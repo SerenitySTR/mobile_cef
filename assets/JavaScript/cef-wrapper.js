@@ -47,3 +47,4 @@ window.GameCef = {
             callback(data);
     }
 };
+GameCef.send("browser:ready");
