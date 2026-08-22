@@ -139,3 +139,8 @@ registerButton.addEventListener("click", () => {
         data
     );
 });
+
+GameCef.on("test:event", (data) => {
+    console.log("Получено событие:", data);
+    alert(data);
+});
