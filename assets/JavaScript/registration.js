@@ -50,10 +50,8 @@ function setAge(value) {
     ageInput.value = age;
 }
 
-GameCef.on("registration:show", (data) => {
-    alert("registration:show = " + data);
-
-    document.getElementById("registration").classList.add("active");
+GameCef.on("registration:show", () => {
+    showRegistration();
 });
 
 GameCef.on("registration:hide", () => {
@@ -141,3 +139,4 @@ registerButton.addEventListener("click", () => {
         data
     );
 });
+
