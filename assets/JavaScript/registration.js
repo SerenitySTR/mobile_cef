@@ -139,3 +139,10 @@ registerButton.addEventListener("click", () => {
         data
     );
 });
+
+if (window.cef && typeof window.cef.on === "function") {
+    window.cef.on("registration:show", (data) => {
+        alert("SHOW: " + data);
+        showRegistration();
+    });
+}
