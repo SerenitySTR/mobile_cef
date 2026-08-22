@@ -28,15 +28,10 @@ button {
 
 #registration {
     display: none;
-}
-
-#registration {
-    display: none;
     position: relative;
     width: 100vw;
     height: 100vh;
     min-height: 100vh;
-    display: flex;
     align-items: center;
     justify-content: center;
     overflow: hidden;
@@ -45,6 +40,10 @@ button {
         max(24px, env(safe-area-inset-top))
         20px
         max(24px, env(safe-area-inset-bottom));
+}
+
+#registration.active {
+    display: flex;
 }
 
 .registration-background {
