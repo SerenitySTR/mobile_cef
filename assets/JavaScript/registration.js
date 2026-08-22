@@ -139,4 +139,3 @@ registerButton.addEventListener("click", () => {
         data
     );
 });
-GameCef.receive("registration:show", "hello");
