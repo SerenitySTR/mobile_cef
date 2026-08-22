@@ -5,11 +5,6 @@ window.GameCef = {
         if (!window.cef)
             return false;
 
-        if (typeof window.cef.sendEvent === "function") {
-            window.cef.sendEvent(eventName, data);
-            return true;
-        }
-
         if (typeof window.cef.emit === "function") {
             window.cef.emit(eventName, data);
             return true;
@@ -23,10 +18,25 @@ window.GameCef = {
     },
 
     on(eventName, callback) {
+        if (!window.cef || typeof window.cef.on !== "function")
+            return false;
+
         this.events[eventName] = callback;
+
+        window.cef.on(eventName, callback);
+
+        return true;
     },
 
     off(eventName) {
+        const callback = this.events[eventName];
+
+        if (!callback)
+            return;
+
+        if (window.cef && typeof window.cef.off === "function")
+            window.cef.off(eventName, callback);
+
         delete this.events[eventName];
     },
 
@@ -36,8 +46,4 @@ window.GameCef = {
         if (callback)
             callback(data);
     }
-};
-
-window.cefEvent = function(eventName, data = "") {
-    GameCef.receive(eventName, data);
 };
