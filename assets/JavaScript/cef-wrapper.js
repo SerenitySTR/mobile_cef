@@ -23,12 +23,7 @@ window.GameCef = {
     },
 
     on(eventName, callback) {
-    this.events[eventName] = callback;
-        if (window.cef && typeof window.cef.on === "function") {
-            window.cef.on(eventName, (data) => {
-                this.receive(eventName, data);
-            });
-        }
+        this.events[eventName] = callback;
     },
 
     off(eventName) {
@@ -43,3 +38,6 @@ window.GameCef = {
     }
 };
 
+window.cefEvent = function(eventName, data = "") {
+    GameCef.receive(eventName, data);
+};
