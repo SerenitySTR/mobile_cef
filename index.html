@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="./assets/CSS/styles/style.css">
+    <link rel="stylesheet" href="./assets/CSS/styles/registration.css">
+</head>
+
+<body>
+    <section id="registration">
+        <div class="registration-background"></div>
+
+        <div
+            class="registration-container registration-step active"
+            id="registration-step-1"
+        >
+            <img
+                class="registration-logo"
+                src="./assets/CSS/Images/Registration/logo.svg"
+                alt="Antares RolePlay"
+            >
+
+            <div class="registration-title">
+                <span></span>
+                <h1>Реєстрація</h1>
+                <span></span>
+            </div>
+
+            <div class="registration-field">
+                <img
+                    src="./assets/CSS/Images/Registration/icon-user.svg"
+                    alt=""
+                >
+
+                <input
+                    type="text"
+                    id="username"
+                    placeholder="Введіть ім'я користувача"
+                    autocomplete="off"
+                >
+            </div>
+
+            <div class="registration-field">
+                <img
+                    src="./assets/CSS/Images/Registration/icon-mail.svg"
+                    alt=""
+                >
+
+                <input
+                    type="email"
+                    id="email"
+                    placeholder="Введіть E-mail"
+                    autocomplete="off"
+                >
+            </div>
+
+            <div class="registration-field">
+                <img
+                    src="./assets/CSS/Images/Registration/icon-lock.svg"
+                    alt=""
+                >
+
+                <input
+                    type="password"
+                    id="password"
+                    placeholder="Введіть пароль"
+                    autocomplete="off"
+                >
+
+                <button
+                    class="password-eye"
+                    type="button"
+                    data-target="password"
+                >
+                    <img
+                        src="./assets/CSS/Images/Registration/icon-eye.svg"
+                        alt=""
+                    >
+                </button>
+            </div>
+
+            <div class="registration-field">
+                <img
+                    src="./assets/CSS/Images/Registration/icon-lock.svg"
+                    alt=""
+                >
+
+                <input
+                    type="password"
+                    id="password-repeat"
+                    placeholder="Повторіть пароль"
+                    autocomplete="off"
+                >
+
+                <button
+                    class="password-eye"
+                    type="button"
+                    data-target="password-repeat"
+                >
+                    <img
+                        src="./assets/CSS/Images/Registration/icon-eye.svg"
+                        alt=""
+                    >
+                </button>
+            </div>
+
+            <button
+                id="registration-next-button"
+                type="button"
+            >
+                Продовжити
+            </button>
+        </div>
+
+        <div
+            class="registration-container registration-step"
+            id="registration-step-2"
+        >
+            <img
+                class="registration-logo"
+                src="./assets/CSS/Images/Registration/logo.svg"
+                alt="Antares RolePlay"
+            >
+
+            <div class="registration-title">
+                <span></span>
+                <h1>Персонаж</h1>
+                <span></span>
+            </div>
+
+            <p class="registration-description">
+                Оберіть стать та вкажіть вік персонажа
+            </p>
+
+            <div class="gender-selector">
+                <button
+                    class="gender-button"
+                    type="button"
+                    data-gender="male"
+                >
+                    <span class="gender-icon">♂</span>
+                    <span>Чоловіча</span>
+                </button>
+
+                <button
+                    class="gender-button"
+                    type="button"
+                    data-gender="female"
+                >
+                    <span class="gender-icon">♀</span>
+                    <span>Жіноча</span>
+                </button>
+            </div>
+
+            <div class="age-container">
+                <p class="age-title">
+                    Вік персонажа
+                </p>
+
+                <div class="age-selector">
+                    <button
+                        id="age-minus"
+                        type="button"
+                    >
+                        −
+                    </button>
+
+                    <input
+                        type="number"
+                        id="age"
+                        min="18"
+                        max="70"
+                        value="18"
+                        inputmode="numeric"
+                    >
+
+                    <button
+                        id="age-plus"
+                        type="button"
+                    >
+                        +
+                    </button>
+                </div>
+
+                <p class="age-description">
+                    Допустимий вік: від 18 до 70 років
+                </p>
+            </div>
+
+            <div class="registration-buttons">
+                <button
+                    id="registration-back-button"
+                    type="button"
+                >
+                    Назад
+                </button>
+
+                <button
+                    id="registration-button"
+                    type="button"
+                >
+                    Зареєструватися
+                </button>
+            </div>
+        </div>
+    </section>    
+
+    <script src="./assets/JavaScript/cef-wrapper.js"></script>
+    <script src="./assets/JavaScript/registration.js"></script>
+</body>
+</html>
