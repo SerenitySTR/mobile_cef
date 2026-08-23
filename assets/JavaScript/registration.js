@@ -23,7 +23,6 @@ let selectedGender = null;
 
 function showRegistration() {
     registration.classList.add("active");
-
     step1.classList.add("active");
     step2.classList.remove("active");
 }
@@ -37,6 +36,10 @@ function showRegistrationStep(step) {
     step2.classList.remove("active");
 
     step.classList.add("active");
+}
+
+function isValidEmail(email) {
+    return email.includes("@") && email.includes(".");
 }
 
 function setAge(value) {
@@ -70,7 +73,6 @@ genderButtons.forEach((button) => {
         });
 
         button.classList.add("active");
-
         selectedGender = button.dataset.gender;
     });
 });
@@ -95,17 +97,49 @@ ageInput.addEventListener("blur", () => {
 });
 
 nextButton.addEventListener("click", () => {
-    if (!usernameInput.value.trim())
-        return;
+    const email = emailInput.value.trim();
+    const password = passwordInput.value;
+    const passwordRepeat = passwordRepeatInput.value;
 
-    if (!emailInput.value.trim())
+    if (!email) {
+        showError("Помилка", "Введіть адресу електронної пошти.");
         return;
+    }
 
-    if (!passwordInput.value)
+    if (email.length > 60) {
+        showError("Невірна пошта", "E-mail не може бути довшим за 60 символів.");
         return;
+    }
 
-    if (passwordInput.value !== passwordRepeatInput.value)
+    if (!/^[A-Za-z0-9@._+-]+$/.test(email)) {
+        showError("Невірна пошта", "E-mail може містити лише латинські літери, цифри та допустимі символи.");
         return;
+    }
+
+    if (!isValidEmail(email)) {
+        showError("Невірна пошта", "Введіть коректну адресу електронної пошти.");
+        return;
+    }
+
+    if (!password) {
+        showError("Помилка", "Введіть пароль.");
+        return;
+    }
+
+    if (password.length < 6 || password.length > 21) {
+        showError("Невірний пароль", "Пароль повинен містити від 6 до 21 символу.");
+        return;
+    }
+
+    if (!/^[A-Za-z0-9_]+$/.test(password)) {
+        showError("Невірний пароль", "Пароль може містити лише латинські літери, цифри та знак _.");
+        return;
+    }
+
+    if (password !== passwordRepeat) {
+        showError("Помилка", "Паролі не співпадають.");
+        return;
+    }
 
     showRegistrationStep(step2);
 });
@@ -115,8 +149,10 @@ backButton.addEventListener("click", () => {
 });
 
 registerButton.addEventListener("click", () => {
-    if (!selectedGender)
+    if (!selectedGender) {
+        showError("Помилка", "Оберіть стать персонажа.");
         return;
+    }
 
     const data = {
         username: usernameInput.value.trim(),
@@ -126,10 +162,7 @@ registerButton.addEventListener("click", () => {
         age: Number(ageInput.value)
     };
 
-    GameCef.sendJson(
-        "registration:submit",
-        data
-    );
+    GameCef.sendJson("registration:submit", data);
 });
 
 GameCef.on("registration:show", (data) => {
@@ -140,3 +173,4 @@ GameCef.on("registration:show", (data) => {
 GameCef.on("registration:hide", () => {
     hideRegistration();
 });
+

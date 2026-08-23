@@ -6,6 +6,7 @@
 
     <link rel="stylesheet" href="./assets/CSS/styles/style.css">
     <link rel="stylesheet" href="./assets/CSS/styles/registration.css">
+    <link rel="stylesheet" href="./assets/CSS/styles/error.css">
 </head>
 
 <body>
@@ -92,9 +93,27 @@
             <button id="registration-button" type="button">Зареєструватися</button>
         </div>
     </div>
-</section>    
+</section>
+     <section id="error-screen">
+    <div class="error-background"></div>
+
+    <div class="error-container">
+        <div class="error-icon">!</div>
+
+        <h1 id="error-title">Помилка</h1>
+
+        <p id="error-message">
+            
+        </p>
+
+        <button id="error-close-button" type="button">
+            Закрити
+        </button>
+    </div>
+</section>      
 
     <script src="./assets/JavaScript/cef-wrapper.js"></script>
     <script src="./assets/JavaScript/registration.js"></script>
+    <script src="./assets/JavaScript/error.js"></script>
 </body>
 </html>

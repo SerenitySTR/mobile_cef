@@ -252,7 +252,11 @@ button {
     font-size: 14px;
     font-weight: 600;
     cursor: pointer;
-    transition: 0.2s;
+    transition:
+        border-color 0.3s ease,
+        color 0.3s ease,
+        background 0.3s ease,
+        transform 0.2s ease;
 }
 
 .gender-button:hover {
@@ -363,6 +367,109 @@ button {
 .registration-buttons #registration-button {
     width: 64%;
     margin-top: 0;
+}
+
+#registration-next-button,
+#registration-button,
+#registration-back-button,
+.age-selector button {
+    transition:
+        border-color 0.3s ease,
+        color 0.3s ease,
+        background 0.3s ease,
+        transform 0.2s ease;
+}
+
+#registration-next-button:active,
+#registration-button:active,
+#registration-back-button:active,
+.gender-button:active,
+.age-selector button:active {
+    transform: scale(0.98);
+}
+
+#registration.active .registration-background {
+    animation: registrationBackgroundEnter 1s ease both;
+}
+
+#registration.active #registration-step-1.active {
+    animation: registrationEnter 0.8s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+#registration.active #registration-step-1.active .registration-logo {
+    animation: registrationLogoEnter 0.95s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+#registration.active #registration-step-1.active .registration-title {
+    animation: registrationItemEnter 0.65s ease 0.12s both;
+}
+
+#registration.active #registration-step-1.active .registration-field:nth-of-type(2) {
+    animation: registrationItemEnter 0.65s ease 0.18s both;
+}
+
+#registration.active #registration-step-1.active .registration-field:nth-of-type(3) {
+    animation: registrationItemEnter 0.65s ease 0.24s both;
+}
+
+#registration.active #registration-step-1.active .registration-field:nth-of-type(4) {
+    animation: registrationItemEnter 0.65s ease 0.30s both;
+}
+
+#registration.active #registration-step-1.active .registration-field:nth-of-type(5) {
+    animation: registrationItemEnter 0.65s ease 0.36s both;
+}
+
+#registration.active #registration-step-1.active #registration-next-button {
+    animation: registrationItemEnter 0.65s ease 0.42s both;
+}
+
+@keyframes registrationBackgroundEnter {
+    from {
+        opacity: 0;
+        transform: scale(1.04);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@keyframes registrationEnter {
+    from {
+        opacity: 0;
+        transform: translateY(18px) scale(0.98);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+@keyframes registrationLogoEnter {
+    from {
+        opacity: 0;
+        transform: translateY(-14px) scale(0.94);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+@keyframes registrationItemEnter {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 @media (max-width: 430px) {
