@@ -50,14 +50,6 @@ function setAge(value) {
     ageInput.value = age;
 }
 
-GameCef.on("registration:show", () => {
-    showRegistration();
-});
-
-GameCef.on("registration:hide", () => {
-    hideRegistration();
-});
-
 passwordEyeButtons.forEach((button) => {
     button.addEventListener("click", () => {
         const input = document.getElementById(button.dataset.target);
@@ -138,4 +130,13 @@ registerButton.addEventListener("click", () => {
         "registration:submit",
         data
     );
+});
+
+GameCef.on("registration:show", (data) => {
+    usernameInput.value = data;
+    showRegistration();
+});
+
+GameCef.on("registration:hide", () => {
+    hideRegistration();
 });
