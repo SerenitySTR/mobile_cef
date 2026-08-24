@@ -73,7 +73,7 @@ genderButtons.forEach((button) => {
         });
 
         button.classList.add("active");
-        selectedGender = button.dataset.gender;
+        selectedGender = button.dataset.gender === "male" ? 1 : 2;
     });
 });
 
