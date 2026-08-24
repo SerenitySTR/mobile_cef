@@ -1,0 +1,365 @@
+#authorization {
+    display: none;
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    min-height: 100vh;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    isolation: isolate;
+    padding:
+        max(24px, env(safe-area-inset-top))
+        20px
+        max(24px, env(safe-area-inset-bottom));
+}
+
+#authorization.active {
+    display: flex;
+}
+
+.authorization-background {
+    position: absolute;
+    inset: 0;
+    background:
+        url("../Images/Registration/background.svg")
+        center center / cover
+        no-repeat;
+    z-index: -2;
+}
+
+#authorization::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+        180deg,
+        rgba(1, 7, 15, 0.08),
+        rgba(1, 7, 15, 0.18) 55%,
+        rgba(1, 7, 15, 0.45)
+    );
+    z-index: -1;
+    pointer-events: none;
+}
+
+.authorization-container {
+    width: 100%;
+    max-width: 420px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.authorization-logo {
+    width: 78vw;
+    max-width: 360px;
+    max-height: 180px;
+    object-fit: contain;
+    margin-bottom: 12px;
+    filter: drop-shadow(
+        0 7px 12px rgba(0, 0, 0, 0.45)
+    );
+}
+
+.authorization-title {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 18px;
+    color: #48beff;
+}
+
+.authorization-title span {
+    height: 1px;
+    flex: 1;
+    background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(72, 190, 255, 0.8)
+    );
+}
+
+.authorization-title span:last-child {
+    background: linear-gradient(
+        90deg,
+        rgba(72, 190, 255, 0.8),
+        transparent
+    );
+}
+
+.authorization-title h1 {
+    font-size: clamp(16px, 4vw, 20px);
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    white-space: nowrap;
+    text-transform: uppercase;
+}
+
+.authorization-field {
+    position: relative;
+    width: 100%;
+    height: 54px;
+    margin-bottom: 12px;
+}
+
+.authorization-field > img {
+    position: absolute;
+    left: 17px;
+    top: 50%;
+    width: 20px;
+    height: 20px;
+    transform: translateY(-50%);
+    opacity: 0.72;
+    z-index: 2;
+    pointer-events: none;
+}
+
+.authorization-field input {
+    width: 100%;
+    height: 100%;
+    padding: 0 52px 0 54px;
+    border: 1px solid rgba(255, 255, 255, 0.22);
+    border-radius: 11px;
+    outline: 0;
+    background: linear-gradient(
+        90deg,
+        rgba(5, 13, 22, 0.88),
+        rgba(4, 11, 19, 0.76)
+    );
+    color: #fff;
+    font-size: 15px;
+}
+
+.authorization-field input::placeholder {
+    color: rgba(255, 255, 255, 0.56);
+}
+
+.authorization-field input:focus {
+    border-color: rgba(54, 185, 255, 0.86);
+    background: rgba(5, 20, 32, 0.92);
+    box-shadow:
+        0 0 0 1px rgba(54, 185, 255, 0.1),
+        0 0 16px rgba(54, 185, 255, 0.08);
+}
+
+.authorization-password-eye {
+    position: absolute;
+    right: 11px;
+    top: 50%;
+    width: 36px;
+    height: 36px;
+    display: grid;
+    place-items: center;
+    transform: translateY(-50%);
+    background: transparent;
+    cursor: pointer;
+    opacity: 0.65;
+}
+
+.authorization-password-eye img {
+    width: 20px;
+    height: 20px;
+}
+
+#authorization-button {
+    width: 100%;
+    height: 54px;
+    margin-top: 4px;
+    border: 1px solid rgba(48, 184, 255, 0.72);
+    border-radius: 11px;
+    background: linear-gradient(
+        180deg,
+        rgba(8, 56, 87, 0.88),
+        rgba(4, 24, 41, 0.94)
+    );
+    color: #38c6ff;
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition:
+        border-color 0.3s ease,
+        color 0.3s ease,
+        transform 0.2s ease;
+}
+
+#authorization-button:hover {
+    border-color: #58caff;
+    color: #89ddff;
+}
+
+#authorization-button:active {
+    transform: scale(0.98);
+}
+
+#authorization.active .authorization-background {
+    animation: authorizationBackgroundEnter 1s ease both;
+}
+
+#authorization.active .authorization-container {
+    animation: authorizationEnter 0.8s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+#authorization.active .authorization-logo {
+    animation: authorizationLogoEnter 0.95s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+#authorization.active .authorization-title {
+    animation: authorizationItemEnter 0.65s ease 0.12s both;
+}
+
+#authorization.active .authorization-field:nth-of-type(2) {
+    animation: authorizationItemEnter 0.65s ease 0.18s both;
+}
+
+#authorization.active .authorization-field:nth-of-type(3) {
+    animation: authorizationItemEnter 0.65s ease 0.24s both;
+}
+
+#authorization.active #authorization-button {
+    animation: authorizationItemEnter 0.65s ease 0.30s both;
+}
+
+@keyframes authorizationBackgroundEnter {
+    from {
+        opacity: 0;
+        transform: scale(1.04);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@keyframes authorizationEnter {
+    from {
+        opacity: 0;
+        transform: translateY(18px) scale(0.98);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+@keyframes authorizationLogoEnter {
+    from {
+        opacity: 0;
+        transform: translateY(-14px) scale(0.94);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+@keyframes authorizationItemEnter {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@media (max-width: 430px) {
+    #authorization {
+        padding-left: 16px;
+        padding-right: 16px;
+    }
+
+    .authorization-container {
+        max-width: 100%;
+    }
+
+    .authorization-logo {
+        width: 82vw;
+        max-width: 320px;
+    }
+
+    .authorization-field,
+    #authorization-button {
+        height: 52px;
+    }
+}
+
+@media (max-width: 380px) {
+    #authorization {
+        padding-left: 14px;
+        padding-right: 14px;
+    }
+
+    .authorization-logo {
+        width: 86vw;
+        max-width: 290px;
+    }
+
+    .authorization-title {
+        margin-bottom: 14px;
+    }
+
+    .authorization-title h1 {
+        font-size: 15px;
+    }
+
+    .authorization-field {
+        height: 50px;
+        margin-bottom: 10px;
+    }
+
+    .authorization-field input {
+        font-size: 14px;
+    }
+
+    #authorization-button {
+        height: 50px;
+        font-size: 14px;
+    }
+}
+
+@media (max-height: 700px) {
+    .authorization-logo {
+        width: 62vw;
+        max-width: 280px;
+        max-height: 130px;
+        margin-bottom: 6px;
+    }
+
+    .authorization-title {
+        margin-bottom: 12px;
+    }
+
+    .authorization-field,
+    #authorization-button {
+        height: 48px;
+    }
+}
+
+@media (max-height: 600px) {
+    #authorization {
+        padding-top: 20px;
+        padding-bottom: 14px;
+    }
+
+    .authorization-logo {
+        width: 52vw;
+        max-width: 230px;
+        max-height: 100px;
+    }
+
+    .authorization-title h1 {
+        font-size: 14px;
+    }
+
+    .authorization-field,
+    #authorization-button {
+        height: 44px;
+    }
+}
