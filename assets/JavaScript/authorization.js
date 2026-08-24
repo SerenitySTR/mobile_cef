@@ -39,8 +39,8 @@ authorizationButton.addEventListener("click", () => {
     }
 
     GameCef.sendJson("authorization:submit", {
-        username: authorizationUsernameInput.value.trim(),
-        password: password
+        UserName: authorizationUsernameInput.value.trim(),
+        Password: password
     });
 });
 
