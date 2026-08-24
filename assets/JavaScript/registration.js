@@ -155,11 +155,11 @@ registerButton.addEventListener("click", () => {
     }
 
     const data = {
-        username: usernameInput.value.trim(),
-        email: emailInput.value.trim(),
-        password: passwordInput.value,
-        gender: selectedGender,
-        age: Number(ageInput.value)
+        UserName: usernameInput.value.trim(),
+        Password: passwordInput.value,
+        Email: emailInput.value.trim(),
+        Gender: selectedGender,
+        Age: Number(ageInput.value)
     };
 
     GameCef.sendJson("registration:submit", data);
