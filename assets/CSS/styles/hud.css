@@ -1,0 +1,227 @@
+#hud {
+    display: none;
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 500;
+    pointer-events: none;
+}
+
+#hud.active {
+    display: block;
+}
+
+.hud-container {
+    width: 270px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 10px;
+}
+
+.hud-logo {
+    width: 150px;
+    height: 85px;
+    object-fit: contain;
+    margin-bottom: 4px;
+    filter: drop-shadow(0 6px 12px rgba(0, 0, 0, 0.5));
+}
+
+.hud-money {
+    width: 230px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 10px;
+    padding: 0 16px;
+    border: 1px solid rgba(88, 255, 120, 0.3);
+    border-radius: 11px;
+    background: linear-gradient(
+        90deg,
+        rgba(4, 17, 12, 0.72),
+        rgba(3, 10, 16, 0.92)
+    );
+    box-shadow:
+        0 8px 22px rgba(0, 0, 0, 0.28),
+        inset 0 0 18px rgba(78, 255, 117, 0.03);
+}
+
+.hud-money-icon {
+    color: #63db77;
+    font-size: 24px;
+    font-weight: 800;
+}
+
+#hud-money-value {
+    color: #fff;
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: 1px;
+}
+
+.hud-stat {
+    width: 230px;
+    min-height: 58px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 12px;
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    border-radius: 11px;
+    background: linear-gradient(
+        90deg,
+        rgba(4, 10, 18, 0.82),
+        rgba(2, 8, 14, 0.94)
+    );
+    box-shadow: 0 8px 22px rgba(0, 0, 0, 0.28);
+}
+
+.hud-stat-icon {
+    width: 38px;
+    height: 38px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    border-radius: 9px;
+    font-size: 21px;
+    font-weight: 800;
+}
+
+.hud-stat-content {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.hud-stat-line {
+    width: 100%;
+    height: 8px;
+    overflow: hidden;
+    border-radius: 20px;
+    background: rgba(255, 255, 255, 0.08);
+}
+
+.hud-stat-fill {
+    width: 100%;
+    height: 100%;
+    border-radius: inherit;
+    transition: width 0.35s ease;
+}
+
+.hud-stat-content span {
+    align-self: flex-end;
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+}
+
+.hud-health {
+    border-color: rgba(255, 70, 70, 0.28);
+}
+
+.hud-health .hud-stat-icon {
+    background: rgba(255, 53, 53, 0.08);
+    color: #ff4f4f;
+}
+
+.hud-health .hud-stat-fill {
+    background: linear-gradient(
+        90deg,
+        #b62323,
+        #ff4545
+    );
+}
+
+.hud-armour {
+    border-color: rgba(63, 169, 255, 0.28);
+}
+
+.hud-armour .hud-stat-icon {
+    background: rgba(49, 157, 255, 0.08);
+    color: #3ba6ff;
+}
+
+.hud-armour .hud-stat-fill {
+    background: linear-gradient(
+        90deg,
+        #166eb9,
+        #42b0ff
+    );
+}
+
+.hud-hunger {
+    border-color: rgba(255, 172, 47, 0.28);
+}
+
+.hud-hunger .hud-stat-icon {
+    background: rgba(255, 172, 47, 0.08);
+    color: #ffad36;
+}
+
+.hud-hunger .hud-stat-fill {
+    background: linear-gradient(
+        90deg,
+        #bb6d13,
+        #ffad32
+    );
+}
+
+#hud.active .hud-container {
+    animation: hudEnter 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@keyframes hudEnter {
+    from {
+        opacity: 0;
+        transform: translateX(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@media (max-width: 430px) {
+    #hud {
+        top: 12px;
+        right: 12px;
+    }
+
+    .hud-container {
+        width: 210px;
+        gap: 8px;
+    }
+
+    .hud-logo {
+        width: 120px;
+        height: 70px;
+    }
+
+    .hud-money,
+    .hud-stat {
+        width: 190px;
+    }
+
+    .hud-money {
+        height: 42px;
+    }
+
+    #hud-money-value {
+        font-size: 17px;
+    }
+
+    .hud-stat {
+        min-height: 52px;
+    }
+
+    .hud-stat-icon {
+        width: 34px;
+        height: 34px;
+        font-size: 18px;
+    }
+}
