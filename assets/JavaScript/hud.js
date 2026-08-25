@@ -42,12 +42,6 @@ function updateHud(data) {
 }
 
 GameCef.on("hud:show", (data) => {
-    if (data) {
-        try {
-            updateHud(JSON.parse(data));
-        } catch {
-        }
-    }
 
     showHud();
 });
@@ -62,3 +56,31 @@ GameCef.on("hud:update", (data) => {
     } catch {
     }
 });
+
+GameCef.on("hud:health", (data) => {
+    const health = clamp(Number(data) || 0, 0, 100);
+
+    hudHealthBar.style.width = `${health}%`;
+    hudHealthValue.textContent = `${health} / 100`;
+});
+
+GameCef.on("hud:armour", (data) => {
+    const armour = clamp(Number(data) || 0, 0, 100);
+
+    hudArmourBar.style.width = `${armour}%`;
+    hudArmourValue.textContent = `${armour} / 100`;
+});
+
+GameCef.on("hud:hunger", (data) => {
+    const hunger = clamp(Number(data) || 0, 0, 100);
+
+    hudHungerBar.style.width = `${hunger}%`;
+    hudHungerValue.textContent = `${hunger} / 100`;
+});
+
+GameCef.on("hud:money", (data) => {
+    const money = Number(data) || 0;
+
+    hudMoneyValue.textContent = `$${money.toLocaleString("en-US")}`;
+});
+
