@@ -25,73 +25,102 @@
 
 .hud-top {
     width: 285px;
-    height: 76px;
+    height: 82px;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 8px 18px 8px 12px;
-    border: 1px solid rgba(255, 255, 255, 0.14);
-    border-left: 2px solid rgba(72, 190, 255, 0.75);
+    padding: 7px 14px 7px 10px;
+    border: 1px solid rgba(255,255,255,.14);
+    border-left: 2px solid rgba(72,190,255,.75);
     border-radius: 12px;
-    background-color: rgba(3, 9, 15, 0.94);
-    background-image: linear-gradient(
-        135deg,
-        rgba(11, 22, 33, 0.98),
-        rgba(2, 7, 12, 0.94)
-    );
-    box-shadow:
-        0 8px 24px rgba(0, 0, 0, 0.45),
-        inset 0 0 20px rgba(72, 190, 255, 0.03);
+    background: linear-gradient(135deg,rgba(11,22,33,.98),rgba(2,7,12,.94));
+    box-shadow: 0 8px 24px rgba(0,0,0,.45),inset 0 0 20px rgba(72,190,255,.03);
 }
 
 .hud-logo {
-    width: 78px;
-    height: 60px;
+    width: 92px;
+    height: 68px;
     object-fit: contain;
     flex-shrink: 0;
-    filter: drop-shadow(0 4px 7px rgba(0, 0, 0, 0.65));
+    filter: drop-shadow(0 4px 7px rgba(0,0,0,.65));
 }
 
-.hud-money {
+.hud-weapon {
+    width: 160px;
+    height: 66px;
+    position: relative;
     display: flex;
     align-items: center;
     justify-content: flex-end;
-    gap: 9px;
-    min-width: 155px;
+}
+
+#hud-weapon-icon {
+    width: 145px;
+    height: 62px;
+    object-fit: contain;
+    object-position: right center;
+    opacity: .96;
+    filter: drop-shadow(0 3px 5px rgba(0,0,0,.72));
+    transition: opacity .2s ease,transform .25s ease;
+}
+
+#hud-weapon-ammo {
+    position: absolute;
+    right: 2px;
+    bottom: 1px;
+    min-width: 30px;
+    padding: 2px 6px;
+    border-radius: 5px;
+    background: rgba(2,7,12,.82);
+    color: #fff;
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: .5px;
+    text-align: right;
+    text-shadow: 0 2px 4px rgba(0,0,0,.8);
+}
+
+#hud-weapon-ammo:empty {
+    display: none;
+}
+
+.hud-money {
+    width: 235px;
+    height: 38px;
+    margin-top: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 8px;
+    padding: 0 12px;
+    border: 1px solid rgba(255,255,255,.12);
+    border-radius: 9px;
+    background: linear-gradient(90deg,rgba(8,17,26,.97),rgba(2,7,12,.95));
+    box-shadow: 0 8px 24px rgba(0,0,0,.35);
 }
 
 .hud-money img {
-    width: 25px;
-    height: 25px;
-    object-fit: contain;
+    width: 21px;
+    height: 21px;
 }
 
 #hud-money-value {
     color: #fff;
-    font-size: 20px;
+    font-size: 17px;
     font-weight: 800;
     letter-spacing: 1px;
     white-space: nowrap;
-    text-shadow:
-        0 2px 4px rgba(0, 0, 0, 0.8),
-        0 0 6px rgba(255, 255, 255, 0.08);
+    text-shadow: 0 2px 4px rgba(0,0,0,.8);
 }
 
 .hud-stats {
     width: 235px;
-    margin-top: 6px;
+    margin-top: 5px;
     overflow: hidden;
-    border: 1px solid rgba(255, 255, 255, 0.12);
+    border: 1px solid rgba(255,255,255,.12);
     border-radius: 10px;
-    background-color: rgba(3, 9, 15, 0.94);
-    background-image: linear-gradient(
-        90deg,
-        rgba(8, 17, 26, 0.97),
-        rgba(2, 7, 12, 0.95)
-    );
-    box-shadow:
-        0 8px 24px rgba(0, 0, 0, 0.42),
-        inset 0 0 18px rgba(255, 255, 255, 0.015);
+    background: linear-gradient(90deg,rgba(8,17,26,.97),rgba(2,7,12,.95));
+    box-shadow: 0 8px 24px rgba(0,0,0,.42),inset 0 0 18px rgba(255,255,255,.015);
 }
 
 .hud-stat {
@@ -105,7 +134,7 @@
 }
 
 .hud-stat + .hud-stat {
-    border-top: 1px solid rgba(255, 255, 255, 0.07);
+    border-top: 1px solid rgba(255,255,255,.07);
 }
 
 .hud-stat::before {
@@ -123,111 +152,84 @@
     height: 24px;
     flex-shrink: 0;
     object-fit: contain;
-    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.5));
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,.5));
 }
 
 .hud-stat-bar {
-    width: 135px;
+    width: 117px;
     height: 7px;
     overflow: hidden;
     flex-shrink: 0;
     border-radius: 10px;
-    background-color: rgba(255, 255, 255, 0.08);
-    box-shadow: inset 0 1px 4px rgba(0, 0, 0, 0.65);
+    background: rgba(255,255,255,.08);
+    box-shadow: inset 0 1px 4px rgba(0,0,0,.65);
 }
 
 .hud-stat-fill {
     width: 100%;
     height: 100%;
     border-radius: inherit;
-    transition: width 0.4s ease;
+    transition: width .4s ease;
 }
 
 .hud-stat > span {
-    width: 30px;
+    width: 50px;
     margin-left: auto;
     color: #fff;
-    font-size: 13px;
+    font-size: 11px;
     font-weight: 800;
     text-align: right;
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
+    white-space: nowrap;
+    text-shadow: 0 2px 4px rgba(0,0,0,.8);
 }
 
 .hud-health::before {
     background: #ff4040;
-    box-shadow: 0 0 7px rgba(255, 64, 64, 0.55);
+    box-shadow: 0 0 7px rgba(255,64,64,.55);
 }
 
 .hud-health .hud-stat-fill {
-    background-color: #e63535;
-    background-image: linear-gradient(
-        90deg,
-        #b51f26,
-        #ff4545
-    );
-    box-shadow: 0 0 7px rgba(255, 64, 64, 0.4);
+    background: linear-gradient(90deg,#b51f26,#ff4545);
+    box-shadow: 0 0 7px rgba(255,64,64,.4);
 }
 
 .hud-armour::before {
     background: #3ca9ff;
-    box-shadow: 0 0 7px rgba(60, 169, 255, 0.55);
+    box-shadow: 0 0 7px rgba(60,169,255,.55);
 }
 
 .hud-armour .hud-stat-fill {
-    background-color: #268fdc;
-    background-image: linear-gradient(
-        90deg,
-        #176faf,
-        #42afff
-    );
-    box-shadow: 0 0 7px rgba(60, 169, 255, 0.4);
+    background: linear-gradient(90deg,#176faf,#42afff);
+    box-shadow: 0 0 7px rgba(60,169,255,.4);
 }
 
 .hud-hunger::before {
     background: #ffab32;
-    box-shadow: 0 0 7px rgba(255, 171, 50, 0.55);
+    box-shadow: 0 0 7px rgba(255,171,50,.55);
 }
 
 .hud-hunger .hud-stat-fill {
-    background-color: #e58a1d;
-    background-image: linear-gradient(
-        90deg,
-        #b8670e,
-        #ffad32
-    );
-    box-shadow: 0 0 7px rgba(255, 171, 50, 0.4);
+    background: linear-gradient(90deg,#b8670e,#ffad32);
+    box-shadow: 0 0 7px rgba(255,171,50,.4);
 }
 
 #hud.active .hud-top {
-    animation: hudTopEnter 0.65s cubic-bezier(0.22, 1, 0.36, 1) both;
+    animation: hudTopEnter .65s cubic-bezier(.22,1,.36,1) both;
 }
 
+#hud.active .hud-money,
 #hud.active .hud-stats {
-    animation: hudStatsEnter 0.7s ease 0.08s both;
+    animation: hudStatsEnter .7s ease .08s both;
 }
 
 @keyframes hudTopEnter {
-    from {
-        opacity: 0;
-        transform: translateX(18px);
-    }
-
-    to {
-        opacity: 1;
-        transform: translateX(0);
-    }
+    from { opacity: 0; transform: translateX(18px); }
+    to { opacity: 1; transform: translateX(0); }
 }
 
 @keyframes hudStatsEnter {
-    from {
-        opacity: 0;
-        transform: translateY(-6px);
-    }
-
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+    from { opacity: 0; transform: translateY(-6px); }
+    to { opacity: 1; transform: translateY(0); }
 }
 
 @media (max-width: 430px) {
@@ -242,32 +244,48 @@
 
     .hud-top {
         width: 225px;
-        height: 58px;
-        padding: 6px 12px 6px 8px;
+        height: 62px;
+        padding: 5px 9px 5px 7px;
     }
 
     .hud-logo {
-        width: 57px;
-        height: 46px;
+        width: 68px;
+        height: 52px;
+    }
+
+    .hud-weapon {
+        width: 135px;
+        height: 50px;
+    }
+
+    #hud-weapon-icon {
+        width: 125px;
+        height: 48px;
+    }
+
+    #hud-weapon-ammo {
+        font-size: 10px;
+        padding: 1px 4px;
+    }
+
+    .hud-money,
+    .hud-stats {
+        width: 185px;
     }
 
     .hud-money {
-        min-width: 125px;
+        height: 31px;
         gap: 6px;
+        padding: 0 8px;
     }
 
     .hud-money img {
-        width: 19px;
-        height: 19px;
+        width: 17px;
+        height: 17px;
     }
 
     #hud-money-value {
-        font-size: 16px;
-    }
-
-    .hud-stats {
-        width: 185px;
-        margin-top: 4px;
+        font-size: 14px;
     }
 
     .hud-stat {
@@ -287,12 +305,12 @@
     }
 
     .hud-stat-bar {
-        width: 101px;
+        width: 82px;
         height: 6px;
     }
 
     .hud-stat > span {
-        width: 26px;
-        font-size: 11px;
+        width: 49px;
+        font-size: 10px;
     }
 }
