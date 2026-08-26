@@ -1,8 +1,13 @@
+#hud,
+#hud * {
+    box-sizing: border-box;
+}
+
 #hud {
     display: none;
     position: fixed;
-    top: 18px;
-    right: 18px;
+    top: 16px;
+    right: 16px;
     z-index: 500;
     pointer-events: none;
 }
@@ -12,59 +17,53 @@
 }
 
 .hud-container {
-    width: 310px;
+    width: 285px;
     display: flex;
     flex-direction: column;
     align-items: flex-end;
 }
 
-.hud-header {
-    position: relative;
-    width: 100%;
-    height: 88px;
+.hud-top {
+    width: 285px;
+    height: 76px;
     display: flex;
     align-items: center;
-    justify-content: flex-end;
-    padding: 0 18px 0 82px;
+    justify-content: space-between;
+    padding: 8px 18px 8px 12px;
     border: 1px solid rgba(255, 255, 255, 0.14);
-    border-radius: 8px 3px 8px 3px;
-    background: linear-gradient(
+    border-left: 2px solid rgba(72, 190, 255, 0.75);
+    border-radius: 12px;
+    background-color: rgba(3, 9, 15, 0.94);
+    background-image: linear-gradient(
         135deg,
-        rgba(7, 13, 20, 0.94),
-        rgba(2, 7, 12, 0.86)
-    );
-    clip-path: polygon(
-        14% 0,
-        100% 0,
-        92% 100%,
-        0 100%
+        rgba(11, 22, 33, 0.98),
+        rgba(2, 7, 12, 0.94)
     );
     box-shadow:
-        0 10px 30px rgba(0, 0, 0, 0.28),
-        inset 0 -2px 0 rgba(72, 190, 255, 0.12);
+        0 8px 24px rgba(0, 0, 0, 0.45),
+        inset 0 0 20px rgba(72, 190, 255, 0.03);
 }
 
 .hud-logo {
-    position: absolute;
-    left: 10px;
-    top: 50%;
     width: 78px;
-    height: 72px;
+    height: 60px;
     object-fit: contain;
-    transform: translateY(-50%);
-    filter: drop-shadow(0 5px 10px rgba(0, 0, 0, 0.45));
+    flex-shrink: 0;
+    filter: drop-shadow(0 4px 7px rgba(0, 0, 0, 0.65));
 }
 
 .hud-money {
     display: flex;
     align-items: center;
-    gap: 10px;
+    justify-content: flex-end;
+    gap: 9px;
+    min-width: 155px;
 }
 
-.hud-money-icon {
-    color: #53d66b;
-    font-size: 24px;
-    font-weight: 800;
+.hud-money img {
+    width: 25px;
+    height: 25px;
+    object-fit: contain;
 }
 
 #hud-money-value {
@@ -72,117 +71,145 @@
     font-size: 20px;
     font-weight: 800;
     letter-spacing: 1px;
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+    white-space: nowrap;
+    text-shadow:
+        0 2px 4px rgba(0, 0, 0, 0.8),
+        0 0 6px rgba(255, 255, 255, 0.08);
 }
 
 .hud-stats {
-    width: 250px;
+    width: 235px;
     margin-top: 6px;
     overflow: hidden;
     border: 1px solid rgba(255, 255, 255, 0.12);
-    border-radius: 8px;
-    background: rgba(2, 7, 12, 0.9);
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);
+    border-radius: 10px;
+    background-color: rgba(3, 9, 15, 0.94);
+    background-image: linear-gradient(
+        90deg,
+        rgba(8, 17, 26, 0.97),
+        rgba(2, 7, 12, 0.95)
+    );
+    box-shadow:
+        0 8px 24px rgba(0, 0, 0, 0.42),
+        inset 0 0 18px rgba(255, 255, 255, 0.015);
 }
 
 .hud-stat {
     position: relative;
     width: 100%;
-    height: 46px;
+    height: 42px;
     display: flex;
     align-items: center;
-    gap: 10px;
-    padding: 0 12px;
+    gap: 9px;
+    padding: 0 10px;
 }
 
 .hud-stat + .hud-stat {
-    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    border-top: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.hud-stat::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 7px;
+    bottom: 7px;
+    width: 2px;
+    border-radius: 2px;
 }
 
 .hud-stat-icon {
-    width: 28px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    width: 24px;
+    height: 24px;
     flex-shrink: 0;
-    font-size: 20px;
-    font-weight: 800;
+    object-fit: contain;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.5));
 }
 
 .hud-stat-bar {
-    position: relative;
     width: 135px;
-    height: 9px;
+    height: 7px;
     overflow: hidden;
-    border-radius: 20px;
-    background: rgba(255, 255, 255, 0.08);
-    box-shadow: inset 0 1px 4px rgba(0, 0, 0, 0.5);
+    flex-shrink: 0;
+    border-radius: 10px;
+    background-color: rgba(255, 255, 255, 0.08);
+    box-shadow: inset 0 1px 4px rgba(0, 0, 0, 0.65);
 }
 
 .hud-stat-fill {
     width: 100%;
     height: 100%;
     border-radius: inherit;
-    transition: width 0.35s ease;
+    transition: width 0.4s ease;
 }
 
-.hud-stat span {
-    width: 36px;
+.hud-stat > span {
+    width: 30px;
     margin-left: auto;
     color: #fff;
-    font-size: 14px;
+    font-size: 13px;
     font-weight: 800;
     text-align: right;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
 }
 
-.hud-health .hud-stat-icon {
-    color: #ff4040;
+.hud-health::before {
+    background: #ff4040;
+    box-shadow: 0 0 7px rgba(255, 64, 64, 0.55);
 }
 
 .hud-health .hud-stat-fill {
-    background: linear-gradient(
+    background-color: #e63535;
+    background-image: linear-gradient(
         90deg,
-        #b82121,
-        #ff4141
+        #b51f26,
+        #ff4545
     );
+    box-shadow: 0 0 7px rgba(255, 64, 64, 0.4);
 }
 
-.hud-armour .hud-stat-icon {
-    color: #41aaff;
+.hud-armour::before {
+    background: #3ca9ff;
+    box-shadow: 0 0 7px rgba(60, 169, 255, 0.55);
 }
 
 .hud-armour .hud-stat-fill {
-    background: linear-gradient(
+    background-color: #268fdc;
+    background-image: linear-gradient(
         90deg,
-        #1675c3,
-        #44adff
+        #176faf,
+        #42afff
     );
+    box-shadow: 0 0 7px rgba(60, 169, 255, 0.4);
 }
 
-.hud-hunger .hud-stat-icon {
-    color: #ffab32;
+.hud-hunger::before {
+    background: #ffab32;
+    box-shadow: 0 0 7px rgba(255, 171, 50, 0.55);
 }
 
 .hud-hunger .hud-stat-fill {
-    background: linear-gradient(
+    background-color: #e58a1d;
+    background-image: linear-gradient(
         90deg,
-        #c56e0f,
+        #b8670e,
         #ffad32
     );
+    box-shadow: 0 0 7px rgba(255, 171, 50, 0.4);
 }
 
-#hud.active .hud-header {
-    animation: hudHeaderEnter 0.55s cubic-bezier(0.22, 1, 0.36, 1) both;
+#hud.active .hud-top {
+    animation: hudTopEnter 0.65s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
 #hud.active .hud-stats {
-    animation: hudStatsEnter 0.6s ease 0.08s both;
+    animation: hudStatsEnter 0.7s ease 0.08s both;
 }
 
-@keyframes hudHeaderEnter {
+@keyframes hudTopEnter {
     from {
         opacity: 0;
-        transform: translateX(22px);
+        transform: translateX(18px);
     }
 
     to {
@@ -194,7 +221,7 @@
 @keyframes hudStatsEnter {
     from {
         opacity: 0;
-        transform: translateY(-8px);
+        transform: translateY(-6px);
     }
 
     to {
@@ -205,80 +232,67 @@
 
 @media (max-width: 430px) {
     #hud {
-        top: 10px;
-        right: 10px;
+        top: 9px;
+        right: 8px;
     }
 
-    .hud-container {
-        width: 250px;
-    }
-
-    .hud-header {
-        height: 70px;
-        padding-left: 68px;
-        padding-right: 14px;
-    }
-
-    .hud-logo {
-        left: 8px;
-        width: 62px;
-        height: 58px;
-    }
-
-    #hud-money-value {
-        font-size: 17px;
-    }
-
-    .hud-money-icon {
-        font-size: 20px;
-    }
-
-    .hud-stats {
-        width: 205px;
-        margin-top: 5px;
-    }
-
-    .hud-stat {
-        height: 39px;
-        gap: 8px;
-        padding: 0 9px;
-    }
-
-    .hud-stat-icon {
-        width: 23px;
-        font-size: 17px;
-    }
-
-    .hud-stat-bar {
-        width: 105px;
-        height: 7px;
-    }
-
-    .hud-stat span {
-        width: 30px;
-        font-size: 12px;
-    }
-}
-
-@media (max-width: 360px) {
     .hud-container {
         width: 225px;
     }
 
-    .hud-header {
-        height: 64px;
+    .hud-top {
+        width: 225px;
+        height: 58px;
+        padding: 6px 12px 6px 8px;
     }
 
     .hud-logo {
-        width: 56px;
-        height: 52px;
+        width: 57px;
+        height: 46px;
+    }
+
+    .hud-money {
+        min-width: 125px;
+        gap: 6px;
+    }
+
+    .hud-money img {
+        width: 19px;
+        height: 19px;
+    }
+
+    #hud-money-value {
+        font-size: 16px;
     }
 
     .hud-stats {
-        width: 188px;
+        width: 185px;
+        margin-top: 4px;
+    }
+
+    .hud-stat {
+        height: 34px;
+        gap: 7px;
+        padding: 0 7px;
+    }
+
+    .hud-stat::before {
+        top: 6px;
+        bottom: 6px;
+    }
+
+    .hud-stat-icon {
+        width: 19px;
+        height: 19px;
     }
 
     .hud-stat-bar {
-        width: 92px;
+        width: 101px;
+        height: 6px;
+    }
+
+    .hud-stat > span {
+        width: 26px;
+        font-size: 11px;
     }
 }

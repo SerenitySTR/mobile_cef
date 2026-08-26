@@ -84,3 +84,4 @@ GameCef.on("hud:money", (data) => {
     hudMoneyValue.textContent = `$${money.toLocaleString("en-US")}`;
 });
 
+showHud();
