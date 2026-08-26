@@ -153,7 +153,3 @@ GameCef.on("hud:weapon", (data) => {
     } catch {
     }
 });
-
-
-
-showHud();
