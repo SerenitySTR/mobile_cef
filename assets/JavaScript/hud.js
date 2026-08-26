@@ -11,68 +11,58 @@ const hudArmourValue = document.getElementById("hud-armour-value");
 const hudHungerBar = document.getElementById("hud-hunger-bar");
 const hudHungerValue = document.getElementById("hud-hunger-value");
 
-const hudWeaponFiles = {
-    "0": "fist",
-    "1": "brassknuckle",
-    "2": "golfclub",
-    "3": "nightstick",
-    "4": "knife",
-    "5": "bat",
-    "6": "shovel",
-    "7": "poolcue",
-    "8": "katana",
-    "9": "chainsaw",
-    "10": "dildo1",
-    "11": "dildo2",
-    "12": "vibrator1",
-    "13": "vibrator2",
-    "14": "flowers",
-    "15": "cane",
-    "16": "grenade",
-    "17": "teargas",
-    "18": "molotov",
-    "22": "colt45",
-    "23": "silenced",
-    "24": "deagle",
-    "25": "shotgun",
-    "26": "sawnoff",
-    "27": "spas12",
-    "28": "uzi",
-    "29": "mp5",
-    "30": "ak47",
-    "31": "m4",
-    "32": "tec9",
-    "33": "rifle",
-    "34": "sniper",
-    "35": "rocketlauncher",
-    "36": "heatseeker",
-    "37": "flamethrower",
-    "38": "minigun",
-    "39": "satchel",
-    "40": "detonator",
-    "41": "spraycan",
-    "42": "extinguisher",
-    "43": "camera",
-    "44": "nightvision",
-    "45": "infrared",
-    "46": "parachute"
-};
-
 const hudWeaponIcon = document.getElementById("hud-weapon-icon");
 const hudWeaponAmmo = document.getElementById("hud-weapon-ammo");
 
-function updateHudWeapon(data) {
-    const weaponId = Number(data.weaponId) || 0;
-    const weaponFile = hudWeaponFiles[String(weaponId)] || "fist";
-    const ammo = Math.max(0, Number(data.ammo) || 0);
+const hudWeaponFiles = {
+    0: "fist",
+    1: "brassknuckle",
+    2: "golfclub",
+    3: "nightstick",
+    4: "knife",
+    5: "bat",
+    6: "shovel",
+    7: "poolcue",
+    8: "katana",
+    9: "chainsaw",
+    10: "dildo1",
+    11: "dildo2",
+    12: "vibrator1",
+    13: "vibrator2",
+    14: "flowers",
+    15: "cane",
+    16: "grenade",
+    17: "teargas",
+    18: "molotov",
+    22: "colt45",
+    23: "silenced",
+    24: "deagle",
+    25: "shotgun",
+    26: "sawnoff",
+    27: "spas12",
+    28: "uzi",
+    29: "mp5",
+    30: "ak47",
+    31: "m4",
+    32: "tec9",
+    33: "rifle",
+    34: "sniper",
+    35: "rocketlauncher",
+    36: "heatseeker",
+    37: "flamethrower",
+    38: "minigun",
+    39: "satchel",
+    40: "detonator",
+    41: "spraycan",
+    42: "extinguisher",
+    43: "camera",
+    44: "nightvision",
+    45: "infrared",
+    46: "parachute"
+};
 
-    hudWeaponIcon.src = `./assets/CSS/Images/Hud/Weapons/${weaponFile}.svg`;
-    hudWeaponAmmo.textContent = weaponId === 0 || weaponId === 1 || weaponId === 2 || weaponId === 3 ||
-        weaponId === 4 || weaponId === 5 || weaponId === 6 || weaponId === 7 || weaponId === 8 ||
-        weaponId === 9 || weaponId === 10 || weaponId === 11 || weaponId === 12 || weaponId === 13 ||
-        weaponId === 14 || weaponId === 15 || weaponId === 40 || weaponId === 41 || weaponId === 42 ||
-        weaponId === 43 || weaponId === 44 || weaponId === 45 || weaponId === 46 ? "" : ammo;
-}
+let lastWeapon = -1;
+let lastAmmo = -1;
 
 function showHud() {
     hud.classList.add("active");
@@ -84,6 +74,50 @@ function hideHud() {
 
 function clamp(value, min, max) {
     return Math.max(min, Math.min(max, value));
+}
+
+function hasWeaponAmmo(weaponId) {
+    return !(
+        weaponId === 0 ||
+        weaponId === 1 ||
+        weaponId === 2 ||
+        weaponId === 3 ||
+        weaponId === 4 ||
+        weaponId === 5 ||
+        weaponId === 6 ||
+        weaponId === 7 ||
+        weaponId === 8 ||
+        weaponId === 9 ||
+        weaponId === 10 ||
+        weaponId === 11 ||
+        weaponId === 12 ||
+        weaponId === 13 ||
+        weaponId === 14 ||
+        weaponId === 15 ||
+        weaponId === 40 ||
+        weaponId === 41 ||
+        weaponId === 42 ||
+        weaponId === 43 ||
+        weaponId === 44 ||
+        weaponId === 45 ||
+        weaponId === 46
+    );
+}
+
+function updateHudWeapon(weaponId, ammo) {
+    weaponId = Number(weaponId) || 0;
+    ammo = Math.max(0, Number(ammo) || 0);
+
+    if (weaponId === lastWeapon && ammo === lastAmmo)
+        return;
+
+    lastWeapon = weaponId;
+    lastAmmo = ammo;
+
+    const weaponFile = hudWeaponFiles[weaponId] || "fist";
+
+    hudWeaponIcon.src = `./assets/CSS/Images/Hud/Weapons/${weaponFile}.svg`;
+    hudWeaponAmmo.textContent = hasWeaponAmmo(weaponId) ? ammo : "";
 }
 
 function updateHud(data) {
@@ -104,8 +138,7 @@ function updateHud(data) {
     hudHungerValue.textContent = `${hunger} / 100`;
 }
 
-GameCef.on("hud:show", (data) => {
-
+GameCef.on("hud:show", () => {
     showHud();
 });
 
@@ -149,7 +182,44 @@ GameCef.on("hud:money", (data) => {
 
 GameCef.on("hud:weapon", (data) => {
     try {
-        updateHudWeapon(JSON.parse(data));
+        const weaponData = JSON.parse(data);
+
+        updateHudWeapon(
+            weaponData.weaponId,
+            weaponData.ammo
+        );
     } catch {
     }
 });
+
+if (window.cef &&
+    typeof window.cef.emit === "function" &&
+    typeof window.cef.on === "function") {
+
+    window.cef.emit(
+        "game:data:pollPlayerStats",
+        true,
+        100
+    );
+
+    window.cef.on(
+        "game:data:playerStats",
+        (
+            health,
+            maxHealth,
+            armour,
+            breath,
+            wanted,
+            weapon,
+            ammo,
+            maxAmmo,
+            money,
+            speed
+        ) => {
+            updateHudWeapon(
+                weapon,
+                ammo
+            );
+        }
+    );
+}
