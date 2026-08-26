@@ -61,58 +61,16 @@ const hudWeaponFiles = {
     46: "parachute"
 };
 
-let lastWeapon = -1;
-let lastAmmo = -1;
+const weaponsWithoutAmmo = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,40,41,42,43,44,45,46];
 
-function showHud() {
-    hud.classList.add("active");
-}
+function showHud() { hud.classList.add("active"); }
+function hideHud() { hud.classList.remove("active"); }
+function clamp(value,min,max) { return Math.max(min,Math.min(max,value)); }
+function hasWeaponAmmo(weaponId) { return !weaponsWithoutAmmo.includes(weaponId); }
 
-function hideHud() {
-    hud.classList.remove("active");
-}
-
-function clamp(value, min, max) {
-    return Math.max(min, Math.min(max, value));
-}
-
-function hasWeaponAmmo(weaponId) {
-    return !(
-        weaponId === 0 ||
-        weaponId === 1 ||
-        weaponId === 2 ||
-        weaponId === 3 ||
-        weaponId === 4 ||
-        weaponId === 5 ||
-        weaponId === 6 ||
-        weaponId === 7 ||
-        weaponId === 8 ||
-        weaponId === 9 ||
-        weaponId === 10 ||
-        weaponId === 11 ||
-        weaponId === 12 ||
-        weaponId === 13 ||
-        weaponId === 14 ||
-        weaponId === 15 ||
-        weaponId === 40 ||
-        weaponId === 41 ||
-        weaponId === 42 ||
-        weaponId === 43 ||
-        weaponId === 44 ||
-        weaponId === 45 ||
-        weaponId === 46
-    );
-}
-
-function updateHudWeapon(weaponId, ammo) {
+function updateHudWeapon(weaponId,ammo) {
     weaponId = Number(weaponId) || 0;
-    ammo = Math.max(0, Number(ammo) || 0);
-
-    if (weaponId === lastWeapon && ammo === lastAmmo)
-        return;
-
-    lastWeapon = weaponId;
-    lastAmmo = ammo;
+    ammo = Math.max(0,Number(ammo) || 0);
 
     const weaponFile = hudWeaponFiles[weaponId] || "fist";
 
@@ -122,9 +80,9 @@ function updateHudWeapon(weaponId, ammo) {
 
 function updateHud(data) {
     const money = Number(data.money) || 0;
-    const health = clamp(Number(data.health) || 0, 0, 100);
-    const armour = clamp(Number(data.armour) || 0, 0, 100);
-    const hunger = clamp(Number(data.hunger) || 0, 0, 100);
+    const health = clamp(Number(data.health) || 0,0,100);
+    const armour = clamp(Number(data.armour) || 0,0,100);
+    const hunger = clamp(Number(data.hunger) || 0,0,100);
 
     hudMoneyValue.textContent = `$${money.toLocaleString("en-US")}`;
 
@@ -136,90 +94,44 @@ function updateHud(data) {
 
     hudHungerBar.style.width = `${hunger}%`;
     hudHungerValue.textContent = `${hunger} / 100`;
+
+    if (data.weaponId !== undefined)
+        updateHudWeapon(data.weaponId,data.ammo);
 }
 
-GameCef.on("hud:show", () => {
-    showHud();
+GameCef.on("hud:show",() => { showHud(); });
+GameCef.on("hud:hide",() => { hideHud(); });
+
+GameCef.on("hud:update",(data) => {
+    try { updateHud(JSON.parse(data)); } catch {}
 });
 
-GameCef.on("hud:hide", () => {
-    hideHud();
-});
-
-GameCef.on("hud:update", (data) => {
-    try {
-        updateHud(JSON.parse(data));
-    } catch {
-    }
-});
-
-GameCef.on("hud:health", (data) => {
-    const health = clamp(Number(data) || 0, 0, 100);
-
+GameCef.on("hud:health",(data) => {
+    const health = clamp(Number(data) || 0,0,100);
     hudHealthBar.style.width = `${health}%`;
     hudHealthValue.textContent = `${health} / 100`;
 });
 
-GameCef.on("hud:armour", (data) => {
-    const armour = clamp(Number(data) || 0, 0, 100);
-
+GameCef.on("hud:armour",(data) => {
+    const armour = clamp(Number(data) || 0,0,100);
     hudArmourBar.style.width = `${armour}%`;
     hudArmourValue.textContent = `${armour} / 100`;
 });
 
-GameCef.on("hud:hunger", (data) => {
-    const hunger = clamp(Number(data) || 0, 0, 100);
-
+GameCef.on("hud:hunger",(data) => {
+    const hunger = clamp(Number(data) || 0,0,100);
     hudHungerBar.style.width = `${hunger}%`;
     hudHungerValue.textContent = `${hunger} / 100`;
 });
 
-GameCef.on("hud:money", (data) => {
+GameCef.on("hud:money",(data) => {
     const money = Number(data) || 0;
-
     hudMoneyValue.textContent = `$${money.toLocaleString("en-US")}`;
 });
 
-GameCef.on("hud:weapon", (data) => {
+GameCef.on("hud:weapon",(data) => {
     try {
-        const weaponData = JSON.parse(data);
-
-        updateHudWeapon(
-            weaponData.weaponId,
-            weaponData.ammo
-        );
-    } catch {
-    }
+        const weapon = JSON.parse(data);
+        updateHudWeapon(weapon.weaponId,weapon.ammo);
+    } catch {}
 });
-
-if (window.cef &&
-    typeof window.cef.emit === "function" &&
-    typeof window.cef.on === "function") {
-
-    window.cef.emit(
-        "game:data:pollPlayerStats",
-        true,
-        100
-    );
-
-    window.cef.on(
-        "game:data:playerStats",
-        (
-            health,
-            maxHealth,
-            armour,
-            breath,
-            wanted,
-            weapon,
-            ammo,
-            maxAmmo,
-            money,
-            speed
-        ) => {
-            updateHudWeapon(
-                weapon,
-                ammo
-            );
-        }
-    );
-}
