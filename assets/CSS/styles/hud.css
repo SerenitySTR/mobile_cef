@@ -791,3 +791,135 @@
 #hud-id-value {
     font-size: 19px;
 }
+
+
+/* Final spacing + compact transparent money block */
+
+/* Reduce gaps between the HUD fragments */
+.hud-topbar {
+    margin-bottom: 4px;
+}
+
+.hud-main-panel {
+    margin-bottom: -25px;
+}
+
+.hud-money-panel {
+    width: 238px;
+    height: 52px;
+
+    margin-top: 4px;
+    margin-left: auto;
+
+    padding: 0 14px;
+
+    gap: 10px;
+
+    border: 1px solid rgba(0, 169, 255, 0.40);
+    border-radius: 16px;
+
+    background: rgba(2, 10, 18, 0.48);
+
+    box-shadow:
+        0 4px 10px rgba(0, 0, 0, 0.28),
+        0 0 8px rgba(0, 155, 255, 0.08),
+        inset 0 0 10px rgba(0, 38, 60, 0.20);
+
+    backdrop-filter: blur(3px);
+    -webkit-backdrop-filter: blur(3px);
+}
+
+.hud-money-icon {
+    width: 34px;
+    height: 34px;
+
+    flex: 0 0 34px;
+
+    font-size: 21px;
+
+    box-shadow:
+        0 0 7px rgba(25, 220, 112, 0.30);
+}
+
+#hud-money-value {
+    font-size: 24px;
+    line-height: 1;
+}
+
+/* Keep the right edge visually aligned */
+.hud-topbar,
+.hud-main-panel,
+.hud-money-panel {
+    margin-left: auto;
+}
+
+
+/* Whole HUD: 20% transparent */
+
+#hud.active {
+    opacity: 0.8;
+}
+
+
+/* Weapon block without bullet icons + equal spacing */
+
+.hud-main-panel {
+    width: 520px;
+
+    justify-content: flex-start;
+    gap: 8px;
+
+    padding-left: 7px;
+    padding-right: 7px;
+}
+
+.hud-stats {
+    width: 324px;
+    flex: 0 0 324px;
+
+    justify-content: space-between;
+    gap: 0;
+}
+
+.hud-weapon {
+    width: 174px;
+    flex: 0 0 174px;
+
+    justify-content: space-evenly;
+
+    padding: 0 8px;
+    margin-left: 0;
+}
+
+.hud-weapon-icon {
+    width: 94px;
+    height: 66px;
+}
+
+.hud-weapon-icon svg {
+    width: 84px;
+    height: 44px;
+}
+
+.hud-ammo {
+    width: 54px;
+    flex: 0 0 54px;
+}
+
+.hud-bullets {
+    display: none;
+}
+
+/* Equal vertical distance between HUD fragments */
+
+.hud-topbar {
+    margin-bottom: 6px;
+}
+
+.hud-main-panel {
+    margin-bottom: -20px;
+}
+
+.hud-money-panel {
+    margin-top: 6px;
+}

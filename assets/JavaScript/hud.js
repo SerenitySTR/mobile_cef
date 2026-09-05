@@ -151,3 +151,4 @@ if(window.GameCef){
         }catch{}
     });
 }
+showHud();
