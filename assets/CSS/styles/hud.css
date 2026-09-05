@@ -35,7 +35,6 @@
     display: block;
 }
 
-/* Top bar */
 
 .hud-topbar {
     width: 390px;
@@ -167,8 +166,6 @@
 .hud-info-blue {
     color: var(--blue);
 }
-
-/* Main */
 
 .hud-main-panel {
     position: relative;
@@ -360,9 +357,6 @@
     --stat-glow: rgba(255, 149, 24, 0.62);
 }
 
-
-/* Weapon */
-
 .hud-weapon {
     position: relative;
     z-index: 1;
@@ -479,8 +473,6 @@
     background: #8bbbdc;
 }
 
-/* Money */
-
 .hud-money-panel {
     width: 304px;
     height: 68px;
@@ -551,8 +543,6 @@
     text-shadow: 0 1px 4px rgba(0, 0, 0, 0.95);
 }
 
-/* Phone / landscape adaptation */
-
 #hud.hud-compact .hud-topbar {
     margin-bottom: 8px;
 }
@@ -575,9 +565,6 @@
     }
 }
 
-
-/* Compact main stats + weapon fragment */
-
 .hud-main-panel {
     width: 720px;
     height: 124px;
@@ -588,9 +575,6 @@
     margin-left: auto;
     margin-bottom: -22px;
 }
-
-
-/* Slightly larger top ONLINE / ID panel */
 
 .hud-topbar {
     width: 420px;
@@ -604,9 +588,6 @@
 .hud-player-info {
     font-size: 1.06em;
 }
-
-
-/* Requested tuning: smaller weapon image, larger top panel */
 
 .hud-topbar {
     width: 465px;
@@ -630,8 +611,6 @@
     width: 176px;
 }
 
-
-/* Compact weapon + ammo block */
 
 .hud-weapon {
     width: 245px;
@@ -686,9 +665,6 @@
     height: 4px;
 }
 
-
-/* Tight main panel: no empty space around compact weapon block */
-
 .hud-main-panel {
     width: 590px;
     height: 112px;
@@ -723,9 +699,6 @@
 .hud-main-panel::before {
     inset: 4px;
 }
-
-
-/* Larger ONLINE / ID area */
 
 .hud-player-info {
     min-width: 210px;
@@ -763,9 +736,6 @@
     font-weight: 700;
 }
 
-
-/* ONLINE / ID - one more small size increase */
-
 .hud-player-info {
     min-width: 230px;
     height: 53px;
@@ -792,10 +762,6 @@
     font-size: 19px;
 }
 
-
-/* Final spacing + compact transparent money block */
-
-/* Reduce gaps between the HUD fragments */
 .hud-topbar {
     margin-bottom: 4px;
 }
@@ -846,22 +812,15 @@
     line-height: 1;
 }
 
-/* Keep the right edge visually aligned */
 .hud-topbar,
 .hud-main-panel,
 .hud-money-panel {
     margin-left: auto;
 }
 
-
-/* Whole HUD: 20% transparent */
-
 #hud.active {
     opacity: 0.8;
 }
-
-
-/* Weapon block without bullet icons + equal spacing */
 
 .hud-main-panel {
     width: 520px;
@@ -910,8 +869,6 @@
     display: none;
 }
 
-/* Equal vertical distance between HUD fragments */
-
 .hud-topbar {
     margin-bottom: 6px;
 }
@@ -924,17 +881,11 @@
     margin-top: 6px;
 }
 
-
-/* Slightly larger HP / Armour / Hunger values */
-
 .hud-stat-value {
     font-size: 18px;
     font-weight: 600;
     line-height: 1;
 }
-
-
-/* Larger weapon ammo values */
 
 .hud-ammo-clip {
     font-size: 27px;
@@ -949,9 +900,6 @@
     line-height: 16px;
     font-weight: 500;
 }
-
-
-/* Antares image logo + glowing star separator */
 
 .hud-logo {
     height: 100%;
@@ -1032,7 +980,6 @@
     box-shadow: 0 0 5px rgba(192, 242, 255, 0.95);
 }
 
-/* Let the real logo use the left area while ONLINE / ID keeps its size */
 .hud-topbar {
     padding-left: 0;
 }
@@ -1040,9 +987,6 @@
 .hud-player-info {
     margin-left: auto;
 }
-
-
-/* Logo + ONLINE separator correction */
 
 .hud-logo {
     width: 214px;
@@ -1080,7 +1024,6 @@
         drop-shadow(0 0 6px rgba(0, 168, 255, 0.78));
 }
 
-/* Remove the old polygon/pseudo implementation completely */
 .hud-info-star::after {
     content: none;
 }
@@ -1089,7 +1032,6 @@
     min-width: 230px;
 }
 
-/* Top bar final: ONLINE / ID are part of the main bar, no inner background */
 .hud-topbar{
     width:465px;
     height:70px;
@@ -1178,7 +1120,6 @@
     content:none;
 }
 
-/* Final topbar spacing fix: move ONLINE / ID balanced position next to the logo */
 .hud-logo{
     width:190px;
     flex:0 0 190px;
@@ -1197,7 +1138,6 @@
     justify-content:flex-start;
 }
 
-/* ONLINE / ID: no separate background panel */
 .hud-topbar .hud-player-info{
     background:transparent!important;
     background-image:none!important;
@@ -1214,7 +1154,6 @@
     display:none!important;
 }
 
-/* Fix ANTARES last letter clipping without moving ONLINE / ID */
 .hud-logo{
     width:205px;
     flex:0 0 205px;

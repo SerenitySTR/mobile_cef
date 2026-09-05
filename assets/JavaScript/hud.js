@@ -13,7 +13,7 @@ function updateHudMobileScale(){
     const scaleByHeight=height/HUD_REFERENCE_HEIGHT;
 
     const isPhone=width<=1000||height<=600;
-    const sizeMultiplier=isPhone?0.88:0.68;
+    const sizeMultiplier=isPhone?0.88:0.82;
 
     let scale=Math.min(scaleByWidth,scaleByHeight)*sizeMultiplier;
 
@@ -24,10 +24,13 @@ function updateHudMobileScale(){
 
     hud.style.setProperty("--hud-scale",scale.toFixed(4));
 
-    if(width<1000||height<600)
+    if(isPhone){
         hud.classList.add("hud-compact");
-    else
+        hud.style.removeProperty("opacity");
+    }else{
         hud.classList.remove("hud-compact");
+        hud.style.opacity="1";
+    }
 }
 
 updateHudMobileScale();
@@ -120,9 +123,6 @@ function updateHud(data){
         hudAmmoTotal.textContent=`/${Math.max(0,Math.trunc(Number(data.ammoTotal)||0))}`;
 }
 
-setHudStat("health",96);
-setHudStat("armour",100);
-setHudStat("hunger",88);
 
 if(window.GameCef){
     GameCef.on("hud:show",showHud);
@@ -151,3 +151,4 @@ if(window.GameCef){
         }catch{}
     });
 }
+showHud();
