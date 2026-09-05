@@ -1,137 +1,153 @@
-const hud = document.getElementById("hud");
+const hud=document.getElementById("hud");
 
-const hudMoneyValue = document.getElementById("hud-money-value");
+const HUD_REFERENCE_WIDTH=1280;
+const HUD_REFERENCE_HEIGHT=720;
+const HUD_MIN_SCALE=0.46;
+const HUD_MAX_SCALE=1.35;
 
-const hudHealthBar = document.getElementById("hud-health-bar");
-const hudHealthValue = document.getElementById("hud-health-value");
+function updateHudMobileScale(){
+    const width=window.innerWidth;
+    const height=window.innerHeight;
 
-const hudArmourBar = document.getElementById("hud-armour-bar");
-const hudArmourValue = document.getElementById("hud-armour-value");
+    const scaleByWidth=width/HUD_REFERENCE_WIDTH;
+    const scaleByHeight=height/HUD_REFERENCE_HEIGHT;
 
-const hudHungerBar = document.getElementById("hud-hunger-bar");
-const hudHungerValue = document.getElementById("hud-hunger-value");
+    const isPhone=width<=1000||height<=600;
+    const sizeMultiplier=isPhone?0.88:0.68;
 
-const hudWeaponIcon = document.getElementById("hud-weapon-icon");
-const hudWeaponAmmo = document.getElementById("hud-weapon-ammo");
+    let scale=Math.min(scaleByWidth,scaleByHeight)*sizeMultiplier;
 
-const hudWeaponFiles = {
-    0: "fist",
-    1: "brassknuckle",
-    2: "golfclub",
-    3: "nightstick",
-    4: "knife",
-    5: "bat",
-    6: "shovel",
-    7: "poolcue",
-    8: "katana",
-    9: "chainsaw",
-    10: "dildo1",
-    11: "dildo2",
-    12: "vibrator1",
-    13: "vibrator2",
-    14: "flowers",
-    15: "cane",
-    16: "grenade",
-    17: "teargas",
-    18: "molotov",
-    22: "colt45",
-    23: "silenced",
-    24: "deagle",
-    25: "shotgun",
-    26: "sawnoff",
-    27: "spas12",
-    28: "uzi",
-    29: "mp5",
-    30: "ak47",
-    31: "m4",
-    32: "tec9",
-    33: "rifle",
-    34: "sniper",
-    35: "rocketlauncher",
-    36: "heatseeker",
-    37: "flamethrower",
-    38: "minigun",
-    39: "satchel",
-    40: "detonator",
-    41: "spraycan",
-    42: "extinguisher",
-    43: "camera",
-    44: "nightvision",
-    45: "infrared",
-    46: "parachute"
+    scale=Math.max(
+        HUD_MIN_SCALE*sizeMultiplier,
+        Math.min(HUD_MAX_SCALE*sizeMultiplier,scale)
+    );
+
+    hud.style.setProperty("--hud-scale",scale.toFixed(4));
+
+    if(width<1000||height<600)
+        hud.classList.add("hud-compact");
+    else
+        hud.classList.remove("hud-compact");
+}
+
+updateHudMobileScale();
+
+window.addEventListener("resize",updateHudMobileScale);
+window.addEventListener("orientationchange",()=>{
+    setTimeout(updateHudMobileScale,100);
+});
+
+
+const HUD_RING_LENGTH=2*Math.PI*49;
+
+const hudStats={
+    health:{
+        ring:document.getElementById("hud-health-ring"),
+        value:document.getElementById("hud-health-value")
+    },
+
+    armour:{
+        ring:document.getElementById("hud-armour-ring"),
+        value:document.getElementById("hud-armour-value")
+    },
+
+    hunger:{
+        ring:document.getElementById("hud-hunger-ring"),
+        value:document.getElementById("hud-hunger-value")
+    }
 };
 
-const weaponsWithoutAmmo = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,40,41,42,43,44,45,46];
+const hudMoneyValue=document.getElementById("hud-money-value");
+const hudOnlineValue=document.getElementById("hud-online-value");
+const hudIdValue=document.getElementById("hud-id-value");
+const hudAmmoClip=document.getElementById("hud-ammo-clip");
+const hudAmmoTotal=document.getElementById("hud-ammo-total");
 
-function showHud() { hud.classList.add("active"); }
-function hideHud() { hud.classList.remove("active"); }
-function clamp(value,min,max) { return Math.max(min,Math.min(max,value)); }
-function hasWeaponAmmo(weaponId) { return !weaponsWithoutAmmo.includes(weaponId); }
-
-function updateHudWeapon(weaponId,ammo) {
-    weaponId = Number(weaponId) || 0;
-    ammo = Math.max(0,Number(ammo) || 0);
-
-    const weaponFile = hudWeaponFiles[weaponId] || "fist";
-
-    hudWeaponIcon.src = `./assets/CSS/Images/Hud/Weapons/${weaponFile}.svg`;
-    hudWeaponAmmo.textContent = hasWeaponAmmo(weaponId) ? ammo : "";
+function showHud(){
+    hud.classList.add("active");
 }
 
-function updateHud(data) {
-    const money = Number(data.money) || 0;
-    const health = clamp(Number(data.health) || 0,0,100);
-    const armour = clamp(Number(data.armour) || 0,0,100);
-    const hunger = clamp(Number(data.hunger) || 0,0,100);
-
-    hudMoneyValue.textContent = `$${money.toLocaleString("en-US")}`;
-
-    hudHealthBar.style.width = `${health}%`;
-    hudHealthValue.textContent = `${health} / 100`;
-
-    hudArmourBar.style.width = `${armour}%`;
-    hudArmourValue.textContent = `${armour} / 100`;
-
-    hudHungerBar.style.width = `${hunger}%`;
-    hudHungerValue.textContent = `${hunger} / 100`;
-
-    if (data.weaponId !== undefined)
-        updateHudWeapon(data.weaponId,data.ammo);
+function hideHud(){
+    hud.classList.remove("active");
 }
 
-GameCef.on("hud:show",() => { showHud(); });
-GameCef.on("hud:hide",() => { hideHud(); });
+function clamp(value,min,max){
+    return Math.max(min,Math.min(max,value));
+}
 
-GameCef.on("hud:update",(data) => {
-    try { updateHud(JSON.parse(data)); } catch {}
-});
+function setHudStat(name,value){
+    const stat=hudStats[name];
 
-GameCef.on("hud:health",(data) => {
-    const health = clamp(Number(data) || 0,0,100);
-    hudHealthBar.style.width = `${health}%`;
-    hudHealthValue.textContent = `${health} / 100`;
-});
+    if(!stat)
+        return;
 
-GameCef.on("hud:armour",(data) => {
-    const armour = clamp(Number(data) || 0,0,100);
-    hudArmourBar.style.width = `${armour}%`;
-    hudArmourValue.textContent = `${armour} / 100`;
-});
+    value=clamp(Number(value)||0,0,100);
 
-GameCef.on("hud:hunger",(data) => {
-    const hunger = clamp(Number(data) || 0,0,100);
-    hudHungerBar.style.width = `${hunger}%`;
-    hudHungerValue.textContent = `${hunger} / 100`;
-});
+    stat.ring.style.strokeDasharray=HUD_RING_LENGTH;
+    stat.ring.style.strokeDashoffset=HUD_RING_LENGTH*(1-value/100);
+    stat.value.textContent=Math.round(value);
+}
 
-GameCef.on("hud:money",(data) => {
-    const money = Number(data) || 0;
-    hudMoneyValue.textContent = `$${money.toLocaleString("en-US")}`;
-});
+function formatHudMoney(value){
+    value=Math.trunc(Number(value)||0);
 
-GameCef.on("hud:weapon",(data) => {
-    try {
-        const weapon = JSON.parse(data);
-        updateHudWeapon(weapon.weaponId,weapon.ammo);
-    } catch {}
-});
+    return value.toLocaleString("ru-RU").replace(/\u00A0/g," ");
+}
+
+function updateHud(data){
+    if(data.health!==undefined)
+        setHudStat("health",data.health);
+
+    if(data.armour!==undefined)
+        setHudStat("armour",data.armour);
+
+    if(data.hunger!==undefined)
+        setHudStat("hunger",data.hunger);
+
+    if(data.money!==undefined)
+        hudMoneyValue.textContent=formatHudMoney(data.money);
+
+    if(data.online!==undefined)
+        hudOnlineValue.textContent=Math.max(0,Math.trunc(Number(data.online)||0));
+
+    if(data.id!==undefined)
+        hudIdValue.textContent=Math.max(0,Math.trunc(Number(data.id)||0));
+
+    if(data.ammoClip!==undefined)
+        hudAmmoClip.textContent=Math.max(0,Math.trunc(Number(data.ammoClip)||0));
+
+    if(data.ammoTotal!==undefined)
+        hudAmmoTotal.textContent=`/${Math.max(0,Math.trunc(Number(data.ammoTotal)||0))}`;
+}
+
+setHudStat("health",96);
+setHudStat("armour",100);
+setHudStat("hunger",88);
+
+if(window.GameCef){
+    GameCef.on("hud:show",showHud);
+    GameCef.on("hud:hide",hideHud);
+
+    GameCef.on("hud:update",(data)=>{
+        try{
+            updateHud(JSON.parse(data));
+        }catch{}
+    });
+
+    GameCef.on("hud:health",(data)=>setHudStat("health",data));
+    GameCef.on("hud:armour",(data)=>setHudStat("armour",data));
+    GameCef.on("hud:hunger",(data)=>setHudStat("hunger",data));
+
+    GameCef.on("hud:money",(data)=>updateHud({money:data}));
+    GameCef.on("hud:online",(data)=>updateHud({online:data}));
+    GameCef.on("hud:id",(data)=>updateHud({id:data}));
+}
+
+
+if(window.GameCef){
+    GameCef.on("hud:ammo",(data)=>{
+        try{
+            updateHud(JSON.parse(data));
+        }catch{}
+    });
+}

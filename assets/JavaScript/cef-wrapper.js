@@ -53,8 +53,6 @@ window.GameCef = {
 
         callback(data);
 
-        // Wait for the DOM changes made by the server event handler to reach
-        // an actual browser frame before allowing native loading to disappear.
         requestAnimationFrame(() => {
             requestAnimationFrame(() => {
                 GameCef.send("browser:ui-ready");
