@@ -923,3 +923,310 @@
 .hud-money-panel {
     margin-top: 6px;
 }
+
+
+/* Slightly larger HP / Armour / Hunger values */
+
+.hud-stat-value {
+    font-size: 18px;
+    font-weight: 600;
+    line-height: 1;
+}
+
+
+/* Larger weapon ammo values */
+
+.hud-ammo-clip {
+    font-size: 27px;
+    line-height: 28px;
+    font-weight: 600;
+}
+
+.hud-ammo-total {
+    margin-top: 2px;
+
+    font-size: 15px;
+    line-height: 16px;
+    font-weight: 500;
+}
+
+
+/* Antares image logo + glowing star separator */
+
+.hud-logo {
+    height: 100%;
+
+    display: flex;
+    align-items: center;
+
+    padding-left: 14px;
+
+    overflow: hidden;
+}
+
+.hud-logo-image {
+    display: block;
+
+    width: 178px;
+    height: 58px;
+
+    object-fit: contain;
+    object-position: left center;
+
+    filter:
+        drop-shadow(0 0 3px rgba(113, 202, 255, 0.32))
+        drop-shadow(0 0 7px rgba(0, 125, 220, 0.12));
+}
+
+.hud-info-divider {
+    display: none;
+}
+
+.hud-info-star {
+    position: relative;
+
+    width: 17px;
+    height: 17px;
+
+    flex: 0 0 17px;
+
+    margin: 0 2px;
+
+    transform: rotate(45deg);
+
+    background:
+        linear-gradient(
+            135deg,
+            #8ee8ff 0%,
+            #27c8ff 35%,
+            #009be9 72%,
+            #56d8ff 100%
+        );
+
+    clip-path: polygon(
+        50% 0%,
+        63% 37%,
+        100% 50%,
+        63% 63%,
+        50% 100%,
+        37% 63%,
+        0% 50%,
+        37% 37%
+    );
+
+    filter:
+        drop-shadow(0 0 3px rgba(67, 208, 255, 0.95))
+        drop-shadow(0 0 7px rgba(0, 157, 255, 0.70));
+}
+
+.hud-info-star::after {
+    content: "";
+
+    position: absolute;
+    inset: 5px;
+
+    border-radius: 50%;
+
+    background: #d6f7ff;
+
+    box-shadow: 0 0 5px rgba(192, 242, 255, 0.95);
+}
+
+/* Let the real logo use the left area while ONLINE / ID keeps its size */
+.hud-topbar {
+    padding-left: 0;
+}
+
+.hud-player-info {
+    margin-left: auto;
+}
+
+
+/* Logo + ONLINE separator correction */
+
+.hud-logo {
+    width: 214px;
+    flex: 0 0 214px;
+
+    padding-left: 10px;
+}
+
+.hud-logo-image {
+    width: 205px;
+    height: 62px;
+
+    object-fit: contain;
+    object-position: left center;
+
+    filter:
+        drop-shadow(0 0 2px rgba(206, 239, 255, 0.38))
+        drop-shadow(0 0 5px rgba(23, 170, 255, 0.18));
+}
+
+.hud-info-star {
+    width: 18px;
+    height: 18px;
+
+    flex: 0 0 18px;
+
+    margin: 0 3px;
+
+    overflow: visible;
+
+    fill: #35caff;
+
+    filter:
+        drop-shadow(0 0 2px rgba(126, 225, 255, 1))
+        drop-shadow(0 0 6px rgba(0, 168, 255, 0.78));
+}
+
+/* Remove the old polygon/pseudo implementation completely */
+.hud-info-star::after {
+    content: none;
+}
+
+.hud-player-info {
+    min-width: 230px;
+}
+
+/* Top bar final: ONLINE / ID are part of the main bar, no inner background */
+.hud-topbar{
+    width:465px;
+    height:70px;
+    padding:0 12px 0 0;
+    display:flex;
+    align-items:center;
+    justify-content:flex-start;
+}
+
+.hud-logo{
+    width:214px;
+    flex:0 0 214px;
+    height:100%;
+    padding-left:10px;
+}
+
+.hud-logo-image{
+    width:205px;
+    height:62px;
+}
+
+.hud-player-info{
+    min-width:0;
+    width:auto;
+    height:auto;
+    flex:1 1 auto;
+    margin-left:0;
+    padding:0 0 0 4px;
+    display:flex;
+    align-items:center;
+    justify-content:flex-end;
+    gap:8px;
+    border:0;
+    border-radius:0;
+    background:none;
+    box-shadow:none;
+    backdrop-filter:none;
+    -webkit-backdrop-filter:none;
+}
+
+.hud-info-item{
+    flex:0 0 auto;
+    gap:5px;
+    font-size:13px;
+}
+
+.hud-info-item span{
+    font-size:13px;
+    font-weight:600;
+}
+
+.hud-info-icon{
+    width:17px;
+    height:17px;
+    flex:0 0 17px;
+}
+
+#hud-online-value,
+#hud-id-value{
+    font-size:16px;
+    font-weight:700;
+}
+
+.hud-info-muted{
+    color:rgba(207,224,234,.62);
+}
+
+.hud-info-star{
+    width:14px;
+    height:14px;
+    flex:0 0 14px;
+    margin:0 3px;
+    padding:0;
+    transform:none;
+    background:none;
+    clip-path:none;
+    overflow:visible;
+    fill:#35caff;
+    filter:
+        drop-shadow(0 0 2px rgba(126,225,255,1))
+        drop-shadow(0 0 6px rgba(0,168,255,.78));
+}
+
+.hud-info-star::before,
+.hud-info-star::after{
+    content:none;
+}
+
+/* Final topbar spacing fix: move ONLINE / ID balanced position next to the logo */
+.hud-logo{
+    width:190px;
+    flex:0 0 190px;
+}
+
+.hud-logo-image{
+    width:190px;
+    height:62px;
+    object-fit:contain;
+}
+
+.hud-player-info{
+    flex:0 0 auto;
+    margin-left:38px;
+    padding:0;
+    justify-content:flex-start;
+}
+
+/* ONLINE / ID: no separate background panel */
+.hud-topbar .hud-player-info{
+    background:transparent!important;
+    background-image:none!important;
+    border:none!important;
+    border-radius:0!important;
+    box-shadow:none!important;
+    backdrop-filter:none!important;
+    -webkit-backdrop-filter:none!important;
+    outline:none!important;
+}
+.hud-topbar .hud-player-info::before,
+.hud-topbar .hud-player-info::after{
+    content:none!important;
+    display:none!important;
+}
+
+/* Fix ANTARES last letter clipping without moving ONLINE / ID */
+.hud-logo{
+    width:205px;
+    flex:0 0 205px;
+    overflow:visible;
+}
+
+.hud-logo-image{
+    width:205px;
+    max-width:none;
+}
+
+.hud-player-info{
+    margin-left:23px;
+}
+
