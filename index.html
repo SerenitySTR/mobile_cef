@@ -6,6 +6,7 @@
 
     <link rel="stylesheet" href="./assets/CSS/styles/registration.css">
     <link rel="stylesheet" href="./assets/CSS/styles/authorization.css">
+    <link rel="stylesheet" href="./assets/CSS/styles/spawn.css">
     <link rel="stylesheet" href="./assets/CSS/styles/error.css">
     <link rel="stylesheet" href="./assets/CSS/styles/hud.css">
 </head>
@@ -39,7 +40,93 @@
 
         <button id="authorization-button" type="button">Увійти</button>
     </div>
-</section>       
+</section>
+    <section id="spawn-selection">
+    <div class="spawn-background"></div>
+
+    <div class="spawn-container">
+        <img class="spawn-logo" src="./assets/CSS/Images/Registration/logo.svg" alt="Antares RolePlay">
+
+        <div class="spawn-title">
+            <span></span>
+            <h1>Вибір спавну</h1>
+            <span></span>
+        </div>
+
+        <p class="spawn-description">Оберіть зручне місце для початку гри</p>
+
+        <div class="spawn-content">
+            <div class="spawn-list">
+                <button class="spawn-item active" type="button" data-spawn="LastPosition">
+                    <span class="spawn-item-image">
+                        <img src="./assets/CSS/Images/Spawn/icon-location.svg" alt="">
+                    </span>
+                    <span class="spawn-item-info">
+                        <strong>Останнє місце</strong>
+                        <small>Повернутися туди, де ви були</small>
+                    </span>
+                    <span class="spawn-item-arrow">›</span>
+                </button>
+
+                <button class="spawn-item" type="button" data-spawn="House">
+                    <span class="spawn-item-image">
+                        <img src="./assets/CSS/Images/Spawn/icon-house.svg" alt="">
+                    </span>
+                    <span class="spawn-item-info">
+                        <strong>Будинок</strong>
+                        <small>З'явитися у власному будинку</small>
+                    </span>
+                    <span class="spawn-item-arrow">›</span>
+                </button>
+
+                <button class="spawn-item" type="button" data-spawn="Standard">
+                    <span class="spawn-item-image spawn-item-preview-image">
+                        <img src="./assets/CSS/Images/Spawn/standard.svg" alt="">
+                    </span>
+                    <span class="spawn-item-info">
+                        <strong>Стандартный</strong>
+                        <small>Стандартне місце появи</small>
+                    </span>
+                    <span class="spawn-item-arrow">›</span>
+                </button>
+
+                <button class="spawn-item" type="button" data-spawn="FamilyHouse">
+                    <span class="spawn-item-image spawn-item-preview-image">
+                        <img src="./assets/CSS/Images/Spawn/family-house.svg" alt="">
+                    </span>
+                    <span class="spawn-item-info">
+                        <strong>Будинок родини</strong>
+                        <small>З'явитися у будинку родини</small>
+                    </span>
+                    <span class="spawn-item-arrow">›</span>
+                </button>
+            </div>
+
+            <div class="spawn-preview">
+                <img id="spawn-preview-image" src="./assets/CSS/Images/Spawn/last-position.svg" alt="">
+                <div class="spawn-preview-shadow"></div>
+
+                <div class="spawn-preview-info">
+                    <span>Попередній перегляд</span>
+                    <h2 id="spawn-preview-title">Останнє місце</h2>
+                    <i></i>
+                    <p id="spawn-preview-text">Поверніться до місця, де завершили попередню ігрову сесію.</p>
+                </div>
+
+                <div class="spawn-preview-location">
+                    <img src="./assets/CSS/Images/Spawn/icon-location.svg" alt="">
+                    <span id="spawn-preview-location">SAN ANDREAS</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="spawn-buttons">
+            <button id="spawn-button" type="button">Продовжити</button>
+            <button id="spawn-back-button" type="button">Назад</button>
+        </div>
+    </div>
+</section>
+       
     <section id="registration">
     <div class="registration-background"></div>
 
@@ -280,6 +367,7 @@
     <script src="./assets/JavaScript/cef-wrapper.js"></script>
     <script src="./assets/JavaScript/registration.js"></script>
     <script src="./assets/JavaScript/authorization.js"></script>
+    <script src="./assets/JavaScript/spawn.js"></script>
     <script src="./assets/JavaScript/hud.js"></script>
     <script src="./assets/JavaScript/error.js"></script>
 </body>
