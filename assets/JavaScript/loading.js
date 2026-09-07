@@ -2,8 +2,8 @@ class Loading {
     static #screen=document.getElementById("loading-screen");
     static #transitionId=0;
 
-    static ExtraDelay=1000;
-    static AssetTimeout=2000;
+    static ExtraDelay=250;
+    static AssetTimeout=500;
 
     static Show(){
         this.#transitionId++;

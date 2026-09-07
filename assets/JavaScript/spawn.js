@@ -82,8 +82,6 @@ spawnItems.forEach(item=>{
 });
 
 spawnButton.addEventListener("click",()=>{
-    Loading.Show();
-
     GameCef.sendJson("spawn:submit",{
         SpawnType:spawnData[selectedSpawn].id
     });

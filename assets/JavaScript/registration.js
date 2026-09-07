@@ -162,7 +162,6 @@ registerButton.addEventListener("click", () => {
         Age: Number(ageInput.value)
     };
 
-    Loading.Show();
     GameCef.sendJson("registration:submit", data);
 });
 
