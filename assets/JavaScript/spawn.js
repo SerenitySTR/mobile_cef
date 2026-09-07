@@ -99,8 +99,9 @@ GameCef.on("spawn:show",data=>{
         }
     }
 
-    showSpawn();
-    hideLoading();
+    showScreenAfterLoading(spawnSelection,()=>{
+        showSpawn();
+    });
 });
 
 GameCef.on("spawn:hide",()=>{

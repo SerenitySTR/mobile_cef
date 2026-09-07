@@ -272,23 +272,41 @@
 }
 
 .spawn-buttons{
-    width:min(650px,75vw);
-    display:grid;
-    grid-template-columns:1.25fr .85fr;
-    gap:12px;
-    margin-top:14px;
+    width:min(430px,72vw);
+    display:flex;
+    justify-content:center;
+    margin-top:16px;
 }
 
-#spawn-button,#spawn-button{
-    border:1px solid rgba(48,184,255,.82);
-    background:linear-gradient(180deg,rgba(8,66,101,.92),rgba(4,28,47,.96));
-    color:#40c9ff;
-    font-size:15px;
+#spawn-button{
+    width:100%;
+    height:52px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    border:1px solid rgba(48,184,255,.78);
+    border-radius:8px;
+    outline:0;
+    background:linear-gradient(180deg,rgba(10,79,119,.96),rgba(4,40,66,.98));
+    box-shadow:0 8px 24px rgba(0,0,0,.22),inset 0 1px 0 rgba(151,224,255,.08);
+    color:#54cfff;
+    font-size:14px;
     font-weight:700;
-    letter-spacing:1px;
+    letter-spacing:1.3px;
+    cursor:pointer;
+    transition:border-color .2s ease,background .2s ease,color .2s ease,box-shadow .2s ease,transform .15s ease;
 }
 
-#spawn-button:hover{border-color:#63d2ff;color:#8ee1ff}
+#spawn-button:hover{
+    border-color:#67d6ff;
+    background:linear-gradient(180deg,rgba(12,91,137,.98),rgba(5,48,78,.98));
+    box-shadow:0 8px 28px rgba(0,0,0,.25),0 0 16px rgba(72,190,255,.10);
+    color:#9be6ff;
+}
+
+#spawn-button:active{
+    transform:translateY(1px);
+}
 
 #spawn-selection.active .spawn-background{animation:spawnBackgroundEnter .85s ease both}
 #spawn-selection.active .spawn-container{animation:spawnEnter .65s cubic-bezier(.22,1,.36,1) both}
@@ -322,19 +340,11 @@
     .spawn-preview-info i{margin-bottom:9px}
     .spawn-preview-info p{font-size:10px}
     .spawn-preview-location{left:18px;bottom:12px;font-size:7px}
-    .spawn-buttons{width:100%;margin-top:10px}
-    #spawn-button,}
-
+    .spawn-buttons{width:min(390px,100%);margin-top:12px}
+    #spawn-button{height:48px;font-size:13px}
 @media(max-height:670px) and (min-width:761px){
     .spawn-logo{width:220px;max-height:90px}
     .spawn-description{margin:6px 0 10px}
     .spawn-content{height:360px;min-height:300px}
     .spawn-buttons{margin-top:10px}
-    #spawn-button,}
-
-/* Single spawn action button */
-.spawn-actions{justify-content:center}
-#spawn-confirm{margin:0 auto}
-
-.spawn-actions{justify-content:center!important}
-#spawn-button,#spawn-confirm{margin:0 auto}
+    #spawn-button{height:48px}

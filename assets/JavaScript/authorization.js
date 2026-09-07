@@ -50,8 +50,9 @@ GameCef.on("authorization:show", (data) => {
     authorizationUsernameInput.value = data;
     authorizationPasswordInput.value = "";
 
-    showAuthorization();
-    hideLoading();
+    showScreenAfterLoading(authorization,()=>{
+        showAuthorization();
+    });
 });
 
 GameCef.on("authorization:hide", () => {

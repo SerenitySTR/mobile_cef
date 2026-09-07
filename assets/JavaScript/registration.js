@@ -168,8 +168,9 @@ registerButton.addEventListener("click", () => {
 
 GameCef.on("registration:show", (data) => {
     usernameInput.value = data;
-    showRegistration();
-    hideLoading();
+    showScreenAfterLoading(registration,()=>{
+        showRegistration();
+    });
 });
 
 GameCef.on("registration:hide", () => {
