@@ -104,4 +104,5 @@ GameCef.on("spawn:show",data=>{
 
 GameCef.on("spawn:hide",()=>{
     hideSpawn();
+    Loading.Hide();
 });
