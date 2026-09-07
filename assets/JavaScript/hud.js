@@ -67,7 +67,7 @@ const hudAmmoClip=document.getElementById("hud-ammo-clip");
 const hudAmmoTotal=document.getElementById("hud-ammo-total");
 
 function showHud(){
-    showScreenAfterLoading(hud,()=>{
+    Loading.Transition(hud,()=>{
         hud.classList.add("active");
     });
 }

@@ -38,7 +38,7 @@ authorizationButton.addEventListener("click", () => {
         return;
     }
 
-    showLoading();
+    Loading.Show();
 
     GameCef.sendJson("authorization:submit", {
         UserName: authorizationUsernameInput.value.trim(),
@@ -50,7 +50,7 @@ GameCef.on("authorization:show", (data) => {
     authorizationUsernameInput.value = data;
     authorizationPasswordInput.value = "";
 
-    showScreenAfterLoading(authorization,()=>{
+    Loading.Transition(authorization,()=>{
         showAuthorization();
     });
 });

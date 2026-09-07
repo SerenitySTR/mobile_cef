@@ -162,13 +162,13 @@ registerButton.addEventListener("click", () => {
         Age: Number(ageInput.value)
     };
 
-    showLoading();
+    Loading.Show();
     GameCef.sendJson("registration:submit", data);
 });
 
 GameCef.on("registration:show", (data) => {
     usernameInput.value = data;
-    showScreenAfterLoading(registration,()=>{
+    Loading.Transition(registration,()=>{
         showRegistration();
     });
 });

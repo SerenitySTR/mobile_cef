@@ -82,7 +82,7 @@ spawnItems.forEach(item=>{
 });
 
 spawnButton.addEventListener("click",()=>{
-    showLoading();
+    Loading.Show();
 
     GameCef.sendJson("spawn:submit",{
         SpawnType:spawnData[selectedSpawn].id
@@ -99,7 +99,7 @@ GameCef.on("spawn:show",data=>{
         }
     }
 
-    showScreenAfterLoading(spawnSelection,()=>{
+    Loading.Transition(spawnSelection,()=>{
         showSpawn();
     });
 });

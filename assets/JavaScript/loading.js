@@ -1,97 +1,100 @@
-const loadingScreen=document.getElementById("loading-screen");
+class Loading {
+    static #screen=document.getElementById("loading-screen");
+    static #transitionId=0;
 
-const LOADING_EXTRA_DELAY=1000;
-const LOADING_ASSET_TIMEOUT=2000;
+    static ExtraDelay=1000;
+    static AssetTimeout=2000;
 
-let loadingTransitionId=0;
-
-function showLoading(){
-    loadingTransitionId++;
-    loadingScreen.classList.add("active");
-}
-
-function hideLoading(){
-    loadingScreen.classList.remove("active");
-}
-
-function wait(ms){
-    return new Promise(resolve=>setTimeout(resolve,ms));
-}
-
-function waitForImage(image){
-    if(image.complete)
-        return Promise.resolve();
-
-    return new Promise(resolve=>{
-        let finished=false;
-
-        const finish=()=>{
-            if(finished)
-                return;
-
-            finished=true;
-            image.removeEventListener("load",finish);
-            image.removeEventListener("error",finish);
-            resolve();
-        };
-
-        image.addEventListener("load",finish,{once:true});
-        image.addEventListener("error",finish,{once:true});
-
-        setTimeout(finish,LOADING_ASSET_TIMEOUT);
-    });
-}
-
-async function waitForScreenReady(screen){
-    if(!screen)
-        return;
-
-    const images=[...screen.querySelectorAll("img")];
-
-    await Promise.all(images.map(waitForImage));
-
-    if(document.fonts&&document.fonts.ready){
-        try{
-            await Promise.race([
-                document.fonts.ready,
-                wait(LOADING_ASSET_TIMEOUT)
-            ]);
-        }catch{}
+    static Show(){
+        this.#transitionId++;
+        this.#screen.classList.add("active");
     }
 
-    await new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)));
-}
+    static Hide(){
+        this.#transitionId++;
+        this.#screen.classList.remove("active");
+    }
 
-async function showScreenAfterLoading(screen,showCallback){
-    const transitionId=++loadingTransitionId;
+    static async Transition(screen,showCallback,delay=this.ExtraDelay){
+        const transitionId=++this.#transitionId;
 
-    loadingScreen.classList.add("active");
+        this.#screen.classList.add("active");
 
-    await waitForScreenReady(screen);
+        await this.#WaitForScreen(screen);
 
-    if(transitionId!==loadingTransitionId)
-        return;
+        if(transitionId!==this.#transitionId)
+            return;
 
-    await wait(LOADING_EXTRA_DELAY);
+        await this.#Wait(delay);
 
-    if(transitionId!==loadingTransitionId)
-        return;
+        if(transitionId!==this.#transitionId)
+            return;
 
-    try{
         showCallback();
-    }finally{
-        setTimeout(()=>{
-            if(transitionId===loadingTransitionId)
-                hideLoading();
-        },50);
+
+        if(transitionId===this.#transitionId)
+            this.#screen.classList.remove("active");
+    }
+
+    static async #WaitForScreen(screen){
+        if(!screen)
+            return;
+
+        const images=[...screen.querySelectorAll("img")];
+
+        await Promise.all(images.map(image=>this.#WaitForImage(image)));
+
+        if(document.fonts&&document.fonts.ready){
+            try{
+                await Promise.race([
+                    document.fonts.ready,
+                    this.#Wait(this.AssetTimeout)
+                ]);
+            }catch{}
+        }
+
+        await new Promise(resolve=>{
+            requestAnimationFrame(()=>{
+                requestAnimationFrame(resolve);
+            });
+        });
+    }
+
+    static #WaitForImage(image){
+        if(image.complete)
+            return Promise.resolve();
+
+        return new Promise(resolve=>{
+            let finished=false;
+
+            const finish=()=>{
+                if(finished)
+                    return;
+
+                finished=true;
+
+                image.removeEventListener("load",finish);
+                image.removeEventListener("error",finish);
+
+                resolve();
+            };
+
+            image.addEventListener("load",finish,{once:true});
+            image.addEventListener("error",finish,{once:true});
+
+            setTimeout(finish,this.AssetTimeout);
+        });
+    }
+
+    static #Wait(ms){
+        return new Promise(resolve=>setTimeout(resolve,ms));
     }
 }
 
 GameCef.on("loading:show",()=>{
-    showLoading();
+    Loading.Show();
 });
 
 GameCef.on("loading:hide",()=>{
-    loadingTransitionId++;
-    hideLoading();
+    Loading.Hide();
 });
