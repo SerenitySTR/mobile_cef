@@ -1,6 +1,8 @@
 const loadingScreen=document.getElementById("loading-screen");
 
 const LOADING_EXTRA_DELAY=1000;
+const LOADING_ASSET_TIMEOUT=2000;
+
 let loadingTransitionId=0;
 
 function showLoading(){
@@ -21,8 +23,22 @@ function waitForImage(image){
         return Promise.resolve();
 
     return new Promise(resolve=>{
-        image.addEventListener("load",resolve,{once:true});
-        image.addEventListener("error",resolve,{once:true});
+        let finished=false;
+
+        const finish=()=>{
+            if(finished)
+                return;
+
+            finished=true;
+            image.removeEventListener("load",finish);
+            image.removeEventListener("error",finish);
+            resolve();
+        };
+
+        image.addEventListener("load",finish,{once:true});
+        image.addEventListener("error",finish,{once:true});
+
+        setTimeout(finish,LOADING_ASSET_TIMEOUT);
     });
 }
 
@@ -36,7 +52,10 @@ async function waitForScreenReady(screen){
 
     if(document.fonts&&document.fonts.ready){
         try{
-            await document.fonts.ready;
+            await Promise.race([
+                document.fonts.ready,
+                wait(LOADING_ASSET_TIMEOUT)
+            ]);
         }catch{}
     }
 
@@ -58,12 +77,14 @@ async function showScreenAfterLoading(screen,showCallback){
     if(transitionId!==loadingTransitionId)
         return;
 
-    showCallback();
-
-    requestAnimationFrame(()=>{
-        if(transitionId===loadingTransitionId)
-            hideLoading();
-    });
+    try{
+        showCallback();
+    }finally{
+        setTimeout(()=>{
+            if(transitionId===loadingTransitionId)
+                hideLoading();
+        },50);
+    }
 }
 
 GameCef.on("loading:show",()=>{

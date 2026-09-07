@@ -194,7 +194,7 @@
 }
 
 #authorization.active .authorization-background {
-    animation: authorizationBackgroundEnter 1s ease both;
+    
 }
 
 #authorization.active .authorization-container {
@@ -219,18 +219,6 @@
 
 #authorization.active #authorization-button {
     animation: authorizationItemEnter 0.65s ease 0.30s both;
-}
-
-@keyframes authorizationBackgroundEnter {
-    from {
-        opacity: 0;
-        transform: scale(1.04);
-    }
-
-    to {
-        opacity: 1;
-        transform: scale(1);
-    }
 }
 
 @keyframes authorizationEnter {
