@@ -1,7 +1,6 @@
 const spawnSelection=document.getElementById("spawn-selection");
 const spawnItems=document.querySelectorAll(".spawn-item");
 const spawnButton=document.getElementById("spawn-button");
-const spawnBackButton=document.getElementById("spawn-back-button");
 const spawnPreviewImage=document.getElementById("spawn-preview-image");
 const spawnPreviewTitle=document.getElementById("spawn-preview-title");
 const spawnPreviewText=document.getElementById("spawn-preview-text");
@@ -48,8 +47,22 @@ function hideSpawn(){
     spawnSelection.classList.remove("active");
 }
 
-function selectSpawn(type){
-    if(!spawnData[type])return;
+function getSpawnKey(value){
+    if(typeof value==="number"){
+        return Object.keys(spawnData).find(key=>spawnData[key].id===value);
+    }
+
+    if(typeof value==="string"&&/^\d+$/.test(value)){
+        const id=Number(value);
+        return Object.keys(spawnData).find(key=>spawnData[key].id===id);
+    }
+
+    return spawnData[value]?value:null;
+}
+
+function selectSpawn(value){
+    const type=getSpawnKey(value);
+    if(!type)return;
 
     selectedSpawn=type;
 
@@ -69,10 +82,10 @@ spawnItems.forEach(item=>{
 });
 
 spawnButton.addEventListener("click",()=>{
-    const data=spawnData[selectedSpawn];
+    showLoading();
 
     GameCef.sendJson("spawn:submit",{
-        SpawnType:data.id
+        SpawnType:spawnData[selectedSpawn].id
     });
 });
 
@@ -80,13 +93,14 @@ GameCef.on("spawn:show",data=>{
     if(data){
         try{
             const value=typeof data==="string"?JSON.parse(data):data;
-            if(value&&value.SelectedSpawn)selectSpawn(value.SelectedSpawn);
+            if(value&&value.SelectedSpawn!==undefined)selectSpawn(value.SelectedSpawn);
         }catch{
-            if(spawnData[data])selectSpawn(data);
+            selectSpawn(data);
         }
     }
 
     showSpawn();
+    hideLoading();
 });
 
 GameCef.on("spawn:hide",()=>{

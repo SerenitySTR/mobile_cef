@@ -4,6 +4,8 @@ const errorMessage = document.getElementById("error-message");
 const errorCloseButton = document.getElementById("error-close-button");
 
 function showError(title, message) {
+    hideLoading();
+
     errorTitle.textContent = title;
     errorMessage.textContent = message;
 

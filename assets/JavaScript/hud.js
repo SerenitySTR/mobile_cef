@@ -68,6 +68,7 @@ const hudAmmoTotal=document.getElementById("hud-ammo-total");
 
 function showHud(){
     hud.classList.add("active");
+    hideLoading();
 }
 
 function hideHud(){
