@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+    <link rel="stylesheet" href="./assets/CSS/styles/loading.css">
     <link rel="stylesheet" href="./assets/CSS/styles/registration.css">
     <link rel="stylesheet" href="./assets/CSS/styles/authorization.css">
     <link rel="stylesheet" href="./assets/CSS/styles/error.css">
@@ -13,7 +14,18 @@
 </head>
 
 <body>
-  
+    <section id="loading-screen" class="active">
+    <div class="loading-background"></div>
+
+    <div class="loading-content">
+        <div class="loading-spinner">
+            <span></span>
+        </div>
+
+        <p>Завантаження...</p>
+    </div>
+</section>
+
     <section id="authorization">
     <div class="authorization-background"></div>
 
@@ -372,6 +384,7 @@
 
 
     <script src="./assets/JavaScript/cef-wrapper.js"></script>
+    <script src="./assets/JavaScript/loading.js"></script>
     <script src="./assets/JavaScript/registration.js"></script>
     <script src="./assets/JavaScript/authorization.js"></script>
     <script src="./assets/JavaScript/spawn.js"></script>
