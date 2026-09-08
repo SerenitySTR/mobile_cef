@@ -1676,3 +1676,133 @@
         margin-top:6px !important;
     }
 }
+
+@media (max-height:800px) and (orientation:landscape){
+    .statistics-title h1{
+        font-size:14px !important;
+        font-weight:800 !important;
+    }
+
+    .statistics-player-name{
+        font-size:13px !important;
+        font-weight:800 !important;
+    }
+
+    .statistics-online{
+        font-size:9px !important;
+        font-weight:700 !important;
+    }
+
+    .statistics-profile-row span{
+        font-size:8.5px !important;
+        font-weight:600 !important;
+    }
+
+    .statistics-profile-row strong{
+        font-size:10px !important;
+        font-weight:800 !important;
+    }
+
+    .statistics-section-title h2{
+        font-size:10px !important;
+        font-weight:800 !important;
+    }
+
+    .statistics-status-header span{
+        font-size:8.5px !important;
+        font-weight:700 !important;
+    }
+
+    .statistics-status-header strong{
+        font-size:9px !important;
+        font-weight:800 !important;
+    }
+
+    .statistics-card-title{
+        font-size:8.5px !important;
+        font-weight:700 !important;
+    }
+
+    .statistics-card-value{
+        font-size:11px !important;
+        font-weight:800 !important;
+    }
+
+    .statistics-skill-header span{
+        font-size:8.5px !important;
+        font-weight:700 !important;
+    }
+
+    .statistics-skill-header strong{
+        font-size:9px !important;
+        font-weight:800 !important;
+    }
+
+    #statistics-close-button{
+        font-size:10.5px !important;
+        font-weight:800 !important;
+    }
+}
+
+@media (max-height:620px) and (orientation:landscape){
+    .statistics-title h1{
+        font-size:11px !important;
+    }
+
+    .statistics-player-name{
+        font-size:11px !important;
+    }
+
+    .statistics-online{
+        font-size:8px !important;
+    }
+
+    .statistics-profile-row span{
+        font-size:7.5px !important;
+    }
+
+    .statistics-profile-row strong{
+        font-size:8.5px !important;
+    }
+
+    .statistics-section-title h2{
+        font-size:8.5px !important;
+    }
+
+    .statistics-status-header span,
+    .statistics-card-title,
+    .statistics-skill-header span{
+        font-size:7.5px !important;
+    }
+
+    .statistics-status-header strong,
+    .statistics-skill-header strong{
+        font-size:8px !important;
+    }
+
+    .statistics-card-value{
+        font-size:9.5px !important;
+    }
+
+    #statistics-close-button{
+        font-size:9px !important;
+    }
+}
+
+@media (max-width:760px) and (orientation:portrait){
+    .statistics-title h1,
+    .statistics-player-name,
+    .statistics-section-title h2,
+    .statistics-status-header span,
+    .statistics-status-header strong,
+    .statistics-card-title,
+    .statistics-card-value,
+    .statistics-skill-header span,
+    .statistics-skill-header strong,
+    .statistics-profile-row span,
+    .statistics-profile-row strong,
+    .statistics-online,
+    #statistics-close-button{
+        font-weight:700 !important;
+    }
+}
