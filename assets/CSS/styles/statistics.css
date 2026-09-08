@@ -649,7 +649,6 @@
     }
 }
 
-/* Mobile landscape */
 @media (max-height:800px) and (orientation:landscape){
     #statistics{
         padding:
@@ -869,7 +868,6 @@
     }
 }
 
-/* Very short landscape */
 @media (max-height:620px) and (orientation:landscape){
     .statistics-container{
         width:min(820px,82vw);
@@ -938,7 +936,6 @@
     }
 }
 
-/* Portrait */
 @media (max-width:760px) and (orientation:portrait){
     #statistics{
         align-items:flex-start;
@@ -1038,13 +1035,6 @@
     }
 }
 
-
-/* ===== Layout normalization fix =====
-   Fixes:
-   1) remove extra empty space in center
-   2) remove extra empty space under skills
-   3) prevent left profile from overflowing outside the window
-*/
 .statistics-container{
     height:auto !important;
     min-height:0 !important;
@@ -1108,7 +1098,6 @@
     max-height:calc(62px * 6 + 8px * 5) !important;
 }
 
-/* Keep the whole window a little tighter on desktop */
 .statistics-layout{
     grid-template-columns:255px minmax(0,1fr) 255px !important;
 }
@@ -1117,7 +1106,6 @@
     margin-top:12px !important;
 }
 
-/* Mobile landscape */
 @media (max-height:800px) and (orientation:landscape){
     .statistics-container{
         height:auto !important;
@@ -1151,7 +1139,6 @@
     }
 }
 
-/* Very short landscape */
 @media (max-height:620px) and (orientation:landscape){
     .statistics-layout{
         grid-template-columns:145px minmax(0,1fr) 160px !important;
@@ -1171,7 +1158,6 @@
     }
 }
 
-/* Portrait */
 @media (max-width:760px) and (orientation:portrait){
     .statistics-container{
         height:auto !important;
@@ -1203,11 +1189,6 @@
     }
 }
 
-
-/* ===== Equal-height compact columns =====
-   Removes the large empty area under center/right by making
-   all three columns the same controlled height.
-*/
 .statistics-container{
     width:min(1120px,86vw) !important;
     height:auto !important;
@@ -1325,7 +1306,6 @@
     margin-top:10px !important;
 }
 
-/* Actual mobile CEF landscape */
 @media (max-height:800px) and (orientation:landscape){
     .statistics-container{
         width:min(820px,76vw) !important;
@@ -1378,7 +1358,6 @@
     }
 }
 
-/* Very short landscape */
 @media (max-height:620px) and (orientation:landscape){
     .statistics-container{
         width:min(760px,78vw) !important;
@@ -1410,7 +1389,6 @@
     }
 }
 
-/* Portrait remains stacked and naturally sized */
 @media (max-width:760px) and (orientation:portrait){
     .statistics-container{
         width:min(390px,92vw) !important;
@@ -1448,10 +1426,6 @@
     }
 }
 
-
-/* ===== Nick visibility + 6 full main-stat cards ===== */
-
-/* Keep name and online status outside the scrollable profile list */
 .statistics-player-name{
     position:relative !important;
     z-index:2 !important;
@@ -1482,7 +1456,6 @@
     flex:none !important;
 }
 
-/* Give profile header guaranteed room so the list never overlaps the nickname */
 .statistics-profile{
     display:flex !important;
     flex-direction:column !important;
@@ -1499,7 +1472,6 @@
     min-height:0 !important;
 }
 
-/* Main statistics: exactly 6 full cards visible (2 x 3) */
 .statistics-main-panel{
     flex:1 1 auto !important;
     min-height:0 !important;
@@ -1524,7 +1496,6 @@
     max-height:66px !important;
 }
 
-/* Slightly increase center column vertical budget */
 .statistics-profile,
 .statistics-center,
 .statistics-skills{
@@ -1533,7 +1504,6 @@
     max-height:545px !important;
 }
 
-/* Mobile landscape */
 @media (max-height:800px) and (orientation:landscape){
     .statistics-player-name{
         min-height:18px !important;
@@ -1566,7 +1536,6 @@
     }
 }
 
-/* Very short landscape */
 @media (max-height:620px) and (orientation:landscape){
     .statistics-player-name{
         min-height:15px !important;
@@ -1597,7 +1566,6 @@
     }
 }
 
-/* Portrait */
 @media (max-width:760px) and (orientation:portrait){
     .statistics-player-name{
         min-height:20px !important;
@@ -1626,5 +1594,85 @@
         min-height:56px !important;
         height:56px !important;
         max-height:56px !important;
+    }
+}
+
+.statistics-main-panel{
+    padding-bottom:12px !important;
+    overflow:hidden !important;
+}
+
+.statistics-main-panel .statistics-grid{
+    box-sizing:border-box !important;
+
+    padding-right:9px !important;
+    padding-bottom:8px !important;
+
+    overflow-y:auto !important;
+    overflow-x:hidden !important;
+}
+
+.statistics-main-panel .statistics-grid::-webkit-scrollbar{
+    width:6px !important;
+}
+
+.statistics-main-panel .statistics-grid::-webkit-scrollbar-track{
+    margin-top:4px !important;
+    margin-bottom:8px !important;
+
+    background:rgba(72,190,255,.06) !important;
+    border-radius:6px !important;
+}
+
+.statistics-main-panel .statistics-grid::-webkit-scrollbar-thumb{
+    min-height:34px !important;
+
+    background:rgba(72,190,255,.78) !important;
+    border-radius:6px !important;
+}
+
+#statistics-close-button{
+    margin-top:14px !important;
+}
+
+@media (max-height:800px) and (orientation:landscape){
+    .statistics-main-panel{
+        padding-bottom:7px !important;
+    }
+
+    .statistics-main-panel .statistics-grid{
+        padding-right:7px !important;
+        padding-bottom:5px !important;
+    }
+
+    .statistics-main-panel .statistics-grid::-webkit-scrollbar{
+        width:5px !important;
+    }
+
+    .statistics-main-panel .statistics-grid::-webkit-scrollbar-track{
+        margin-top:3px !important;
+        margin-bottom:6px !important;
+    }
+
+    #statistics-close-button{
+        margin-top:8px !important;
+    }
+}
+
+@media (max-height:620px) and (orientation:landscape){
+    .statistics-main-panel{
+        padding-bottom:5px !important;
+    }
+
+    .statistics-main-panel .statistics-grid{
+        padding-bottom:4px !important;
+    }
+
+    .statistics-main-panel .statistics-grid::-webkit-scrollbar-track{
+        margin-bottom:5px !important;
+    }
+
+    #statistics-close-button{
+        margin-top:6px !important;
     }
 }

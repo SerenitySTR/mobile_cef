@@ -372,6 +372,120 @@ var Statistics={
             .replace(/'/g,"&#039;");
     },
 
+    TestData:function(){
+        return {
+            Profile:{
+                Name:"Serenity_Walker",
+                Id:178,
+                Level:12,
+                Online:true,
+
+                Items:[
+                    {Icon:"clock",Title:"Час у грі",Value:"186 год"},
+                    {Icon:"family",Title:"Сім'я",Value:"Walker"},
+                    {Icon:"faction",Title:"Фракція",Value:"LSPD"},
+                    {Icon:"job",Title:"Робота",Value:"Далекобійник"},
+                    {Icon:"money",Title:"Готівка",Value:"$ 124 520"},
+                    {Icon:"money",Title:"Банк",Value:"$ 1 245 320"},
+                    {Icon:"vip",Title:"VIP статус",Value:"Premium"},
+                    {Icon:"warning",Title:"Попередження",Value:"0 / 3"},
+                    {Icon:"phone",Title:"Номер телефону",Value:"549"},
+                    {Icon:"skill",Title:"Репутація",Value:"85 / 100"},
+                    {Icon:"skill",Title:"Днів на сервері",Value:"214"},
+                    {Icon:"skill",Title:"Ранг у фракції",Value:"8"},
+                    {Icon:"skill",Title:"Номер паспорта",Value:"LS-0178"},
+                    {Icon:"skill",Title:"Ліцензій",Value:"4"},
+                    {Icon:"skill",Title:"Нерухомості",Value:"3"},
+                    {Icon:"skill",Title:"Транспорту",Value:"5"}
+                ]
+            },
+
+            Status:[
+                {Id:"health",Title:"Здоров'я",Value:100,Max:100},
+                {Id:"armor",Title:"Броня",Value:50,Max:100},
+                {Id:"hunger",Title:"Голод",Value:72,Max:100},
+                {Id:"stamina",Title:"Витривалість",Value:78,Max:100},
+                {Id:"energy",Title:"Енергія",Value:64,Max:100},
+                {Id:"reputation",Title:"Репутація",Value:85,Max:100},
+                {Id:"skill",Title:"Спрага",Value:43,Max:100},
+                {Id:"skill",Title:"Стрес",Value:18,Max:100},
+                {Id:"skill",Title:"Настрій",Value:92,Max:100},
+                {Id:"skill",Title:"Втома",Value:26,Max:100},
+                {Id:"skill",Title:"Гігієна",Value:88,Max:100},
+                {Id:"skill",Title:"Ситість",Value:71,Max:100}
+            ],
+
+            Statistics:[
+                {Icon:"wanted",Title:"Рівень розшуку",Value:"0 / 5"},
+                {Icon:"skill",Title:"Зіграно годин",Value:"186 год"},
+                {Icon:"skill",Title:"Виконано робіт",Value:"342"},
+                {Icon:"skill",Title:"Загальний заробіток",Value:"$ 1 245 320"},
+                {Icon:"skill",Title:"Будинків у власності",Value:"1"},
+                {Icon:"skill",Title:"Квартир у власності",Value:"2"},
+                {Icon:"skill",Title:"Транспортних засобів",Value:"5"},
+                {Icon:"skill",Title:"Бізнесів у власності",Value:"2"},
+                {Icon:"skill",Title:"Виконано квестів",Value:"126"},
+                {Icon:"skill",Title:"Завершено місій",Value:"84"},
+                {Icon:"skill",Title:"Штрафів отримано",Value:"8"},
+                {Icon:"skill",Title:"Законопорушень",Value:"17"},
+                {Icon:"skill",Title:"Арештів",Value:"3"},
+                {Icon:"skill",Title:"Смертей",Value:"24"},
+                {Icon:"skill",Title:"Вбивств",Value:"11"},
+                {Icon:"skill",Title:"Пройдено кілометрів",Value:"4 852 км"},
+                {Icon:"skill",Title:"Максимальна швидкість",Value:"231 км/год"},
+                {Icon:"skill",Title:"Доставлено вантажів",Value:"418"},
+                {Icon:"skill",Title:"Замовлень таксі",Value:"237"},
+                {Icon:"skill",Title:"Спіймано риби",Value:"486 кг"}
+            ],
+
+            Skills:[
+                {Icon:"skill",Title:"Водіння",Value:78,Max:100},
+                {Icon:"skill",Title:"Стрільба",Value:61,Max:100},
+                {Icon:"skill",Title:"Риболовля",Value:42,Max:100},
+                {Icon:"skill",Title:"Кур'єр",Value:67,Max:100},
+                {Icon:"skill",Title:"Механік",Value:35,Max:100},
+                {Icon:"skill",Title:"Медицина",Value:28,Max:100},
+                {Icon:"skill",Title:"Таксі",Value:54,Max:100},
+                {Icon:"skill",Title:"Далекобійник",Value:81,Max:100},
+                {Icon:"skill",Title:"Шахтар",Value:46,Max:100},
+                {Icon:"skill",Title:"Лісоруб",Value:39,Max:100},
+                {Icon:"skill",Title:"Фермер",Value:73,Max:100},
+                {Icon:"skill",Title:"Будівельник",Value:57,Max:100},
+                {Icon:"skill",Title:"Пілот",Value:31,Max:100},
+                {Icon:"skill",Title:"Моряк",Value:64,Max:100},
+                {Icon:"skill",Title:"Мисливець",Value:49,Max:100},
+                {Icon:"skill",Title:"Торгівля",Value:88,Max:100},
+                {Icon:"skill",Title:"Автомеханіка",Value:69,Max:100},
+                {Icon:"skill",Title:"Електрик",Value:52,Max:100},
+                {Icon:"skill",Title:"Рятувальник",Value:76,Max:100},
+                {Icon:"skill",Title:"Пожежник",Value:83,Max:100},
+                {Icon:"skill",Title:"Поліцейський",Value:58,Max:100},
+                {Icon:"skill",Title:"Інкасатор",Value:33,Max:100},
+                {Icon:"skill",Title:"Сміттяр",Value:91,Max:100},
+                {Icon:"skill",Title:"Вантажник",Value:48,Max:100},
+                {Icon:"skill",Title:"Автобусник",Value:62,Max:100},
+                {Icon:"skill",Title:"Листоноша",Value:71,Max:100},
+                {Icon:"skill",Title:"Крановщик",Value:36,Max:100},
+                {Icon:"skill",Title:"Екскаваторник",Value:44,Max:100},
+                {Icon:"skill",Title:"Водолаз",Value:53,Max:100},
+                {Icon:"skill",Title:"Фотограф",Value:66,Max:100},
+                {Icon:"skill",Title:"Репортер",Value:59,Max:100},
+                {Icon:"skill",Title:"Охоронець",Value:72,Max:100},
+                {Icon:"skill",Title:"Бармен",Value:55,Max:100},
+                {Icon:"skill",Title:"Офіціант",Value:63,Max:100},
+                {Icon:"skill",Title:"Кухар",Value:77,Max:100},
+                {Icon:"skill",Title:"Зварювальник",Value:74,Max:100},
+                {Icon:"skill",Title:"Дрифт",Value:68,Max:100},
+                {Icon:"skill",Title:"Паркування",Value:84,Max:100},
+                {Icon:"skill",Title:"Навігація",Value:58,Max:100},
+                {Icon:"skill",Title:"Перша допомога",Value:47,Max:100}
+            ]
+        };
+    },
+
+    ShowTest:function(){
+        this.Show(this.TestData());
+    }
 };
 
 var statisticsCloseButton=document.getElementById("statistics-close-button");
@@ -384,7 +498,10 @@ if(statisticsCloseButton){
 }
 
 GameCef.on("statistics:show",function(data){
-    Statistics.Show(data);
+    if(data)
+        Statistics.Show(data);
+    else
+        Statistics.ShowTest();
 });
 
 GameCef.on("statistics:hide",function(){
@@ -411,3 +528,7 @@ GameCef.on("statistics:skill-add",function(data){
     Statistics.AddSkill(data);
 });
 
+window.addEventListener("load",function(){
+    if(!window.cef)
+        Statistics.ShowTest();
+});
