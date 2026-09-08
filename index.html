@@ -384,8 +384,6 @@
 </section>
 
     <section id="statistics">
-    <div class="statistics-background"></div>
-
     <div class="statistics-container">
         <img class="statistics-logo" src="./assets/CSS/Images/Registration/logo.svg" alt="Antares RolePlay">
 
@@ -395,15 +393,14 @@
             <span></span>
         </div>
 
-        <div class="statistics-content">
+        <div class="statistics-layout">
             <aside class="statistics-profile">
                 <div class="statistics-avatar">
                     <div class="statistics-avatar-glow"></div>
 
                     <svg viewBox="0 0 200 200" aria-hidden="true">
-                        <circle cx="100" cy="67" r="36"></circle>
-                        <path d="M45 172c4-42 26-66 55-66s51 24 55 66"></path>
-                        <path d="M65 122c9 15 20 22 35 22s26-7 35-22"></path>
+                        <circle cx="100" cy="66" r="36"></circle>
+                        <path d="M44 172c4-42 27-66 56-66s52 24 56 66"></path>
                     </svg>
                 </div>
 
@@ -414,44 +411,32 @@
                     <span id="statistics-online-text">В мережі</span>
                 </div>
 
+                <div class="statistics-profile-divider"></div>
                 <div class="statistics-profile-list" id="statistics-profile-list"></div>
             </aside>
 
-            <main class="statistics-main">
-                <div class="statistics-status-grid" id="statistics-status-grid"></div>
-
-                <div class="statistics-experience" id="statistics-experience">
-                    <div class="statistics-experience-icon">
-                        <span id="statistics-level">12</span>
+            <main class="statistics-center">
+                <section class="statistics-panel statistics-status-panel">
+                    <div class="statistics-section-title">
+                        <h2>Стан персонажа</h2>
+                        <span></span>
                     </div>
 
-                    <div class="statistics-experience-content">
-                        <div class="statistics-experience-header">
-                            <span>Досвід</span>
-                            <strong id="statistics-experience-value">2 480 / 4 800 XP</strong>
-                        </div>
+                    <div class="statistics-status-grid" id="statistics-status-grid"></div>
+                </section>
 
-                        <div class="statistics-progress">
-                            <span id="statistics-experience-progress"></span>
-                        </div>
-
-                        <div class="statistics-experience-next">
-                            До наступного рівня
-                            <strong id="statistics-experience-next">2 320 XP</strong>
-                        </div>
+                <section class="statistics-panel statistics-main-panel">
+                    <div class="statistics-section-title">
+                        <h2>Основна статистика</h2>
+                        <span></span>
                     </div>
-                </div>
 
-                <div class="statistics-section-title">
-                    <h2>Основна статистика</h2>
-                    <span></span>
-                </div>
-
-                <div class="statistics-grid" id="statistics-grid"></div>
+                    <div class="statistics-grid" id="statistics-grid"></div>
+                </section>
             </main>
 
-            <aside class="statistics-skills">
-                <div class="statistics-section-title statistics-section-title-skills">
+            <aside class="statistics-panel statistics-skills">
+                <div class="statistics-section-title">
                     <h2>Навички</h2>
                     <span></span>
                 </div>

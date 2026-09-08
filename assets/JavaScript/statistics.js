@@ -12,7 +12,18 @@ var Statistics={
         health:'<path d="M12 21S3 15.5 3 8.8C3 5.5 5.4 3 8.5 3c1.8 0 3 1 3.5 2 .5-1 1.7-2 3.5-2C18.6 3 21 5.5 21 8.8 21 15.5 12 21 12 21Z"></path>',
         armor:'<path d="M12 2 20 5v6c0 5.5-3.5 9-8 12-4.5-3-8-6.5-8-12V5l8-3Z"></path>',
         hunger:'<path d="M3 2h2v7h1V2h2v7h1V2h2v7c0 2.2-1.2 3.8-3 4.5V22H6v-8.5C4.2 12.8 3 11.2 3 9V2Z"></path><path d="M15 2h2c2.2 2.8 3 6 3 9h-3v11h-2V2Z"></path>',
+        energy:'<path d="m13 2-8 12h6l-1 8 9-13h-6l0-7Z"></path>',
+        stamina:'<path d="m12 2 3 6 7 .9-5 4.8 1.3 6.8L12 17l-6.3 3.5L7 13.7 2 8.9 9 8l3-6Z"></path>',
+        reputation:'<path d="m12 2 3 6 7 .9-5 4.8 1.3 6.8L12 17l-6.3 3.5L7 13.7 2 8.9 9 8l3-6Z"></path>',
         wanted:'<path d="m12 2 3 6 7 .9-5 4.8 1.3 6.8L12 17l-6.3 3.5L7 13.7 2 8.9 9 8l3-6Z"></path>',
+        family:'<circle cx="8" cy="8" r="3"></circle><circle cx="16" cy="9" r="2"></circle><path d="M3 21v-2c0-4 2-6 5-6"></path><path d="M13 21v-2c0-3 2-5 5-5"></path>',
+        faction:'<rect x="3" y="7" width="18" height="13" rx="2"></rect><path d="M9 7V4h6v3"></path>',
+        job:'<path d="M4 7h16v13H4z"></path><path d="M9 7V4h6v3"></path><path d="M4 12h16"></path>',
+        clock:'<circle cx="12" cy="12" r="9"></circle><path d="M12 7v5l4 2"></path>',
+        money:'<circle cx="12" cy="12" r="9"></circle><path d="M14.5 8.5c-.7-.6-1.5-.9-2.5-.9-1.5 0-2.5.8-2.5 1.9 0 3 5.5 1.5 5.5 4.5 0 1.2-1.1 2-2.7 2-1.2 0-2.3-.4-3.1-1"></path><path d="M12 5v14"></path>',
+        vip:'<path d="m3 8 4 3 5-7 5 7 4-3-2 11H5L3 8Z"></path>',
+        warning:'<path d="M12 3 2 21h20L12 3Z"></path><path d="M12 9v5"></path><circle cx="12" cy="17" r="1"></circle>',
+        phone:'<rect x="7" y="2" width="10" height="20" rx="2"></rect><path d="M10 5h4"></path><circle cx="12" cy="18" r="1"></circle>',
         skill:'<path d="m12 2 3 6 7 .9-5 4.8 1.3 6.8L12 17l-6.3 3.5L7 13.7 2 8.9 9 8l3-6Z"></path>'
     },
 
@@ -25,12 +36,29 @@ var Statistics={
         this.skillsContainer=document.querySelector(".statistics-skills");
     },
 
-    Show:function(){
+    Show:function(data){
         this.Init();
 
         if(!this.screen){
             console.error("Statistics: #statistics not found");
             return;
+        }
+
+        if(data){
+            data=this.Parse(data);
+
+            if(data){
+                this.SetProfile(data.Profile||data.profile||{});
+                this.SetStatus(data.Status||data.status||[]);
+                this.SetStatistics(data.Statistics||data.statistics||[]);
+
+                this.ClearSkills();
+
+                var skills=data.Skills||data.skills||[];
+
+                for(var i=0;i<skills.length;i++)
+                    this.AddSkill(skills[i]);
+            }
         }
 
         this.screen.classList.add("active");
@@ -88,6 +116,20 @@ var Statistics={
 
         if(level!==undefined)
             this.AddProfileItem("level","Рівень",level);
+
+        var items=this.Get(profile,"Items","items");
+
+        if(items&&items.length){
+            for(var i=0;i<items.length;i++){
+                var item=items[i];
+
+                this.AddProfileItem(
+                    this.Get(item,"Icon","icon")||"skill",
+                    this.Get(item,"Title","title")||"",
+                    this.Get(item,"Value","value")!==undefined?this.Get(item,"Value","value"):"-"
+                );
+            }
+        }
     },
 
     AddProfileItem:function(icon,title,value){
@@ -95,7 +137,6 @@ var Statistics={
             return;
 
         var element=document.createElement("div");
-
         element.className="statistics-profile-row";
 
         element.innerHTML=
@@ -143,7 +184,6 @@ var Statistics={
             displayValue=value+" / "+max;
 
         var element=document.createElement("div");
-
         element.className="statistics-status-item";
         element.style.setProperty("--statistics-color",color||this.StatusColor(id));
 
@@ -191,7 +231,6 @@ var Statistics={
             value="-";
 
         var element=document.createElement("div");
-
         element.className="statistics-card";
 
         element.innerHTML=
@@ -238,7 +277,6 @@ var Statistics={
         this.skillsContainer.classList.remove("empty");
 
         var element=document.createElement("div");
-
         element.className="statistics-skill";
 
         element.innerHTML=
@@ -260,13 +298,22 @@ var Statistics={
         id=(id||"").toString().toLowerCase();
 
         if(id==="health")
-            return "#ff4d5f";
+            return "#ff4962";
 
         if(id==="armor")
-            return "#36bfff";
+            return "#35c0ff";
 
         if(id==="hunger")
-            return "#ffb52e";
+            return "#ffb229";
+
+        if(id==="energy")
+            return "#42c7ff";
+
+        if(id==="stamina")
+            return "#42c7ff";
+
+        if(id==="reputation")
+            return "#42c7ff";
 
         return "#48beff";
     },
@@ -323,7 +370,8 @@ var Statistics={
             .replace(/>/g,"&gt;")
             .replace(/"/g,"&quot;")
             .replace(/'/g,"&#039;");
-    }
+    },
+
 };
 
 var statisticsCloseButton=document.getElementById("statistics-close-button");
@@ -335,8 +383,8 @@ if(statisticsCloseButton){
     });
 }
 
-GameCef.on("statistics:show",function(){
-    Statistics.Show();
+GameCef.on("statistics:show",function(data){
+    Statistics.Show(data);
 });
 
 GameCef.on("statistics:hide",function(){
@@ -362,3 +410,4 @@ GameCef.on("statistics:skills-clear",function(){
 GameCef.on("statistics:skill-add",function(data){
     Statistics.AddSkill(data);
 });
+
