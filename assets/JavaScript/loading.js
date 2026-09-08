@@ -98,3 +98,5 @@ GameCef.on("loading:show",()=>{
 GameCef.on("loading:hide",()=>{
     Loading.Hide();
 });
+
+Loading.Hide();
