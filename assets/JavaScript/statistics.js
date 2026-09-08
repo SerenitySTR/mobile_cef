@@ -25,23 +25,13 @@ var Statistics={
         this.skillsContainer=document.querySelector(".statistics-skills");
     },
 
-    Show:function(data){
+    Show:function(){
         this.Init();
-
-        data=this.Parse(data);
-
-        console.log("Statistics data:");
-        console.log(data);
 
         if(!this.screen){
             console.error("Statistics: #statistics not found");
             return;
         }
-
-        this.RenderProfile(data.Profile||data.profile||{});
-        this.RenderStatus(data.Status||data.status||[]);
-        this.RenderStatistics(data.Statistics||data.statistics||[]);
-        this.RenderSkills(data.Skills||data.skills||[]);
 
         this.screen.classList.add("active");
 
@@ -56,15 +46,22 @@ var Statistics={
             this.screen.classList.remove("active");
     },
 
-    RenderProfile:function(profile){
+    SetProfile:function(data){
+        this.Init();
+
+        var profile=this.Parse(data);
+
+        if(!profile)
+            return;
+
         var playerName=document.getElementById("statistics-player-name");
         var onlineText=document.getElementById("statistics-online-text");
         var online=document.querySelector(".statistics-online");
 
-        var name=profile.Name!==undefined?profile.Name:profile.name;
-        var id=profile.Id!==undefined?profile.Id:profile.id;
-        var level=profile.Level!==undefined?profile.Level:profile.level;
-        var isOnline=profile.Online!==undefined?profile.Online:profile.online;
+        var name=this.Get(profile,"Name","name");
+        var id=this.Get(profile,"Id","id");
+        var level=this.Get(profile,"Level","level");
+        var isOnline=this.Get(profile,"Online","online");
 
         if(playerName)
             playerName.textContent=name||"Персонаж";
@@ -94,6 +91,9 @@ var Statistics={
     },
 
     AddProfileItem:function(icon,title,value){
+        if(!this.profileList)
+            return;
+
         var element=document.createElement("div");
 
         element.className="statistics-profile-row";
@@ -106,123 +106,154 @@ var Statistics={
         this.profileList.appendChild(element);
     },
 
-    RenderStatus:function(items){
+    SetStatus:function(data){
+        this.Init();
+
+        var items=this.Parse(data);
+
         if(!this.statusGrid)
             return;
 
         this.statusGrid.innerHTML="";
 
-        for(var i=0;i<items.length;i++){
-            var item=items[i];
+        if(!items||!items.length)
+            return;
 
-            var id=item.Id!==undefined?item.Id:item.id;
-            var title=item.Title!==undefined?item.Title:item.title;
-            var valueRaw=item.Value!==undefined?item.Value:item.value;
-            var maxRaw=item.Max!==undefined?item.Max:item.max;
-            var icon=item.Icon!==undefined?item.Icon:item.icon;
-            var color=item.Color!==undefined?item.Color:item.color;
-            var displayValue=item.DisplayValue!==undefined?item.DisplayValue:item.displayValue;
-
-            var max=Math.max(1,Number(maxRaw!==undefined?maxRaw:100));
-            var value=Math.max(0,Math.min(max,Number(valueRaw!==undefined?valueRaw:0)));
-            var percent=Math.max(0,Math.min(100,value/max*100));
-
-            if(displayValue===undefined)
-                displayValue=value+" / "+max;
-
-            var element=document.createElement("div");
-
-            element.className="statistics-status-item";
-            element.style.setProperty("--statistics-color",color||this.StatusColor(id));
-
-            element.innerHTML=
-                '<div class="statistics-status-icon">'+this.Icon(icon||id||"skill")+'</div>'+
-                '<div class="statistics-status-content">'+
-                    '<div class="statistics-status-header">'+
-                        '<span>'+this.Escape(title||"")+'</span>'+
-                        '<strong>'+this.Escape(displayValue)+'</strong>'+
-                    '</div>'+
-                    '<div class="statistics-progress">'+
-                        '<span style="width:'+percent+'%"></span>'+
-                    '</div>'+
-                '</div>';
-
-            this.statusGrid.appendChild(element);
-        }
+        for(var i=0;i<items.length;i++)
+            this.AddStatus(items[i]);
     },
 
-    RenderStatistics:function(items){
+    AddStatus:function(item){
+        if(!this.statusGrid)
+            return;
+
+        var id=this.Get(item,"Id","id");
+        var title=this.Get(item,"Title","title");
+        var valueRaw=this.Get(item,"Value","value");
+        var maxRaw=this.Get(item,"Max","max");
+        var icon=this.Get(item,"Icon","icon");
+        var color=this.Get(item,"Color","color");
+        var displayValue=this.Get(item,"DisplayValue","displayValue");
+
+        var max=Math.max(1,Number(maxRaw!==undefined?maxRaw:100));
+        var value=Math.max(0,Math.min(max,Number(valueRaw!==undefined?valueRaw:0)));
+        var percent=Math.max(0,Math.min(100,value/max*100));
+
+        if(displayValue===undefined)
+            displayValue=value+" / "+max;
+
+        var element=document.createElement("div");
+
+        element.className="statistics-status-item";
+        element.style.setProperty("--statistics-color",color||this.StatusColor(id));
+
+        element.innerHTML=
+            '<div class="statistics-status-icon">'+this.Icon(icon||id||"skill")+'</div>'+
+            '<div class="statistics-status-content">'+
+                '<div class="statistics-status-header">'+
+                    '<span>'+this.Escape(title||"")+'</span>'+
+                    '<strong>'+this.Escape(displayValue)+'</strong>'+
+                '</div>'+
+                '<div class="statistics-progress">'+
+                    '<span style="width:'+percent+'%"></span>'+
+                '</div>'+
+            '</div>';
+
+        this.statusGrid.appendChild(element);
+    },
+
+    SetStatistics:function(data){
+        this.Init();
+
+        var items=this.Parse(data);
+
         if(!this.statisticsGrid)
             return;
 
         this.statisticsGrid.innerHTML="";
 
-        for(var i=0;i<items.length;i++){
-            var item=items[i];
-
-            var icon=item.Icon!==undefined?item.Icon:item.icon;
-            var title=item.Title!==undefined?item.Title:item.title;
-            var value=item.Value!==undefined?item.Value:item.value;
-
-            if(value===undefined)
-                value="-";
-
-            var element=document.createElement("div");
-
-            element.className="statistics-card";
-
-            element.innerHTML=
-                '<div class="statistics-card-icon">'+this.Icon(icon||"wanted")+'</div>'+
-                '<div class="statistics-card-content">'+
-                    '<div class="statistics-card-title">'+this.Escape(title||"")+'</div>'+
-                    '<div class="statistics-card-value">'+this.Escape(value)+'</div>'+
-                '</div>';
-
-            this.statisticsGrid.appendChild(element);
-        }
-    },
-
-    RenderSkills:function(items){
-        if(!this.skillsList||!this.skillsContainer)
+        if(!items||!items.length)
             return;
 
-        this.skillsList.innerHTML="";
-        this.skillsContainer.classList.toggle("empty",items.length===0);
+        for(var i=0;i<items.length;i++)
+            this.AddStatistic(items[i]);
+    },
 
-        for(var i=0;i<items.length;i++){
-            var item=items[i];
+    AddStatistic:function(item){
+        if(!this.statisticsGrid)
+            return;
 
-            var icon=item.Icon!==undefined?item.Icon:item.icon;
-            var title=item.Title!==undefined?item.Title:item.title;
-            var valueRaw=item.Value!==undefined?item.Value:item.value;
-            var maxRaw=item.Max!==undefined?item.Max:item.max;
-            var displayValue=item.DisplayValue!==undefined?item.DisplayValue:item.displayValue;
+        var icon=this.Get(item,"Icon","icon");
+        var title=this.Get(item,"Title","title");
+        var value=this.Get(item,"Value","value");
 
-            var max=Math.max(1,Number(maxRaw!==undefined?maxRaw:100));
-            var value=Math.max(0,Math.min(max,Number(valueRaw!==undefined?valueRaw:0)));
-            var percent=Math.max(0,Math.min(100,value/max*100));
+        if(value===undefined)
+            value="-";
 
-            if(displayValue===undefined)
-                displayValue=Math.round(percent)+"%";
+        var element=document.createElement("div");
 
-            var element=document.createElement("div");
+        element.className="statistics-card";
 
-            element.className="statistics-skill";
+        element.innerHTML=
+            '<div class="statistics-card-icon">'+this.Icon(icon||"wanted")+'</div>'+
+            '<div class="statistics-card-content">'+
+                '<div class="statistics-card-title">'+this.Escape(title||"")+'</div>'+
+                '<div class="statistics-card-value">'+this.Escape(value)+'</div>'+
+            '</div>';
 
-            element.innerHTML=
-                '<div class="statistics-skill-icon">'+this.Icon(icon||"skill")+'</div>'+
-                '<div class="statistics-skill-content">'+
-                    '<div class="statistics-skill-header">'+
-                        '<span>'+this.Escape(title||"")+'</span>'+
-                        '<strong>'+this.Escape(displayValue)+'</strong>'+
-                    '</div>'+
-                    '<div class="statistics-progress">'+
-                        '<span style="width:'+percent+'%"></span>'+
-                    '</div>'+
-                '</div>';
+        this.statisticsGrid.appendChild(element);
+    },
 
-            this.skillsList.appendChild(element);
-        }
+    ClearSkills:function(){
+        this.Init();
+
+        if(this.skillsList)
+            this.skillsList.innerHTML="";
+
+        if(this.skillsContainer)
+            this.skillsContainer.classList.add("empty");
+    },
+
+    AddSkill:function(data){
+        this.Init();
+
+        var item=this.Parse(data);
+
+        if(!item||!this.skillsList||!this.skillsContainer)
+            return;
+
+        var icon=this.Get(item,"Icon","icon");
+        var title=this.Get(item,"Title","title");
+        var valueRaw=this.Get(item,"Value","value");
+        var maxRaw=this.Get(item,"Max","max");
+        var displayValue=this.Get(item,"DisplayValue","displayValue");
+
+        var max=Math.max(1,Number(maxRaw!==undefined?maxRaw:100));
+        var value=Math.max(0,Math.min(max,Number(valueRaw!==undefined?valueRaw:0)));
+        var percent=Math.max(0,Math.min(100,value/max*100));
+
+        if(displayValue===undefined)
+            displayValue=Math.round(percent)+"%";
+
+        this.skillsContainer.classList.remove("empty");
+
+        var element=document.createElement("div");
+
+        element.className="statistics-skill";
+
+        element.innerHTML=
+            '<div class="statistics-skill-icon">'+this.Icon(icon||"skill")+'</div>'+
+            '<div class="statistics-skill-content">'+
+                '<div class="statistics-skill-header">'+
+                    '<span>'+this.Escape(title||"")+'</span>'+
+                    '<strong>'+this.Escape(displayValue)+'</strong>'+
+                '</div>'+
+                '<div class="statistics-progress">'+
+                    '<span style="width:'+percent+'%"></span>'+
+                '</div>'+
+            '</div>';
+
+        this.skillsList.appendChild(element);
     },
 
     StatusColor:function(id){
@@ -250,33 +281,39 @@ var Statistics={
     },
 
     Parse:function(data){
-        console.log("Statistics raw:");
-        console.log(data);
+        if(data===undefined||data===null||data==="")
+            return null;
 
         if(typeof data!=="string")
-            return data||{};
+            return data;
 
         try{
             var result=JSON.parse(data);
 
-            /*
-             * Некоторые CEF wrappers могут передать JSON,
-             * внутри которого ещё раз лежит JSON-строка.
-             */
             if(typeof result==="string"){
                 try{
                     result=JSON.parse(result);
                 }catch(error){}
             }
 
-            return result||{};
+            return result;
         }catch(error){
             console.error("Statistics JSON parse error:");
             console.error(error);
             console.error(data);
 
-            return {};
+            return null;
         }
+    },
+
+    Get:function(data,pascalName,camelName){
+        if(!data)
+            return undefined;
+
+        if(data[pascalName]!==undefined)
+            return data[pascalName];
+
+        return data[camelName];
     },
 
     Escape:function(value){
@@ -298,13 +335,30 @@ if(statisticsCloseButton){
     });
 }
 
-GameCef.on("statistics:show",function(data){
-    console.log("statistics:show RECEIVED");
-    console.log(data);
-
-    Statistics.Show(data);
+GameCef.on("statistics:show",function(){
+    Statistics.Show();
 });
 
 GameCef.on("statistics:hide",function(){
     Statistics.Hide();
+});
+
+GameCef.on("statistics:profile",function(data){
+    Statistics.SetProfile(data);
+});
+
+GameCef.on("statistics:status",function(data){
+    Statistics.SetStatus(data);
+});
+
+GameCef.on("statistics:main",function(data){
+    Statistics.SetStatistics(data);
+});
+
+GameCef.on("statistics:skills-clear",function(){
+    Statistics.ClearSkills();
+});
+
+GameCef.on("statistics:skill-add",function(data){
+    Statistics.AddSkill(data);
 });
