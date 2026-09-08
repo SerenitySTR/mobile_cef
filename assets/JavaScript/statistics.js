@@ -52,12 +52,7 @@ var Statistics={
                 this.SetStatus(data.Status||data.status||[]);
                 this.SetStatistics(data.Statistics||data.statistics||[]);
 
-                this.ClearSkills();
-
-                var skills=data.Skills||data.skills||[];
-
-                for(var i=0;i<skills.length;i++)
-                    this.AddSkill(skills[i]);
+                this.SetSkills(data.Skills||data.skills||[]);
             }
         }
 
@@ -243,22 +238,29 @@ var Statistics={
         this.statisticsGrid.appendChild(element);
     },
 
-    ClearSkills:function(){
+    SetSkills:function(data){
         this.Init();
 
-        if(this.skillsList)
-            this.skillsList.innerHTML="";
+        var items=this.Parse(data);
 
-        if(this.skillsContainer)
+        if(!this.skillsList||!this.skillsContainer)
+            return;
+
+        this.skillsList.innerHTML="";
+
+        if(!items||!items.length){
             this.skillsContainer.classList.add("empty");
+            return;
+        }
+
+        this.skillsContainer.classList.remove("empty");
+
+        for(var i=0;i<items.length;i++)
+            this.AddSkill(items[i]);
     },
 
-    AddSkill:function(data){
-        this.Init();
-
-        var item=this.Parse(data);
-
-        if(!item||!this.skillsList||!this.skillsContainer)
+    AddSkill:function(item){
+        if(!item||!this.skillsList)
             return;
 
         var icon=this.Get(item,"Icon","icon");
@@ -273,8 +275,6 @@ var Statistics={
 
         if(displayValue===undefined)
             displayValue=Math.round(percent)+"%";
-
-        this.skillsContainer.classList.remove("empty");
 
         var element=document.createElement("div");
         element.className="statistics-skill";
@@ -403,10 +403,6 @@ GameCef.on("statistics:main",function(data){
     Statistics.SetStatistics(data);
 });
 
-GameCef.on("statistics:skills-clear",function(){
-    Statistics.ClearSkills();
-});
-
-GameCef.on("statistics:skill-add",function(data){
-    Statistics.AddSkill(data);
+GameCef.on("statistics:skills",function(data){
+    Statistics.SetSkills(data);
 });
