@@ -11,7 +11,7 @@ class Statistics {
         level:'<path d="M5 20V10"></path><path d="M12 20V4"></path><path d="M19 20V7"></path>',
         health:'<path d="M12 21S3 15.5 3 8.8C3 5.5 5.4 3 8.5 3c1.8 0 3 1 3.5 2 .5-1 1.7-2 3.5-2C18.6 3 21 5.5 21 8.8 21 15.5 12 21 12 21Z"></path>',
         armor:'<path d="M12 2 20 5v6c0 5.5-3.5 9-8 12-4.5-3-8-6.5-8-12V5l8-3Z"></path>',
-        hunger:'<path d="M6 2v8"></path><path d="M3 2v5c0 2 1 3 3 3s3-1 3-3V2"></path><path d="M6 10v12"></path><path d="M16 2v20"></path><path d="M16 2c3 2 4 5 4 8h-4"></path>',
+        hunger:'<path d="M2 2h2v6h1V2h2v6h1V2h2v7c0 2-1.2 3.5-3 4.2V22H5v-8.8C3.2 12.5 2 11 2 9V2Z"></path><path d="M15 2h2c2 2.6 3 5.7 3 9h-3v11h-2V2Z"></path>',
         wanted:'<path d="m12 2 3 6 7 .9-5 4.8 1.3 6.8L12 17l-6.3 3.5L7 13.7 2 8.9 9 8l3-6Z"></path>',
         skill:'<path d="m12 2 3 6 7 .9-5 4.8 1.3 6.8L12 17l-6.3 3.5L7 13.7 2 8.9 9 8l3-6Z"></path>'
     };
