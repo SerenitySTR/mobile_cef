@@ -54,12 +54,12 @@
     background:
         linear-gradient(
             135deg,
-            rgba(4, 19, 34, 0.97),
-            rgba(3, 13, 24, 0.96)
+            rgba(4, 19, 34, 0.88),
+            rgba(3, 13, 24, 0.84)
         );
 
     box-shadow:
-        0 14px 34px rgba(0, 0, 0, 0.30),
+        0 14px 34px rgba(0, 0, 0, 0.24),
         inset 0 1px 0 rgba(255, 255, 255, 0.025);
 
     color: #eef8ff;
@@ -645,5 +645,265 @@
 
     .notification-brand {
         display: none;
+    }
+}
+
+/* Size tuning */
+
+@media (min-width: 1100px) and (min-height: 651px) {
+    #notification-toast-container {
+        width: min(696px, 48vw);
+    }
+
+    #notification-banner-container {
+        width: min(880px, 66vw);
+    }
+
+    #notification-bottom-container {
+        width: min(768px, 62vw);
+    }
+
+    .notification-toast {
+        min-height: 141px;
+        padding: 24px 27px 24px 29px;
+
+        grid-template-columns: 74px minmax(0, 1fr);
+        gap: 22px;
+
+        border-radius: 14px;
+    }
+
+    .notification-toast .notification-icon {
+        width: 74px;
+        height: 74px;
+    }
+
+    .notification-toast .notification-icon svg {
+        width: 43px;
+        height: 43px;
+    }
+
+    .notification-toast .notification-title {
+        font-size: 29px;
+    }
+
+    .notification-toast .notification-text {
+        font-size: 24px;
+    }
+
+    .notification-toast .notification-time {
+        font-size: 21px;
+    }
+
+    .notification-banner {
+        min-height: 155px;
+        padding: 22px 80px 22px 26px;
+
+        grid-template-columns: 59px minmax(0, 1fr);
+        gap: 21px;
+
+        border-radius: 14px;
+    }
+
+    .notification-banner .notification-icon {
+        width: 59px;
+        height: 59px;
+    }
+
+    .notification-banner-label {
+        font-size: 16px;
+    }
+
+    .notification-banner .notification-title {
+        font-size: 26px;
+    }
+
+    .notification-banner .notification-text {
+        font-size: 18px;
+    }
+
+    .notification-subtext {
+        font-size: 14px;
+    }
+
+    .notification-bottom {
+        min-height: 128px;
+        padding: 19px 22px;
+
+        grid-template-columns: 61px minmax(0, 1fr) auto;
+        gap: 19px;
+
+        border-radius: 14px;
+    }
+
+    .notification-bottom .notification-icon {
+        width: 61px;
+        height: 61px;
+    }
+
+    .notification-bottom-label {
+        font-size: 16px;
+    }
+
+    .notification-bottom .notification-title {
+        font-size: 26px;
+    }
+
+    .notification-bottom .notification-text {
+        font-size: 16px;
+    }
+
+    .notification-brand {
+        min-width: 118px;
+        padding-left: 20px;
+
+        font-size: 18px;
+    }
+}
+
+@media (max-height: 650px) and (orientation: landscape) {
+    #notification-toast-container {
+        width: min(339px, 32.8vw);
+    }
+
+    #notification-banner-container {
+        width: min(535px, 53.5vw);
+    }
+
+    #notification-bottom-container {
+        width: min(477px, 48.3vw);
+    }
+
+    .notification-toast {
+        min-height: 64px;
+        padding: 9px 10px 9px 13px;
+
+        grid-template-columns: 33px minmax(0, 1fr);
+        gap: 9px;
+    }
+
+    .notification-toast .notification-icon {
+        width: 33px;
+        height: 33px;
+    }
+
+    .notification-toast .notification-icon svg {
+        width: 18px;
+        height: 18px;
+    }
+
+    .notification-toast .notification-title {
+        font-size: 14px;
+    }
+
+    .notification-toast .notification-text {
+        font-size: 12px;
+    }
+
+    .notification-toast .notification-time {
+        font-size: 10px;
+    }
+
+    .notification-banner {
+        min-height: 87px;
+        padding: 11px 40px 11px 13px;
+
+        grid-template-columns: 35px minmax(0, 1fr);
+        gap: 11px;
+    }
+
+    .notification-banner .notification-icon {
+        width: 35px;
+        height: 35px;
+    }
+
+    .notification-banner-label {
+        font-size: 9px;
+    }
+
+    .notification-banner .notification-title {
+        font-size: 14px;
+    }
+
+    .notification-banner .notification-text {
+        font-size: 10px;
+    }
+
+    .notification-subtext {
+        font-size: 9px;
+    }
+
+    .notification-bottom {
+        min-height: 70px;
+        padding: 9px 12px;
+
+        grid-template-columns: 37px minmax(0, 1fr) auto;
+        gap: 10px;
+    }
+
+    .notification-bottom .notification-icon {
+        width: 37px;
+        height: 37px;
+    }
+
+    .notification-bottom-label {
+        font-size: 9px;
+    }
+
+    .notification-bottom .notification-title {
+        font-size: 14px;
+    }
+
+    .notification-bottom .notification-text {
+        font-size: 9px;
+    }
+}
+
+@media (max-width: 760px) and (orientation: portrait) {
+    #notification-toast-container {
+        width: min(402px, 94vw);
+    }
+
+    .notification-toast {
+        min-height: 83px;
+        padding: 13px 16px;
+
+        grid-template-columns: 39px minmax(0, 1fr);
+        gap: 12px;
+    }
+
+    .notification-toast .notification-icon {
+        width: 39px;
+        height: 39px;
+    }
+
+    .notification-toast .notification-icon svg {
+        width: 22px;
+        height: 22px;
+    }
+
+    .notification-toast .notification-title {
+        font-size: 17px;
+    }
+
+    .notification-toast .notification-text {
+        font-size: 14px;
+    }
+
+    .notification-toast .notification-time {
+        font-size: 13px;
+    }
+
+    #notification-banner-container,
+    #notification-bottom-container {
+        width: calc(100vw - 18px);
+    }
+
+    .notification-banner {
+        min-height: 110px;
+    }
+
+    .notification-bottom {
+        min-height: 92px;
     }
 }
