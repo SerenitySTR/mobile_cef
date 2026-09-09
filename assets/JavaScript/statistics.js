@@ -9,11 +9,10 @@ var Statistics={
     icons:{
         id:'<path d="M5 4h14v16H5z"></path><path d="M8 8h8"></path><path d="M8 12h5"></path>',
         level:'<path d="M5 20V10"></path><path d="M12 20V4"></path><path d="M19 20V7"></path>',
+        experience:'<path d="m12 2 2.6 5.3 5.9.9-4.2 4.1 1 5.8L12 15.3 6.7 18l1-5.8-4.2-4.1 5.9-.9L12 2Z"></path><path d="M12 22v-5"></path><path d="m9.5 19.5 2.5-2.5 2.5 2.5"></path>',
         health:'<path d="M12 21S3 15.5 3 8.8C3 5.5 5.4 3 8.5 3c1.8 0 3 1 3.5 2 .5-1 1.7-2 3.5-2C18.6 3 21 5.5 21 8.8 21 15.5 12 21 12 21Z"></path>',
         armor:'<path d="M12 2 20 5v6c0 5.5-3.5 9-8 12-4.5-3-8-6.5-8-12V5l8-3Z"></path>',
         hunger:'<path d="M3 2h2v7h1V2h2v7h1V2h2v7c0 2.2-1.2 3.8-3 4.5V22H6v-8.5C4.2 12.8 3 11.2 3 9V2Z"></path><path d="M15 2h2c2.2 2.8 3 6 3 9h-3v11h-2V2Z"></path>',
-        energy:'<path d="m13 2-8 12h6l-1 8 9-13h-6l0-7Z"></path>',
-        stamina:'<path d="m12 2 3 6 7 .9-5 4.8 1.3 6.8L12 17l-6.3 3.5L7 13.7 2 8.9 9 8l3-6Z"></path>',
         reputation:'<path d="m12 2 3 6 7 .9-5 4.8 1.3 6.8L12 17l-6.3 3.5L7 13.7 2 8.9 9 8l3-6Z"></path>',
         wanted:'<path d="m12 2 3 6 7 .9-5 4.8 1.3 6.8L12 17l-6.3 3.5L7 13.7 2 8.9 9 8l3-6Z"></path>',
         family:'<circle cx="8" cy="8" r="3"></circle><circle cx="16" cy="9" r="2"></circle><path d="M3 21v-2c0-4 2-6 5-6"></path><path d="M13 21v-2c0-3 2-5 5-5"></path>',
@@ -107,7 +106,7 @@ var Statistics={
         this.profileList.innerHTML="";
 
         if(id!==undefined)
-            this.AddProfileItem("id","ID персонажа",id);
+            this.AddProfileItem("id","ID акаунту",id);
 
         if(level!==undefined)
             this.AddProfileItem("level","Рівень",level);
@@ -306,16 +305,8 @@ var Statistics={
         if(id==="hunger")
             return "#ffb229";
 
-        if(id==="energy")
-            return "#42c7ff";
 
-        if(id==="stamina")
-            return "#42c7ff";
-
-        if(id==="reputation")
-            return "#42c7ff";
-
-        return "#48beff";
+        return "#f5f9fc";
     },
 
     Icon:function(name){
@@ -387,9 +378,6 @@ GameCef.on("statistics:show",function(data){
     Statistics.Show(data);
 });
 
-GameCef.on("statistics:hide",function(){
-    Statistics.Hide();
-});
 
 GameCef.on("statistics:profile",function(data){
     Statistics.SetProfile(data);
