@@ -1132,3 +1132,78 @@
 .hud-player-info {
   margin-left: 23px;
 }
+
+#hud-corner-info{
+  display:none;
+  position:fixed;
+  left:22px;
+  bottom:34px;
+  align-items:center;
+  gap:10px;
+  min-height:44px;
+  padding:8px 14px;
+  border:1px solid rgba(10,168,255,.58);
+  border-radius:15px;
+  background:linear-gradient(180deg,rgba(4,17,28,.88),rgba(1,7,13,.9));
+  box-shadow:0 5px 16px rgba(0,0,0,.35),0 0 12px rgba(0,139,230,.1);
+  color:#fff;
+  font-family:Arial,Helvetica,sans-serif;
+  pointer-events:none;
+  z-index:500;
+}
+
+#hud.active + #hud-corner-info{
+  display:flex;
+}
+
+.hud-corner-item{
+  display:flex;
+  align-items:center;
+  gap:6px;
+}
+
+.hud-corner-icon{
+  width:17px;
+  height:17px;
+  fill:#0aa8ff;
+  filter:drop-shadow(0 0 4px rgba(10,168,255,.6));
+}
+
+.hud-corner-item strong{
+  font-size:15px;
+  font-weight:700;
+}
+
+.hud-corner-divider{
+  width:1px;
+  height:23px;
+  background:rgba(56,133,176,.45);
+}
+
+.hud-topbar{
+  width:190px;
+}
+
+@media (max-width:1000px), (max-height:600px){
+  #hud-corner-info{
+    left:14px;
+    bottom:22px;
+    min-height:38px;
+    gap:8px;
+    padding:7px 11px;
+    border-radius:12px;
+  }
+
+  .hud-corner-icon{
+    width:15px;
+    height:15px;
+  }
+
+  .hud-corner-item strong{
+    font-size:13px;
+  }
+
+  .hud-corner-divider{
+    height:19px;
+  }
+}
