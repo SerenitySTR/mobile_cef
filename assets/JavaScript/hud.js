@@ -261,22 +261,15 @@ function initializeHudPcStats(){
     if(!window.cef||typeof window.cef.on!=="function"||typeof window.cef.emit!=="function")
         return false;
 
-    window.cef.on("game:data:playerStats",(payload)=>{
-        try{
-            const data=typeof payload==="string"?JSON.parse(payload):payload;
+    window.cef.on("game:data:playerStats",(health,maxHealth,armour,breath,wanted,weapon,ammo,maxAmmo,money,speed)=>{
+        updateHudWeapon({
+            WeaponId:weapon,
+            AmmoClip:ammo,
+            AmmoTotal:maxAmmo
+        });
 
-            if(!data||typeof data!=="object")
-                return;
-
-            updateHudWeapon({
-                WeaponId:data.weapon,
-                AmmoClip:data.ammo,
-                AmmoTotal:data.max_ammo
-            });
-
-            updateHudHealth(data.health,data.max_hp);
-            updateHudArmour(data.armour);
-        }catch{}
+        updateHudHealth(health,maxHealth);
+        updateHudArmour(armour);
     });
 
     window.cef.emit("game:data:pollPlayerStats",true,50);
