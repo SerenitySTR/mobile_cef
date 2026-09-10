@@ -157,6 +157,35 @@ function setHudStat(name,value){
     stat.value.textContent=Math.round(value);
 }
 
+function updateHudHealth(health,maxHealth){
+    const stat=hudStats.health;
+
+    if(!stat)
+        return;
+
+    health=Math.max(0,Number(health)||0);
+    maxHealth=Math.max(1,Number(maxHealth)||100);
+
+    const percent=clamp(health/maxHealth*100,0,100);
+
+    stat.ring.style.strokeDasharray=HUD_RING_LENGTH;
+    stat.ring.style.strokeDashoffset=HUD_RING_LENGTH*(1-percent/100);
+    stat.value.textContent=Math.round(health);
+}
+
+function updateHudArmour(armour){
+    const stat=hudStats.armor;
+
+    if(!stat)
+        return;
+
+    armour=clamp(Number(armour)||0,0,100);
+
+    stat.ring.style.strokeDasharray=HUD_RING_LENGTH;
+    stat.ring.style.strokeDashoffset=HUD_RING_LENGTH*(1-armour/100);
+    stat.value.textContent=Math.round(armour);
+}
+
 function formatHudMoney(value){
     value=Math.trunc(Number(value)||0);
 
@@ -244,6 +273,9 @@ function initializeHudPcStats(){
                 AmmoClip:data.ammo,
                 AmmoTotal:data.max_ammo
             });
+
+            updateHudHealth(data.health,data.max_hp);
+            updateHudArmour(data.armour);
         }catch{}
     });
 
