@@ -377,7 +377,8 @@
   justify-content: center;
 }
 
-.hud-weapon-icon svg {
+.hud-weapon-icon svg,
+.hud-weapon-icon img {
   width: 172px;
   height: 82px;
 
@@ -574,7 +575,8 @@
   font-size: 1.12em;
 }
 
-.hud-weapon-icon svg {
+.hud-weapon-icon svg,
+.hud-weapon-icon img {
   width: 138px;
   height: 66px;
 }
@@ -597,7 +599,8 @@
   height: 66px;
 }
 
-.hud-weapon-icon svg {
+.hud-weapon-icon svg,
+.hud-weapon-icon img {
   width: 96px;
   height: 48px;
 }
@@ -825,7 +828,8 @@
   height: 66px;
 }
 
-.hud-weapon-icon svg {
+.hud-weapon-icon svg,
+.hud-weapon-icon img {
   width: 84px;
   height: 44px;
 }

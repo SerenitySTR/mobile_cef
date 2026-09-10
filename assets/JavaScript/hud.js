@@ -65,6 +65,70 @@ const hudOnlineValue=document.getElementById("hud-online-value");
 const hudIdValue=document.getElementById("hud-id-value");
 const hudAmmoClip=document.getElementById("hud-ammo-clip");
 const hudAmmoTotal=document.getElementById("hud-ammo-total");
+const hudWeaponImage=document.getElementById("hud-weapon-image");
+
+const HUD_WEAPON_IMAGES={
+    0:"fist.svg",
+    1:"brassknuckle.svg",
+    2:"golfclub.svg",
+    3:"nightstick.svg",
+    4:"knife.svg",
+    5:"bat.svg",
+    6:"shovel.svg",
+    7:"poolcue.svg",
+    8:"katana.svg",
+    9:"chainsaw.svg",
+    10:"dildo1.svg",
+    11:"dildo2.svg",
+    12:"vibrator1.svg",
+    13:"vibrator2.svg",
+    14:"flowers.svg",
+    15:"cane.svg",
+    16:"grenade.svg",
+    17:"teargas.svg",
+    18:"molotov.svg",
+    22:"colt45.svg",
+    23:"silenced.svg",
+    24:"deagle.svg",
+    25:"shotgun.svg",
+    26:"sawnoff.svg",
+    27:"spas12.svg",
+    28:"uzi.svg",
+    29:"mp5.svg",
+    30:"ak47.svg",
+    31:"m4.svg",
+    32:"tec9.svg",
+    33:"rifle.svg",
+    34:"sniper.svg",
+    35:"rocketlauncher.svg",
+    36:"heatseeker.svg",
+    37:"flamethrower.svg",
+    38:"minigun.svg",
+    39:"satchel.svg",
+    40:"detonator.svg",
+    41:"spraycan.svg",
+    42:"extinguisher.svg",
+    43:"camera.svg",
+    44:"nightvision.svg",
+    45:"infrared.svg",
+    46:"parachute.svg"
+};
+
+function updateHudWeapon(data){
+    if(!data)
+        return;
+
+    const weaponId=Math.max(0,Math.trunc(Number(data.WeaponId!==undefined?data.WeaponId:data.weaponId)||0));
+    const ammoClip=Math.max(0,Math.trunc(Number(data.AmmoClip!==undefined?data.AmmoClip:data.ammoClip)||0));
+    const ammoTotal=Math.max(0,Math.trunc(Number(data.AmmoTotal!==undefined?data.AmmoTotal:data.ammoTotal)||0));
+    const weaponFile=HUD_WEAPON_IMAGES[weaponId]||HUD_WEAPON_IMAGES[0];
+
+    if(hudWeaponImage)
+        hudWeaponImage.src="./assets/CSS/Images/Hud/Weapons/"+weaponFile;
+
+    hudAmmoClip.textContent=ammoClip;
+    hudAmmoTotal.textContent="/"+ammoTotal;
+}
 
 function showHud(){
     Loading.Transition(hud,()=>{
@@ -143,6 +207,11 @@ if(window.GameCef){
     GameCef.on("hud:money",(data)=>updateHud({money:data}));
     GameCef.on("hud:online",(data)=>updateHud({online:data}));
     GameCef.on("hud:id",(data)=>updateHud({id:data}));
+    GameCef.on("hud:weapon",(data)=>{
+        try{
+            updateHudWeapon(typeof data==="string"?JSON.parse(data):data);
+        }catch{}
+    });
 }
 
 
@@ -151,5 +220,19 @@ if(window.GameCef){
         try{
             updateHud(JSON.parse(data));
         }catch{}
+    });
+}
+
+if(window.cef&&typeof cef.on==="function"&&typeof cef.emit==="function"){
+    cef.emit("game:hud:setComponentVisible","weapon",false);
+    cef.emit("game:hud:setComponentVisible","ammo",false);
+    cef.emit("game:data:pollPlayerStats",true,50);
+
+    cef.on("game:data:playerStats",(health,maxHealth,armour,breath,wanted,weapon,ammo,maxAmmo,money,speed)=>{
+        updateHudWeapon({
+            WeaponId:weapon,
+            AmmoClip:ammo,
+            AmmoTotal:maxAmmo
+        });
     });
 }
