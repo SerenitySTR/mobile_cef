@@ -226,6 +226,32 @@ if(window.GameCef){
 let hudPcCefInitialized=false;
 let hudPcStatsHandler=null;
 
+function hideDefaultPcHud(){
+    if(!window.cef||typeof window.cef.emit!=="function")
+        return;
+
+    const components=[
+        "ammo",
+        "weapon",
+        "health",
+        "armour",
+        "breath",
+        "money",
+        "wanted",
+        "radar",
+        "crosshair",
+        "clock",
+        "radio",
+        "vehicle_name",
+        "area_name",
+        "help_text"
+    ];
+
+    components.forEach(component=>{
+        window.cef.emit("game:hud:setComponentVisible",component,false);
+    });
+}
+
 function initializeHudPcStats(){
     if(hudPcCefInitialized)
         return true;
@@ -242,8 +268,7 @@ function initializeHudPcStats(){
     };
 
     window.cef.on("game:data:playerStats",hudPcStatsHandler);
-    window.cef.emit("game:hud:setComponentVisible","weapon",false);
-    window.cef.emit("game:hud:setComponentVisible","ammo",false);
+    hideDefaultPcHud();
     window.cef.emit("game:data:pollPlayerStats",true,50);
 
     hudPcCefInitialized=true;
@@ -269,11 +294,15 @@ startHudPcStats();
 window.addEventListener("load",()=>{
     startHudPcStats();
 
-    if(hudPcCefInitialized&&window.cef&&typeof window.cef.emit==="function")
+    if(hudPcCefInitialized&&window.cef&&typeof window.cef.emit==="function"){
+        hideDefaultPcHud();
         window.cef.emit("game:data:pollPlayerStats",true,50);
+    }
 });
 
 window.addEventListener("focus",()=>{
-    if(initializeHudPcStats()&&window.cef&&typeof window.cef.emit==="function")
+    if(initializeHudPcStats()&&window.cef&&typeof window.cef.emit==="function"){
+        hideDefaultPcHud();
         window.cef.emit("game:data:pollPlayerStats",true,50);
+    }
 });
