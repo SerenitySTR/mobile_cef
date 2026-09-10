@@ -1123,14 +1123,19 @@
 }
 
 .hud-logo {
-  width: 205px;
-  flex: 0 0 205px;
-  overflow: visible;
+  width: 100%;
+  flex: 1 1 auto;
+  padding: 0 10px;
+  overflow: hidden;
+  box-sizing: border-box;
 }
 
 .hud-logo-image {
-  width: 205px;
-  max-width: none;
+  width: 100%;
+  height: 58px;
+  max-width: 170px;
+  object-fit: contain;
+  object-position: center;
 }
 
 .hud-player-info {
@@ -1166,11 +1171,11 @@
   gap:6px;
 }
 
-.hud-corner-icon{
-  width:17px;
-  height:17px;
-  fill:#0aa8ff;
-  filter:drop-shadow(0 0 4px rgba(10,168,255,.6));
+.hud-corner-label{
+  font-size:13px;
+  font-weight:600;
+  color:rgba(162,220,255,.78);
+  letter-spacing:.2px;
 }
 
 .hud-corner-item strong{
@@ -1198,9 +1203,9 @@
     border-radius:12px;
   }
 
-  .hud-corner-icon{
-    width:15px;
-    height:15px;
+
+  .hud-corner-label{
+    font-size:12px;
   }
 
   .hud-corner-item strong{
