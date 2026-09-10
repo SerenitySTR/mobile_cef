@@ -301,16 +301,78 @@ function initializeHudPcStats() {
         return false;
     }
 
-    window.cef.on("game:data:playerStats", (health, maxHealth, armour, breath, wanted, weapon, ammo, maxAmmo, money, speed) => {
-        updateHudWeapon({
-            WeaponId: weapon,
-            AmmoClip: ammo,
-            AmmoTotal: maxAmmo
-        });
+    window.cef.on("game:data:playerStats", (...args) => {
+        let stats = null;
 
-        updateHudHealth(health, maxHealth);
-        updateHudArmour(armour);
-        updateHudWanted(wanted);
+        if (args.length === 1) {
+            const value = args[0];
+
+            if (value && typeof value === "object") {
+                stats = value;
+            } else if (typeof value === "string") {
+                try {
+                    const parsed = JSON.parse(value);
+
+                    if (parsed && typeof parsed === "object") {
+                        stats = parsed;
+                    }
+                } catch {}
+            }
+        }
+
+        if (stats) {
+            const health = stats.health ?? stats.Health ?? stats.hp ?? stats.HP;
+            const maxHealth = stats.maxHealth ?? stats.MaxHealth ?? stats.max_health ?? 100;
+            const armour = stats.armour ?? stats.Armour ?? stats.armor ?? stats.Armor;
+            const wanted = stats.wanted ?? stats.Wanted ?? stats.wantedLevel ?? stats.WantedLevel;
+            const weapon = stats.weapon ?? stats.Weapon ?? stats.weaponId ?? stats.WeaponId;
+            const ammo = stats.ammo ?? stats.Ammo ?? stats.ammoClip ?? stats.AmmoClip;
+            const maxAmmo = stats.maxAmmo ?? stats.MaxAmmo ?? stats.ammoTotal ?? stats.AmmoTotal;
+
+            if (health !== undefined) {
+                updateHudHealth(health, maxHealth);
+            }
+
+            if (armour !== undefined) {
+                updateHudArmour(armour);
+            }
+
+            if (wanted !== undefined) {
+                updateHudWanted(wanted);
+            }
+
+            if (weapon !== undefined || ammo !== undefined || maxAmmo !== undefined) {
+                updateHudWeapon({
+                    WeaponId: weapon ?? 0,
+                    AmmoClip: ammo ?? 0,
+                    AmmoTotal: maxAmmo ?? 0
+                });
+            }
+
+            return;
+        }
+
+        const [health, maxHealth, armour, breath, wanted, weapon, ammo, maxAmmo] = args;
+
+        if (health !== undefined) {
+            updateHudHealth(health, maxHealth);
+        }
+
+        if (armour !== undefined) {
+            updateHudArmour(armour);
+        }
+
+        if (wanted !== undefined) {
+            updateHudWanted(wanted);
+        }
+
+        if (weapon !== undefined || ammo !== undefined || maxAmmo !== undefined) {
+            updateHudWeapon({
+                WeaponId: weapon ?? 0,
+                AmmoClip: ammo ?? 0,
+                AmmoTotal: maxAmmo ?? 0
+            });
+        }
     });
 
     window.cef.emit("game:data:pollPlayerStats", true, 50);
@@ -349,4 +411,3 @@ window.addEventListener("focus", () => {
         window.cef.emit("game:data:pollPlayerStats", true, 50);
     }
 });
-showHud();

@@ -1137,15 +1137,41 @@
   }
 }
 
-/* ID / Online final device sizing */
+.hud-logo-panel {
+  width: 306px;
+  height: 78px;
+  margin-right: 0;
+  margin-bottom: -1px;
+  border-radius: 28px 28px 0 0;
+  overflow: hidden;
+  z-index: 1;
+}
+
+.hud-logo-panel::before,
+.hud-logo-panel::after {
+  display: none;
+  content: none;
+}
+
+.hud-main-panel {
+  z-index: 2;
+  border-radius: 28px 12px 0 28px;
+}
+
 #hud-corner-info {
-  transform: scale(1.08);
-  transform-origin: left bottom;
+  left: auto;
+  right: calc(14px + env(safe-area-inset-right, 0px));
+  bottom: calc(14px + env(safe-area-inset-bottom, 0px));
 }
 
 @media (max-width: 1000px), (max-height: 600px) {
   #hud-corner-info {
-    transform: scale(0.78);
-    transform-origin: left bottom;
+    left: calc(8px + env(safe-area-inset-left, 0px));
+    right: auto;
+    bottom: calc(8px + env(safe-area-inset-bottom, 0px));
+  }
+
+  #hud.hud-compact .hud-logo-panel {
+    background: linear-gradient(180deg, rgba(7, 27, 41, .48), rgba(1, 10, 17, .56));
   }
 }
