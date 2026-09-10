@@ -89,16 +89,10 @@ var Inventory={
                 self.RenderItems();
             };
 
-            this.search.onfocus=function(){
-                self.ShowKeyboard();
-            };
-
-            this.search.onclick=function(){
-                self.ShowKeyboard();
+            this.search.oncompositionend=function(){
+                self.RenderItems();
             };
         }
-
-        this.BuildKeyboard();
 
         if(use)
             use.onclick=function(){
@@ -231,78 +225,6 @@ var Inventory={
             this.quick=data;
 
         this.RenderQuick();
-    },
-
-    BuildKeyboard:function(){
-        var keyboard=document.getElementById("inventory-mobile-keyboard");
-
-        if(!keyboard||keyboard.getAttribute("data-ready")==="1")
-            return;
-
-        keyboard.setAttribute("data-ready","1");
-
-        var self=this;
-        var letters=["й","ц","у","к","е","н","г","ш","щ","з","х","ї","ф","ы","в","а","п","р","о","л","д","ж","э","є","я","ч","с","м","и","т","ь","б","ю","і"];
-
-        for(var i=0;i<letters.length;i++){
-            var button=document.createElement("button");
-            button.type="button";
-            button.textContent=letters[i];
-            button.setAttribute("data-key",letters[i]);
-            keyboard.appendChild(button);
-        }
-
-        var space=document.createElement("button");
-        space.type="button";
-        space.className="wide";
-        space.textContent="Пробіл";
-        space.setAttribute("data-action","space");
-        keyboard.appendChild(space);
-
-        var erase=document.createElement("button");
-        erase.type="button";
-        erase.className="action";
-        erase.textContent="⌫";
-        erase.setAttribute("data-action","backspace");
-        keyboard.appendChild(erase);
-
-        var clear=document.createElement("button");
-        clear.type="button";
-        clear.className="action";
-        clear.textContent="Очистити";
-        clear.setAttribute("data-action","clear");
-        keyboard.appendChild(clear);
-
-        keyboard.onclick=function(event){
-            var target=event.target;
-
-            if(!target||target.tagName!=="BUTTON"||!self.search)
-                return;
-
-            var key=target.getAttribute("data-key");
-            var action=target.getAttribute("data-action");
-            var value=self.search.value||"";
-
-            if(key)
-                value+=key;
-            else if(action==="space")
-                value+=" ";
-            else if(action==="backspace")
-                value=value.substring(0,value.length-1);
-            else if(action==="clear")
-                value="";
-
-            self.search.value=value;
-            self.RenderItems();
-            self.search.focus();
-        };
-    },
-
-    ShowKeyboard:function(){
-        var keyboard=document.getElementById("inventory-mobile-keyboard");
-
-        if(keyboard)
-            keyboard.classList.add("active");
     },
 
     RenderAll:function(){
