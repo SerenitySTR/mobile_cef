@@ -223,55 +223,32 @@ if(window.GameCef){
     });
 }
 
-let hudPcCefInitialized=false;
-let hudPcStatsHandler=null;
-
-function hideDefaultPcHud(){
-    if(!window.cef||typeof window.cef.emit!=="function")
-        return;
-
-    const components=[
-        "ammo",
-        "weapon",
-        "health",
-        "armour",
-        "breath",
-        "money",
-        "wanted",
-        "radar",
-        "crosshair",
-        "clock",
-        "radio",
-        "vehicle_name",
-        "area_name",
-        "help_text"
-    ];
-
-    components.forEach(component=>{
-        window.cef.emit("game:hud:setComponentVisible",component,false);
-    });
-}
+let hudPcStatsInitialized=false;
 
 function initializeHudPcStats(){
-    if(hudPcCefInitialized)
+    if(hudPcStatsInitialized)
         return true;
 
     if(!window.cef||typeof window.cef.on!=="function"||typeof window.cef.emit!=="function")
         return false;
 
-    hudPcStatsHandler=(health,maxHealth,armour,breath,wanted,weapon,ammo,maxAmmo,money,speed)=>{
-        updateHudWeapon({
-            WeaponId:weapon,
-            AmmoClip:ammo,
-            AmmoTotal:maxAmmo
-        });
-    };
+    window.cef.on("game:data:playerStats",(payload)=>{
+        try{
+            const data=typeof payload==="string"?JSON.parse(payload):payload;
 
-    window.cef.on("game:data:playerStats",hudPcStatsHandler);
-    hideDefaultPcHud();
+            if(!data||typeof data!=="object")
+                return;
+
+            updateHudWeapon({
+                WeaponId:data.weapon,
+                AmmoClip:data.ammo,
+                AmmoTotal:data.max_ammo
+            });
+        }catch{}
+    });
+
     window.cef.emit("game:data:pollPlayerStats",true,50);
-
-    hudPcCefInitialized=true;
+    hudPcStatsInitialized=true;
     return true;
 }
 
@@ -294,15 +271,11 @@ startHudPcStats();
 window.addEventListener("load",()=>{
     startHudPcStats();
 
-    if(hudPcCefInitialized&&window.cef&&typeof window.cef.emit==="function"){
-        hideDefaultPcHud();
+    if(hudPcStatsInitialized&&window.cef&&typeof window.cef.emit==="function")
         window.cef.emit("game:data:pollPlayerStats",true,50);
-    }
 });
 
 window.addEventListener("focus",()=>{
-    if(initializeHudPcStats()&&window.cef&&typeof window.cef.emit==="function"){
-        hideDefaultPcHud();
+    if(initializeHudPcStats()&&window.cef&&typeof window.cef.emit==="function")
         window.cef.emit("game:data:pollPlayerStats",true,50);
-    }
 });
