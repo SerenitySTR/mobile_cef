@@ -223,16 +223,57 @@ if(window.GameCef){
     });
 }
 
-if(window.cef&&typeof cef.on==="function"&&typeof cef.emit==="function"){
-    cef.emit("game:hud:setComponentVisible","weapon",false);
-    cef.emit("game:hud:setComponentVisible","ammo",false);
-    cef.emit("game:data:pollPlayerStats",true,50);
+let hudPcCefInitialized=false;
+let hudPcStatsHandler=null;
 
-    cef.on("game:data:playerStats",(health,maxHealth,armour,breath,wanted,weapon,ammo,maxAmmo,money,speed)=>{
+function initializeHudPcStats(){
+    if(hudPcCefInitialized)
+        return true;
+
+    if(!window.cef||typeof window.cef.on!=="function"||typeof window.cef.emit!=="function")
+        return false;
+
+    hudPcStatsHandler=(health,maxHealth,armour,breath,wanted,weapon,ammo,maxAmmo,money,speed)=>{
         updateHudWeapon({
             WeaponId:weapon,
             AmmoClip:ammo,
             AmmoTotal:maxAmmo
         });
-    });
+    };
+
+    window.cef.on("game:data:playerStats",hudPcStatsHandler);
+    window.cef.emit("game:hud:setComponentVisible","weapon",false);
+    window.cef.emit("game:hud:setComponentVisible","ammo",false);
+    window.cef.emit("game:data:pollPlayerStats",true,50);
+
+    hudPcCefInitialized=true;
+    return true;
 }
+
+function startHudPcStats(){
+    if(initializeHudPcStats())
+        return;
+
+    const timer=setInterval(()=>{
+        if(initializeHudPcStats())
+            clearInterval(timer);
+    },250);
+
+    setTimeout(()=>{
+        clearInterval(timer);
+    },15000);
+}
+
+startHudPcStats();
+
+window.addEventListener("load",()=>{
+    startHudPcStats();
+
+    if(hudPcCefInitialized&&window.cef&&typeof window.cef.emit==="function")
+        window.cef.emit("game:data:pollPlayerStats",true,50);
+});
+
+window.addEventListener("focus",()=>{
+    if(initializeHudPcStats()&&window.cef&&typeof window.cef.emit==="function")
+        window.cef.emit("game:data:pollPlayerStats",true,50);
+});
