@@ -1,0 +1,192 @@
+<section id="inventory">
+    <div class="inventory-shell">
+        <header class="inventory-header">
+            <div class="inventory-brand">
+                <img src="./assets/CSS/Images/Registration/logo.svg" alt="Antares RolePlay">
+                <div class="inventory-heading">
+                    <h1>Інвентар</h1>
+                    <span>Усе потрібне завжди з тобою</span>
+                </div>
+            </div>
+
+            <div class="inventory-weight">
+                <div class="inventory-weight-head">
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M7 8V6a5 5 0 0 1 10 0v2"></path>
+                        <rect x="4" y="8" width="16" height="13" rx="2"></rect>
+                    </svg>
+                    <div>
+                        <span>Вага</span>
+                        <strong id="inventory-weight-text">0 / 50 кг</strong>
+                    </div>
+                </div>
+                <div class="inventory-weight-bar"><span id="inventory-weight-progress"></span></div>
+            </div>
+
+            <button class="inventory-close" id="inventory-close" type="button" aria-label="Закрити">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M5 5l14 14"></path>
+                    <path d="M19 5 5 19"></path>
+                </svg>
+            </button>
+        </header>
+
+        <div class="inventory-layout">
+            <aside class="inventory-equipment">
+                <div class="inventory-section-label">СПОРЯДЖЕННЯ</div>
+
+                <div class="inventory-character">
+                    <div class="inventory-body-silhouette">
+                        <svg viewBox="0 0 180 360" aria-hidden="true">
+                            <circle cx="90" cy="45" r="29"></circle>
+                            <path d="M62 78c-20 16-29 42-29 72v78c0 12 10 21 22 21h10l-8 93h27l6-91 6 91h27l-8-93h10c12 0 22-9 22-21v-78c0-30-9-56-29-72-16 12-40 12-56 0Z"></path>
+                        </svg>
+                    </div>
+
+                    <button class="equipment-slot slot-head" data-slot="head" type="button">
+                        <span class="equipment-icon" id="equipment-head-icon"></span>
+                        <strong>Голова</strong>
+                    </button>
+
+                    <button class="equipment-slot slot-accessory" data-slot="accessory" type="button">
+                        <span class="equipment-icon" id="equipment-accessory-icon"></span>
+                        <strong>Аксесуари</strong>
+                    </button>
+
+                    <button class="equipment-slot slot-body" data-slot="body" type="button">
+                        <span class="equipment-icon" id="equipment-body-icon"></span>
+                        <strong>Тіло</strong>
+                    </button>
+
+                    <button class="equipment-slot slot-backpack" data-slot="backpack" type="button">
+                        <span class="equipment-icon" id="equipment-backpack-icon"></span>
+                        <strong>Рюкзак</strong>
+                    </button>
+
+                    <button class="equipment-slot slot-legs" data-slot="legs" type="button">
+                        <span class="equipment-icon" id="equipment-legs-icon"></span>
+                        <strong>Ноги</strong>
+                    </button>
+
+                    <button class="equipment-slot slot-weapon" data-slot="weapon" type="button">
+                        <span class="equipment-icon" id="equipment-weapon-icon"></span>
+                        <strong>Зброя</strong>
+                    </button>
+
+                    <button class="equipment-slot slot-feet" data-slot="feet" type="button">
+                        <span class="equipment-icon" id="equipment-feet-icon"></span>
+                        <strong>Взуття</strong>
+                    </button>
+
+                    <button class="equipment-slot slot-extra" data-slot="extra" type="button">
+                        <span class="equipment-icon" id="equipment-extra-icon"></span>
+                        <strong>Додатково</strong>
+                    </button>
+                </div>
+
+                <div class="inventory-quick-title">ШВИДКІ СЛОТИ</div>
+                <div class="inventory-quick" id="inventory-quick"></div>
+
+                <div class="inventory-backpack-weight">
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M8 8V6a4 4 0 0 1 8 0v2"></path>
+                        <rect x="5" y="8" width="14" height="13" rx="2"></rect>
+                    </svg>
+                    <div>
+                        <span>Рюкзак</span>
+                        <strong id="inventory-weight-small">0 / 50 кг</strong>
+                        <div class="inventory-small-bar"><span id="inventory-weight-small-progress"></span></div>
+                    </div>
+                </div>
+            </aside>
+
+            <main class="inventory-main">
+                <div class="inventory-toolbar">
+                    <div class="inventory-tabs" id="inventory-tabs">
+                        <button class="active" data-category="all" type="button">Усі</button>
+                        <button data-category="food" type="button">Їжа</button>
+                        <button data-category="drink" type="button">Напої</button>
+                        <button data-category="medicine" type="button">Ліки</button>
+                        <button data-category="materials" type="button">Матеріали</button>
+                        <button data-category="other" type="button">Інше</button>
+                    </div>
+
+                    <label class="inventory-search">
+                        <svg viewBox="0 0 24 24" aria-hidden="true">
+                            <circle cx="11" cy="11" r="7"></circle>
+                            <path d="m16 16 5 5"></path>
+                        </svg>
+                        <input id="inventory-search" type="text" placeholder="Пошук предметів..." autocomplete="off">
+                    </label>
+                </div>
+
+                <div class="inventory-grid" id="inventory-grid"></div>
+                <div class="inventory-empty" id="inventory-empty">Предметів у цій категорії немає</div>
+            </main>
+
+            <aside class="inventory-details" id="inventory-details">
+                <div class="inventory-details-preview">
+                    <div class="inventory-details-image" id="inventory-details-image"></div>
+                    <div class="inventory-details-count" id="inventory-details-count">x0</div>
+                </div>
+
+                <div class="inventory-details-title-row">
+                    <div>
+                        <h2 id="inventory-details-title">Оберіть предмет</h2>
+                        <span class="inventory-category-chip" id="inventory-details-category">Інше</span>
+                    </div>
+                    <div class="inventory-details-weight">
+                        <svg viewBox="0 0 24 24" aria-hidden="true">
+                            <path d="M8 8V6a4 4 0 0 1 8 0v2"></path>
+                            <rect x="5" y="8" width="14" height="13" rx="2"></rect>
+                        </svg>
+                        <span id="inventory-details-weight">0 кг</span>
+                    </div>
+                </div>
+
+                <p class="inventory-description" id="inventory-details-description">Оберіть предмет у рюкзаку, щоб побачити детальну інформацію.</p>
+
+                <div class="inventory-effects" id="inventory-effects"></div>
+
+                <div class="inventory-meta">
+                    <div>
+                        <span>Вага</span>
+                        <strong id="inventory-meta-weight">0 кг</strong>
+                    </div>
+                    <div>
+                        <span>Кількість</span>
+                        <strong id="inventory-meta-count">0 шт.</strong>
+                    </div>
+                </div>
+
+                <div class="inventory-actions">
+                    <button class="inventory-action primary" id="inventory-use" type="button">
+                        <svg viewBox="0 0 24 24" aria-hidden="true">
+                            <path d="m8 5 11 7-11 7V5Z"></path>
+                        </svg>
+                        Використати
+                    </button>
+                    <button class="inventory-action" id="inventory-transfer" type="button">
+                        <svg viewBox="0 0 24 24" aria-hidden="true">
+                            <path d="M4 8h13"></path>
+                            <path d="m14 5 3 3-3 3"></path>
+                            <path d="M20 16H7"></path>
+                            <path d="m10 13-3 3 3 3"></path>
+                        </svg>
+                        Передати
+                    </button>
+                    <button class="inventory-action danger" id="inventory-drop" type="button">
+                        <svg viewBox="0 0 24 24" aria-hidden="true">
+                            <path d="M5 7h14"></path>
+                            <path d="M9 7V4h6v3"></path>
+                            <path d="m8 10 1 9h6l1-9"></path>
+                        </svg>
+                        Викинути
+                    </button>
+                </div>
+            </aside>
+        </div>
+
+        <div class="inventory-footer">ANTARES ROLEPLAY · БІЛЬШЕ, НІЖ ГРА</div>
+    </div>
+</section>
