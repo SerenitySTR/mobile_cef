@@ -150,7 +150,8 @@ function updateHudWeapon(data) {
 
     const weaponId = Math.max(0, Math.trunc(Number(data.WeaponId !== undefined ? data.WeaponId : data.weaponId) || 0));
     const ammoClip = Math.max(0, Math.trunc(Number(data.AmmoClip !== undefined ? data.AmmoClip : data.ammoClip) || 0));
-    const ammoTotal = Math.max(0, Math.trunc(Number(data.AmmoTotal !== undefined ? data.AmmoTotal : data.ammoTotal) || 0));
+    const ammoTotalValue = data.AmmoTotal ?? data.ammoTotal ?? data.maxAmmo ?? data.MaxAmmo ?? data.max_ammo ?? data.totalAmmo ?? data.TotalAmmo ?? data.ammo_total;
+    const ammoTotal = Math.max(0, Math.trunc(Number(ammoTotalValue) || 0));
     const weaponFile = HUD_WEAPON_IMAGES[weaponId] || HUD_WEAPON_IMAGES[0];
 
     if (hudWeaponImage) {
@@ -327,7 +328,7 @@ function initializeHudPcStats() {
             const wanted = stats.wanted ?? stats.Wanted ?? stats.wantedLevel ?? stats.WantedLevel;
             const weapon = stats.weapon ?? stats.Weapon ?? stats.weaponId ?? stats.WeaponId;
             const ammo = stats.ammo ?? stats.Ammo ?? stats.ammoClip ?? stats.AmmoClip;
-            const maxAmmo = stats.maxAmmo ?? stats.MaxAmmo ?? stats.ammoTotal ?? stats.AmmoTotal;
+            const maxAmmo = stats.maxAmmo ?? stats.MaxAmmo ?? stats.max_ammo ?? stats.ammoTotal ?? stats.AmmoTotal ?? stats.totalAmmo ?? stats.TotalAmmo ?? stats.ammo_total;
 
             if (health !== undefined) {
                 updateHudHealth(health, maxHealth);
