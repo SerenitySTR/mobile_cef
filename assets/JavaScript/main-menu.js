@@ -7,7 +7,14 @@ var MainMenu = {
             Title: "Статистика",
             Description: "Статистика та навички персонажа",
             Image: "./assets/CSS/Images/Spawn/standard.svg",
-            Event: "main-menu:select"
+            Event: "main-menu:statistics"
+        },
+        {
+            Id: "inventory",
+            Title: "Інвентар",
+            Description: "Ваші предмети та аксесуари",
+            Image: "./assets/CSS/Images/Inventory/burger.webp",
+            Event: "main-menu:inventory"
         }
     ],
 
@@ -60,7 +67,7 @@ var MainMenu = {
         var avatarElement = document.getElementById("main-menu-avatar");
 
         if (nameElement)
-            nameElement.textContent = name || "Serenity";
+            nameElement.textContent = name || "Гравець";
 
         if (idElement)
             idElement.textContent = id !== undefined ? id : 0;
@@ -71,7 +78,7 @@ var MainMenu = {
         if (avatarElement) {
             avatarElement.classList.remove("has-image");
             avatarElement.style.backgroundImage = "";
-            avatarElement.textContent = this.GetInitial(name || "Serenity");
+            avatarElement.textContent = this.GetInitial(name || "Гравець");
 
             if (avatar) {
                 avatarElement.classList.add("has-image");
@@ -182,7 +189,7 @@ var MainMenu = {
 
         this.Hide();
 
-        GameCef.sendJson(eventName || "main-menu:select", { Id: id });
+        GameCef.sendJson(eventName || ("main-menu:" + id), {});
     },
 
     GetInitial: function(name) {
