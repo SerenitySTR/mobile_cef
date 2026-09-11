@@ -86,10 +86,7 @@ agePlusButton.addEventListener("click", () => {
 });
 
 ageInput.addEventListener("input", () => {
-    if (ageInput.value === "")
-        return;
-
-    setAge(ageInput.value);
+    ageInput.value = ageInput.value.replace(/\D/g, "").slice(0, 2);
 });
 
 ageInput.addEventListener("blur", () => {
@@ -149,6 +146,8 @@ backButton.addEventListener("click", () => {
 });
 
 registerButton.addEventListener("click", () => {
+    setAge(ageInput.value);
+
     if (!selectedGender) {
         showError("Помилка", "Оберіть стать персонажа.");
         return;
