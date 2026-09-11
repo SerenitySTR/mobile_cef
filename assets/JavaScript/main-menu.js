@@ -3,18 +3,16 @@ var MainMenu = {
     grid: null,
     items: [
         {
-            Id: "statistics",
+            Id: 1,
             Title: "Статистика",
             Description: "Статистика та навички персонажа",
-            Image: "./assets/CSS/Images/Spawn/standard.svg",
-            Event: "main-menu:statistics"
+            Image: "./assets/CSS/Images/Spawn/standard.svg"
         },
         {
-            Id: "inventory",
+            Id: 2,
             Title: "Інвентар",
             Description: "Ваші предмети та аксесуари",
-            Image: "./assets/CSS/Images/Inventory/burger.webp",
-            Event: "main-menu:inventory"
+            Image: "./assets/CSS/Images/Inventory/burger.webp"
         }
     ],
 
@@ -101,21 +99,26 @@ var MainMenu = {
 
         var id = this.Get(item, "Id", "id");
 
-        if (!id)
+        if (!Number.isInteger(Number(id)))
             return;
 
+        id = Number(id);
+
         for (var i = 0; i < this.items.length; i++) {
-            if (this.Get(this.items[i], "Id", "id") === id)
+            if (Number(this.Get(this.items[i], "Id", "id")) === id)
                 return;
         }
 
+        item.Id = id;
         this.items.push(item);
         this.Render();
     },
 
     RemoveItem: function(id) {
+        id = Number(id);
+
         for (var i = this.items.length - 1; i >= 0; i--) {
-            if (this.Get(this.items[i], "Id", "id") === id)
+            if (Number(this.Get(this.items[i], "Id", "id")) === id)
                 this.items.splice(i, 1);
         }
 
@@ -126,8 +129,10 @@ var MainMenu = {
         if (!data)
             return;
 
+        id = Number(id);
+
         for (var i = 0; i < this.items.length; i++) {
-            if (this.Get(this.items[i], "Id", "id") !== id)
+            if (Number(this.Get(this.items[i], "Id", "id")) !== id)
                 continue;
 
             for (var key in data)
@@ -152,11 +157,10 @@ var MainMenu = {
     },
 
     AddCard: function(item) {
-        var id = this.Get(item, "Id", "id");
+        var id = Number(this.Get(item, "Id", "id"));
         var title = this.Get(item, "Title", "title");
         var description = this.Get(item, "Description", "description");
         var image = this.Get(item, "Image", "image");
-        var eventName = this.Get(item, "Event", "event");
 
         var card = document.createElement("button");
         card.type = "button";
@@ -177,19 +181,23 @@ var MainMenu = {
             '</span>';
 
         card.onclick = function() {
-            MainMenu.Select(id, eventName);
+            MainMenu.Select(id);
         };
 
         this.grid.appendChild(card);
     },
 
-    Select: function(id, eventName) {
-        if (!id)
+    Select: function(id) {
+        id = Number(id);
+
+        if (!Number.isInteger(id) || id <= 0)
             return;
 
         this.Hide();
 
-        GameCef.sendJson(eventName || ("main-menu:" + id), {});
+        GameCef.sendJson("main-menu:select", {
+            SelectType: id
+        });
     },
 
     GetInitial: function(name) {
@@ -257,18 +265,3 @@ if (mainMenuClose) {
         GameCef.sendJson("main-menu:close", {});
     };
 }
-
-GameCef.on("main-menu:show", function(data) {
-    MainMenu.Show(data);
-});
-
-GameCef.on("main-menu:hide", function() {
-    MainMenu.Hide();
-});
-
-GameCef.on("main-menu:items", function(data) {
-    var items = MainMenu.Parse(data);
-
-    if (items)
-        MainMenu.SetItems(items);
-});
