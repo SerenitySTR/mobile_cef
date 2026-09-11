@@ -97,12 +97,10 @@ var MainMenu = {
         if (!item)
             return;
 
-        var id = this.Get(item, "Id", "id");
+        var id = Number(this.Get(item, "Id", "id"));
 
-        if (!Number.isInteger(Number(id)))
+        if (!Number.isInteger(id) || id <= 0)
             return;
-
-        id = Number(id);
 
         for (var i = 0; i < this.items.length; i++) {
             if (Number(this.Get(this.items[i], "Id", "id")) === id)
@@ -265,3 +263,18 @@ if (mainMenuClose) {
         GameCef.sendJson("main-menu:close", {});
     };
 }
+
+GameCef.on("main-menu:show", function(data) {
+    MainMenu.Show(data);
+});
+
+GameCef.on("main-menu:hide", function() {
+    MainMenu.Hide();
+});
+
+GameCef.on("main-menu:items", function(data) {
+    var items = MainMenu.Parse(data);
+
+    if (items)
+        MainMenu.SetItems(items);
+});
