@@ -13,6 +13,7 @@
     <link rel="stylesheet" href="./assets/CSS/styles/notifications.css">
     <link rel="stylesheet" href="./assets/CSS/styles/statistics.css">
     <link rel="stylesheet" href="./assets/CSS/styles/inventory.css">
+    <link rel="stylesheet" href="./assets/CSS/styles/main-menu.css">
 </head>
 
 <body>
@@ -602,6 +603,38 @@
     </div>
 </section>
 
+    <section id="main-menu">
+    <div class="main-menu-shell">
+        <header class="main-menu-header">
+            <div class="main-menu-heading">
+                <h1>Головне меню</h1>
+                <span>Serenity Role Play</span>
+            </div>
+
+            <div class="main-menu-profile">
+                <div class="main-menu-avatar" id="main-menu-avatar">S</div>
+
+                <div class="main-menu-player">
+                    <strong id="main-menu-player-name">Serenity</strong>
+                    <div class="main-menu-player-meta">
+                        <span>ID: <b id="main-menu-player-id">0</b></span>
+                        <span id="main-menu-player-level">1 рівень</span>
+                    </div>
+                </div>
+
+                <button class="main-menu-close" id="main-menu-close" type="button" aria-label="Закрити">
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M5 5l14 14"></path>
+                        <path d="M19 5 5 19"></path>
+                    </svg>
+                </button>
+            </div>
+        </header>
+
+        <div class="main-menu-grid" id="main-menu-grid"></div>
+    </div>
+</section>
+
 
     <script src="./assets/JavaScript/cef-wrapper.js"></script>
     <script src="./assets/JavaScript/loading.js"></script>
@@ -613,5 +646,6 @@
     <script src="./assets/JavaScript/notifications.js"></script>
     <script src="./assets/JavaScript/statistics.js"></script>
     <script src="./assets/JavaScript/inventory.js"></script>
+    <script src="./assets/JavaScript/main-menu.js"></script>
 </body>
 </html>
