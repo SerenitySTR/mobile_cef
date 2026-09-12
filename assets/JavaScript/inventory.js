@@ -597,4 +597,3 @@ GameCef.on("inventory:quick",function(data){
     Inventory.SetQuick(data);
 });
 
-Inventory.Show(data);

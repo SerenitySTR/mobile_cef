@@ -6,13 +6,49 @@ var MainMenu = {
             Id: 1,
             Title: "Статистика",
             Description: "Статистика та навички персонажа",
-            Image: "./assets/CSS/Images/Spawn/standard.svg"
+            Image: "./assets/CSS/Images/MainMenu/statistics.webp"
         },
         {
             Id: 2,
             Title: "Інвентар",
             Description: "Ваші предмети та аксесуари",
-            Image: "./assets/CSS/Images/Inventory/burger.webp"
+            Image: "./assets/CSS/Images/MainMenu/inventory.webp"
+        },
+        {
+            Id: 3,
+            Title: "Зв'язок з адміністрацією",
+            Description: "Звернення до адміністрації сервера",
+            Image: "./assets/CSS/Images/MainMenu/administration.webp"
+        },
+        {
+            Id: 4,
+            Title: "Поставити питання",
+            Description: "Отримайте відповідь на своє питання",
+            Image: "./assets/CSS/Images/MainMenu/question.webp"
+        },
+        {
+            Id: 5,
+            Title: "Правила сервера",
+            Description: "Ознайомтеся з правилами сервера",
+            Image: "./assets/CSS/Images/MainMenu/rules.webp"
+        },
+        {
+            Id: 6,
+            Title: "Команди сервера",
+            Description: "Повний список доступних команд",
+            Image: "./assets/CSS/Images/MainMenu/commands.webp"
+        },
+        {
+            Id: 7,
+            Title: "Налаштування",
+            Description: "Налаштування гри та інтерфейсу",
+            Image: "./assets/CSS/Images/MainMenu/settings.webp"
+        },
+        {
+            Id: 8,
+            Title: "Промокод",
+            Description: "Введіть промокод та отримайте бонус",
+            Image: "./assets/CSS/Images/MainMenu/promocode.webp"
         }
     ],
 
@@ -39,17 +75,49 @@ var MainMenu = {
         else
             this.Render();
 
+        this.screen.classList.remove("closing");
         this.screen.classList.add("active");
+
+        requestAnimationFrame(function() {
+            requestAnimationFrame(function() {
+                if (MainMenu.screen)
+                    MainMenu.screen.classList.add("opened");
+            });
+        });
 
         if (typeof Loading !== "undefined" && Loading.Hide)
             Loading.Hide();
     },
 
-    Hide: function() {
+    Hide: function(callback) {
         this.Init();
 
-        if (this.screen)
-            this.screen.classList.remove("active");
+        if (!this.screen) {
+            if (callback)
+                callback();
+
+            return;
+        }
+
+        if (!this.screen.classList.contains("active")) {
+            if (callback)
+                callback();
+
+            return;
+        }
+
+        this.screen.classList.remove("opened");
+        this.screen.classList.add("closing");
+
+        setTimeout(function() {
+            if (MainMenu.screen) {
+                MainMenu.screen.classList.remove("active");
+                MainMenu.screen.classList.remove("closing");
+            }
+
+            if (callback)
+                callback();
+        }, 220);
     },
 
     SetProfile: function(data) {
@@ -160,15 +228,18 @@ var MainMenu = {
         var description = this.Get(item, "Description", "description");
         var image = this.Get(item, "Image", "image");
 
+        if (!Number.isInteger(id) || id <= 0)
+            return;
+
         var card = document.createElement("button");
         card.type = "button";
         card.className = "main-menu-card";
 
-        if (this.items.length === 1)
-            card.classList.add("single");
+        var safeImage = this.EscapeAttribute(image || "./assets/CSS/Images/Spawn/standard.svg");
 
         card.innerHTML =
-            '<span class="main-menu-card-background" style="background-image:url(\'' + this.EscapeAttribute(image || "./assets/CSS/Images/Spawn/standard.svg") + '\')"></span>' +
+            '<span class="main-menu-card-background" style="background-image:url(\'' + safeImage + '\')"></span>' +
+            '<img class="main-menu-card-image" src="' + safeImage + '" alt="">' +
             '<span class="main-menu-card-overlay"></span>' +
             '<span class="main-menu-card-content">' +
                 '<span class="main-menu-card-title">' + this.Escape(title || "") + '</span>' +
@@ -191,10 +262,10 @@ var MainMenu = {
         if (!Number.isInteger(id) || id <= 0)
             return;
 
-        this.Hide();
-
-        GameCef.sendJson("main-menu:select", {
-            SelectType: id
+        this.Hide(function() {
+            GameCef.sendJson("main-menu:select", {
+                SelectType: id
+            });
         });
     },
 
@@ -243,7 +314,7 @@ var MainMenu = {
             .replace(/&/g, "&amp;")
             .replace(/</g, "&lt;")
             .replace(/>/g, "&gt;")
-            .replace(/\"/g, "&quot;")
+            .replace(/"/g, "&quot;")
             .replace(/'/g, "&#039;");
     },
 
@@ -251,7 +322,7 @@ var MainMenu = {
         return String(value || "")
             .replace(/\\/g, "\\\\")
             .replace(/'/g, "\\'")
-            .replace(/\"/g, "&quot;");
+            .replace(/"/g, "&quot;");
     }
 };
 
@@ -259,8 +330,9 @@ var mainMenuClose = document.getElementById("main-menu-close");
 
 if (mainMenuClose) {
     mainMenuClose.onclick = function() {
-        MainMenu.Hide();
-        GameCef.sendJson("main-menu:close", {});
+        MainMenu.Hide(function() {
+            GameCef.sendJson("main-menu:close", {});
+        });
     };
 }
 
