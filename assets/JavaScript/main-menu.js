@@ -350,4 +350,3 @@ GameCef.on("main-menu:items", function(data) {
     if (items)
         MainMenu.SetItems(items);
 });
-MainMenu.Show(MainMenu);
