@@ -1329,3 +1329,149 @@
         font-size: 9px;
     }
 }
+
+
+.main-menu-user-info {
+    min-width: 118px;
+    max-width: 175px;
+}
+
+.main-menu-user-info strong {
+    font-size: 11px;
+}
+
+.main-menu-user-info div {
+    gap: 7px;
+    margin-top: 4px;
+    font-size: 7.5px;
+}
+
+@media (orientation: landscape) and (max-width: 1099px) {
+    .main-menu-user-info {
+        display: block;
+        min-width: 92px;
+        max-width: 130px;
+    }
+
+    .main-menu-user-info strong {
+        font-size: 9px;
+    }
+
+    .main-menu-user-info div {
+        gap: 5px;
+        margin-top: 2px;
+        font-size: 6.5px;
+    }
+
+    .main-menu-avatar {
+        display: flex;
+        width: 29px;
+        height: 29px;
+        flex: 0 0 29px;
+        font-size: 10px;
+    }
+}
+
+@media (orientation: landscape) and (max-height: 420px) and (max-width: 1099px) {
+    .main-menu-user-info {
+        display: block;
+        min-width: 86px;
+        max-width: 120px;
+    }
+
+    .main-menu-user-info strong {
+        font-size: 8.5px;
+    }
+
+    .main-menu-user-info div {
+        font-size: 6px;
+    }
+
+    .main-menu-avatar {
+        display: flex;
+        width: 27px;
+        height: 27px;
+        flex: 0 0 27px;
+    }
+}
+
+
+.main-menu-user {
+    gap: 10px;
+}
+
+.main-menu-user-info {
+    min-width: 155px;
+    max-width: 210px;
+}
+
+.main-menu-user-info strong {
+    font-size: 15px;
+    line-height: 1.1;
+}
+
+.main-menu-user-info div {
+    gap: 12px;
+    margin-top: 5px;
+    font-size: 10px;
+    line-height: 1.1;
+}
+
+@media (orientation: landscape) and (max-width: 1099px) {
+    .main-menu-user {
+        gap: 7px;
+    }
+
+    .main-menu-user-info {
+        display: block;
+        min-width: 125px;
+        max-width: 165px;
+    }
+
+    .main-menu-user-info strong {
+        font-size: 12px;
+        line-height: 1.1;
+    }
+
+    .main-menu-user-info div {
+        display: flex;
+        gap: 10px;
+        margin-top: 4px;
+        font-size: 9px;
+        line-height: 1.1;
+    }
+
+    .main-menu-avatar {
+        width: 34px;
+        height: 34px;
+        flex: 0 0 34px;
+        font-size: 12px;
+    }
+}
+
+@media (orientation: landscape) and (max-height: 420px) and (max-width: 1099px) {
+    .main-menu-user-info {
+        display: block;
+        min-width: 118px;
+        max-width: 155px;
+    }
+
+    .main-menu-user-info strong {
+        font-size: 11px;
+    }
+
+    .main-menu-user-info div {
+        display: flex;
+        gap: 9px;
+        margin-top: 3px;
+        font-size: 8.5px;
+    }
+
+    .main-menu-avatar {
+        display: flex;
+        width: 31px;
+        height: 31px;
+        flex: 0 0 31px;
+        font-size: 11px;
+    }
+}
