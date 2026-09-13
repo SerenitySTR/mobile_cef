@@ -14,6 +14,7 @@
     <link rel="stylesheet" href="./assets/CSS/styles/statistics.css">
     <link rel="stylesheet" href="./assets/CSS/styles/inventory.css">
     <link rel="stylesheet" href="./assets/CSS/styles/main-menu.css">
+    <link rel="stylesheet" href="./assets/CSS/styles/dialog.css">
 </head>
 
 <body>
@@ -644,6 +645,41 @@
     </div>
 </section>
 
+    <section id="dialog-screen">
+    <div class="dialog-window" id="dialog-window">
+        <header class="dialog-header">
+            <div class="dialog-header-left">
+                <div class="dialog-icon" id="dialog-icon">i</div>
+                <h2 id="dialog-title">Діалог</h2>
+            </div>
+
+            <button class="dialog-close" id="dialog-close" type="button" aria-label="Закрити">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M5 5l14 14"></path>
+                    <path d="M19 5 5 19"></path>
+                </svg>
+            </button>
+        </header>
+
+        <div class="dialog-body">
+            <div class="dialog-text" id="dialog-text"></div>
+            <div class="dialog-input-wrap" id="dialog-input-wrap">
+                <input class="dialog-input" id="dialog-input" autocomplete="off">
+                <button class="dialog-password-toggle" id="dialog-password-toggle" type="button" aria-label="Показати пароль">
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M2.5 12s3.5-6 9.5-6 9.5 6 9.5 6-3.5 6-9.5 6S2.5 12 2.5 12Z"></path>
+                        <circle cx="12" cy="12" r="2.6"></circle>
+                    </svg>
+                </button>
+            </div>
+            <div class="dialog-list" id="dialog-list"></div>
+            <div class="dialog-tablist" id="dialog-tablist"></div>
+        </div>
+
+        <div class="dialog-buttons" id="dialog-buttons"></div>
+    </div>
+</section>
+
 
     <script src="./assets/JavaScript/cef-wrapper.js"></script>
     <script src="./assets/JavaScript/loading.js"></script>
@@ -656,5 +692,6 @@
     <script src="./assets/JavaScript/statistics.js"></script>
     <script src="./assets/JavaScript/inventory.js"></script>
     <script src="./assets/JavaScript/main-menu.js"></script>
+    <script src="./assets/JavaScript/dialog.js"></script>
 </body>
 </html>
