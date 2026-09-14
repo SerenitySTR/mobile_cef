@@ -108,3 +108,12 @@ window.addEventListener("load",()=>{
         GameCef.send("browser:ui-ready");
     });
 });
+
+
+GameCef.on("cef:test", data => {
+    const json = JSON.parse(data);
+    const now = Date.now();
+    const delay = now - json.Timestamp;
+
+    console.log(`[CEF TEST] RECEIVE | Delay: ${delay} ms`);
+});
