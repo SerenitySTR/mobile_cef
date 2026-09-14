@@ -51,12 +51,8 @@ var Dialog = {
         this.screen.classList.remove("closing");
         this.screen.classList.add("active");
 
-        requestAnimationFrame(function() {
-            requestAnimationFrame(function() {
-                if (Dialog.screen)
-                    Dialog.screen.classList.add("opened");
-            });
-        });
+        void this.screen.offsetWidth;
+        this.screen.classList.add("opened");
     },
 
     Hide: function(callback) {

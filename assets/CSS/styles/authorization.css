@@ -198,27 +198,27 @@
 }
 
 #authorization.active .authorization-container {
-    animation: authorizationEnter 0.8s cubic-bezier(0.22, 1, 0.36, 1) both;
+    animation: authorizationEnter 0.4s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
 #authorization.active .authorization-logo {
-    animation: authorizationLogoEnter 0.95s cubic-bezier(0.22, 1, 0.36, 1) both;
+    animation: authorizationLogoEnter 0.45s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
 #authorization.active .authorization-title {
-    animation: authorizationItemEnter 0.65s ease 0.12s both;
+    animation: authorizationItemEnter 0.35s ease 0.02s both;
 }
 
 #authorization.active .authorization-field:nth-of-type(2) {
-    animation: authorizationItemEnter 0.65s ease 0.18s both;
+    animation: authorizationItemEnter 0.35s ease 0.04s both;
 }
 
 #authorization.active .authorization-field:nth-of-type(3) {
-    animation: authorizationItemEnter 0.65s ease 0.24s both;
+    animation: authorizationItemEnter 0.35s ease 0.06s both;
 }
 
 #authorization.active #authorization-button {
-    animation: authorizationItemEnter 0.65s ease 0.30s both;
+    animation: authorizationItemEnter 0.35s ease 0.08s both;
 }
 
 @keyframes authorizationEnter {

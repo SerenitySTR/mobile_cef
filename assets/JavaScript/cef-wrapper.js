@@ -1,33 +1,88 @@
 window.GameCef={
     events:{},
+    boundEvents:{},
+    pending:[],
+    bridge:null,
+    sync(){
+        const bridge=window.cef;
+        if(!bridge)return false;
+
+        if(this.bridge!==bridge){
+            this.bridge=bridge;
+            this.boundEvents={};
+        }
+
+        const canSend=typeof bridge.emit==="function"||typeof bridge.sendEvent==="function";
+        const canReceive=typeof bridge.on==="function";
+
+        if(canReceive){
+            for(const eventName in this.events){
+                const callback=this.events[eventName];
+                const boundCallback=this.boundEvents[eventName];
+
+                if(boundCallback===callback)
+                    continue;
+
+                if(boundCallback&&typeof bridge.off==="function")
+                    bridge.off(eventName,boundCallback);
+
+                bridge.on(eventName,callback);
+                this.boundEvents[eventName]=callback;
+            }
+        }
+
+        if(canSend&&this.pending.length>0){
+            const pending=this.pending.splice(0);
+
+            for(const event of pending)
+                this.send(event.eventName,event.data);
+        }
+
+        return canSend&&canReceive;
+    },
     send(eventName,data=""){
-        if(!window.cef)return false;
-        if(typeof window.cef.emit==="function"){
-            window.cef.emit(eventName,data);
+        const bridge=window.cef;
+
+        if(!bridge){
+            this.pending.push({eventName,data});
+            return false;
+        }
+
+        if(typeof bridge.emit==="function"){
+            bridge.emit(eventName,data);
             return true;
         }
-        if(typeof window.cef.sendEvent==="function"){
-            window.cef.sendEvent(eventName,data);
+
+        if(typeof bridge.sendEvent==="function"){
+            bridge.sendEvent(eventName,data);
             return true;
         }
+
+        this.pending.push({eventName,data});
         return false;
     },
     sendJson(eventName,data){
         return this.send(eventName,JSON.stringify(data));
     },
     on(eventName,callback){
+        const oldCallback=this.events[eventName];
+
+        if(oldCallback&&oldCallback!==callback&&this.bridge&&typeof this.bridge.off==="function"&&this.boundEvents[eventName]===oldCallback)
+            this.bridge.off(eventName,oldCallback);
+
         this.events[eventName]=callback;
-        if(window.cef&&typeof window.cef.on==="function"){
-            window.cef.on(eventName,callback);
-            return true;
-        }
-        return false;
+        delete this.boundEvents[eventName];
+        return this.sync();
     },
     off(eventName){
         const callback=this.events[eventName];
         if(!callback)return;
-        if(window.cef&&typeof window.cef.off==="function")window.cef.off(eventName,callback);
+
+        if(this.bridge&&typeof this.bridge.off==="function"&&this.boundEvents[eventName]===callback)
+            this.bridge.off(eventName,callback);
+
         delete this.events[eventName];
+        delete this.boundEvents[eventName];
     },
     receive(eventName,data=""){
         const callback=this.events[eventName];
@@ -36,11 +91,20 @@ window.GameCef={
     }
 };
 
-window.addEventListener("load",()=>{
+const cefSyncTimer=setInterval(()=>{
+    if(GameCef.sync())
+        clearInterval(cefSyncTimer);
+},25);
+
+window.addEventListener("DOMContentLoaded",()=>{
+    GameCef.sync();
     GameCef.send("browser:ready");
+});
+
+window.addEventListener("load",()=>{
+    GameCef.sync();
     requestAnimationFrame(()=>{
-        requestAnimationFrame(()=>{
-            GameCef.send("browser:ui-ready");
-        });
+        GameCef.sync();
+        GameCef.send("browser:ui-ready");
     });
 });

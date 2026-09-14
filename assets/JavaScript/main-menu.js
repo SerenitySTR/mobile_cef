@@ -78,12 +78,8 @@ var MainMenu = {
         this.screen.classList.remove("closing");
         this.screen.classList.add("active");
 
-        requestAnimationFrame(function() {
-            requestAnimationFrame(function() {
-                if (MainMenu.screen)
-                    MainMenu.screen.classList.add("opened");
-            });
-        });
+        void this.screen.offsetWidth;
+        this.screen.classList.add("opened");
 
         if (typeof Loading !== "undefined" && Loading.Hide)
             Loading.Hide();

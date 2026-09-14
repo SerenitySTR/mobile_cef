@@ -393,35 +393,35 @@ button {
 }
 
 #registration.active #registration-step-1.active {
-    animation: registrationEnter 0.8s cubic-bezier(0.22, 1, 0.36, 1) both;
+    animation: registrationEnter 0.4s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
 #registration.active #registration-step-1.active .registration-logo {
-    animation: registrationLogoEnter 0.95s cubic-bezier(0.22, 1, 0.36, 1) both;
+    animation: registrationLogoEnter 0.45s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
 #registration.active #registration-step-1.active .registration-title {
-    animation: registrationItemEnter 0.65s ease 0.12s both;
+    animation: registrationItemEnter 0.35s ease 0.02s both;
 }
 
 #registration.active #registration-step-1.active .registration-field:nth-of-type(2) {
-    animation: registrationItemEnter 0.65s ease 0.18s both;
+    animation: registrationItemEnter 0.35s ease 0.04s both;
 }
 
 #registration.active #registration-step-1.active .registration-field:nth-of-type(3) {
-    animation: registrationItemEnter 0.65s ease 0.24s both;
+    animation: registrationItemEnter 0.35s ease 0.06s both;
 }
 
 #registration.active #registration-step-1.active .registration-field:nth-of-type(4) {
-    animation: registrationItemEnter 0.65s ease 0.30s both;
+    animation: registrationItemEnter 0.35s ease 0.08s both;
 }
 
 #registration.active #registration-step-1.active .registration-field:nth-of-type(5) {
-    animation: registrationItemEnter 0.65s ease 0.36s both;
+    animation: registrationItemEnter 0.35s ease 0.10s both;
 }
 
 #registration.active #registration-step-1.active #registration-next-button {
-    animation: registrationItemEnter 0.65s ease 0.42s both;
+    animation: registrationItemEnter 0.35s ease 0.12s both;
 }
 
 @keyframes registrationEnter {
