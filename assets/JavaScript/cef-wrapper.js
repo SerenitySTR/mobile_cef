@@ -108,8 +108,3 @@ window.addEventListener("load",()=>{
         GameCef.send("browser:ui-ready");
     });
 });
-
-
-GameCef.on("cef:test", () => {
-    GameCef.send("cef:test:response");
-});

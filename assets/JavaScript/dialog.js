@@ -294,6 +294,7 @@ var Dialog = {
     Submit: function(buttonId) {
         var input = document.getElementById("dialog-input");
         var value = input ? input.value : "";
+
         var response = {
             DialogId: this.dialogId,
             ButtonId: buttonId,
@@ -301,6 +302,9 @@ var Dialog = {
             SelectedIndex: this.selectedIndex,
             SelectedItemId: this.selectedItemId
         };
+
+        console.log("Dialog input:", value);
+        console.log("Dialog response:", JSON.stringify(response));
 
         this.Hide(function() {
             GameCef.sendJson("dialog:response", response);
