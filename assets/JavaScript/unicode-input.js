@@ -1,173 +1,190 @@
 (function() {
-    var ukrainianLayout = {
-        Backquote: "'",
-        KeyQ: "й",
-        KeyW: "ц",
-        KeyE: "у",
-        KeyR: "к",
-        KeyT: "е",
-        KeyY: "н",
-        KeyU: "г",
-        KeyI: "ш",
-        KeyO: "щ",
-        KeyP: "з",
-        BracketLeft: "х",
-        BracketRight: "ї",
-        KeyA: "ф",
-        KeyS: "і",
-        KeyD: "в",
-        KeyF: "а",
-        KeyG: "п",
-        KeyH: "р",
-        KeyJ: "о",
-        KeyK: "л",
-        KeyL: "д",
-        Semicolon: "ж",
-        Quote: "є",
-        KeyZ: "я",
-        KeyX: "ч",
-        KeyC: "с",
-        KeyV: "м",
-        KeyB: "и",
-        KeyN: "т",
-        KeyM: "ь",
-        Comma: "б",
-        Period: "ю"
+    var uk = {
+        Backquote: "ʼ",
+        KeyQ: "й", KeyW: "ц", KeyE: "у", KeyR: "к", KeyT: "е",
+        KeyY: "н", KeyU: "г", KeyI: "ш", KeyO: "щ", KeyP: "з",
+        BracketLeft: "х", BracketRight: "ї",
+        KeyA: "ф", KeyS: "і", KeyD: "в", KeyF: "а", KeyG: "п",
+        KeyH: "р", KeyJ: "о", KeyK: "л", KeyL: "д",
+        Semicolon: "ж", Quote: "є",
+        KeyZ: "я", KeyX: "ч", KeyC: "с", KeyV: "м", KeyB: "и",
+        KeyN: "т", KeyM: "ь", Comma: "б", Period: "ю"
     };
 
-    var latinLayout = {
-        KeyQ: "q", KeyW: "w", KeyE: "e", KeyR: "r", KeyT: "t",
-        KeyY: "y", KeyU: "u", KeyI: "i", KeyO: "o", KeyP: "p",
-        KeyA: "a", KeyS: "s", KeyD: "d", KeyF: "f", KeyG: "g",
-        KeyH: "h", KeyJ: "j", KeyK: "k", KeyL: "l",
-        KeyZ: "z", KeyX: "x", KeyC: "c", KeyV: "v", KeyB: "b",
-        KeyN: "n", KeyM: "m"
-    };
+    var mobile = /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent || "");
+    var suppressNativeInput = false;
+    var lastValue = "";
+    var lastStart = 0;
+    var lastEnd = 0;
 
-    function isMobile() {
-        return /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent || "");
+    function editable() {
+        var el = document.activeElement;
+        if (!el)
+            return null;
+
+        if (el.tagName === "TEXTAREA")
+            return el;
+
+        if (el.tagName !== "INPUT")
+            return null;
+
+        var type = (el.type || "text").toLowerCase();
+        return ["text", "password", "search", "email", "url", "tel"].indexOf(type) !== -1 ? el : null;
     }
 
-    function insertText(element, text) {
-        var start = typeof element.selectionStart === "number" ? element.selectionStart : element.value.length;
-        var end = typeof element.selectionEnd === "number" ? element.selectionEnd : start;
-
-        element.value = element.value.substring(0, start) + text + element.value.substring(end);
-
-        var position = start + text.length;
-
-        if (element.setSelectionRange)
-            element.setSelectionRange(position, position);
-
-        element.dispatchEvent(new Event("input", { bubbles: true }));
+    function fireInput(el) {
+        try {
+            el.dispatchEvent(new InputEvent("input", {
+                bubbles: true,
+                inputType: "insertText",
+                data: null
+            }));
+        } catch (_) {
+            el.dispatchEvent(new Event("input", { bubbles: true }));
+        }
     }
 
-    function shouldUseUkrainianFallback(event) {
-        var expectedLatin = latinLayout[event.code];
+    function replaceSelection(el, value) {
+        var start = typeof el.selectionStart === "number" ? el.selectionStart : el.value.length;
+        var end = typeof el.selectionEnd === "number" ? el.selectionEnd : start;
 
-        if (!ukrainianLayout[event.code])
-            return false;
+        el.value = el.value.slice(0, start) + value + el.value.slice(end);
 
-        if (!expectedLatin)
-            return event.key && event.key.length === 1 && event.key.charCodeAt(0) > 127;
+        var pos = start + value.length;
+        if (el.setSelectionRange)
+            el.setSelectionRange(pos, pos);
 
-        if (!event.key || event.key.length !== 1)
-            return true;
-
-        return event.key.toLowerCase() !== expectedLatin;
+        fireInput(el);
     }
 
-    function handleBrokenPcUnicode(event) {
-        if (isMobile() || event.ctrlKey || event.altKey || event.metaKey)
-            return;
-
-        var element = event.currentTarget;
-
-        if (!shouldUseUkrainianFallback(event))
-            return;
-
-        var value = ukrainianLayout[event.code];
-
-        if (!value)
-            return;
-
-        event.preventDefault();
-        event.stopPropagation();
-
-        if (event.shiftKey)
-            value = value.toUpperCase();
-
-        insertText(element, value);
+    function remember(el) {
+        lastValue = el.value;
+        lastStart = typeof el.selectionStart === "number" ? el.selectionStart : el.value.length;
+        lastEnd = typeof el.selectionEnd === "number" ? el.selectionEnd : lastStart;
     }
 
-    function prepare(element) {
-        if (!element || element.dataset.unicodeInputReady === "1")
+    function restore(el) {
+        el.value = lastValue;
+        if (el.setSelectionRange)
+            el.setSelectionRange(lastStart, lastEnd);
+    }
+
+    if (!mobile) {
+        document.addEventListener("keydown", function(event) {
+            var el = editable();
+            if (!el)
+                return;
+
+            remember(el);
+
+            if (event.ctrlKey || event.altKey || event.metaKey)
+                return;
+
+            var ch = uk[event.code];
+            if (!ch)
+                return;
+
+            /*
+             * The PC omp-cef build corrupts non-ASCII WM_CHAR before Chromium
+             * receives it. For Ukrainian keyboard input we therefore use only
+             * the physical KeyboardEvent.code and never the broken event.key.
+             */
+            event.preventDefault();
+            event.stopImmediatePropagation();
+
+            suppressNativeInput = true;
+
+            if (event.shiftKey)
+                ch = ch.toUpperCase();
+
+            replaceSelection(el, ch);
+
+            setTimeout(function() {
+                suppressNativeInput = false;
+                remember(el);
+            }, 0);
+        }, true);
+
+        document.addEventListener("keypress", function(event) {
+            if (!suppressNativeInput || !editable())
+                return;
+
+            event.preventDefault();
+            event.stopImmediatePropagation();
+        }, true);
+
+        document.addEventListener("beforeinput", function(event) {
+            if (!suppressNativeInput || !editable())
+                return;
+
+            event.preventDefault();
+            event.stopImmediatePropagation();
+        }, true);
+
+        document.addEventListener("textInput", function(event) {
+            if (!suppressNativeInput || !editable())
+                return;
+
+            event.preventDefault();
+            event.stopImmediatePropagation();
+        }, true);
+
+        document.addEventListener("input", function(event) {
+            if (!suppressNativeInput)
+                return;
+
+            var el = editable();
+            if (!el || event.target !== el)
+                return;
+
+            /*
+             * Our synthetic input event is allowed. A second native event in
+             * the same key cycle is the mojibake character from CEF.
+             */
+            if (event.isTrusted) {
+                event.stopImmediatePropagation();
+                restore(el);
+            }
+        }, true);
+    }
+
+    function prepare(el) {
+        if (!el || el.dataset.unicodeInputReady === "1")
             return;
 
-        if (element.tagName !== "INPUT" && element.tagName !== "TEXTAREA")
-            return;
+        el.dataset.unicodeInputReady = "1";
+        el.setAttribute("lang", "uk");
+        el.setAttribute("dir", "auto");
 
-        var type = (element.getAttribute("type") || "text").toLowerCase();
+        if (el.tagName === "INPUT")
+            el.setAttribute("inputmode", "text");
 
-        if (["button", "submit", "reset", "checkbox", "radio", "range", "file", "hidden"].indexOf(type) !== -1)
-            return;
-
-        element.dataset.unicodeInputReady = "1";
-        element.setAttribute("lang", "uk");
-        element.setAttribute("dir", "auto");
-
-        if (type === "text" || type === "search" || type === "email" || type === "password")
-            element.setAttribute("inputmode", "text");
-
-        element.setAttribute("autocapitalize", "none");
-        element.setAttribute("autocorrect", "off");
-        element.setAttribute("spellcheck", "false");
-
-        element.addEventListener("keydown", handleBrokenPcUnicode, true);
+        el.setAttribute("autocorrect", "off");
+        el.setAttribute("spellcheck", "false");
     }
 
     function prepareAll(root) {
-        var scope = root || document;
-        var elements = scope.querySelectorAll("input, textarea");
-
-        for (var i = 0; i < elements.length; i++)
-            prepare(elements[i]);
+        var items = (root || document).querySelectorAll("input, textarea");
+        for (var i = 0; i < items.length; i++)
+            prepare(items[i]);
     }
 
-    window.UnicodeInput = {
-        Prepare: prepare,
-        PrepareAll: prepareAll
-    };
-
-    if (document.readyState === "loading") {
-        document.addEventListener("DOMContentLoaded", function() {
-            prepareAll(document);
-        });
-    } else {
+    if (document.readyState === "loading")
+        document.addEventListener("DOMContentLoaded", function() { prepareAll(document); });
+    else
         prepareAll(document);
-    }
 
-    var observer = new MutationObserver(function(mutations) {
-        for (var i = 0; i < mutations.length; i++) {
-            var nodes = mutations[i].addedNodes;
-
-            for (var j = 0; j < nodes.length; j++) {
-                var node = nodes[j];
-
+    new MutationObserver(function(records) {
+        for (var i = 0; i < records.length; i++) {
+            for (var j = 0; j < records[i].addedNodes.length; j++) {
+                var node = records[i].addedNodes[j];
                 if (node.nodeType !== 1)
                     continue;
-
-                if (node.matches && (node.matches("input") || node.matches("textarea")))
+                if (node.matches && node.matches("input, textarea"))
                     prepare(node);
-
                 if (node.querySelectorAll)
                     prepareAll(node);
             }
         }
-    });
-
-    observer.observe(document.documentElement, {
-        childList: true,
-        subtree: true
-    });
+    }).observe(document.documentElement, { childList: true, subtree: true });
 })();
