@@ -298,7 +298,7 @@ var Dialog = {
         var response = {
             DialogId: this.dialogId,
             ButtonId: buttonId,
-            Input: value,
+            Input: encodeURIComponent(value),
             SelectedIndex: this.selectedIndex,
             SelectedItemId: this.selectedItemId
         };
