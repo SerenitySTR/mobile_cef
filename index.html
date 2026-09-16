@@ -15,6 +15,7 @@
     <link rel="stylesheet" href="./assets/CSS/styles/inventory.css">
     <link rel="stylesheet" href="./assets/CSS/styles/main-menu.css">
     <link rel="stylesheet" href="./assets/CSS/styles/dialog.css">
+    <link rel="stylesheet" href="./assets/CSS/styles/tickets.css">
 </head>
 
 <body>
@@ -685,6 +686,33 @@
     </div>
 </section>
 
+    <section id="tickets" aria-hidden="true">
+    <div class="tickets-panel">
+        <header class="tickets-header">
+            <div><span class="tickets-kicker">ПІДТРИМКА</span><h1>Система тікетів</h1><p>Звернення до адміністрації сервера</p></div>
+            <div class="tickets-header-actions"><button id="tickets-create" class="tickets-primary">+ Створити тікет</button><button id="tickets-close" class="tickets-icon">×</button></div>
+        </header>
+        <div class="tickets-layout">
+            <aside class="tickets-sidebar">
+                <div class="tickets-tabs"><button data-filter="all" class="active">Всі</button><button data-filter="open">Відкриті</button><button data-filter="closed">Закриті</button></div>
+                <div id="tickets-list" class="tickets-list"></div>
+            </aside>
+            <main class="tickets-content">
+                <div id="tickets-empty" class="tickets-empty"><strong>Оберіть тікет</strong><span>або створіть нове звернення</span></div>
+                <div id="tickets-thread" class="tickets-thread hidden">
+                    <div class="tickets-thread-head"><div><h2 id="tickets-title"></h2><span id="tickets-meta"></span></div><span id="tickets-status" class="tickets-status"></span></div>
+                    <div id="tickets-messages" class="tickets-messages"></div>
+                    <div id="tickets-reply" class="tickets-reply"><input id="tickets-message" maxlength="500" placeholder="Написати повідомлення..."><button id="tickets-send">Надіслати</button></div>
+                    <button id="tickets-finish" class="tickets-finish">Закрити тікет</button>
+                </div>
+            </main>
+        </div>
+    </div>
+    <div id="tickets-create-modal" class="tickets-modal hidden">
+        <div class="tickets-modal-card"><h2>Нове звернення</h2><input id="tickets-new-title" maxlength="60" placeholder="Тема звернення"><textarea id="tickets-new-message" maxlength="500" placeholder="Опишіть проблему або питання"></textarea><div><button id="tickets-create-cancel">Скасувати</button><button id="tickets-create-submit" class="tickets-primary">Створити</button></div></div>
+    </div>
+</section>
+
 
     <script src="./assets/JavaScript/cef-wrapper.js"></script>
     <script src="./assets/JavaScript/loading.js"></script>
@@ -698,5 +726,6 @@
     <script src="./assets/JavaScript/inventory.js"></script>
     <script src="./assets/JavaScript/main-menu.js"></script>
     <script src="./assets/JavaScript/dialog.js"></script>
+    <script src="./assets/JavaScript/tickets.js"></script>
 </body>
 </html>
