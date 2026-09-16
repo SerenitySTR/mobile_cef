@@ -429,3 +429,11 @@ rgba(4,
 }
 
 }
+
+#tickets {
+    display: none;
+}
+
+#tickets.active {
+    display: flex;
+}
