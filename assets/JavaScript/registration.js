@@ -9,6 +9,7 @@ const registerButton = document.getElementById("registration-button");
 
 const usernameInput = document.getElementById("username");
 const emailInput = document.getElementById("email");
+const referalInput = document.getElementById("referal");
 const passwordInput = document.getElementById("password");
 const passwordRepeatInput = document.getElementById("password-repeat");
 
@@ -128,8 +129,8 @@ nextButton.addEventListener("click", () => {
         return;
     }
 
-    if (!/^[A-Za-z0-9_]+$/.test(password)) {
-        showError("Невірний пароль", "Пароль може містити лише латинські літери, цифри та знак _.");
+    if (!/^[\x21-\x7E]+$/.test(password)) {
+        showError("Невірний пароль", "Пароль може містити латинські літери, цифри та спеціальні символи без пробілів.");
         return;
     }
 
@@ -157,6 +158,7 @@ registerButton.addEventListener("click", () => {
         UserName: usernameInput.value.trim(),
         Password: passwordInput.value,
         Email: emailInput.value.trim(),
+        Referral: referalInput.value.trim(),
         Gender: selectedGender,
         Age: Number(ageInput.value)
     };

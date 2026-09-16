@@ -33,8 +33,8 @@ authorizationButton.addEventListener("click", () => {
         return;
     }
 
-    if (!/^[A-Za-z0-9_]+$/.test(password)) {
-        showError("Невірний пароль", "Пароль може містити лише латинські літери, цифри та знак _.");
+    if (!/^[\x21-\x7E]+$/.test(password)) {
+        showError("Невірний пароль", "Пароль може містити латинські літери, цифри та спеціальні символи без пробілів.");
         return;
     }
 
