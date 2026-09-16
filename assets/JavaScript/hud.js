@@ -412,5 +412,3 @@ window.addEventListener("focus", () => {
         window.cef.emit("game:data:pollPlayerStats", true, 50);
     }
 });
-
-showHud();
