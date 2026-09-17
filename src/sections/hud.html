@@ -1,10 +1,10 @@
 <section id="hud">
   <div class="hud-main-shell">
     <div class="hud-logo-panel">
-      <img class="hud-logo-image" src="./assets/CSS/Images/Hud/logo-antares-roleplay.png" alt="Antares Roleplay" />
     </div>
 
     <div class="hud-main-panel">
+    <div class="hud-top-spacer" aria-hidden="true"></div>
     <div class="hud-stats">
       <div class="hud-stat hud-health">
         <svg class="hud-ring" viewBox="0 0 120 120" aria-hidden="true">
@@ -38,8 +38,13 @@
           <circle id="hud-hunger-ring" class="hud-ring-progress" cx="60" cy="60" r="49"></circle>
         </svg>
         <div class="hud-stat-core">
-          <svg class="hud-stat-icon" viewBox="0 0 64 64" aria-hidden="true">
-            <path d="M13 27c1.1-9 8.3-14 19-14s17.9 5 19 14H13Zm1 5h36c-1.1 4.2-4.4 6-9 6H23c-4.6 0-7.9-1.8-9-6Zm3 10h30l-4 6H21l-4-6Zm4 9h22c-2.1 3-5.2 4-11 4s-8.9-1-11-4Z"></path>
+          <svg class="hud-stat-icon hud-burger-icon" viewBox="0 0 64 64" aria-hidden="true">
+            <path d="M11 25C12.7 15.6 20.2 10 32 10s19.3 5.6 21 15H11Z"></path>
+            <circle cx="22" cy="18" r="1.3"></circle><circle cx="31" cy="15" r="1.3"></circle><circle cx="40" cy="19" r="1.3"></circle>
+            <path d="M10 29h44v5H10z"></path>
+            <path d="M13 37c4-3.2 7.8-3.2 11.8 0 4-3.2 7.9-3.2 11.9 0 4-3.2 7.8-3.2 11.8 0l-3 4H16l-3-4Z"></path>
+            <path d="M14 43h36l-3.8 7H17.8L14 43Z"></path>
+            <path d="M12 53h40c-1.5 4-5 6-10 6H22c-5 0-8.5-2-10-6Z"></path>
           </svg>
           <span id="hud-hunger-value" class="hud-stat-value">100</span>
         </div>
@@ -60,6 +65,8 @@
     </div>
   </div>
 
+  <div class="hud-money-row-spacer" aria-hidden="true"></div>
+
   <div class="hud-bottom-panel">
     <div class="hud-money">
       <div class="hud-money-icon">$</div>
@@ -70,19 +77,15 @@
 </section>
 
 <div id="hud-corner-info">
-  <div class="hud-corner-data">
-    <div class="hud-corner-row hud-corner-id">
-      <svg viewBox="0 0 24 24" aria-hidden="true">
-        <path d="M12 12c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5Zm0 2c-4.42 0-8 2.24-8 5v3h16v-3c0-2.76-3.58-5-8-5Z"></path>
-      </svg>
-      <span>ID:</span>
-      <strong id="hud-id-value">0</strong>
-    </div>
-
-    <div class="hud-corner-row hud-corner-online">
-      <span class="hud-online-dot"></span>
-      <span>Online:</span>
-      <strong id="hud-online-value">0</strong>
-    </div>
+  <div class="hud-corner-logo"><img src="./assets/CSS/Images/Hud/logo.svg" alt="Antares" /></div>
+  <div class="hud-corner-divider"></div>
+  <div class="hud-corner-player">
+    <strong id="hud-player-name">Nastya Petrova</strong>
+    <div class="hud-corner-idtext">ID: <span id="hud-id-value">0</span></div>
+  </div>
+  <div class="hud-corner-divider hud-corner-divider-second"></div>
+  <div class="hud-corner-datetime">
+    <div class="hud-corner-time"><span class="hud-clock-icon"></span><span id="hud-time-value">22:31</span></div>
+    <div class="hud-corner-date"><span class="hud-calendar-icon"></span><span id="hud-date-value">14.09.2025</span></div>
   </div>
 </div>

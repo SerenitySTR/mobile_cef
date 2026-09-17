@@ -1175,3 +1175,730 @@
     background: linear-gradient(180deg, rgba(7, 27, 41, .48), rgba(1, 10, 17, .56));
   }
 }
+
+/* ===== Antares HUD: unified translucent shell + individual stat tiles ===== */
+#hud {
+  width: 570px;
+}
+
+.hud-logo-panel {
+  width: 250px;
+  height: 62px;
+  margin-right: 10px;
+  margin-bottom: -9px;
+  border-radius: 20px 20px 22px 10px;
+  background: rgba(8, 18, 27, .78);
+}
+
+.hud-logo-image {
+  width: 190px;
+  height: 50px;
+}
+
+.hud-main-panel {
+  width: 570px;
+  height: 126px;
+  padding: 9px 10px;
+  gap: 8px;
+  border: 1px solid rgba(113, 191, 226, .42);
+  border-radius: 24px;
+  background: rgba(38, 57, 70, .72);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, .34), inset 0 1px 0 rgba(255,255,255,.05);
+}
+
+.hud-main-panel::after { display: none; }
+
+.hud-stats {
+  gap: 8px;
+}
+
+.hud-stat {
+  width: 104px;
+  height: 104px;
+  border-radius: 20px;
+  background: rgba(4, 12, 19, .80);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.035), 0 3px 10px rgba(0,0,0,.18);
+}
+
+.hud-ring {
+  inset: 9px;
+  width: 86px;
+  height: 86px;
+}
+
+.hud-ring circle {
+  stroke-width: 7;
+}
+
+.hud-ring-track {
+  stroke: rgba(255,255,255,.12);
+}
+
+.hud-stat-core {
+  width: 62px;
+  height: 62px;
+  gap: 2px;
+  background: transparent;
+  box-shadow: none;
+}
+
+.hud-stat-icon {
+  width: 23px;
+  height: 23px;
+}
+
+.hud-stat-value {
+  font-size: 17px;
+  line-height: 18px;
+}
+
+.hud-separator { display: none; }
+
+.hud-weapon {
+  min-width: 0;
+  width: 214px;
+  height: 104px;
+  padding: 8px 10px;
+  gap: 6px;
+  border-radius: 20px;
+  background: rgba(4, 12, 19, .80);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.035), 0 3px 10px rgba(0,0,0,.18);
+}
+
+.hud-weapon-icon {
+  width: 126px;
+  height: 76px;
+}
+
+.hud-weapon-icon img {
+  width: 122px;
+  height: 68px;
+}
+
+.hud-ammo {
+  min-width: 58px;
+}
+
+.hud-ammo-clip { font-size: 24px; }
+.hud-ammo-total { font-size: 14px; margin-left: 3px; }
+
+.hud-bottom-panel {
+  width: 455px;
+  height: 52px;
+  margin-right: 16px;
+  background: rgba(8, 18, 27, .80);
+}
+
+#hud.hud-compact .hud-main-panel {
+  background: rgba(38, 57, 70, .68);
+  border-color: rgba(113, 191, 226, .38);
+}
+
+#hud.hud-compact .hud-stat,
+#hud.hud-compact .hud-weapon {
+  background: rgba(4, 12, 19, .76);
+}
+
+#hud.hud-compact .hud-stat-core { background: transparent; }
+
+/* Antares lower-left player info */
+#hud-corner-info {
+  display: none;
+  position: fixed;
+  left: calc(18px + env(safe-area-inset-left, 0px));
+  bottom: calc(18px + env(safe-area-inset-bottom, 0px));
+  width: 500px;
+  height: 92px;
+  padding: 9px 18px 9px 12px;
+  align-items: center;
+  border: 0;
+  border-radius: 25px;
+  background: rgba(12, 12, 14, .76);
+  box-shadow: 0 8px 24px rgba(0,0,0,.32);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  color: #fff;
+  font-family: "Montserrat", Arial, sans-serif;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 500;
+}
+#hud-corner-info::before, #hud-corner-info::after { display:none !important; }
+#hud.active + #hud-corner-info { display:flex; }
+.hud-corner-logo { width: 112px; height: 76px; display:flex; align-items:center; justify-content:center; flex:0 0 112px; }
+.hud-corner-logo img { width: 104px; height: 72px; object-fit:contain; filter: drop-shadow(0 2px 4px rgba(0,0,0,.55)); }
+.hud-corner-divider { width:1px; height:62px; margin:0 17px 0 7px; background:rgba(255,255,255,.72); flex:0 0 1px; }
+.hud-corner-player { width:178px; min-width:178px; display:flex; flex-direction:column; justify-content:center; gap:14px; }
+#hud-player-name { font-size:18px; line-height:1; font-weight:700; white-space:nowrap; }
+.hud-corner-idtext { font-size:16px; line-height:1; font-weight:500; color:rgba(255,255,255,.74); white-space:nowrap; }
+.hud-corner-divider-second { margin-left:15px; margin-right:18px; }
+.hud-corner-datetime { display:flex; flex-direction:column; justify-content:center; gap:12px; min-width:120px; }
+.hud-corner-time, .hud-corner-date { display:flex; align-items:center; gap:12px; font-size:13px; line-height:1; font-weight:500; color:rgba(255,255,255,.88); white-space:nowrap; }
+.hud-clock-icon { width:23px; height:23px; border:3px solid #fff; border-radius:50%; position:relative; flex:0 0 23px; }
+.hud-clock-icon::before { content:""; position:absolute; left:9px; top:4px; width:3px; height:7px; border-radius:2px; background:#fff; transform-origin:bottom center; }
+.hud-clock-icon::after { content:""; position:absolute; left:9px; top:9px; width:6px; height:3px; border-radius:2px; background:#fff; transform:rotate(22deg); transform-origin:left center; }
+.hud-calendar-icon { width:24px; height:22px; border:3px solid #fff; border-radius:3px; position:relative; flex:0 0 24px; }
+.hud-calendar-icon::before { content:""; position:absolute; left:-3px; right:-3px; top:4px; height:3px; background:#fff; }
+.hud-calendar-icon::after { content:"•••"; position:absolute; left:3px; top:5px; font-size:12px; letter-spacing:1px; color:#fff; }
+@media (max-width:1000px), (max-height:600px) {
+  #hud-corner-info { left:calc(8px + env(safe-area-inset-left,0px)); bottom:calc(8px + env(safe-area-inset-bottom,0px)); width:390px; height:72px; padding:7px 13px 7px 9px; border-radius:20px; transform:scale(.9); transform-origin:bottom left; }
+  .hud-corner-logo { width:86px; height:58px; flex-basis:86px; }
+  .hud-corner-logo img { width:80px; height:56px; }
+  .hud-corner-divider { height:48px; margin:0 12px 0 5px; }
+  .hud-corner-player { width:138px; min-width:138px; gap:10px; }
+  #hud-player-name { font-size:14px; }
+  .hud-corner-idtext { font-size:13px; }
+  .hud-corner-divider-second { margin-left:10px; margin-right:12px; }
+  .hud-corner-datetime { gap:9px; min-width:100px; }
+  .hud-corner-time, .hud-corner-date { gap:9px; font-size:11px; }
+  .hud-clock-icon { width:19px; height:19px; flex-basis:19px; border-width:2px; }
+  .hud-clock-icon::before { left:8px; top:3px; width:2px; height:6px; }
+  .hud-clock-icon::after { left:8px; top:8px; width:5px; height:2px; }
+  .hud-calendar-icon { width:20px; height:18px; flex-basis:20px; border-width:2px; }
+  .hud-calendar-icon::before { left:-2px; right:-2px; top:3px; height:2px; }
+  .hud-calendar-icon::after { left:3px; top:3px; font-size:9px; }
+}
+
+/* 2026-09-17: remove the empty top logo panel completely */
+.hud-main-shell .hud-logo-panel {
+  display: none !important;
+}
+
+/* Antares HUD: slimmer stats/weapon strip */
+.hud-main-panel {
+  height: 108px;
+  padding: 7px 9px;
+}
+.hud-stat {
+  width: 90px;
+  height: 90px;
+  border-radius: 18px;
+}
+.hud-ring {
+  inset: 8px;
+  width: 74px;
+  height: 74px;
+}
+.hud-ring circle { stroke-width: 6; }
+.hud-stat-core {
+  width: 54px;
+  height: 54px;
+}
+.hud-stat-icon {
+  width: 20px;
+  height: 20px;
+}
+.hud-stat-value {
+  font-size: 16px;
+  line-height: 17px;
+}
+.hud-weapon {
+  height: 90px;
+  border-radius: 18px;
+  padding: 7px 9px;
+}
+.hud-weapon-icon {
+  height: 66px;
+}
+.hud-weapon-icon img {
+  height: 60px;
+}
+
+/* Antares stats row — wide capsule layout matching approved reference */
+#hud {
+  width: 690px;
+}
+
+.hud-main-panel {
+  width: 690px;
+  height: 84px;
+  padding: 7px 10px;
+  border-radius: 27px;
+  background: linear-gradient(180deg, rgba(20, 53, 79, .82), rgba(12, 39, 61, .88));
+  border: 2px solid rgba(95, 169, 226, .55);
+  box-shadow: 0 7px 20px rgba(0,0,0,.32), inset 0 0 0 2px rgba(135,198,241,.08);
+}
+
+.hud-main-panel::after { display: none; }
+
+.hud-stats { gap: 9px; }
+
+.hud-stat {
+  width: 130px;
+  height: 68px;
+  justify-content: flex-start;
+  padding: 0 18px;
+  border-radius: 28px;
+  background: linear-gradient(180deg, rgba(6, 27, 43, .90), rgba(3, 19, 31, .94));
+  box-shadow: inset 0 0 0 4px rgba(106, 143, 174, .32), inset 0 0 16px rgba(0,0,0,.22);
+  overflow: hidden;
+}
+
+.hud-ring {
+  inset: 0;
+  width: 130px;
+  height: 68px;
+  transform: none;
+}
+
+.hud-ring circle { display: none; }
+
+.hud-stat::before,
+.hud-stat::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+}
+
+.hud-stat::before {
+  border: 5px solid rgba(112, 147, 176, .32);
+}
+
+.hud-stat::after {
+  border: 5px solid transparent;
+  border-right-color: currentColor;
+  border-bottom-color: currentColor;
+  transform: rotate(12deg);
+  filter: drop-shadow(0 0 4px currentColor);
+}
+
+.hud-health { color: #ff4b56; }
+.hud-armour { color: #31c6f4; }
+.hud-hunger { color: #ffa126; }
+
+.hud-stat-core {
+  width: 100%;
+  height: 100%;
+  flex-direction: row;
+  justify-content: flex-start;
+  gap: 18px;
+  border-radius: 0;
+  background: none;
+  box-shadow: none;
+  z-index: 2;
+}
+
+.hud-stat-icon { width: 31px; height: 31px; flex: 0 0 auto; }
+.hud-stat-value { font-size: 25px; line-height: 1; font-weight: 800; color: #fff; }
+
+.hud-separator { display: none; }
+
+.hud-weapon {
+  min-width: 236px;
+  height: 68px;
+  margin-left: 9px;
+  padding: 0 18px 0 16px;
+  justify-content: flex-start;
+  gap: 14px;
+  border-radius: 28px;
+  background: linear-gradient(180deg, rgba(6, 27, 43, .90), rgba(3, 19, 31, .94));
+  box-shadow: inset 0 0 0 4px rgba(106, 143, 174, .32), inset 0 0 16px rgba(0,0,0,.22);
+}
+
+.hud-weapon-icon { width: 128px; height: 58px; }
+.hud-weapon-icon img { width: 122px; height: 53px; }
+
+.hud-ammo {
+  min-width: 78px;
+  padding-left: 15px;
+  border-left: 2px solid rgba(150, 187, 217, .55);
+}
+.hud-ammo-clip { font-size: 27px; font-weight: 800; }
+.hud-ammo-total { font-size: 18px; font-weight: 600; color: rgba(194,215,236,.85); }
+
+/* 2026-09-17: clean reference-style stats strip; fix clipping/smearing */
+#hud { width: 690px !important; }
+.hud-main-shell { width: 690px !important; padding-top: 0 !important; overflow: visible !important; }
+.hud-main-shell .hud-main-panel,
+.hud-main-panel { width: 690px !important; overflow: visible !important; }
+.hud-stat { overflow: visible !important; --progress: 100; }
+.hud-stat::before {
+  inset: 0;
+  border: 5px solid rgba(112,147,176,.32);
+  border-radius: inherit;
+}
+.hud-stat::after {
+  inset: 0;
+  padding: 5px;
+  border: 0;
+  border-radius: inherit;
+  background: conic-gradient(from 0deg, currentColor calc(var(--progress) * 1%), transparent 0);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  transform: none;
+  filter: drop-shadow(0 0 3px currentColor);
+}
+.hud-weapon { overflow: hidden; flex: 0 0 236px; }
+
+/* 2026-09-17: vertical spacing between top stats row and money/wanted row */
+.hud-bottom-panel {
+  margin-top: 10px !important;
+}
+
+/* 2026-09-17: wanted stars directly under money */
+.hud-bottom-panel {
+  height: 82px !important;
+  flex-direction: column !important;
+  align-items: flex-start !important;
+  justify-content: center !important;
+  gap: 4px !important;
+  padding-left: 24px !important;
+}
+.hud-wanted {
+  min-width: 0 !important;
+  justify-content: flex-start !important;
+  margin-left: 0 !important;
+}
+.hud-wanted-star {
+  width: 23px !important;
+  height: 23px !important;
+}
+
+/* 2026-09-17: remove divider between weapon icon and ammo */
+.hud-weapon .hud-ammo {
+  border-left: none !important;
+  padding-left: 0 !important;
+}
+
+/* 2026-09-17: unified palette and background treatment for every stat tile */
+.hud-stat,
+.hud-weapon {
+  background: linear-gradient(180deg, rgba(6, 27, 43, .90), rgba(3, 19, 31, .94)) !important;
+  box-shadow:
+    inset 0 0 0 4px rgba(106, 143, 174, .32),
+    inset 0 0 16px rgba(0, 0, 0, .22) !important;
+  border: 0 !important;
+}
+
+/* Keep the neutral blue-grey base contour identical on HP / armour / hunger. */
+.hud-stat::before {
+  border-color: rgba(112, 147, 176, .32) !important;
+}
+
+/* Weapon uses the same neutral inner contour/background as the stat tiles. */
+.hud-weapon {
+  position: relative;
+}
+.hud-weapon::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border: 5px solid rgba(112, 147, 176, .32);
+  border-radius: inherit;
+  pointer-events: none;
+  box-sizing: border-box;
+}
+.hud-weapon-icon,
+.hud-ammo {
+  position: relative;
+  z-index: 2;
+}
+
+
+/* 2026-09-17: compact lower-right area + unified money + transparent wanted/corner */
+.hud-bottom-panel {
+  width: 220px !important;
+  height: auto !important;
+  min-height: 0 !important;
+  margin-top: 10px !important;
+  margin-right: 0 !important;
+  padding: 0 !important;
+  gap: 5px !important;
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  align-items: stretch !important;
+}
+.hud-money {
+  width: 220px !important;
+  height: 48px !important;
+  box-sizing: border-box !important;
+  padding: 0 14px !important;
+  border-radius: 20px !important;
+  background: linear-gradient(180deg, rgba(6, 27, 43, .90), rgba(3, 19, 31, .94)) !important;
+  box-shadow: inset 0 0 0 4px rgba(106,143,174,.32), inset 0 0 16px rgba(0,0,0,.22) !important;
+}
+.hud-wanted {
+  width: 220px !important;
+  min-width: 0 !important;
+  height: 27px !important;
+  padding: 0 4px !important;
+  margin: 0 !important;
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  box-sizing: border-box !important;
+}
+#hud-corner-info {
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+#hud-corner-info::before,
+#hud-corner-info::after { display: none !important; }
+
+/* More detailed burger silhouette while keeping the hunger accent colour. */
+.hud-burger-icon { overflow: visible; }
+.hud-burger-icon circle { fill: rgba(255,255,255,.78); }
+
+/* 2026-09-17: lower-left identity text — white fill with dark gradient-like outline */
+#hud-player-name,
+.hud-corner-idtext,
+.hud-corner-idtext span,
+.hud-corner-time,
+.hud-corner-time span,
+.hud-corner-date,
+.hud-corner-date span {
+  color: #fff !important;
+  -webkit-text-fill-color: #fff !important;
+  text-shadow:
+    0 1px 0 rgba(5, 13, 22, .98),
+    1px 0 0 rgba(5, 13, 22, .92),
+    -1px 0 0 rgba(5, 13, 22, .92),
+    0 -1px 0 rgba(12, 28, 42, .88),
+    1px 1px 1px rgba(0, 0, 0, .82),
+    -1px 1px 1px rgba(0, 0, 0, .72),
+    0 2px 3px rgba(0, 0, 0, .62) !important;
+}
+
+/* 2026-09-17: dark outline/shadow for lower-left time/date icons */
+.hud-clock-icon,
+.hud-calendar-icon {
+  filter:
+    drop-shadow(0 1px 0 rgba(5, 13, 22, .98))
+    drop-shadow(1px 0 0 rgba(5, 13, 22, .92))
+    drop-shadow(-1px 0 0 rgba(5, 13, 22, .92))
+    drop-shadow(0 -1px 0 rgba(12, 28, 42, .88))
+    drop-shadow(0 2px 3px rgba(0, 0, 0, .62));
+}
+
+/* 2026-09-17: center wanted stars directly below money */
+.hud-wanted {
+  justify-content: center !important;
+  align-self: center !important;
+}
+
+/* 2026-09-17: equal outer fill above the stats row */
+.hud-main-panel {
+  height: 88px !important;
+  padding-top: 10px !important;
+  padding-bottom: 10px !important;
+  box-sizing: border-box !important;
+}
+
+/* 2026-09-17: real symmetric top/bottom inset around stats row.
+   68px tile + 10px top + 10px bottom + 2px borders = 92px outer panel. */
+.hud-main-panel {
+  height: 92px !important;
+  min-height: 92px !important;
+  padding: 10px 10px !important;
+  align-items: center !important;
+  box-sizing: border-box !important;
+}
+.hud-main-panel .hud-stats,
+.hud-main-panel .hud-weapon {
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+}
+
+/* 2026-09-17: keep the stat progress inside each capsule so the outer panel
+   has a clean, visible top inset equal to the surrounding background fill. */
+.hud-main-panel {
+  height: 92px !important;
+  padding: 10px !important;
+  align-items: center !important;
+  box-sizing: border-box !important;
+}
+.hud-stat {
+  height: 68px !important;
+  overflow: hidden !important;
+}
+.hud-stat::before,
+.hud-stat::after {
+  box-sizing: border-box !important;
+}
+
+/* 2026-09-17: explicit visible top gutter above HP/armour/hunger/weapon row */
+.hud-main-panel {
+  height: 100px !important;
+  min-height: 100px !important;
+  padding: 16px 10px 12px !important;
+  align-items: flex-start !important;
+  box-sizing: border-box !important;
+}
+.hud-main-panel > .hud-stats,
+.hud-main-panel > .hud-weapon {
+  position: relative !important;
+  top: 0 !important;
+  transform: none !important;
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+}
+
+/* 2026-09-17: explicit spacer ABOVE the complete stats/weapon panel.
+   Previous rules forced .hud-main-shell padding-top to 0!important, so changing
+   the panel padding could not create the requested gap above the row. */
+.hud-main-shell {
+  padding-top: 10px !important;
+  box-sizing: border-box !important;
+}
+
+
+/* 2026-09-17: physical transparent spacer above the stats row.
+   Grid placement makes the spacer consume real layout height instead of relying on padding. */
+.hud-main-panel {
+  display: grid !important;
+  grid-template-columns: 1fr 236px !important;
+  grid-template-rows: 10px 68px 10px !important;
+  column-gap: 9px !important;
+  row-gap: 0 !important;
+  width: 690px !important;
+  height: 92px !important;
+  min-height: 92px !important;
+  padding: 2px 10px !important;
+  box-sizing: border-box !important;
+  align-items: center !important;
+}
+.hud-top-spacer {
+  display: block !important;
+  grid-column: 1 / -1 !important;
+  grid-row: 1 !important;
+  width: 100% !important;
+  height: 10px !important;
+  min-height: 10px !important;
+  background: transparent !important;
+  pointer-events: none !important;
+}
+.hud-main-panel > .hud-stats {
+  grid-column: 1 !important;
+  grid-row: 2 !important;
+  align-self: center !important;
+  margin: 0 !important;
+}
+.hud-main-panel > .hud-weapon {
+  grid-column: 2 !important;
+  grid-row: 2 !important;
+  align-self: center !important;
+  margin: 0 !important;
+}
+.hud-main-shell {
+  padding-top: 0 !important;
+}
+
+/* 2026-09-17: reduce the overall HUD footprint on screen without changing its internal proportions. */
+#hud {
+  --hud-scale: 0.82 !important;
+}
+#hud-corner-info {
+  transform: scale(0.82) !important;
+  transform-origin: bottom left !important;
+}
+
+/* 2026-09-17: mobile-first compact top stats/weapon row.
+   Shrink only the upper HP/armour/hunger/weapon group so it does not occupy
+   a large part of a phone screen. CSS zoom changes its layout footprint too,
+   unlike transform:scale(), so the rows below do not inherit a large empty gap. */
+.hud-main-shell {
+  zoom: 0.72 !important;
+  margin-left: auto !important;
+  transform: none !important;
+}
+
+/* 2026-09-17: compact money block for mobile HUD (about 15% smaller). */
+.hud-bottom-panel {
+  width: 187px !important;
+  align-items: center !important;
+}
+.hud-money {
+  width: 187px !important;
+  height: 41px !important;
+  padding: 0 12px !important;
+  gap: 10px !important;
+  border-radius: 17px !important;
+}
+.hud-money-icon {
+  width: 31px !important;
+  height: 31px !important;
+  flex: 0 0 31px !important;
+  font-size: 18px !important;
+}
+#hud-money-value {
+  font-size: 21px !important;
+  letter-spacing: .3px !important;
+}
+.hud-wanted {
+  width: 187px !important;
+  align-self: center !important;
+  justify-content: center !important;
+}
+
+
+/* 2026-09-17: physical spacer between the compact stats/weapon row and money row.
+   This is a real layout element, not margin/padding, so CEF cannot collapse the gap. */
+.hud-money-row-spacer {
+  display: block !important;
+  width: 100% !important;
+  height: 12px !important;
+  min-height: 12px !important;
+  clear: both !important;
+  background: transparent !important;
+  pointer-events: none !important;
+}
+.hud-bottom-panel {
+  margin-top: 0 !important;
+}
+
+/* 2026-09-17: compact lower-left identity/date/time block for mobile screens. */
+#hud-corner-info {
+  transform: scale(0.62) !important;
+  transform-origin: bottom left !important;
+}
+
+/* 2026-09-17: final viewport-adaptive mobile positioning. */
+#hud {
+  top: calc(clamp(6px, 1.2vmin, 14px) + env(safe-area-inset-top, 0px)) !important;
+  right: calc(clamp(6px, 1.2vmin, 14px) + env(safe-area-inset-right, 0px)) !important;
+  max-width: calc(100vw - env(safe-area-inset-left, 0px) - env(safe-area-inset-right, 0px)) !important;
+}
+#hud-corner-info {
+  left: calc(clamp(6px, 1.2vmin, 14px) + env(safe-area-inset-left, 0px)) !important;
+  right: auto !important;
+  bottom: calc(clamp(6px, 1.2vmin, 14px) + env(safe-area-inset-bottom, 0px)) !important;
+}
+@media (orientation: portrait) {
+  #hud { right: calc(5px + env(safe-area-inset-right, 0px)) !important; }
+  #hud-corner-info { left: calc(5px + env(safe-area-inset-left, 0px)) !important; }
+}
+
+/* 2026-09-17: make the outer stats panel bottom-right corner match the other corners. */
+.hud-main-panel {
+  border-radius: 28px !important;
+}
+
+/* 2026-09-17: visible screen-edge gap above the complete right-side HUD.
+   This is the OUTER viewport offset requested by the user, not an inset inside the stats panel. */
+#hud {
+  top: calc(clamp(14px, 2.2vmin, 24px) + env(safe-area-inset-top, 0px)) !important;
+}
+@media (orientation: portrait) {
+  #hud {
+    top: calc(clamp(14px, 2.2vmin, 24px) + env(safe-area-inset-top, 0px)) !important;
+  }
+}
+
+/* 2026-09-17: reserve a functional top zone for future mobile HUD buttons. */
+#hud {
+  top: calc(clamp(56px, 8vmin, 72px) + env(safe-area-inset-top, 0px)) !important;
+}
+@media (orientation: portrait) {
+  #hud {
+    top: calc(clamp(52px, 7vmin, 68px) + env(safe-area-inset-top, 0px)) !important;
+  }
+}
