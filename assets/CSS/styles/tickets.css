@@ -437,3 +437,43 @@ rgba(4,
 #tickets.active {
     display: flex;
 }
+\n\n/* Larger, more readable ticket-system typography */
+.tickets-kicker { font-size: 10px; }
+.tickets-header h1 { font-size: 26px; }
+.tickets-header p { font-size: 12px; }
+.tickets-primary, #tickets-send { font-size: 13px; }
+.tickets-tabs button { font-size: 12px; }
+.ticket-row-top { font-size: 12px; }
+.ticket-row strong { font-size: 14px; }
+.ticket-row small { font-size: 11px; }
+.tickets-status { font-size: 11px; }
+.tickets-empty strong { font-size: 19px; }
+.tickets-empty span { font-size: 12px; }
+.tickets-thread-head h2 { font-size: 19px; }
+.tickets-thread-head span { font-size: 11px; }
+.ticket-message b { font-size: 12px; }
+.ticket-message p { font-size: 13px; line-height: 1.55; }
+.ticket-message time { font-size: 10px; }
+.tickets-reply input, .tickets-modal input, .tickets-modal textarea { font-size: 13px; }
+.tickets-finish { font-size: 12px; }
+.tickets-modal-card h2 { font-size: 20px; }
+.tickets-modal-card > div button { font-size: 12px; }
+
+@media(max-width:760px) {
+    .tickets-header h1 { font-size: 20px; }
+    .tickets-primary { font-size: 11px; }
+    .tickets-tabs button { font-size: 10px; }
+    .ticket-row-top { font-size: 10px; }
+    .ticket-row strong { font-size: 12px; }
+    .ticket-row small { font-size: 9px; }
+    .tickets-status { font-size: 9px; }
+    .tickets-thread-head h2 { font-size: 14px; }
+    .tickets-thread-head span { font-size: 9px; }
+    .ticket-message b { font-size: 10px; }
+    .ticket-message p { font-size: 11px; line-height: 1.5; }
+    .ticket-message time { font-size: 8px; }
+    .tickets-reply input { font-size: 10px; }
+    #tickets-send { font-size: 10px; }
+    .tickets-finish { font-size: 10px; }
+    .tickets-modal input, .tickets-modal textarea { font-size: 11px; }
+}

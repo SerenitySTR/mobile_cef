@@ -997,3 +997,35 @@
 #dialog-screen.dialog-mobile-landscape.dialog-mobile-low.dialog-type-tablist .dialog-window {
     width: min(620px, 74vw);
 }
+\n\n/* Larger, more readable dialog typography */
+.dialog-header h2 { font-size: 19px; }
+.dialog-text { font-size: 16px; line-height: 1.6; }
+.dialog-input { font-size: 15px; }
+.dialog-list-title { font-size: 14px; }
+.dialog-list-description { font-size: 11px; }
+.dialog-list-number { font-size: 12px; }
+.dialog-table th { font-size: 11px; }
+.dialog-table td { font-size: 13px; }
+.dialog-button { font-size: 14px; }
+
+@media (orientation: landscape) and (max-height: 620px) {
+    .dialog-header h2 { font-size: 15px; }
+    .dialog-text { font-size: 12px; line-height: 1.5; }
+    .dialog-input { font-size: 11px; }
+    .dialog-list-title { font-size: 11px; }
+    .dialog-list-description { font-size: 9px; }
+    .dialog-list-number { font-size: 9px; }
+    .dialog-table th { font-size: 9px; }
+    .dialog-table td { font-size: 10px; }
+    .dialog-button { font-size: 11px; }
+}
+
+#dialog-screen.dialog-mobile-landscape .dialog-header h2 { font-size: 15px; }
+#dialog-screen.dialog-mobile-landscape .dialog-text { font-size: 12px; line-height: 1.5; }
+#dialog-screen.dialog-mobile-landscape .dialog-input { font-size: 11px; }
+#dialog-screen.dialog-mobile-landscape .dialog-list-title { font-size: 11px; }
+#dialog-screen.dialog-mobile-landscape .dialog-list-description { font-size: 9px; }
+#dialog-screen.dialog-mobile-landscape .dialog-list-number { font-size: 9px; }
+#dialog-screen.dialog-mobile-landscape .dialog-table th { font-size: 9px; }
+#dialog-screen.dialog-mobile-landscape .dialog-table td { font-size: 10px; }
+#dialog-screen.dialog-mobile-landscape .dialog-button { font-size: 11px; }
