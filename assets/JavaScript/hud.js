@@ -2,60 +2,64 @@ const hud = document.getElementById("hud");
 
 const HUD_REFERENCE_WIDTH = 1280;
 const HUD_REFERENCE_HEIGHT = 720;
-const HUD_MIN_SCALE = 0.46;
-const HUD_MAX_SCALE = 0.92;
 
+/* Responsive mobile HUD.
+   Scale is based on BOTH viewport dimensions, so 16:9, 18:9, 19.5:9,
+   20:9 and 21:9 phones keep the same visual proportions. */
 function updateHudMobileScale() {
-    const width = window.innerWidth;
-    const height = window.innerHeight;
-    const scaleByWidth = width / HUD_REFERENCE_WIDTH;
-    const scaleByHeight = height / HUD_REFERENCE_HEIGHT;
-    const isPhone = width <= 1000 || height <= 600;
-    const sizeMultiplier = isPhone ? 0.85 : 0.92;
+    const width = Math.max(1, window.innerWidth || document.documentElement.clientWidth);
+    const height = Math.max(1, window.innerHeight || document.documentElement.clientHeight);
+    const shortSide = Math.min(width, height);
+    const isPhone = width <= 1400 || height <= 800 || shortSide <= 720;
 
-    let scale = Math.min(scaleByWidth, scaleByHeight) * sizeMultiplier;
+    // 1280x720 is the design reference. Do not let extreme aspect ratios
+    // make the HUD huge; the smaller viewport ratio always wins.
+    const fit = Math.min(width / HUD_REFERENCE_WIDTH, height / HUD_REFERENCE_HEIGHT);
+    let scale = fit * (isPhone ? 0.70 : 0.82);
+    scale = Math.max(isPhone ? 0.44 : 0.62, Math.min(isPhone ? 0.72 : 0.90, scale));
 
-    scale = Math.max(
-        HUD_MIN_SCALE * sizeMultiplier,
-        Math.min(HUD_MAX_SCALE * sizeMultiplier, scale)
-    );
+    // hud.css contains legacy !important rules, therefore set the runtime
+    // variable as !important as well so viewport adaptation actually wins.
+    hud.style.setProperty("--hud-scale", scale.toFixed(4), "important");
 
-    hud.style.setProperty("--hud-scale", scale.toFixed(4));
-
-    if (isPhone) {
-        hud.classList.add("hud-compact");
-    } else {
-        hud.classList.remove("hud-compact");
+    const corner = document.getElementById("hud-corner-info");
+    if (corner) {
+        // Lower-left information is intentionally a little smaller than the
+        // main stats group on phones.
+        const cornerScale = Math.max(0.42, Math.min(0.62, scale * 0.82));
+        corner.style.setProperty("transform", `scale(${cornerScale.toFixed(4)})`, "important");
+        corner.style.setProperty("transform-origin", "bottom left", "important");
     }
+
+    hud.classList.toggle("hud-compact", isPhone);
 }
 
 updateHudMobileScale();
-
-window.addEventListener("resize", updateHudMobileScale);
-window.addEventListener("orientationchange", () => {
-    setTimeout(updateHudMobileScale, 100);
-});
+window.addEventListener("resize", updateHudMobileScale, { passive: true });
+window.addEventListener("orientationchange", () => setTimeout(updateHudMobileScale, 120));
 
 const HUD_RING_LENGTH = 2 * Math.PI * 49;
 
 const hudStats = {
     health: {
-        ring: document.getElementById("hud-health-ring"),
+        ring: document.getElementById("hud-health-ring-perimeter") || document.getElementById("hud-health-ring"),
         value: document.getElementById("hud-health-value")
     },
     armour: {
-        ring: document.getElementById("hud-armour-ring"),
+        ring: document.getElementById("hud-armour-ring-perimeter") || document.getElementById("hud-armour-ring"),
         value: document.getElementById("hud-armour-value")
     },
     hunger: {
-        ring: document.getElementById("hud-hunger-ring"),
+        ring: document.getElementById("hud-hunger-ring-perimeter") || document.getElementById("hud-hunger-ring"),
         value: document.getElementById("hud-hunger-value")
     }
 };
 
 const hudMoneyValue = document.getElementById("hud-money-value");
-const hudOnlineValue = document.getElementById("hud-online-value");
 const hudIdValue = document.getElementById("hud-id-value");
+const hudPlayerName = document.getElementById("hud-player-name");
+const hudTimeValue = document.getElementById("hud-time-value");
+const hudDateValue = document.getElementById("hud-date-value");
 const hudAmmoClip = document.getElementById("hud-ammo-clip");
 const hudAmmoTotal = document.getElementById("hud-ammo-total");
 const hudWeaponImage = document.getElementById("hud-weapon-image");
@@ -128,12 +132,33 @@ function createWantedStars() {
     }
 }
 
+function parseHudWanted(value) {
+    // Wanted level is server-owned. CEF only renders the value it receives.
+    if (value && typeof value === "object") {
+        value = value.wanted ?? value.Wanted ?? value.wantedLevel ?? value.WantedLevel ?? value.level ?? value.Level;
+    } else if (typeof value === "string") {
+        const trimmed = value.trim();
+        if (trimmed.startsWith("{") || trimmed.startsWith("[")) {
+            try {
+                return parseHudWanted(JSON.parse(trimmed));
+            } catch {}
+        }
+    }
+
+    const numeric = Number(value);
+    return Number.isFinite(numeric) ? clamp(Math.trunc(numeric), 0, 6) : null;
+}
+
 function updateHudWanted(value) {
     if (!hudWanted) {
         return;
     }
 
-    const wanted = clamp(Math.trunc(Number(value) || 0), 0, 6);
+    const wanted = parseHudWanted(value);
+    if (wanted === null) {
+        return;
+    }
+
     const stars = hudWanted.querySelectorAll(".hud-wanted-star");
 
     stars.forEach((star, index) => {
@@ -181,8 +206,9 @@ function setHudStat(name, value) {
 
     value = clamp(Number(value) || 0, 0, 100);
 
-    stat.ring.style.strokeDasharray = HUD_RING_LENGTH;
-    stat.ring.style.strokeDashoffset = HUD_RING_LENGTH * (1 - value / 100);
+    stat.ring.style.strokeDasharray = "100";
+    stat.ring.style.strokeDashoffset = String(100 - value);
+    stat.ring.closest(".hud-stat")?.style.setProperty("--progress", value);
     stat.value.textContent = Math.round(value);
 }
 
@@ -198,8 +224,9 @@ function updateHudHealth(health, maxHealth) {
 
     const percent = clamp(health / maxHealth * 100, 0, 100);
 
-    stat.ring.style.strokeDasharray = HUD_RING_LENGTH;
-    stat.ring.style.strokeDashoffset = HUD_RING_LENGTH * (1 - percent / 100);
+    stat.ring.style.strokeDasharray = "100";
+    stat.ring.style.strokeDashoffset = String(100 - percent);
+    stat.ring.closest(".hud-stat")?.style.setProperty("--progress", percent);
     stat.value.textContent = Math.round(health);
 }
 
@@ -212,8 +239,9 @@ function updateHudArmour(armour) {
 
     armour = clamp(Number(armour) || 0, 0, 100);
 
-    stat.ring.style.strokeDasharray = HUD_RING_LENGTH;
-    stat.ring.style.strokeDashoffset = HUD_RING_LENGTH * (1 - armour / 100);
+    stat.ring.style.strokeDasharray = "100";
+    stat.ring.style.strokeDashoffset = String(100 - armour);
+    stat.ring.closest(".hud-stat")?.style.setProperty("--progress", armour);
     stat.value.textContent = Math.round(armour);
 }
 
@@ -222,7 +250,36 @@ function formatHudMoney(value) {
     return value.toLocaleString("ru-RU").replace(/\u00A0/g, " ");
 }
 
+function setHudText(element, value) {
+    if (!element || value === undefined || value === null) return;
+    element.textContent = String(value);
+}
+
+function updateHudServerIdentity(data) {
+    if (!data || typeof data !== "object") return;
+
+    const nickname = data.nickname ?? data.nick ?? data.name ?? data.playerName ?? data.PlayerName ?? data.Nickname;
+    const id = data.id ?? data.playerId ?? data.PlayerId ?? data.ID;
+    const time = data.time ?? data.serverTime ?? data.ServerTime;
+    const date = data.date ?? data.serverDate ?? data.ServerDate;
+
+    if (nickname !== undefined) setHudText(hudPlayerName, nickname);
+    if (id !== undefined) setHudText(hudIdValue, Math.max(0, Math.trunc(Number(id) || 0)));
+    if (time !== undefined) setHudText(hudTimeValue, time);
+    if (date !== undefined) setHudText(hudDateValue, date);
+}
+
+function parseHudPayload(data) {
+    if (data && typeof data === "object") return data;
+    if (typeof data === "string") {
+        try { return JSON.parse(data); } catch {}
+    }
+    return null;
+}
+
 function updateHud(data) {
+    if (!data || typeof data !== "object") return;
+    updateHudServerIdentity(data);
     if (data.health !== undefined) {
         setHudStat("health", data.health);
     }
@@ -239,10 +296,6 @@ function updateHud(data) {
         hudMoneyValue.textContent = formatHudMoney(data.money);
     }
 
-    if (data.online !== undefined) {
-        hudOnlineValue.textContent = Math.max(0, Math.trunc(Number(data.online) || 0));
-    }
-
     if (data.id !== undefined) {
         hudIdValue.textContent = Math.max(0, Math.trunc(Number(data.id) || 0));
     }
@@ -255,8 +308,16 @@ function updateHud(data) {
         hudAmmoTotal.textContent = `/${Math.max(0, Math.trunc(Number(data.ammoTotal) || 0))}`;
     }
 
-    if (data.wanted !== undefined) {
-        updateHudWanted(data.wanted);
+    const wanted = data.wanted ?? data.wantedLevel ?? data.Wanted ?? data.WantedLevel;
+    if (wanted !== undefined) updateHudWanted(wanted);
+
+    const weaponId = data.weaponId ?? data.WeaponId ?? data.weapon ?? data.Weapon;
+    if (weaponId !== undefined) {
+        updateHudWeapon({
+            WeaponId: weaponId,
+            AmmoClip: data.ammoClip ?? data.AmmoClip ?? data.ammo ?? data.Ammo ?? 0,
+            AmmoTotal: data.ammoTotal ?? data.AmmoTotal ?? data.maxAmmo ?? data.MaxAmmo ?? 0
+        });
     }
 }
 
@@ -265,18 +326,25 @@ if (window.GameCef) {
     GameCef.on("hud:hide", hideHud);
 
     GameCef.on("hud:update", data => {
-        try {
-            updateHud(JSON.parse(data));
-        } catch {}
+        const payload = parseHudPayload(data);
+        if (payload) updateHud(payload);
     });
+    GameCef.on("hud:player", data => {
+        const payload = parseHudPayload(data);
+        if (payload) updateHudServerIdentity(payload);
+    });
+    GameCef.on("hud:nickname", data => setHudText(hudPlayerName, data));
+    GameCef.on("hud:time", data => setHudText(hudTimeValue, data));
+    GameCef.on("hud:date", data => setHudText(hudDateValue, data));
 
     GameCef.on("hud:health", data => setHudStat("health", data));
     GameCef.on("hud:armour", data => setHudStat("armour", data));
     GameCef.on("hud:hunger", data => setHudStat("hunger", data));
     GameCef.on("hud:money", data => updateHud({ money: data }));
-    GameCef.on("hud:online", data => updateHud({ online: data }));
     GameCef.on("hud:id", data => updateHud({ id: data }));
+    // Server -> CEF wanted-level events. Both names are supported for integration convenience.
     GameCef.on("hud:wanted", data => updateHudWanted(data));
+    GameCef.on("hud:wantedLevel", data => updateHudWanted(data));
 
     GameCef.on("hud:weapon", data => {
         try {
@@ -301,6 +369,17 @@ function initializeHudPcStats() {
     if (!window.cef || typeof window.cef.on !== "function" || typeof window.cef.emit !== "function") {
         return false;
     }
+
+    // Dedicated server-side wanted update (0..6).
+    window.cef.on("game:data:wantedLevel", value => updateHudWanted(value));
+    window.cef.on("game:data:hud", value => {
+        const payload = parseHudPayload(value);
+        if (payload) updateHud(payload);
+    });
+    window.cef.on("game:data:playerInfo", value => {
+        const payload = parseHudPayload(value);
+        if (payload) updateHudServerIdentity(payload);
+    });
 
     window.cef.on("game:data:playerStats", (...args) => {
         let stats = null;
@@ -329,6 +408,13 @@ function initializeHudPcStats() {
             const weapon = stats.weapon ?? stats.Weapon ?? stats.weaponId ?? stats.WeaponId;
             const ammo = stats.ammo ?? stats.Ammo ?? stats.ammoClip ?? stats.AmmoClip;
             const maxAmmo = stats.maxAmmo ?? stats.MaxAmmo ?? stats.max_ammo ?? stats.ammoTotal ?? stats.AmmoTotal ?? stats.totalAmmo ?? stats.TotalAmmo ?? stats.ammo_total;
+            const hunger = stats.hunger ?? stats.Hunger;
+            const money = stats.money ?? stats.Money;
+
+            updateHudServerIdentity(stats);
+
+            if (hunger !== undefined) setHudStat("hunger", hunger);
+            if (money !== undefined && hudMoneyValue) hudMoneyValue.textContent = formatHudMoney(money);
 
             if (health !== undefined) {
                 updateHudHealth(health, maxHealth);
@@ -412,3 +498,22 @@ window.addEventListener("focus", () => {
         window.cef.emit("game:data:pollPlayerStats", true, 50);
     }
 });
+
+/* Browser preview: open index.html?hudtest=1 */
+(function enableHudBrowserPreview() {
+    try {
+        const params = new URLSearchParams(window.location.search);
+        if (params.get("hudtest") !== "1") return;
+        hud.classList.add("active");
+        setHudStat("health", 83);
+        setHudStat("armour", 61);
+        setHudStat("hunger", 74);
+        updateHudWeapon({ WeaponId: 24, AmmoClip: 7, AmmoTotal: 42 });
+        hudMoneyValue.textContent = formatHudMoney(125430);
+        updateHudWanted(2);
+        updateHudServerIdentity({ nickname: "Nastya Petrova", id: 15, time: "22:31", date: "14.09.2025" });
+    } catch (_) {}
+})();
+
+
+/* Date/time are server-owned. No local device clock is used in production. */

@@ -1902,3 +1902,33 @@
     top: calc(clamp(52px, 7vmin, 68px) + env(safe-area-inset-top, 0px)) !important;
   }
 }
+
+
+/* 2026-09-17: CEF-safe server-driven perimeter progress.
+   Uses an SVG path instead of conic-gradient/mask-composite so older mobile CEF builds
+   update the outline reliably when server values change. */
+.hud-stat .hud-ring { display: none !important; }
+.hud-stat::after { display: none !important; }
+.hud-perimeter {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  pointer-events: none;
+  z-index: 4;
+}
+.hud-perimeter-progress {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 4;
+  vector-effect: non-scaling-stroke;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 100;
+  stroke-dashoffset: 0;
+  transition: stroke-dashoffset .18s linear;
+}
+.hud-health .hud-perimeter-progress { stroke: #ff454c; }
+.hud-armour .hud-perimeter-progress { stroke: #43bfff; }
+.hud-hunger .hud-perimeter-progress { stroke: #ff9d22; }
