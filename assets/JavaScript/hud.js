@@ -15,8 +15,11 @@ function updateHudMobileScale() {
     // 1280x720 is the design reference. Do not let extreme aspect ratios
     // make the HUD huge; the smaller viewport ratio always wins.
     const fit = Math.min(width / HUD_REFERENCE_WIDTH, height / HUD_REFERENCE_HEIGHT);
-    let scale = fit * (isPhone ? 0.70 : 0.82);
-    scale = Math.max(isPhone ? 0.44 : 0.62, Math.min(isPhone ? 0.72 : 0.90, scale));
+    let scale = fit * (isPhone ? 0.56 : 0.82);
+    // Mobile CEF is commonly rendered at wide landscape resolutions (for example
+    // 20:9 phones). Keep the right HUD about 20% smaller than the previous mobile
+    // profile while preserving the desktop profile.
+    scale = Math.max(isPhone ? 0.38 : 0.62, Math.min(isPhone ? 0.58 : 0.90, scale));
 
     // hud.css contains legacy !important rules, therefore set the runtime
     // variable as !important as well so viewport adaptation actually wins.
@@ -26,7 +29,7 @@ function updateHudMobileScale() {
     if (corner) {
         // Lower-left information is intentionally a little smaller than the
         // main stats group on phones.
-        const cornerScale = Math.max(0.42, Math.min(0.62, scale * 0.82));
+        const cornerScale = Math.max(0.38, Math.min(0.54, scale * 0.90));
         corner.style.setProperty("transform", `scale(${cornerScale.toFixed(4)})`, "important");
         corner.style.setProperty("transform-origin", "bottom left", "important");
     }
@@ -206,7 +209,7 @@ function setHudStat(name, value) {
 
     value = clamp(Number(value) || 0, 0, 100);
 
-    stat.ring.style.strokeDasharray = "100";
+    stat.ring.style.strokeDasharray = "100 100";
     stat.ring.style.strokeDashoffset = String(100 - value);
     stat.ring.closest(".hud-stat")?.style.setProperty("--progress", value);
     stat.value.textContent = Math.round(value);
@@ -224,7 +227,7 @@ function updateHudHealth(health, maxHealth) {
 
     const percent = clamp(health / maxHealth * 100, 0, 100);
 
-    stat.ring.style.strokeDasharray = "100";
+    stat.ring.style.strokeDasharray = "100 100";
     stat.ring.style.strokeDashoffset = String(100 - percent);
     stat.ring.closest(".hud-stat")?.style.setProperty("--progress", percent);
     stat.value.textContent = Math.round(health);
@@ -239,7 +242,7 @@ function updateHudArmour(armour) {
 
     armour = clamp(Number(armour) || 0, 0, 100);
 
-    stat.ring.style.strokeDasharray = "100";
+    stat.ring.style.strokeDasharray = "100 100";
     stat.ring.style.strokeDashoffset = String(100 - armour);
     stat.ring.closest(".hud-stat")?.style.setProperty("--progress", armour);
     stat.value.textContent = Math.round(armour);

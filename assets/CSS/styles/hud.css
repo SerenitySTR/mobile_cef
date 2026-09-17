@@ -1923,12 +1923,34 @@
   stroke: currentColor;
   stroke-width: 4;
   vector-effect: non-scaling-stroke;
-  stroke-linecap: round;
+  stroke-linecap: butt;
   stroke-linejoin: round;
-  stroke-dasharray: 100;
+  stroke-dasharray: 100 100;
   stroke-dashoffset: 0;
   transition: stroke-dashoffset .18s linear;
 }
 .hud-health .hud-perimeter-progress { stroke: #ff454c; }
 .hud-armour .hud-perimeter-progress { stroke: #43bfff; }
 .hud-hunger .hud-perimeter-progress { stroke: #ff9d22; }
+
+/* 2026-09-17: keep SVG stat progress visually continuous at capsule edges.
+   The older rule clipped the SVG stroke at the stat boundary; mobile CEF made
+   those clipped pixels look like breaks, especially where tiles sit side-by-side. */
+.hud-stats { overflow: visible !important; }
+.hud-stat {
+  overflow: visible !important;
+  isolation: isolate;
+}
+.hud-stat .hud-perimeter {
+  inset: 0 !important;
+  overflow: visible !important;
+  z-index: 10 !important;
+}
+.hud-stat .hud-perimeter-progress {
+  stroke-linecap: round !important;
+  stroke-linejoin: round !important;
+}
+.hud-stat-core {
+  position: relative;
+  z-index: 11 !important;
+}
