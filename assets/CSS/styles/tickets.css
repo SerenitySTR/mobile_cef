@@ -477,3 +477,65 @@ rgba(4,
     .tickets-finish { font-size: 10px; }
     .tickets-modal input, .tickets-modal textarea { font-size: 11px; }
 }
+
+
+/* Ticket quick replies */
+.tickets-reply-wrapper {
+    position:relative;
+    padding-top:10px
+}
+
+.tickets-reply-wrapper .tickets-reply {
+    padding-top:0
+}
+
+.tickets-quick-toggle {
+    flex-shrink:0;
+    padding:0 12px;
+    border:1px solid #164a67;
+    border-radius:9px;
+    background:#091d2d;
+    color:#9fdcff;
+    font-family:inherit;
+    font-size:9px;
+    font-weight:600
+}
+
+.tickets-quick-toggle:hover {
+    border-color:#1ba9f4;
+    background:#0b2b43;
+    color:#fff
+}
+
+.tickets-quick-replies {
+    position:absolute;
+    left:0;
+    right:0;
+    bottom:52px;
+    z-index:10;
+    display:grid;
+    grid-template-columns:repeat(2, 1fr);
+    gap:6px;
+    padding:9px;
+    border:1px solid #164a67;
+    border-radius:10px;
+    background:#071522;
+    box-shadow:0 12px 30px rgba(0, 0, 0, .4)
+}
+
+.tickets-quick-replies button {
+    padding:9px 10px;
+    border:1px solid #123b54;
+    border-radius:8px;
+    background:#0a2031;
+    color:#b9d8e9;
+    font-family:inherit;
+    font-size:9px;
+    text-align:left
+}
+
+.tickets-quick-replies button:hover {
+    border-color:#1ba9f4;
+    background:#0c3049;
+    color:#fff
+}

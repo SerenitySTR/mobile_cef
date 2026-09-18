@@ -709,7 +709,21 @@
                 <div id="tickets-thread" class="tickets-thread hidden">
                     <div class="tickets-thread-head"><div><h2 id="tickets-title"></h2><span id="tickets-meta"></span></div><span id="tickets-status" class="tickets-status"></span></div>
                     <div id="tickets-messages" class="tickets-messages"></div>
-                    <div id="tickets-reply" class="tickets-reply"><input id="tickets-message" maxlength="500" placeholder="Написати повідомлення..."><button id="tickets-send">Надіслати</button></div>
+                    <div id="tickets-reply" class="tickets-reply-wrapper">
+                        <div id="tickets-quick-replies" class="tickets-quick-replies hidden">
+                            <button data-reply="Вітаю! Чим можу допомогти?">Вітання</button>
+                            <button data-reply="Очікуйте, будь ласка, перевіряю інформацію.">Перевіряю</button>
+                            <button data-reply="Уточніть, будь ласка, детальніше вашу проблему.">Уточнити</button>
+                            <button data-reply="Спробуйте, будь ласка, перезайти на сервер.">Перезайти</button>
+                            <button data-reply="Інформацію передано адміністрації. Очікуйте, будь ласка.">Передано</button>
+                            <button data-reply="Проблему вирішено. Приємної гри!">Вирішено</button>
+                        </div>
+                        <div class="tickets-reply">
+                            <button id="tickets-quick-toggle" class="tickets-quick-toggle hidden">Швидкі відповіді</button>
+                            <input id="tickets-message" maxlength="500" placeholder="Написати повідомлення...">
+                            <button id="tickets-send">Надіслати</button>
+                        </div>
+                    </div>
                     <button id="tickets-finish" class="tickets-finish">Закрити тікет</button>
                 </div>
             </main>

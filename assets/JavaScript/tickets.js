@@ -128,6 +128,14 @@ var Tickets = {
         document.getElementById("tickets-reply").classList.toggle("hidden", closed);
         document.getElementById("tickets-finish").classList.toggle("hidden", closed);
 
+        var quickToggle = document.getElementById("tickets-quick-toggle");
+        var quickReplies = document.getElementById("tickets-quick-replies");
+
+        quickToggle.classList.toggle("hidden", !this.data.IsAdmin || closed);
+
+        if (!this.data.IsAdmin || closed)
+            quickReplies.classList.add("hidden");
+
         this.messages.innerHTML = "";
 
         (ticket.Messages || []).forEach(this.AddMessage.bind(this));
@@ -231,6 +239,26 @@ window.addEventListener("DOMContentLoaded", function() {
 
         input.value = "";
     };
+
+    document.getElementById("tickets-quick-toggle").onclick = function() {
+        document.getElementById("tickets-quick-replies").classList.toggle("hidden");
+    };
+
+    document.querySelectorAll("#tickets-quick-replies button").forEach(function(button) {
+        button.onclick = function() {
+            var message = button.dataset.reply;
+
+            if (!message || !Tickets.selectedId)
+                return;
+
+            GameCef.sendJson("ticket:message", {
+                TicketId: Tickets.selectedId,
+                Message: encodeURIComponent(message)
+            });
+
+            document.getElementById("tickets-quick-replies").classList.add("hidden");
+        };
+    });
 
     document.getElementById("tickets-finish").onclick = function() {
         if (!Tickets.selectedId)
