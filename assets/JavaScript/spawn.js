@@ -23,7 +23,7 @@ const spawnData={
     },
     Standard:{
         id:2,
-        title:"Стандартный",
+        title:"Стандартний",
         text:"Стандартне місце появи для швидкого початку гри у місті.",
         location:"СТАНДАРТНИЙ СПАВН",
         image:"./assets/CSS/Images/Spawn/standard.svg"

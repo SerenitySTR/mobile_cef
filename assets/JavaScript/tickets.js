@@ -211,10 +211,10 @@ window.addEventListener("DOMContentLoaded", function() {
     };
 
     document.getElementById("tickets-create-submit").onclick = function() {
-        var title = document.getElementById("tickets-new-title").value.trim();
+        var title = "Звернення";
         var message = document.getElementById("tickets-new-message").value.trim();
 
-        if (!title || !message)
+        if (!message)
             return;
 
         GameCef.sendJson("ticket:create", {
