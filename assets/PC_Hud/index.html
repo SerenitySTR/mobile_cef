@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="uk">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no" />
+<title>Antares RP — PC HUD</title>
+<link rel="stylesheet" href="css/hud.css" />
+</head>
+<body>
+<div id="hud" class="hud">
+  
+  <div class="chat-gradient" aria-hidden="true"></div>
+
+  <div class="right-hud">
+    <div class="right-gradient" aria-hidden="true"></div>
+
+    <div class="player-gradient">
+    <div class="identity two-col">
+      <div class="col">
+        <div class="line"><span class="ico">●</span><span id="playerName">Mark Evans</span></div>
+        <div class="line"><span class="ico">◆</span><span>ID: <b id="playerId">245</b></span></div>
+      </div>
+      <div class="divider"></div>
+      <div class="col">
+        <div class="line"><span class="ico">◷</span><span id="clock">21:44</span></div>
+        <div class="line"><span class="ico">▣</span><span id="date">17.09.2026</span></div>
+      </div>
+    </div>
+    <img class="logo" src="assets/antares_logo.png" alt="Antares" />
+  </div>
+
+  <div class="stats-row">
+    <div class="stat hp" style="--value:100"><div class="ring"><svg class="progress-ring" viewBox="0 0 64 64" aria-hidden="true"><circle class="ring-track" cx="32" cy="32" r="29"/><circle class="ring-progress" cx="32" cy="32" r="29"/></svg><svg class="stat-icon" viewBox="0 0 64 64" aria-hidden="true"><path d="M32 54S11 42 11 24c0-7.6 5.1-13 12.1-13 5 0 8.1 2.8 8.9 6 1.2-3.2 4.2-6 9.2-6C48 11 53 16.4 53 24c0 18-21 30-21 30Z"></path></svg><span id="hp" class="value">100</span></div></div>
+    <div class="stat armor" style="--value:100"><div class="ring"><svg class="progress-ring" viewBox="0 0 64 64" aria-hidden="true"><circle class="ring-track" cx="32" cy="32" r="29"/><circle class="ring-progress" cx="32" cy="32" r="29"/></svg><svg class="stat-icon" viewBox="0 0 64 64" aria-hidden="true"><path d="M32 7 49 14v14c0 12.5-7.7 21-17 28-9.3-7-17-15.5-17-28V14L32 7Z"></path></svg><span id="armor" class="value">100</span></div></div>
+    <div class="stat hunger" style="--value:85"><div class="ring"><svg class="progress-ring" viewBox="0 0 64 64" aria-hidden="true"><circle class="ring-track" cx="32" cy="32" r="29"/><circle class="ring-progress" cx="32" cy="32" r="29"/></svg><svg class="stat-icon burger" viewBox="0 0 64 64" aria-hidden="true"><path d="M11 25C12.7 15.6 20.2 10 32 10s19.3 5.6 21 15H11Z"></path><circle cx="22" cy="18" r="1.3"></circle><circle cx="31" cy="15" r="1.3"></circle><circle cx="40" cy="19" r="1.3"></circle><path d="M10 29h44v5H10z"></path><path d="M13 37c4-3.2 7.8-3.2 11.8 0 4-3.2 7.9-3.2 11.9 0 4-3.2 7.8-3.2 11.8 0l-3 4H16l-3-4Z"></path><path d="M14 43h36l-3.8 7H17.8L14 43Z"></path><path d="M12 53h40c-1.5 4-5 6-10 6H22c-5 0-8.5-2-10-6Z"></path></svg><span id="hunger" class="value">85</span></div></div>
+    <div class="weapon glass"><img id="weaponImage" class="weapon-icon" src="assets/CSS/Images/Hud/Weapons/fist.webp" alt=""><span id="ammo"><span id="ammoClip">12</span> <span class="ammo-slash">/</span> <span id="ammoTotal">48</span></span></div>
+  </div>
+
+    <div class="money-wanted glass">
+      <div class="money"><span>$</span><b id="money">12 450</b></div>
+      <div id="wanted" class="wanted" aria-label="wanted level"></div>
+    </div>
+  </div>
+
+</div>
+<script src="js/cef-wrapper.js"></script>
+<script src="js/hud.js"></script>
+</body>
+</html>

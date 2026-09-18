@@ -1,34 +1,41 @@
+const pcHudFrame = document.getElementById("pc-hud-frame");
+
+function isMobileHudPlatform() {
+    const userAgent = navigator.userAgent || "";
+    const mobileUserAgent = /Android|iPhone|iPad|iPod|Mobile/i.test(userAgent);
+    const touchDevice = (navigator.maxTouchPoints || 0) > 1;
+    const screenShortSide = Math.min(screen.width || innerWidth, screen.height || innerHeight);
+    return mobileUserAgent || (touchDevice && screenShortSide <= 900);
+}
+
+const hudMobilePlatform = isMobileHudPlatform();
+document.body.classList.add(hudMobilePlatform ? "hud-platform-mobile" : "hud-platform-pc");
+
+function sendPcHud(type, data = null) {
+    if (hudMobilePlatform || !pcHudFrame || !pcHudFrame.contentWindow) return;
+    pcHudFrame.contentWindow.postMessage({ source: "antares-hud", type, data }, "*");
+}
+
 const hud = document.getElementById("hud");
 
 const HUD_REFERENCE_WIDTH = 1280;
 const HUD_REFERENCE_HEIGHT = 720;
 
-/* Responsive mobile HUD.
-   Scale is based on BOTH viewport dimensions, so 16:9, 18:9, 19.5:9,
-   20:9 and 21:9 phones keep the same visual proportions. */
+
 function updateHudMobileScale() {
     const width = Math.max(1, window.innerWidth || document.documentElement.clientWidth);
     const height = Math.max(1, window.innerHeight || document.documentElement.clientHeight);
     const shortSide = Math.min(width, height);
     const isPhone = width <= 1400 || height <= 800 || shortSide <= 720;
 
-    // 1280x720 is the design reference. Do not let extreme aspect ratios
-    // make the HUD huge; the smaller viewport ratio always wins.
     const fit = Math.min(width / HUD_REFERENCE_WIDTH, height / HUD_REFERENCE_HEIGHT);
     let scale = fit * (isPhone ? 0.56 : 0.82) * 1.05;
-    // Mobile CEF is commonly rendered at wide landscape resolutions (for example
-    // 20:9 phones). Keep the right HUD about 20% smaller than the previous mobile
-    // profile while preserving the desktop profile.
     scale = Math.max(isPhone ? 0.38 : 0.62, Math.min(isPhone ? 0.58 : 0.90, scale));
 
-    // hud.css contains legacy !important rules, therefore set the runtime
-    // variable as !important as well so viewport adaptation actually wins.
     hud.style.setProperty("--hud-scale", scale.toFixed(4), "important");
 
     const corner = document.getElementById("hud-corner-info");
     if (corner) {
-        // Lower-left information is intentionally a little smaller than the
-        // main stats group on phones.
         const cornerScale = Math.max(0.399, Math.min(0.567, scale * 0.90));
         corner.style.setProperty("transform", `scale(${cornerScale.toFixed(4)})`, "important");
         corner.style.setProperty("transform-origin", "bottom left", "important");
@@ -136,7 +143,6 @@ function createWantedStars() {
 }
 
 function parseHudWanted(value) {
-    // Wanted level is server-owned. CEF only renders the value it receives.
     if (value && typeof value === "object") {
         value = value.wanted ?? value.Wanted ?? value.wantedLevel ?? value.WantedLevel ?? value.level ?? value.Level;
     } else if (typeof value === "string") {
@@ -153,6 +159,7 @@ function parseHudWanted(value) {
 }
 
 function updateHudWanted(value) {
+    sendPcHud("update", { wanted: value });
     if (!hudWanted) {
         return;
     }
@@ -172,6 +179,7 @@ function updateHudWanted(value) {
 createWantedStars();
 
 function updateHudWeapon(data) {
+    if (data) sendPcHud("update", data);
     if (!data) {
         return;
     }
@@ -191,16 +199,29 @@ function updateHudWeapon(data) {
 }
 
 function showHud() {
+    if (!hudMobilePlatform) {
+        sendPcHud("show");
+        return;
+    }
+
     Loading.Transition(hud, () => {
         hud.classList.add("active");
     });
 }
 
 function hideHud() {
+    if (!hudMobilePlatform) {
+        sendPcHud("hide");
+        return;
+    }
+
     hud.classList.remove("active");
 }
 
 function setHudStat(name, value) {
+    if (name === "health") sendPcHud("update", { health: value });
+    if (name === "armour") sendPcHud("update", { armour: value });
+    if (name === "hunger") sendPcHud("update", { hunger: value });
     const stat = hudStats[name];
 
     if (!stat) {
@@ -216,6 +237,7 @@ function setHudStat(name, value) {
 }
 
 function updateHudHealth(health, maxHealth) {
+    sendPcHud("update", { health, maxHealth });
     const stat = hudStats.health;
 
     if (!stat) {
@@ -234,6 +256,7 @@ function updateHudHealth(health, maxHealth) {
 }
 
 function updateHudArmour(armour) {
+    sendPcHud("update", { armour });
     const stat = hudStats.armour;
 
     if (!stat) {
@@ -260,6 +283,7 @@ function setHudText(element, value) {
 
 function updateHudServerIdentity(data) {
     if (!data || typeof data !== "object") return;
+    sendPcHud("update", data);
 
     const nickname = data.nickname ?? data.nick ?? data.name ?? data.playerName ?? data.PlayerName ?? data.Nickname;
     const id = data.id ?? data.playerId ?? data.PlayerId ?? data.ID;
@@ -282,6 +306,7 @@ function parseHudPayload(data) {
 
 function updateHud(data) {
     if (!data || typeof data !== "object") return;
+    sendPcHud("update", data);
     updateHudServerIdentity(data);
     if (data.health !== undefined) {
         setHudStat("health", data.health);
@@ -336,16 +361,15 @@ if (window.GameCef) {
         const payload = parseHudPayload(data);
         if (payload) updateHudServerIdentity(payload);
     });
-    GameCef.on("hud:nickname", data => setHudText(hudPlayerName, data));
-    GameCef.on("hud:time", data => setHudText(hudTimeValue, data));
-    GameCef.on("hud:date", data => setHudText(hudDateValue, data));
+    GameCef.on("hud:nickname", data => { setHudText(hudPlayerName, data); sendPcHud("update", { nickname: data }); });
+    GameCef.on("hud:time", data => { setHudText(hudTimeValue, data); sendPcHud("update", { time: data }); });
+    GameCef.on("hud:date", data => { setHudText(hudDateValue, data); sendPcHud("update", { date: data }); });
 
     GameCef.on("hud:health", data => setHudStat("health", data));
     GameCef.on("hud:armour", data => setHudStat("armour", data));
     GameCef.on("hud:hunger", data => setHudStat("hunger", data));
     GameCef.on("hud:money", data => updateHud({ money: data }));
     GameCef.on("hud:id", data => updateHud({ id: data }));
-    // Server -> CEF wanted-level events. Both names are supported for integration convenience.
     GameCef.on("hud:wanted", data => updateHudWanted(data));
     GameCef.on("hud:wantedLevel", data => updateHudWanted(data));
 
@@ -373,7 +397,6 @@ function initializeHudPcStats() {
         return false;
     }
 
-    // Dedicated server-side wanted update (0..6).
     window.cef.on("game:data:wantedLevel", value => updateHudWanted(value));
     window.cef.on("game:data:hud", value => {
         const payload = parseHudPayload(value);
@@ -502,7 +525,7 @@ window.addEventListener("focus", () => {
     }
 });
 
-/* Browser preview: open index.html?hudtest=1 */
+
 (function enableHudBrowserPreview() {
     try {
         const params = new URLSearchParams(window.location.search);
@@ -519,4 +542,10 @@ window.addEventListener("focus", () => {
 })();
 
 
-/* Date/time are server-owned. No local device clock is used in production. */
+
+
+if (pcHudFrame) {
+    pcHudFrame.addEventListener("load", () => {
+        if (!hudMobilePlatform) sendPcHud("show");
+    });
+}

@@ -715,7 +715,7 @@
 }
 
 
-/* Final sizing overrides */
+
 #hud-corner-info {
   width: 260px;
   height: 54px;
@@ -822,7 +822,7 @@
   }
 }
 
-/* HUD integration and final compact sizing */
+
 .hud-main-shell {
   position: relative;
   width: 610px;
@@ -1038,7 +1038,7 @@
   }
 }
 
-/* Clean aligned HUD geometry */
+
 .hud-main-shell {
   width: 610px;
   padding-top: 66px;
@@ -1112,7 +1112,7 @@
   z-index: 2;
 }
 
-/* Sharp bottom corners for the Antares logo panel */
+
 .hud-main-shell .hud-logo-panel {
   border-radius: 28px 28px 0 0;
 }
@@ -1176,7 +1176,7 @@
   }
 }
 
-/* ===== Antares HUD: unified translucent shell + individual stat tiles ===== */
+
 #hud {
   width: 570px;
 }
@@ -1303,7 +1303,7 @@
 
 #hud.hud-compact .hud-stat-core { background: transparent; }
 
-/* Antares lower-left player info */
+
 #hud-corner-info {
   display: none;
   position: fixed;
@@ -1361,12 +1361,12 @@
   .hud-calendar-icon::after { left:3px; top:3px; font-size:9px; }
 }
 
-/* 2026-09-17: remove the empty top logo panel completely */
+
 .hud-main-shell .hud-logo-panel {
   display: none !important;
 }
 
-/* Antares HUD: slimmer stats/weapon strip */
+
 .hud-main-panel {
   height: 108px;
   padding: 7px 9px;
@@ -1406,7 +1406,7 @@
   height: 60px;
 }
 
-/* Antares stats row — wide capsule layout matching approved reference */
+
 #hud {
   width: 690px;
 }
@@ -1510,7 +1510,7 @@
 .hud-ammo-clip { font-size: 27px; font-weight: 800; }
 .hud-ammo-total { font-size: 18px; font-weight: 600; color: rgba(194,215,236,.85); }
 
-/* 2026-09-17: clean reference-style stats strip; fix clipping/smearing */
+
 #hud { width: 690px !important; }
 .hud-main-shell { width: 690px !important; padding-top: 0 !important; overflow: visible !important; }
 .hud-main-shell .hud-main-panel,
@@ -1535,12 +1535,12 @@
 }
 .hud-weapon { overflow: hidden; flex: 0 0 236px; }
 
-/* 2026-09-17: vertical spacing between top stats row and money/wanted row */
+
 .hud-bottom-panel {
   margin-top: 10px !important;
 }
 
-/* 2026-09-17: wanted stars directly under money */
+
 .hud-bottom-panel {
   height: 82px !important;
   flex-direction: column !important;
@@ -1559,13 +1559,13 @@
   height: 23px !important;
 }
 
-/* 2026-09-17: remove divider between weapon icon and ammo */
+
 .hud-weapon .hud-ammo {
   border-left: none !important;
   padding-left: 0 !important;
 }
 
-/* 2026-09-17: unified palette and background treatment for every stat tile */
+
 .hud-stat,
 .hud-weapon {
   background: linear-gradient(180deg, rgba(6, 27, 43, .90), rgba(3, 19, 31, .94)) !important;
@@ -1575,12 +1575,12 @@
   border: 0 !important;
 }
 
-/* Keep the neutral blue-grey base contour identical on HP / armour / hunger. */
+
 .hud-stat::before {
   border-color: rgba(112, 147, 176, .32) !important;
 }
 
-/* Weapon uses the same neutral inner contour/background as the stat tiles. */
+
 .hud-weapon {
   position: relative;
 }
@@ -1600,7 +1600,7 @@
 }
 
 
-/* 2026-09-17: compact lower-right area + unified money + transparent wanted/corner */
+
 .hud-bottom-panel {
   width: 220px !important;
   height: auto !important;
@@ -1644,11 +1644,11 @@
 #hud-corner-info::before,
 #hud-corner-info::after { display: none !important; }
 
-/* More detailed burger silhouette while keeping the hunger accent colour. */
+
 .hud-burger-icon { overflow: visible; }
 .hud-burger-icon circle { fill: rgba(255,255,255,.78); }
 
-/* 2026-09-17: lower-left identity text — white fill with dark gradient-like outline */
+
 #hud-player-name,
 .hud-corner-idtext,
 .hud-corner-idtext span,
@@ -1668,7 +1668,7 @@
     0 2px 3px rgba(0, 0, 0, .62) !important;
 }
 
-/* 2026-09-17: dark outline/shadow for lower-left time/date icons */
+
 .hud-clock-icon,
 .hud-calendar-icon {
   filter:
@@ -1679,13 +1679,13 @@
     drop-shadow(0 2px 3px rgba(0, 0, 0, .62));
 }
 
-/* 2026-09-17: center wanted stars directly below money */
+
 .hud-wanted {
   justify-content: center !important;
   align-self: center !important;
 }
 
-/* 2026-09-17: equal outer fill above the stats row */
+
 .hud-main-panel {
   height: 88px !important;
   padding-top: 10px !important;
@@ -1693,8 +1693,7 @@
   box-sizing: border-box !important;
 }
 
-/* 2026-09-17: real symmetric top/bottom inset around stats row.
-   68px tile + 10px top + 10px bottom + 2px borders = 92px outer panel. */
+
 .hud-main-panel {
   height: 92px !important;
   min-height: 92px !important;
@@ -1708,8 +1707,7 @@
   margin-bottom: 0 !important;
 }
 
-/* 2026-09-17: keep the stat progress inside each capsule so the outer panel
-   has a clean, visible top inset equal to the surrounding background fill. */
+
 .hud-main-panel {
   height: 92px !important;
   padding: 10px !important;
@@ -1725,7 +1723,7 @@
   box-sizing: border-box !important;
 }
 
-/* 2026-09-17: explicit visible top gutter above HP/armour/hunger/weapon row */
+
 .hud-main-panel {
   height: 100px !important;
   min-height: 100px !important;
@@ -1742,17 +1740,14 @@
   margin-bottom: 0 !important;
 }
 
-/* 2026-09-17: explicit spacer ABOVE the complete stats/weapon panel.
-   Previous rules forced .hud-main-shell padding-top to 0!important, so changing
-   the panel padding could not create the requested gap above the row. */
+
 .hud-main-shell {
   padding-top: 10px !important;
   box-sizing: border-box !important;
 }
 
 
-/* 2026-09-17: physical transparent spacer above the stats row.
-   Grid placement makes the spacer consume real layout height instead of relying on padding. */
+
 .hud-main-panel {
   display: grid !important;
   grid-template-columns: 1fr 236px !important;
@@ -1792,7 +1787,7 @@
   padding-top: 0 !important;
 }
 
-/* 2026-09-17: reduce the overall HUD footprint on screen without changing its internal proportions. */
+
 #hud {
   --hud-scale: 0.82 !important;
 }
@@ -1801,17 +1796,14 @@
   transform-origin: bottom left !important;
 }
 
-/* 2026-09-17: mobile-first compact top stats/weapon row.
-   Shrink only the upper HP/armour/hunger/weapon group so it does not occupy
-   a large part of a phone screen. CSS zoom changes its layout footprint too,
-   unlike transform:scale(), so the rows below do not inherit a large empty gap. */
+
 .hud-main-shell {
   zoom: 0.72 !important;
   margin-left: auto !important;
   transform: none !important;
 }
 
-/* 2026-09-17: compact money block for mobile HUD (about 15% smaller). */
+
 .hud-bottom-panel {
   width: 187px !important;
   align-items: center !important;
@@ -1840,8 +1832,7 @@
 }
 
 
-/* 2026-09-17: physical spacer between the compact stats/weapon row and money row.
-   This is a real layout element, not margin/padding, so CEF cannot collapse the gap. */
+
 .hud-money-row-spacer {
   display: block !important;
   width: 100% !important;
@@ -1855,13 +1846,13 @@
   margin-top: 0 !important;
 }
 
-/* 2026-09-17: compact lower-left identity/date/time block for mobile screens. */
+
 #hud-corner-info {
   transform: scale(0.62) !important;
   transform-origin: bottom left !important;
 }
 
-/* 2026-09-17: final viewport-adaptive mobile positioning. */
+
 #hud {
   top: calc(clamp(6px, 1.2vmin, 14px) + env(safe-area-inset-top, 0px)) !important;
   right: calc(clamp(6px, 1.2vmin, 14px) + env(safe-area-inset-right, 0px)) !important;
@@ -1877,13 +1868,12 @@
   #hud-corner-info { left: calc(5px + env(safe-area-inset-left, 0px)) !important; }
 }
 
-/* 2026-09-17: make the outer stats panel bottom-right corner match the other corners. */
+
 .hud-main-panel {
   border-radius: 28px !important;
 }
 
-/* 2026-09-17: visible screen-edge gap above the complete right-side HUD.
-   This is the OUTER viewport offset requested by the user, not an inset inside the stats panel. */
+
 #hud {
   top: calc(clamp(14px, 2.2vmin, 24px) + env(safe-area-inset-top, 0px)) !important;
 }
@@ -1893,7 +1883,7 @@
   }
 }
 
-/* 2026-09-17: reserve a functional top zone for future mobile HUD buttons. */
+
 #hud {
   top: calc(clamp(56px, 8vmin, 72px) + env(safe-area-inset-top, 0px)) !important;
 }
@@ -1904,9 +1894,7 @@
 }
 
 
-/* 2026-09-17: CEF-safe server-driven perimeter progress.
-   Uses an SVG path instead of conic-gradient/mask-composite so older mobile CEF builds
-   update the outline reliably when server values change. */
+
 .hud-stat .hud-ring { display: none !important; }
 .hud-stat::after { display: none !important; }
 .hud-perimeter {
@@ -1933,9 +1921,7 @@
 .hud-armour .hud-perimeter-progress { stroke: #43bfff; }
 .hud-hunger .hud-perimeter-progress { stroke: #ff9d22; }
 
-/* 2026-09-17: keep SVG stat progress visually continuous at capsule edges.
-   The older rule clipped the SVG stroke at the stat boundary; mobile CEF made
-   those clipped pixels look like breaks, especially where tiles sit side-by-side. */
+
 .hud-stats { overflow: visible !important; }
 .hud-stat {
   overflow: visible !important;
@@ -1955,8 +1941,7 @@
   z-index: 11 !important;
 }
 
-/* 2026-09-17: support SA:MP nicknames up to 24 characters without clipping.
-   Keep short names compact; allow only the identity column to grow. */
+
 #hud-corner-info {
   width: auto !important;
   max-width: calc(100vw - 24px - env(safe-area-inset-left, 0px) - env(safe-area-inset-right, 0px)) !important;
@@ -1989,7 +1974,7 @@
   }
 }
 
-/* 2026-09-17: subtle background only behind lower-left text/info area */
+
 #hud-corner-info {
   background: transparent !important;
   box-shadow: none !important;
@@ -2022,8 +2007,7 @@
   }
 }
 
-/* 2026-09-17: corrected subtle background for the complete lower-left text area.
-   Keep the Antares logo outside; cover player + ID + date/time with one quiet panel. */
+
 #hud-corner-info {
   background: transparent !important;
   border-color: transparent !important;
@@ -2068,7 +2052,7 @@
   }
 }
 
-/* 2026-09-17: lower-left text +3% only (nickname, ID, time, date). */
+
 #hud-player-name { font-size: 18.54px !important; }
 .hud-corner-idtext,
 .hud-corner-idtext span { font-size: 16.48px !important; }
@@ -2086,7 +2070,7 @@
   .hud-corner-date span { font-size: 11.33px !important; }
 }
 
-/* 2026-09-17: mobile readability pass for lower-left identity text. */
+
 #hud-player-name {
   font-size: 20.02px !important;
   font-weight: 600 !important;
@@ -2131,7 +2115,7 @@
   }
 }
 
-/* 2026-09-17: match lower-left logo height to the info panel and reuse the stats-row blue-grey background at lower opacity. */
+
 #hud-corner-info::after {
   background: rgba(38, 57, 70, .32) !important;
 }
@@ -2159,9 +2143,7 @@
   }
 }
 
-/* 2026-09-17 final lower-left logo/panel correction.
-   The previous rule capped the logo width, so its intrinsic 410:270 aspect ratio
-   prevented it from ever reaching the requested panel height. */
+
 #hud-corner-info::after {
   left: 146px !important;
   background: rgba(38, 57, 70, .40) !important;
@@ -2198,7 +2180,7 @@
   }
 }
 
-/* 2026-09-18: lower-left info panel fades smoothly to fully transparent behind the date. */
+
 #hud-corner-info::after {
   background: linear-gradient(90deg,
     rgba(38, 57, 70, .40) 0%,
@@ -2220,7 +2202,7 @@
   }
 }
 
-/* 2026-09-18: lower-left gradient uses the dark inner stat-tile colour and starts before the Antares logo. */
+
 #hud-corner-info::after {
   left: -8px !important;
   right: -18px !important;
@@ -2265,7 +2247,7 @@
   }
 }
 
-/* 2026-09-18: exact stat-tile fill for lower-left gradient + 10% extra vertical breathing room. */
+
 #hud-corner-info::after {
   left: -8px !important;
   right: -18px !important;
@@ -2297,8 +2279,7 @@
   }
 }
 
-/* 2026-09-18: keep the lower-left gradient visible through the full date,
-   then fade it out farther to the right. Remove dark outline from time/date icons. */
+
 #hud-corner-info::after {
   right: -86px !important;
   background: linear-gradient(90deg,
@@ -2326,7 +2307,7 @@
   }
 }
 
-/* 2026-09-18: thin clock/calendar outline to match time/date text. */
+
 .hud-clock-icon,
 .hud-calendar-icon {
   filter:
