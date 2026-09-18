@@ -1954,3 +1954,382 @@
   position: relative;
   z-index: 11 !important;
 }
+
+/* 2026-09-17: support SA:MP nicknames up to 24 characters without clipping.
+   Keep short names compact; allow only the identity column to grow. */
+#hud-corner-info {
+  width: auto !important;
+  max-width: calc(100vw - 24px - env(safe-area-inset-left, 0px) - env(safe-area-inset-right, 0px)) !important;
+  overflow: visible !important;
+}
+.hud-corner-player {
+  width: auto !important;
+  min-width: 178px !important;
+  max-width: 310px !important;
+  flex: 0 1 auto !important;
+}
+#hud-player-name {
+  display: block !important;
+  width: max-content !important;
+  max-width: 24ch !important;
+  white-space: nowrap !important;
+  overflow: visible !important;
+  text-overflow: clip !important;
+}
+.hud-corner-datetime {
+  flex: 0 0 auto !important;
+}
+@media (max-width:1000px), (max-height:600px) {
+  .hud-corner-player {
+    min-width: 138px !important;
+    max-width: 245px !important;
+  }
+  #hud-player-name {
+    max-width: 24ch !important;
+  }
+}
+
+/* 2026-09-17: subtle background only behind lower-left text/info area */
+#hud-corner-info {
+  background: transparent !important;
+  box-shadow: none !important;
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+  overflow: visible;
+}
+#hud-corner-info::after {
+  content: "";
+  display: block !important;
+  position: absolute;
+  left: 124px;
+  right: 0;
+  top: 5px;
+  bottom: 5px;
+  border-radius: 18px;
+  background: rgba(5, 10, 15, .18);
+  box-shadow: inset 0 0 14px rgba(0, 0, 0, .08);
+  pointer-events: none;
+  z-index: -1;
+}
+#hud-corner-info > * { position: relative; z-index: 1; }
+@media (max-width:1000px), (max-height:600px) {
+  #hud-corner-info::after {
+    left: 96px;
+    top: 4px;
+    bottom: 4px;
+    border-radius: 14px;
+    background: rgba(5, 10, 15, .18);
+  }
+}
+
+/* 2026-09-17: corrected subtle background for the complete lower-left text area.
+   Keep the Antares logo outside; cover player + ID + date/time with one quiet panel. */
+#hud-corner-info {
+  background: transparent !important;
+  border-color: transparent !important;
+  box-shadow: none !important;
+  overflow: visible !important;
+  isolation: isolate;
+}
+#hud-corner-info::before {
+  display: none !important;
+}
+#hud-corner-info::after {
+  content: "" !important;
+  display: block !important;
+  position: absolute !important;
+  left: 120px !important;
+  right: -8px !important;
+  top: 1px !important;
+  bottom: 1px !important;
+  width: auto !important;
+  height: auto !important;
+  border: 0 !important;
+  border-radius: 13px !important;
+  transform: none !important;
+  background: linear-gradient(180deg, rgba(4, 13, 20, .22), rgba(1, 7, 12, .16)) !important;
+  box-shadow: inset 0 0 10px rgba(0, 0, 0, .06) !important;
+  filter: none !important;
+  pointer-events: none !important;
+  z-index: 0 !important;
+}
+#hud-corner-info > * {
+  position: relative !important;
+  z-index: 1 !important;
+}
+@media (max-width:1000px), (max-height:600px) {
+  #hud-corner-info::after {
+    left: 91px !important;
+    right: -6px !important;
+    top: 1px !important;
+    bottom: 1px !important;
+    border-radius: 10px !important;
+    background: linear-gradient(180deg, rgba(4, 13, 20, .22), rgba(1, 7, 12, .16)) !important;
+  }
+}
+
+/* 2026-09-17: lower-left text +3% only (nickname, ID, time, date). */
+#hud-player-name { font-size: 18.54px !important; }
+.hud-corner-idtext,
+.hud-corner-idtext span { font-size: 16.48px !important; }
+.hud-corner-time,
+.hud-corner-time span,
+.hud-corner-date,
+.hud-corner-date span { font-size: 13.39px !important; }
+@media (max-width:1000px), (max-height:600px) {
+  #hud-player-name { font-size: 14.42px !important; }
+  .hud-corner-idtext,
+  .hud-corner-idtext span { font-size: 13.39px !important; }
+  .hud-corner-time,
+  .hud-corner-time span,
+  .hud-corner-date,
+  .hud-corner-date span { font-size: 11.33px !important; }
+}
+
+/* 2026-09-17: mobile readability pass for lower-left identity text. */
+#hud-player-name {
+  font-size: 20.02px !important;
+  font-weight: 600 !important;
+}
+.hud-corner-idtext,
+.hud-corner-idtext span {
+  font-size: 17.80px !important;
+  font-weight: 600 !important;
+}
+.hud-corner-time,
+.hud-corner-time span,
+.hud-corner-date,
+.hud-corner-date span {
+  font-size: 14.46px !important;
+  font-weight: 600 !important;
+}
+#hud-player-name,
+.hud-corner-idtext,
+.hud-corner-idtext span,
+.hud-corner-time,
+.hud-corner-time span,
+.hud-corner-date,
+.hud-corner-date span {
+  color: #fff !important;
+  -webkit-text-fill-color: #fff !important;
+  text-shadow: 0 1px 2px rgba(0,0,0,.95), 0 0 2px rgba(0,0,0,.72) !important;
+}
+#hud-corner-info::after {
+  background: linear-gradient(180deg, rgba(4,13,20,.34), rgba(1,7,12,.28)) !important;
+  box-shadow: inset 0 0 10px rgba(0,0,0,.08), 0 2px 6px rgba(0,0,0,.10) !important;
+}
+@media (max-width:1000px), (max-height:600px) {
+  #hud-player-name { font-size: 15.57px !important; font-weight: 600 !important; }
+  .hud-corner-idtext,
+  .hud-corner-idtext span { font-size: 14.46px !important; font-weight: 600 !important; }
+  .hud-corner-time,
+  .hud-corner-time span,
+  .hud-corner-date,
+  .hud-corner-date span { font-size: 12.24px !important; font-weight: 600 !important; }
+  #hud-corner-info::after {
+    background: linear-gradient(180deg, rgba(4,13,20,.34), rgba(1,7,12,.28)) !important;
+  }
+}
+
+/* 2026-09-17: match lower-left logo height to the info panel and reuse the stats-row blue-grey background at lower opacity. */
+#hud-corner-info::after {
+  background: rgba(38, 57, 70, .32) !important;
+}
+.hud-corner-logo {
+  height: 90px !important;
+  align-self: center !important;
+}
+.hud-corner-logo img {
+  height: 90px !important;
+  width: auto !important;
+  max-width: 112px !important;
+  object-fit: contain !important;
+}
+@media (max-width:1000px), (max-height:600px) {
+  #hud-corner-info::after {
+    background: rgba(38, 57, 70, .32) !important;
+  }
+  .hud-corner-logo {
+    height: 70px !important;
+  }
+  .hud-corner-logo img {
+    height: 70px !important;
+    width: auto !important;
+    max-width: 86px !important;
+  }
+}
+
+/* 2026-09-17 final lower-left logo/panel correction.
+   The previous rule capped the logo width, so its intrinsic 410:270 aspect ratio
+   prevented it from ever reaching the requested panel height. */
+#hud-corner-info::after {
+  left: 146px !important;
+  background: rgba(38, 57, 70, .40) !important;
+}
+.hud-corner-logo {
+  width: 138px !important;
+  height: 90px !important;
+  flex: 0 0 138px !important;
+  align-self: center !important;
+  overflow: visible !important;
+}
+.hud-corner-logo img {
+  width: auto !important;
+  height: 90px !important;
+  max-width: none !important;
+  max-height: none !important;
+  object-fit: contain !important;
+}
+@media (max-width:1000px), (max-height:600px) {
+  #hud-corner-info::after {
+    left: 112px !important;
+    background: rgba(38, 57, 70, .40) !important;
+  }
+  .hud-corner-logo {
+    width: 108px !important;
+    height: 70px !important;
+    flex: 0 0 108px !important;
+  }
+  .hud-corner-logo img {
+    width: auto !important;
+    height: 70px !important;
+    max-width: none !important;
+    max-height: none !important;
+  }
+}
+
+/* 2026-09-18: lower-left info panel fades smoothly to fully transparent behind the date. */
+#hud-corner-info::after {
+  background: linear-gradient(90deg,
+    rgba(38, 57, 70, .40) 0%,
+    rgba(38, 57, 70, .38) 34%,
+    rgba(38, 57, 70, .27) 58%,
+    rgba(38, 57, 70, .13) 78%,
+    rgba(38, 57, 70, 0) 100%) !important;
+  box-shadow: none !important;
+}
+@media (max-width:1000px), (max-height:600px) {
+  #hud-corner-info::after {
+    background: linear-gradient(90deg,
+      rgba(38, 57, 70, .40) 0%,
+      rgba(38, 57, 70, .38) 34%,
+      rgba(38, 57, 70, .27) 58%,
+      rgba(38, 57, 70, .13) 78%,
+      rgba(38, 57, 70, 0) 100%) !important;
+    box-shadow: none !important;
+  }
+}
+
+/* 2026-09-18: lower-left gradient uses the dark inner stat-tile colour and starts before the Antares logo. */
+#hud-corner-info::after {
+  left: -8px !important;
+  right: -18px !important;
+  top: 0 !important;
+  bottom: auto !important;
+  width: auto !important;
+  height: 100% !important;
+  border: 0 !important;
+  border-radius: 18px 0 0 18px !important;
+  transform: none !important;
+  filter: none !important;
+  background: linear-gradient(90deg,
+    rgba(6, 27, 43, .72) 0%,
+    rgba(6, 27, 43, .68) 24%,
+    rgba(6, 27, 43, .52) 48%,
+    rgba(6, 27, 43, .30) 70%,
+    rgba(6, 27, 43, .11) 88%,
+    rgba(6, 27, 43, 0) 100%) !important;
+  box-shadow: none !important;
+  pointer-events: none !important;
+  z-index: 0 !important;
+}
+#hud-corner-info > * {
+  position: relative;
+  z-index: 1;
+}
+@media (max-width:1000px), (max-height:600px) {
+  #hud-corner-info::after {
+    left: -6px !important;
+    right: -14px !important;
+    top: 0 !important;
+    bottom: auto !important;
+    width: auto !important;
+    height: 100% !important;
+    background: linear-gradient(90deg,
+      rgba(6, 27, 43, .72) 0%,
+      rgba(6, 27, 43, .68) 24%,
+      rgba(6, 27, 43, .52) 48%,
+      rgba(6, 27, 43, .30) 70%,
+      rgba(6, 27, 43, .11) 88%,
+      rgba(6, 27, 43, 0) 100%) !important;
+  }
+}
+
+/* 2026-09-18: exact stat-tile fill for lower-left gradient + 10% extra vertical breathing room. */
+#hud-corner-info::after {
+  left: -8px !important;
+  right: -18px !important;
+  top: -5% !important;
+  bottom: auto !important;
+  height: 110% !important;
+  background: linear-gradient(90deg,
+    rgba(6, 27, 43, .72) 0%,
+    rgba(5, 24, 38, .68) 24%,
+    rgba(4, 22, 35, .52) 48%,
+    rgba(3, 19, 31, .30) 70%,
+    rgba(3, 19, 31, .11) 88%,
+    rgba(3, 19, 31, 0) 100%) !important;
+}
+@media (max-width:1000px), (max-height:600px) {
+  #hud-corner-info::after {
+    left: -6px !important;
+    right: -14px !important;
+    top: -5% !important;
+    bottom: auto !important;
+    height: 110% !important;
+    background: linear-gradient(90deg,
+      rgba(6, 27, 43, .72) 0%,
+      rgba(5, 24, 38, .68) 24%,
+      rgba(4, 22, 35, .52) 48%,
+      rgba(3, 19, 31, .30) 70%,
+      rgba(3, 19, 31, .11) 88%,
+      rgba(3, 19, 31, 0) 100%) !important;
+  }
+}
+
+/* 2026-09-18: keep the lower-left gradient visible through the full date,
+   then fade it out farther to the right. Remove dark outline from time/date icons. */
+#hud-corner-info::after {
+  right: -86px !important;
+  background: linear-gradient(90deg,
+    rgba(6, 27, 43, .72) 0%,
+    rgba(5, 24, 38, .68) 30%,
+    rgba(4, 22, 35, .56) 58%,
+    rgba(3, 19, 31, .40) 76%,
+    rgba(3, 19, 31, .18) 90%,
+    rgba(3, 19, 31, 0) 100%) !important;
+}
+.hud-clock-icon,
+.hud-calendar-icon {
+  filter: none !important;
+}
+@media (max-width:1000px), (max-height:600px) {
+  #hud-corner-info::after {
+    right: -64px !important;
+    background: linear-gradient(90deg,
+      rgba(6, 27, 43, .72) 0%,
+      rgba(5, 24, 38, .68) 30%,
+      rgba(4, 22, 35, .56) 58%,
+      rgba(3, 19, 31, .40) 76%,
+      rgba(3, 19, 31, .18) 90%,
+      rgba(3, 19, 31, 0) 100%) !important;
+  }
+}
+
+/* 2026-09-18: thin clock/calendar outline to match time/date text. */
+.hud-clock-icon,
+.hud-calendar-icon {
+  filter:
+    drop-shadow(0 1px 1px rgba(0, 0, 0, .72))
+    drop-shadow(0 0 1px rgba(5, 13, 22, .58)) !important;
+}

@@ -15,7 +15,7 @@ function updateHudMobileScale() {
     // 1280x720 is the design reference. Do not let extreme aspect ratios
     // make the HUD huge; the smaller viewport ratio always wins.
     const fit = Math.min(width / HUD_REFERENCE_WIDTH, height / HUD_REFERENCE_HEIGHT);
-    let scale = fit * (isPhone ? 0.56 : 0.82);
+    let scale = fit * (isPhone ? 0.56 : 0.82) * 1.05;
     // Mobile CEF is commonly rendered at wide landscape resolutions (for example
     // 20:9 phones). Keep the right HUD about 20% smaller than the previous mobile
     // profile while preserving the desktop profile.
@@ -29,7 +29,7 @@ function updateHudMobileScale() {
     if (corner) {
         // Lower-left information is intentionally a little smaller than the
         // main stats group on phones.
-        const cornerScale = Math.max(0.38, Math.min(0.54, scale * 0.90));
+        const cornerScale = Math.max(0.399, Math.min(0.567, scale * 0.90));
         corner.style.setProperty("transform", `scale(${cornerScale.toFixed(4)})`, "important");
         corner.style.setProperty("transform-origin", "bottom left", "important");
     }
