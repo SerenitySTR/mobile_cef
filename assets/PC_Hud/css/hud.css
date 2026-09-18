@@ -623,3 +623,8 @@ body {
 body.pc-hud-visible {
   display: block;
 }
+
+.weapon-icon {
+  width: 50px;
+  height: 33px;
+}
