@@ -194,6 +194,12 @@ function updateHudWeapon(data) {
         hudWeaponImage.src = "./assets/CSS/Images/Hud/Weapons/" + weaponFile;
     }
 
+    const hudAmmo = hudAmmoClip?.closest(".hud-ammo");
+
+    if (hudAmmo) {
+        hudAmmo.style.display = weaponId === 0 ? "none" : "";
+    }
+
     hudAmmoClip.textContent = ammoClip;
     hudAmmoTotal.textContent = "/" + ammoTotal;
 }
@@ -544,8 +550,3 @@ window.addEventListener("focus", () => {
 
 
 
-if (pcHudFrame) {
-    pcHudFrame.addEventListener("load", () => {
-        if (!hudMobilePlatform) sendPcHud("show");
-    });
-}

@@ -34,9 +34,9 @@ html,body {
   height:252px;
   transform:scale(var(--hud-scale));
   transform-origin:top left;
-  background:linear-gradient(90deg,rgba(4,15,27,.72) 0%,rgba(4,15,27,.50) 35%,rgba(4,15,27,.18) 70%,rgba(4,15,27,0) 100%);
-  mask-image:linear-gradient(to bottom,#000 0%,#000 88%,transparent 100%);
-  -webkit-mask-image:linear-gradient(to bottom,#000 0%,#000 88%,transparent 100%)
+  background:transparent;
+  mask-image:none;
+  -webkit-mask-image:none
 }
 .player-gradient {
   position:absolute;
