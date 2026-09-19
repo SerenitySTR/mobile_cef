@@ -478,215 +478,7 @@
     border-radius:9px
 }
 
-@media (max-width:767px) {
-    #admin-panel {
-        align-items:stretch;
-        justify-content:stretch;
-        background:rgba(3,17,29,.98)
-    }
-    .admin-panel-canvas {
-        width:100%;
-        height:100%;
-        transform:none;
-        border:0;
-        border-radius:0;
-        flex-direction:column
-    }
-    .admin-sidebar {
-        width:100%;
-        padding:0;
-        flex-direction:row;
-        align-items:stretch;
-        border-right:0;
-        border-bottom:1px solid var(--ap-line)
-    }
-    .admin-brand {
-        display:none
-    }
-    .admin-sidebar nav {
-        min-width:0;
-        flex:1;
-        flex-direction:row;
-        gap:0;
-        overflow-x:auto
-    }
-    .admin-sidebar nav button {
-        flex:0 0 auto;
-        gap:6px;
-        padding:10px 12px;
-        white-space:nowrap;
-        font-size:13px;
-        border-left:0;
-        border-bottom:3px solid transparent
-    }
-    .admin-sidebar nav button.active {
-        border-bottom-color:#fff
-    }
-    .admin-sidebar .admin-icon {
-        width:20px;
-        font-size:19px
-    }
-    .admin-sidebar .admin-badge {
-        padding:2px 5px;
-        font-size:11px
-    }
-    .admin-zone {
-        min-width:44px;
-        max-width:100px;
-        margin:5px;
-        padding:6px;
-        font-size:12px
-    }
-    .admin-header {
-        min-height:48px;
-        padding:4px 12px
-    }
-    .admin-header h1 {
-        font-size:18px
-    }
-    .admin-header button {
-        min-width:44px;
-        min-height:44px
-    }
-    #admin-content {
-        gap:10px;
-        padding:10px
-    }
-    .admin-cards {
-        gap:6px
-    }
-    .admin-card {
-        gap:0;
-        padding:9px
-    }
-    .admin-card>.admin-icon {
-        display:none
-    }
-    .admin-card small {
-        font-size:11px
-    }
-    .admin-value {
-        font-size:18px;
-        overflow-wrap:anywhere
-    }
-    .admin-stats {
-        display:flex;
-        flex-direction:column;
-        min-height:auto
-    }
-    .admin-table th,.admin-table td {
-        padding:10px 7px;
-        font-size:12px
-    }
-    .admin-tabs {
-        flex-wrap:nowrap;
-        overflow-x:auto;
-        padding-bottom:3px
-    }
-    .admin-tabs button {
-        flex-shrink:0;
-        font-size:13px
-    }
-    .admin-ticket-layout {
-        display:block;
-        min-height:0;
-        overflow:hidden
-    }
-    .admin-tickets {
-        height:100%;
-        overflow:auto
-    }
-    .admin-chat {
-        height:100%;
-        min-height:0
-    }
-    .admin-ticket-layout.admin-chat-open .admin-tickets {
-        display:none
-    }
-    .admin-ticket-layout:not(.admin-chat-open) .admin-chat {
-        display:none
-    }
-    .admin-back {
-        display:inline-flex;
-        margin-bottom:6px;
-        padding:5px 10px;
-        font-size:13px
-    }
-    .admin-chat-head {
-        padding:8px
-    }
-    .admin-chat-head h2 {
-        font-size:14px
-    }
-    .admin-messages {
-        min-height:65px;
-        padding:10px
-    }
-    .admin-message {
-        max-width:94%;
-        margin-bottom:12px
-    }
-    .admin-bubble {
-        padding:9px;
-        font-size:14px
-    }
-    .admin-composer {
-        max-height:55%;
-        padding:8px
-    }
-    .admin-quick {
-        display:flex;
-        max-height:none;
-        overflow-x:auto;
-        gap:6px;
-        margin-bottom:8px
-    }
-    .admin-quick button {
-        flex:0 0 auto;
-        min-height:44px;
-        padding:8px 11px;
-        white-space:nowrap;
-        font-size:13px
-    }
-    .admin-actions {
-        gap:6px;
-        margin-top:7px
-    }
-    .admin-actions .admin-select {
-        width:100%;
-        max-width:none;
-        min-height:44px
-    }
-    .admin-actions button {
-        flex:1;
-        padding:8px;
-        font-size:13px
-    }
-    .admin-command-layout {
-        display:block;
-        overflow:auto
-    }
-    .admin-command-layout .admin-details {
-        margin-top:10px
-    }
-    .admin-spawns {
-        grid-template-columns:repeat(2,minmax(0,1fr));
-        gap:8px
-    }
-    .admin-spawn {
-        min-height:82px;
-        padding:12px;
-        gap:10px;
-        font-size:14px
-    }
-    .admin-spawn .admin-icon {
-        font-size:23px
-    }
-    #admin-toast {
-        bottom:calc(10px + env(safe-area-inset-bottom,0px));
-        font-size:13px
-    }
-}
+
 
 /* Compact ticket/admin panel adjustments */
 .admin-panel-canvas {
@@ -777,29 +569,7 @@
     border-color:#d76070!important
 }
 
-@media (max-width:767px) {
-    .admin-panel-canvas {
-        width:100%;
-        height:100%
-    }
-    .admin-back {
-        display:inline-flex
-    }
-    .admin-quick-menu {
-        position:fixed;
-        left:10px;
-        right:10px;
-        bottom:10px;
-        width:auto;
-        grid-template-columns:1fr 1fr
-    }
-    .admin-message small {
-        font-size:10px
-    }
-    .admin-bubble {
-        font-size:14px
-    }
-}
+
 
 /* Ticket chat controls */
 .admin-chat-head {
@@ -939,41 +709,7 @@
     display: none !important;
 }
 
-@media (max-width: 767px) {
-    .admin-message {
-        max-width: 82%;
-    }
-    .admin-message small {
-        font-size: 9px;
-    }
-    .admin-bubble {
-        padding: 7px 9px;
-        font-size: 13px;
-    }
-    .admin-ticket-controls {
-        display: block;
-    }
-    .admin-quick-wrap {
-        margin-bottom: 7px;
-    }
-    .admin-quick-toggle {
-        width: 100%;
-    }
-    .admin-quick-menu {
-        position: static;
-        width: 100%;
-        grid-template-columns: 1fr 1fr;
-        margin-top: 6px;
-    }
-    .admin-transfer-row {
-        width: 100%;
-    }
-    .admin-transfer-row .admin-select {
-        flex: 1;
-        width: auto;
-        min-width: 0;
-    }
-}
+
 
 .admin-ticket-layout.admin-ticket-focus {
     grid-template-columns: minmax(0, 1fr);
@@ -1006,13 +742,7 @@
     white-space: nowrap;
 }
 
-@media (max-height: 800px), (max-width: 900px) {
-    .admin-ticket-focus-toggle {
-        min-height: 32px;
-        padding: 5px 9px;
-        font-size: 12px;
-    }
-}
+
 
 .admin-ticket-focus-toggle {
     display: inline-flex !important;
@@ -1024,186 +754,409 @@
 }
 
 /* Mobile landscape admin ticket layout */
-@media (max-width: 1100px), (max-height: 650px) {
-    #admin-panel {
-        align-items: stretch;
-        justify-content: stretch;
-        background: rgba(3,17,29,.98);
-    }
-    .admin-panel-canvas {
-        width: 100%;
-        height: 100%;
-        transform: none !important;
-        border: 0;
-        border-radius: 0;
-    }
-    .admin-sidebar {
-        width: 170px;
-        padding: 8px 0;
-    }
-    .admin-brand {
-        padding: 8px 12px 10px;
-        font-size: 12px;
-    }
-    .admin-sidebar nav button {
-        padding: 8px 10px;
-        font-size: 11px;
-    }
-    .admin-zone {
-        margin: 6px;
-        padding: 7px;
-        font-size: 10px;
-    }
-    .admin-header {
-        min-height: 40px;
-        padding: 3px 10px;
-    }
-    .admin-header h1 {
-        font-size: 16px;
-    }
-    .admin-header button {
-        min-width: 38px;
-        min-height: 34px;
-    }
-    #admin-content {
-        padding: 7px 9px;
-        gap: 6px;
-    }
-    .admin-tabs button {
-        padding: 6px 10px;
-        font-size: 11px;
-    }
-    .admin-ticket-layout {
-        grid-template-columns: minmax(190px, 28%) minmax(0, 1fr);
-        gap: 7px;
-        min-height: 0;
-    }
-    .admin-search {
-        min-height: 32px;
-        padding: 6px 8px;
-        font-size: 11px;
-    }
-    .admin-ticket {
-        padding: 7px 8px;
-    }
-    .admin-ticket span,.admin-ticket small {
-        font-size: 9px;
-    }
-    .admin-ticket strong {
-        font-size: 11px;
-    }
-    .admin-chat-head {
-        padding: 6px 8px;
-    }
-    .admin-chat-head h2 {
-        margin-bottom: 2px;
-        font-size: 13px;
-    }
-    .admin-chat-head small {
-        font-size: 9px;
-    }
-    .admin-ticket-focus-toggle {
-        min-height: 28px;
-        padding: 4px 8px;
-        font-size: 10px;
-    }
-    .admin-messages {
-        padding: 7px 9px;
-    }
-    .admin-message {
-        max-width: 82%;
-        margin-bottom: 7px;
-    }
-    .admin-message small {
-        font-size: 8px;
-    }
-    .admin-bubble {
-        padding: 6px 8px;
-        font-size: 11px;
-        line-height: 1.25;
-    }
-    .admin-composer {
-        gap: 5px;
-        padding: 6px 8px;
-    }
-    .admin-quick-toggle,.admin-transfer-row .admin-select,.admin-transfer-row button,.admin-close-ticket {
-        min-height: 30px;
-        padding: 5px 7px;
-        font-size: 10px;
-    }
-    .admin-textarea {
-        height: 34px;
-        min-height: 34px;
-        padding: 7px;
-        font-size: 11px;
-    }
-    .admin-send-row .admin-send {
-        min-width: 75px;
-        padding: 5px 9px;
-        font-size: 10px;
-    }
-    .admin-ticket-layout.admin-ticket-focus {
-        display: block;
-    }
-    .admin-ticket-layout.admin-ticket-focus .admin-tickets {
-        display: none !important;
-    }
-    .admin-ticket-layout.admin-ticket-focus .admin-chat {
-        display: flex !important;
-        width: 100%;
-        height: 100%;
-    }
-}
+
 
 /* Phones in landscape: keep the ticket itself usable instead of switching at 767px only. */
-@media (max-height: 520px) and (orientation: landscape) {
-    .admin-sidebar {
-        width: 145px;
+
+/* Custom admin transfer dropdown. Native <select> is unreliable in game CEF
+   and opens the Android system picker on mobile. */
+.admin-transfer-select {
+    position: relative;
+    flex: 1 1 190px;
+    min-width: 0;
+}
+
+.admin-transfer-toggle {
+    width: 100%;
+    text-align: left;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.admin-transfer-menu {
+    position: absolute;
+    right: 0;
+    bottom: calc(100% + 5px);
+    z-index: 50;
+    width: max(100%, 230px);
+    max-height: 190px;
+    padding: 4px;
+    overflow-y: auto;
+    background: #071a29;
+    border: 1px solid #214761;
+    border-radius: 7px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, .35);
+}
+
+.admin-transfer-option {
+    display: block;
+    width: 100%;
+    min-height: 34px;
+    padding: 7px 9px;
+    text-align: left;
+    white-space: nowrap;
+}
+
+.admin-transfer-option:hover,
+.admin-transfer-option.active {
+    background: #12344d;
+}
+
+.admin-transfer-empty {
+    padding: 8px;
+    font-size: 12px;
+    opacity: .65;
+}
+
+
+/* ============================================================
+   MOBILE LANDSCAPE — SA-MP / Android
+   Rebuilt from scratch. Height is the primary phone breakpoint.
+   ============================================================ */
+
+
+/* ==========================================================================\n   MOBILE LANDSCAPE\n   --------------------------------------------------------------------------\n   The mobile version intentionally keeps the same component structure as PC.\n   Instead of trying to resize every control independently, the whole panel is\n   laid out on a dedicated 1280x620 landscape canvas and scaled as one unit by\n   AdminPanel.Scale(). This keeps fonts, buttons, gaps, tables, ticket cards,\n   dropdowns and the composer proportional on every phone resolution.\n   ========================================================================== */
+#admin-panel.admin-mobile-landscape {
+    padding: 0;
+    background: rgba(1, 7, 13, .34);
+}
+
+#admin-panel.admin-mobile-landscape .admin-panel-canvas {
+    width: 1280px;
+    height: 620px;
+    max-width: none;
+    max-height: none;
+    transform: scale(var(--admin-panel-scale, 1));
+    transform-origin: center;
+    border-radius: 10px;
+    box-shadow: 0 18px 55px rgba(0, 0, 0, .58);
+}
+
+#admin-panel.admin-mobile-landscape .admin-sidebar {
+    width: 205px;
+    padding: 16px 0;
+}
+
+#admin-panel.admin-mobile-landscape .admin-brand {
+    padding: 18px 16px 16px;
+    font-size: 11px;
+    line-height: 1.2;
+    white-space: nowrap;
+}
+
+#admin-panel.admin-mobile-landscape .admin-sidebar nav {
+    gap: 4px;
+}
+
+#admin-panel.admin-mobile-landscape .admin-sidebar nav button {
+    min-height: 46px;
+    padding: 12px 14px;
+    gap: 11px;
+    font-size: 15px;
+}
+
+#admin-panel.admin-mobile-landscape .admin-sidebar .admin-icon {
+    width: 21px;
+    flex: 0 0 21px;
+    font-size: 18px;
+}
+
+#admin-panel.admin-mobile-landscape .admin-badge {
+    padding: 3px 7px;
+    font-size: 11px;
+}
+
+#admin-panel.admin-mobile-landscape .admin-zone {
+    min-height: 42px;
+    margin: auto 14px 0;
+    padding: 9px 10px;
+    font-size: 13px;
+}
+
+#admin-panel.admin-mobile-landscape .admin-header {
+    min-height: 54px;
+    height: 54px;
+    padding: 8px 16px 8px 20px;
+}
+
+#admin-panel.admin-mobile-landscape .admin-header h1 {
+    font-size: 21px;
+}
+
+#admin-panel.admin-mobile-landscape .admin-header button {
+    min-width: 38px;
+    min-height: 36px;
+    padding: 4px 9px;
+    font-size: 24px;
+}
+
+#admin-panel.admin-mobile-landscape #admin-content {
+    gap: 10px;
+    padding: 12px 14px 14px;
+    overflow: hidden;
+}
+
+#admin-panel.admin-mobile-landscape button {
+    padding: 9px 12px;
+    border-radius: 6px;
+}
+
+#admin-panel.admin-mobile-landscape .admin-search,
+#admin-panel.admin-mobile-landscape .admin-textarea,
+#admin-panel.admin-mobile-landscape .admin-select {
+    padding: 9px 11px;
+    font-size: 14px;
+}
+
+#admin-panel.admin-mobile-landscape .admin-row {
+    gap: 9px;
+}
+
+#admin-panel.admin-mobile-landscape .admin-muted,
+#admin-panel.admin-mobile-landscape small {
+    font-size: 12px;
+}
+
+#admin-panel.admin-mobile-landscape .admin-tabs {
+    flex-wrap: nowrap;
+    gap: 7px;
+    overflow-x: auto;
+    scrollbar-width: none;
+}
+
+#admin-panel.admin-mobile-landscape .admin-tabs::-webkit-scrollbar {
+    display: none;
+}
+
+#admin-panel.admin-mobile-landscape .admin-tabs button {
+    flex: 0 0 auto;
+    min-height: 39px;
+    padding: 8px 13px;
+    font-size: 14px;
+    white-space: nowrap;
+}
+
+#admin-panel.admin-mobile-landscape .admin-ticket-layout {
+    grid-template-columns: 285px minmax(0, 1fr);
+    gap: 10px;
+    min-height: 0;
+    overflow: hidden;
+}
+
+#admin-panel.admin-mobile-landscape .admin-tickets {
+    gap: 7px;
+    min-width: 0;
+    overflow-y: auto;
+}
+
+#admin-panel.admin-mobile-landscape .admin-ticket {
+    padding: 10px 11px;
+}
+
+#admin-panel.admin-mobile-landscape .admin-ticket strong {
+    margin: 5px 0;
+    font-size: 14px;
+    line-height: 1.2;
+}
+
+#admin-panel.admin-mobile-landscape .admin-ticket small,
+#admin-panel.admin-mobile-landscape .admin-ticket span {
+    font-size: 11px;
+    line-height: 1.2;
+}
+
+#admin-panel.admin-mobile-landscape .admin-chat {
+    min-width: 0;
+    min-height: 0;
+}
+
+#admin-panel.admin-mobile-landscape .admin-chat-head {
+    padding: 10px 12px;
+}
+
+#admin-panel.admin-mobile-landscape .admin-chat-title-row {
+    gap: 10px;
+}
+
+#admin-panel.admin-mobile-landscape .admin-chat-title-row > div {
+    min-width: 0;
+}
+
+#admin-panel.admin-mobile-landscape .admin-chat-head h2 {
+    margin: 0 0 3px;
+    font-size: 17px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+#admin-panel.admin-mobile-landscape .admin-ticket-focus-toggle {
+    min-height: 36px;
+    padding: 7px 11px;
+    font-size: 13px;
+    white-space: nowrap;
+}
+
+#admin-panel.admin-mobile-landscape .admin-messages {
+    min-height: 0;
+    padding: 10px 12px;
+    overflow-y: auto;
+}
+
+#admin-panel.admin-mobile-landscape .admin-message {
+    max-width: 78%;
+    margin-bottom: 9px;
+}
+
+#admin-panel.admin-mobile-landscape .admin-message small {
+    margin-bottom: 3px;
+    font-size: 10px;
+}
+
+#admin-panel.admin-mobile-landscape .admin-bubble {
+    padding: 7px 9px;
+    font-size: 13px;
+    line-height: 1.25;
+}
+
+#admin-panel.admin-mobile-landscape .admin-composer {
+    gap: 7px;
+    padding: 9px 11px;
+    max-height: 43%;
+    overflow-y: auto;
+}
+
+#admin-panel.admin-mobile-landscape .admin-ticket-controls,
+#admin-panel.admin-mobile-landscape .admin-transfer-row,
+#admin-panel.admin-mobile-landscape .admin-send-row {
+    gap: 7px;
+}
+
+#admin-panel.admin-mobile-landscape .admin-quick-toggle,
+#admin-panel.admin-mobile-landscape .admin-transfer-toggle,
+#admin-panel.admin-mobile-landscape .admin-transfer-row > button,
+#admin-panel.admin-mobile-landscape .admin-close-ticket,
+#admin-panel.admin-mobile-landscape .admin-claim-ticket,
+#admin-panel.admin-mobile-landscape .admin-send {
+    min-height: 38px;
+    padding: 7px 10px;
+    font-size: 13px;
+    line-height: 1.15;
+}
+
+#admin-panel.admin-mobile-landscape .admin-textarea {
+    min-height: 39px;
+    height: 39px;
+    max-height: 74px;
+    resize: none;
+}
+
+#admin-panel.admin-mobile-landscape .admin-quick-menu {
+    width: 460px;
+    max-height: 250px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 6px;
+    padding: 7px;
+    overflow-y: auto;
+}
+
+#admin-panel.admin-mobile-landscape .admin-quick-menu button {
+    min-height: 36px;
+    padding: 7px 8px;
+    font-size: 12px;
+}
+
+#admin-panel.admin-mobile-landscape .admin-transfer-menu {
+    max-height: 220px;
+    overflow-y: auto;
+}
+
+#admin-panel.admin-mobile-landscape .admin-transfer-option {
+    min-height: 36px;
+    padding: 7px 9px;
+    font-size: 12px;
+}
+
+#admin-panel.admin-mobile-landscape .admin-ticket-layout.admin-ticket-focus {
+    grid-template-columns: minmax(0, 1fr);
+}
+
+#admin-panel.admin-mobile-landscape .admin-ticket-layout.admin-ticket-focus .admin-tickets {
+    display: none;
+}
+
+#admin-panel.admin-mobile-landscape .admin-ticket-layout.admin-ticket-focus .admin-chat {
+    display: flex;
+    width: 100%;
+    height: 100%;
+}
+
+#admin-panel.admin-mobile-landscape .admin-cards {
+    gap: 9px;
+}
+
+#admin-panel.admin-mobile-landscape .admin-card,
+#admin-panel.admin-mobile-landscape .admin-box {
+    padding: 12px;
+}
+
+#admin-panel.admin-mobile-landscape .admin-card {
+    gap: 11px;
+}
+
+#admin-panel.admin-mobile-landscape .admin-card .admin-icon {
+    width: 30px;
+    font-size: 26px;
+}
+
+#admin-panel.admin-mobile-landscape .admin-value {
+    margin-top: 6px;
+    font-size: 20px;
+}
+
+#admin-panel.admin-mobile-landscape .admin-stats {
+    gap: 9px;
+}
+
+#admin-panel.admin-mobile-landscape .admin-box h2 {
+    margin: 0 0 9px;
+    font-size: 15px;
+}
+
+#admin-panel.admin-mobile-landscape .admin-table th,
+#admin-panel.admin-mobile-landscape .admin-table td {
+    padding: 8px 9px;
+    font-size: 12px;
+}
+
+#admin-panel.admin-mobile-landscape .admin-spawns {
+    gap: 8px;
+}
+
+#admin-panel.admin-mobile-landscape .admin-spawn {
+    min-height: 42px;
+    padding: 9px 11px;
+    font-size: 13px;
+}
+
+/* Very short landscape phones: keep the same design, only tighten the logical canvas. */
+@media (orientation: landscape) and (max-height: 390px) {
+    #admin-panel.admin-mobile-landscape .admin-panel-canvas {
+        height: 590px;
     }
-    .admin-brand {
-        display: none;
+
+    #admin-panel.admin-mobile-landscape .admin-header {
+        min-height: 50px;
+        height: 50px;
     }
-    .admin-sidebar nav {
-        gap: 0;
+
+    #admin-panel.admin-mobile-landscape #admin-content {
+        padding-top: 10px;
+        padding-bottom: 10px;
     }
-    .admin-sidebar nav button {
-        padding: 6px 8px;
-        font-size: 10px;
-    }
-    .admin-sidebar .admin-icon {
-        width: 17px;
-        font-size: 15px;
-    }
-    .admin-zone {
-        font-size: 9px;
-    }
-    .admin-header {
-        min-height: 34px;
-    }
-    .admin-header h1 {
-        font-size: 14px;
-    }
-    #admin-content {
-        padding: 5px 7px;
-    }
-    .admin-tabs {
-        gap: 4px;
-    }
-    .admin-tabs button {
-        padding: 4px 8px;
-        font-size: 10px;
-    }
-    .admin-ticket-layout {
-        grid-template-columns: 180px minmax(0,1fr);
-        gap: 5px;
-    }
-    .admin-chat-head {
-        padding: 4px 7px;
-    }
-    .admin-messages {
-        padding: 5px 7px;
-    }
-    .admin-composer {
-        padding: 5px 7px;
+
+    #admin-panel.admin-mobile-landscape .admin-sidebar nav button {
+        min-height: 43px;
     }
 }

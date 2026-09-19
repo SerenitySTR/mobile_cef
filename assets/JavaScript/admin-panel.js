@@ -1,5 +1,5 @@
 var AdminPanel = {
-    root: null, tab: "stats", filter: "mine", selectedTicket: null, query: "", chatOpen: false, ticketFocus: false, itemCategory: "weapons", pendingClaimTicket: null, quickOpen: false,
+    root: null, tab: "stats", filter: "mine", selectedTicket: null, query: "", chatOpen: false, ticketFocus: false, itemCategory: "weapons", pendingClaimTicket: null, quickOpen: false, transferOpen: false, transferAdminId: null, searchTimer: null, composingSearch: false,
     state: {
         profile: {
             id:null,name:"",role:""
@@ -42,6 +42,15 @@ var AdminPanel = {
         };
         this.root.addEventListener("click", function(e){ self.Click(e); });
         this.root.addEventListener("input", function(e){ self.Input(e); });
+        this.root.addEventListener("compositionstart", function(e){
+            if(e.target.matches && e.target.matches("[data-admin-search]")) self.composingSearch=true;
+        });
+        this.root.addEventListener("compositionend", function(e){
+            if(e.target.matches && e.target.matches("[data-admin-search]")) {
+                self.composingSearch=false;
+                self.Input(e);
+            }
+        });
         document.addEventListener("keydown", function(e){ if(e.key === "Escape" && self.root.classList.contains("active")) self.Close(); });
         window.addEventListener("resize", function(){ self.Scale(); });
         this.Scale();
@@ -113,12 +122,20 @@ var AdminPanel = {
     },
     Scale: function() {
         if(!this.root)return;
-        var desktop=window.innerWidth>=768;
-        if(!desktop) {
-            this.root.style.removeProperty("--admin-panel-scale");
-            return;
-        }
-        this.root.style.setProperty("--admin-panel-scale",Math.min(window.innerWidth*.92/1280,window.innerHeight*.88/720));
+
+        var width=window.innerWidth;
+        var height=window.innerHeight;
+        var mobileLandscape=width>height && height<=600;
+
+        this.root.classList.toggle("admin-mobile-landscape",mobileLandscape);
+
+        var baseWidth=mobileLandscape?1280:1440;
+        var baseHeight=mobileLandscape?(height<=390?590:620):810;
+        var widthRatio=(mobileLandscape?0.88:0.92);
+        var heightRatio=(mobileLandscape?0.84:0.88);
+        var scale=Math.min(width*widthRatio/baseWidth,height*heightRatio/baseHeight,1);
+
+        this.root.style.setProperty("--admin-panel-scale",scale);
     },
     Toast: function(text) {
         var e=this.Q("#admin-toast");
@@ -172,7 +189,7 @@ var AdminPanel = {
             controls='<div class="admin-composer">'
             +'<div class="admin-ticket-controls">'
             +'<div class="admin-quick-wrap"><button type="button" class="admin-quick-toggle" data-admin-quick-toggle>Швидкі відповіді '+(this.quickOpen?'▴':'▾')+'</button>'+quickMenu+'</div>'
-            +'<div class="admin-transfer-row"><select class="admin-select" data-admin-transfer><option value="">Передати адміну…</option>'+admins.map(function(a){return '<option value="'+self.Escape(a.id)+'">'+self.Escape(a.name)+' ['+self.Escape(a.id)+']</option>';}).join("")+'</select><button type="button" data-admin-action="transfer">Передати</button><button type="button" data-admin-action="release">Звільнити</button></div>'
+            +'<div class="admin-transfer-row"><div class="admin-transfer-select"><button type="button" class="admin-select admin-transfer-toggle" data-admin-transfer-toggle>'+this.TransferAdminLabel(admins)+'</button>'+(this.transferOpen?'<div class="admin-transfer-menu">'+(admins.length?admins.map(function(a){return '<button type="button" class="admin-transfer-option '+(String(self.transferAdminId)===String(a.id)?"active":"")+'" data-admin-transfer-option="'+self.Escape(a.id)+'">'+self.Escape(a.name)+' ['+self.Escape(a.id)+']</button>';}).join(""):'<div class="admin-transfer-empty">Немає адміністраторів онлайн</div>')+'</div>':'')+'</div><button type="button" data-admin-action="transfer">Передати</button><button type="button" data-admin-action="release">Звільнити</button></div>'
             +'</div>'
             +'<div class="admin-send-row"><textarea class="admin-textarea" data-admin-draft placeholder="Напишіть повідомлення…"></textarea><button type="button" class="admin-send admin-primary" data-admin-action="send">Надіслати</button></div>'
             +'<button type="button" class="admin-close-ticket" data-admin-action="resolve">Закрити тікет</button>'
@@ -183,6 +200,11 @@ var AdminPanel = {
             controls='<div class="admin-composer admin-muted">Перегляд історії листування</div>';
         }
         return '<div class="admin-chat-head"><div class="admin-chat-title-row"><div><h2>#'+this.Escape(r.id)+' · '+this.Escape(r.subject||r.title||"Звернення")+'</h2><small>'+this.Escape(r.playerName)+' [ID: '+this.Escape(r.playerId)+'] · '+(closed?"Закрито":r.adminId==null?"Вільний":"В роботі")+'</small></div><button type="button" class="admin-ticket-focus-toggle" data-admin-ticket-focus>'+(this.ticketFocus?"Показати звернення":"Сховати звернення")+'</button></div></div><div class="admin-messages">'+messages+'</div>'+controls;
+    },
+    TransferAdminLabel: function(admins) {
+        var self=this;
+        var admin=(admins||[]).find(function(a){ return String(a.id)===String(self.transferAdminId); });
+        return admin ? this.Escape(admin.name)+" ["+this.Escape(admin.id)+"] ▾" : "Передати адміну… ▾";
     },
     Search: function() {
         return '<input class="admin-search" data-admin-search value="'+this.Escape(this.query)+'" placeholder="Пошук за назвою, ID або описом">';
@@ -267,6 +289,17 @@ var AdminPanel = {
             }
             return;
         }
+        if(b.dataset.adminTransferToggle!==undefined) {
+            this.transferOpen=!this.transferOpen;
+            this.Render();
+            return;
+        }
+        if(b.dataset.adminTransferOption!==undefined) {
+            this.transferAdminId=b.dataset.adminTransferOption;
+            this.transferOpen=false;
+            this.Render();
+            return;
+        }
         if(b.dataset.adminSpawn!==undefined) {
             this.Send("admin:spawn",{LocationId:b.dataset.adminSpawn});
             return;
@@ -301,8 +334,7 @@ var AdminPanel = {
             return;
         }
         if(action==="transfer") {
-            var select=this.Q("[data-admin-transfer]");
-            var adminId=select?select.value:"";
+            var adminId=this.transferAdminId;
             if(!adminId) {
                 this.Toast("Оберіть адміністратора");
                 return;
@@ -312,12 +344,23 @@ var AdminPanel = {
     },
     Input: function(e) {
         var input=e.target;
-        if(input.matches&&input.matches("[data-admin-search]")) {
-            this.query=input.value;
-            this.Render();
-            var i=this.Q("[data-admin-search]");
-            if(i)i.focus();
-        }
+        if(!input.matches || !input.matches("[data-admin-search]")) return;
+
+        this.query=input.value;
+        clearTimeout(this.searchTimer);
+
+        // Do not rebuild the input on every key press. In Android/CEF that
+        // resets the caret/IME composition and characters can appear reversed.
+        var self=this;
+        this.searchTimer=setTimeout(function(){
+            if(self.composingSearch) return;
+            self.Render();
+            var search=self.Q("[data-admin-search]");
+            if(search) {
+                search.focus();
+                try { search.setSelectionRange(search.value.length, search.value.length); } catch (_) {}
+            }
+        },180);
     }
 };
 window.addEventListener("DOMContentLoaded", function(){ AdminPanel.Init(); });
