@@ -1,5 +1,5 @@
 var AdminPanel = {
-    root: null, tab: "stats", filter: "mine", selectedTicket: null, query: "", chatOpen: false, ticketFocus: false, itemCategory: "weapons", pendingClaimTicket: null, quickOpen: false, transferOpen: false, transferAdminId: null, searchTimer: null, composingSearch: false, syncId: null, messageLoadTokens: {},
+    root: null, tab: "stats", filter: "mine", selectedTicket: null, query: "", chatOpen: false, ticketFocus: false, itemCategory: "weapons", pendingClaimTicket: null, quickOpen: false, transferOpen: false, transferAdminId: null, searchTimer: null, composingSearch: false, pendingSync: null, pendingMessages: null,
     state: {
         profile: {
             id:null,name:"",role:""
@@ -200,101 +200,40 @@ var AdminPanel = {
         var patch=payload.patch;
         if(!patch) return this.SetData(payload);
 
-        if(patch==="reset") {
-            this.syncId=payload.syncId ?? null;
-            this.state.admins=[];
-            this.state.tickets=[];
-            this.messageLoadTokens={};
-            if(payload.profile) this.state.profile=this.NormalizeProfile(payload.profile);
+        if(patch==="sync-begin") {
+            this.pendingSync={
+                id:String(payload.syncId),
+                admins:[],
+                tickets:[]
+            };
             return true;
         }
 
-        if(payload.syncId!=null && this.syncId!=null && String(payload.syncId)!==String(this.syncId)) {
-            return false;
-        }
-
-        if(patch==="admin") {
-            var admin=this.NormalizeAdmin(payload.admin);
-            if(admin.id==null) return false;
-            var adminIndex=this.state.admins.findIndex(function(item){ return String(item.id)===String(admin.id); });
-            if(adminIndex===-1) this.state.admins.push(admin);
-            else this.state.admins[adminIndex]=admin;
+        if(patch==="admins") {
+            if(!this.pendingSync || String(this.pendingSync.id)!==String(payload.syncId)) return false;
+            var admins=Array.isArray(payload.admins)?payload.admins:[];
+            for(var i=0;i<admins.length;i++) {
+                this.pendingSync.admins.push(this.NormalizeAdmin(admins[i]));
+            }
             return true;
         }
 
         if(patch==="tickets") {
-            var incoming=Array.isArray(payload.tickets)?payload.tickets:[];
-            for(var i=0;i<incoming.length;i++) {
-                var ticket=this.NormalizeTicket(incoming[i]);
-                if(ticket.id==null) continue;
-                var index=this.state.tickets.findIndex(function(item){ return String(item.id)===String(ticket.id); });
-                if(index===-1) this.state.tickets.push(ticket);
-                else {
-                    var oldMessages=this.state.tickets[index].messages||[];
-                    ticket.messages=oldMessages;
-                    this.state.tickets[index]=ticket;
-                }
+            if(!this.pendingSync || String(this.pendingSync.id)!==String(payload.syncId)) return false;
+            var tickets=Array.isArray(payload.tickets)?payload.tickets:[];
+            for(var i=0;i<tickets.length;i++) {
+                this.pendingSync.tickets.push(this.NormalizeTicket(tickets[i]));
             }
             return true;
         }
 
-        if(patch==="ticket") {
-            var single=this.NormalizeTicket(payload.ticket);
-            if(single.id==null) return false;
-            var singleIndex=this.state.tickets.findIndex(function(item){ return String(item.id)===String(single.id); });
-            if(singleIndex===-1) this.state.tickets.push(single);
-            else {
-                var preserved=this.state.tickets[singleIndex].messages||[];
-                single.messages=preserved;
-                this.state.tickets[singleIndex]=single;
-            }
-            this.state.tickets.sort(function(a,b){ return Number(b.id)-Number(a.id); });
-            if(this.root&&this.root.classList.contains("active")) this.Render();
-            return true;
-        }
+        if(patch==="sync-end") {
+            if(!this.pendingSync || String(this.pendingSync.id)!==String(payload.syncId)) return false;
 
-        if(patch==="messages-reset") {
-            var resetTicket=this.state.tickets.find(function(item){ return String(item.id)===String(payload.ticketId); });
-            if(!resetTicket) return false;
-            this.messageLoadTokens[String(payload.ticketId)]=payload.loadId;
-            resetTicket.messages=[];
-            return true;
-        }
+            this.state.admins=this.pendingSync.admins;
+            this.state.tickets=this.pendingSync.tickets;
+            this.pendingSync=null;
 
-        if(patch==="message") {
-            if(payload.loadId!=null && String(this.messageLoadTokens[String(payload.ticketId)])!==String(payload.loadId)) return false;
-            var targetTicket=this.state.tickets.find(function(item){ return String(item.id)===String(payload.ticketId); });
-            if(!targetTicket) return false;
-
-            var messageIndex=Number(payload.messageIndex);
-            var partIndex=Number(payload.partIndex)||0;
-            var normalized=this.NormalizeMessage(payload.message);
-
-            if(!targetTicket.messages[messageIndex] || partIndex===0) {
-                targetTicket.messages[messageIndex]=normalized;
-            } else {
-                targetTicket.messages[messageIndex].message += normalized.message;
-                targetTicket.messages[messageIndex].text += normalized.text;
-            }
-            return true;
-        }
-
-        if(patch==="message-append") {
-            var appendTicket=this.state.tickets.find(function(item){ return String(item.id)===String(payload.ticketId); });
-            if(!appendTicket) return false;
-            appendTicket.messages.push(this.NormalizeMessage(payload.message));
-            if(String(this.selectedTicket)===String(payload.ticketId) && this.root&&this.root.classList.contains("active")) this.Render();
-            return true;
-        }
-
-        if(patch==="messages-ready") {
-            if(payload.loadId!=null && String(this.messageLoadTokens[String(payload.ticketId)])!==String(payload.loadId)) return false;
-            if(String(this.selectedTicket)===String(payload.ticketId) && this.root&&this.root.classList.contains("active")) this.Render();
-            return true;
-        }
-
-        if(patch==="ready") {
-            if(payload.syncId!=null) this.syncId=payload.syncId;
             this.state.tickets.sort(function(a,b){ return Number(b.id)-Number(a.id); });
 
             if(this.pendingClaimTicket!=null) {
@@ -309,9 +248,73 @@ var AdminPanel = {
                 }
             }
 
-            if(this.root && this.root.classList.contains("active")) {
+            if(this.root && this.root.classList.contains("active")) this.Render();
+            return true;
+        }
+
+        if(patch==="ticket") {
+            var ticket=this.NormalizeTicket(payload.ticket);
+            if(ticket.id==null) return false;
+
+            var ticketIndex=this.state.tickets.findIndex(function(item){
+                return String(item.id)===String(ticket.id);
+            });
+
+            if(ticketIndex===-1) this.state.tickets.push(ticket);
+            else {
+                var oldMessages=this.state.tickets[ticketIndex].messages||[];
+                ticket.messages=oldMessages;
+                this.state.tickets[ticketIndex]=ticket;
+            }
+
+            if(this.root && this.root.classList.contains("active")) this.Render();
+            return true;
+        }
+
+        if(patch==="messages-begin") {
+            this.pendingMessages={
+                ticketId:String(payload.ticketId),
+                messages:[]
+            };
+            return true;
+        }
+
+        if(patch==="message") {
+            var ticketId=String(payload.ticketId);
+            var normalized=this.NormalizeMessage(payload.message);
+
+            if(this.pendingMessages && String(this.pendingMessages.ticketId)===ticketId) {
+                this.pendingMessages.messages.push(normalized);
+                return true;
+            }
+
+            var targetTicket=this.state.tickets.find(function(item){
+                return String(item.id)===ticketId;
+            });
+
+            if(!targetTicket) return false;
+            targetTicket.messages=targetTicket.messages||[];
+            targetTicket.messages.push(normalized);
+
+            if(this.root && this.root.classList.contains("active") && String(this.selectedTicket)===ticketId) {
                 this.Render();
-                if(this.tab==="tickets" && this.selectedTicket!=null) this.Send("admin:ticket:open",{TicketId:Number(this.selectedTicket)});
+            }
+            return true;
+        }
+
+        if(patch==="messages-end") {
+            if(!this.pendingMessages || String(this.pendingMessages.ticketId)!==String(payload.ticketId)) return false;
+
+            var ticketId=String(payload.ticketId);
+            var targetTicket=this.state.tickets.find(function(item){
+                return String(item.id)===ticketId;
+            });
+
+            if(targetTicket) targetTicket.messages=this.pendingMessages.messages;
+            this.pendingMessages=null;
+
+            if(this.root && this.root.classList.contains("active") && String(this.selectedTicket)===ticketId) {
+                this.Render();
             }
             return true;
         }
@@ -501,7 +504,6 @@ var AdminPanel = {
             this.transferOpen=false;
             this.transferAdminId=null;
             this.Render();
-            if(this.tab==="tickets" && this.selectedTicket!=null) this.Send("admin:ticket:open",{TicketId:Number(this.selectedTicket)});
             return;
         }
         if(b.dataset.adminFilter) {
@@ -512,7 +514,6 @@ var AdminPanel = {
             this.transferOpen=false;
             this.transferAdminId=null;
             this.Render();
-            if(this.selectedTicket!=null) this.Send("admin:ticket:open",{TicketId:Number(this.selectedTicket)});
             return;
         }
         if(b.dataset.adminTicket) {
@@ -520,8 +521,6 @@ var AdminPanel = {
             this.chatOpen=true;
             this.transferOpen=false;
             this.transferAdminId=null;
-            var selected=this.Ticket();
-            if(selected) selected.messages=[];
             this.Render();
             this.Send("admin:ticket:open",{TicketId:Number(this.selectedTicket)});
             return;
