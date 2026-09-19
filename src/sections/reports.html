@@ -1,0 +1,58 @@
+<section id="reports" aria-hidden="true">
+    <div class="reports-panel">
+        <header class="reports-header">
+            <div>
+                <span class="reports-kicker">ПІДТРИМКА</span>
+                <h1>Репорти</h1>
+                <p>Звернення до адміністрації сервера</p>
+            </div>
+            <div class="reports-header-actions">
+                <button id="reports-create" class="reports-primary">+ Новий репорт</button>
+                <button id="reports-close" class="reports-icon">×</button>
+            </div>
+        </header>
+        <div class="reports-layout">
+            <aside class="reports-sidebar">
+                <div class="reports-tabs">
+                    <button data-filter="all" class="active">Всі</button>
+                    <button data-filter="open">Відкриті</button>
+                    <button data-filter="closed">Закриті</button>
+                </div>
+                <div id="reports-list" class="reports-list"></div>
+            </aside>
+            <main class="reports-content">
+                <div id="reports-empty" class="reports-empty">
+                    <strong>Оберіть репорт</strong>
+                    <span>або створіть нове звернення</span>
+                </div>
+                <div id="reports-thread" class="reports-thread hidden">
+                    <div class="reports-thread-head">
+                        <div>
+                            <h2 id="reports-title"></h2>
+                            <span id="reports-meta"></span>
+                        </div>
+                        <span id="reports-status" class="reports-status"></span>
+                    </div>
+                    <div id="reports-messages" class="reports-messages"></div>
+                    <div id="reports-reply" class="reports-reply-wrapper">
+                        <div class="reports-reply">
+                            <input id="reports-message" maxlength="500" placeholder="Написати повідомлення...">
+                            <button id="reports-send">Надіслати</button>
+                        </div>
+                    </div>
+                    <button id="reports-finish" class="reports-finish">Закрити репорт</button>
+                </div>
+            </main>
+        </div>
+    </div>
+    <div id="reports-create-modal" class="reports-modal hidden">
+        <div class="reports-modal-card">
+            <h2>Новий репорт</h2>
+            <textarea id="reports-new-message" maxlength="500" placeholder="Опишіть проблему або питання"></textarea>
+            <div>
+                <button id="reports-create-cancel">Скасувати</button>
+                <button id="reports-create-submit" class="reports-primary">Створити</button>
+            </div>
+        </div>
+    </div>
+</section>
