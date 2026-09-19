@@ -1,4 +1,4 @@
-:root {
+#pc-hud {
   --ui:#07192b;
   --ui2:#0a2742;
   --text:#f4f7fb;
@@ -8,10 +8,10 @@
   --green:#22d24d;
   --hud-scale:1
 }
-* {
+#pc-hud * {
   box-sizing:border-box
 }
-html,body {
+#pc-hud, #pc-hud {
   margin:0;
   width:100%;
   height:100%;
@@ -21,12 +21,12 @@ html,body {
   color:var(--text);
   user-select:none
 }
-.hud {
+#pc-hud .hud {
   position:fixed;
   inset:0;
   pointer-events:none
 }
-.chat-gradient {
+#pc-hud .chat-gradient {
   position:absolute;
   left:0;
   top:12px;
@@ -38,7 +38,7 @@ html,body {
   mask-image:none;
   -webkit-mask-image:none
 }
-.player-gradient {
+#pc-hud .player-gradient {
   position:absolute;
   right:14px;
   top:14px;
@@ -54,42 +54,42 @@ html,body {
   gap:14px;
   background:linear-gradient(90deg,rgba(5,23,40,0) 0%,rgba(5,23,40,.34) 22%,rgba(5,23,40,.72) 58%,rgba(5,23,40,.9) 100%)
 }
-.identity {
+#pc-hud .identity {
   display:flex;
   align-items:center;
   gap:13px;
   font-size:13px;
   line-height:1.2
 }
-.identity .col {
+#pc-hud .identity .col {
   display:grid;
   gap:10px;
   white-space:nowrap
 }
-.identity .line {
+#pc-hud .identity .line {
   display:flex;
   align-items:center;
   gap:8px
 }
-.identity .ico {
+#pc-hud .identity .ico {
   width:16px;
   text-align:center;
   color:white;
   font-size:13px
 }
-.divider {
+#pc-hud .divider {
   width:1px;
   height:50px;
   background:rgba(255,255,255,.7)
 }
-.logo {
+#pc-hud .logo {
   width:76px;
   height:64px;
   object-fit:contain;
   object-position:center;
   flex:0 0 auto
 }
-.stats-row {
+#pc-hud .stats-row {
   position:absolute;
   right:14px;
   top:103px;
@@ -100,12 +100,12 @@ html,body {
   align-items:center;
   gap:9px
 }
-.stat {
+#pc-hud .stat {
   width:62px;
   height:62px;
   flex:0 0 62px
 }
-.ring {
+#pc-hud .ring {
   --c:var(--cyan);
   position:relative;
   width:62px;
@@ -118,38 +118,38 @@ html,body {
   background:radial-gradient(circle at center,rgba(5,23,40,.96) 0 72%,transparent 73%),conic-gradient(from -90deg,var(--c) calc(var(--value)*1%),rgba(255,255,255,.16) 0);
   box-shadow:inset 0 0 12px rgba(0,0,0,.18),0 0 0 1px rgba(0,0,0,.28)
 }
-.hp .ring {
+#pc-hud .hp .ring {
   --c:var(--red)
 }
-.armor .ring {
+#pc-hud .armor .ring {
   --c:var(--cyan)
 }
-.hunger .ring {
+#pc-hud .hunger .ring {
   --c:var(--orange)
 }
-.stat-icon {
+#pc-hud .stat-icon {
   width:21px;
   height:21px;
   fill:#f7f9fc;
   display:block;
   margin-bottom:1px
 }
-.hunger .stat-icon {
+#pc-hud .hunger .stat-icon {
   fill:var(--orange);
   width:23px
 }
-.value {
+#pc-hud .value {
   font-size:12px;
   line-height:13px;
   font-weight:700;
   color:#fff
 }
-.glass {
+#pc-hud .glass {
   background:linear-gradient(90deg,rgba(5,23,40,.68),rgba(5,23,40,.93));
   border:1px solid rgba(28,132,214,.16);
   border-radius:11px
 }
-.weapon {
+#pc-hud .weapon {
   height:62px;
   width:148px;
   flex:0 0 148px;
@@ -160,17 +160,17 @@ html,body {
   font-size:16px;
   font-weight:600
 }
-.weapon-icon {
+#pc-hud .weapon-icon {
   width:43px;
   height:28px;
   fill:#f4f7fb;
   filter:drop-shadow(0 1px 1px rgba(0,0,0,.25))
 }
-.ammo-slash {
+#pc-hud .ammo-slash {
   color:rgba(255,255,255,.65);
   padding:0 2px
 }
-.money-wanted {
+#pc-hud .money-wanted {
   position:absolute;
   right:14px;
   top:171px;
@@ -183,42 +183,40 @@ html,body {
   flex-direction:column;
   justify-content:space-between
 }
-.money {
+#pc-hud .money {
   display:flex;
   align-items:center;
   gap:10px;
   font-size:16px
 }
-.money span {
+#pc-hud .money span {
   color:var(--green);
   font-size:25px;
   font-weight:800
 }
-.money b {
+#pc-hud .money b {
   font-weight:500
 }
-.wanted {
+#pc-hud .wanted {
   display:flex;
   justify-content:flex-end;
   gap:7px;
   font-size:18px;
   letter-spacing:0
 }
-.wanted .off {
+#pc-hud .wanted .off {
   color:#02070c
 }
-.wanted .on {
+#pc-hud .wanted .on {
   color:white
 }
-@media(max-width:900px),(max-height:540px) {
-  .identity {
+@media (max-width:900px),(max-height:540px){#pc-hud .identity {
     font-size:12px
-  }
-}
-body.preview {
+  }}
+#pc-hud.preview {
   background:radial-gradient(circle at 45% 45%,#45515b 0,#222b33 55%,#111820 100%)
 }
-body.preview::after {
+#pc-hud.preview::after {
   content:"BROWSER PREVIEW — CEF BACKGROUND IS TRANSPARENT IN GAME";
   position:fixed;
   left:50%;
@@ -228,7 +226,7 @@ body.preview::after {
   letter-spacing:.08em;
   color:rgba(255,255,255,.38)
 }
-.right-gradient {
+#pc-hud .right-gradient {
   position:absolute;
   right:0;
   top:0;
@@ -241,40 +239,40 @@ body.preview::after {
   mask-image:linear-gradient(to bottom,#000 0%,#000 82%,transparent 100%);
   pointer-events:none;
 }
-.player-gradient {
+#pc-hud .player-gradient {
   background:transparent
 }
-.stats-row {
+#pc-hud .stats-row {
   z-index:2
 }
-.player-gradient,.money-wanted {
+#pc-hud .player-gradient, #pc-hud .money-wanted {
   z-index:2
 }
-.ring {
+#pc-hud .ring {
   background:radial-gradient(circle at center,rgba(5,23,40,.94) 0 70%,transparent 71%),conic-gradient(from -90deg,var(--c) calc(var(--value)*1%),rgba(255,255,255,.16) 0);
   box-shadow:0 0 0 1px rgba(0,0,0,.34),inset 0 0 10px rgba(0,0,0,.28)
 }
-.stat-icon {
+#pc-hud .stat-icon {
   width:22px;
   height:22px;
   margin-bottom:0
 }
-.hunger .stat-icon {
+#pc-hud .hunger .stat-icon {
   width:24px;
   height:24px
 }
-.weapon {
+#pc-hud .weapon {
   background:linear-gradient(90deg,rgba(5,23,40,.72),rgba(5,23,40,.94))
 }
-.money-wanted {
+#pc-hud .money-wanted {
   background:linear-gradient(90deg,rgba(5,23,40,.72),rgba(5,23,40,.94))
 }
-.ring {
+#pc-hud .ring {
   background:rgba(5,23,40,.94);
   overflow:visible;
   box-shadow:inset 0 0 10px rgba(0,0,0,.28)
 }
-.progress-ring {
+#pc-hud .progress-ring {
   position:absolute;
   inset:-1px;
   width:64px;
@@ -283,26 +281,26 @@ body.preview::after {
   transform:rotate(-90deg);
   pointer-events:none
 }
-.ring-track,.ring-progress {
+#pc-hud .ring-track, #pc-hud .ring-progress {
   fill:none;
   stroke-width:3;
   vector-effect:non-scaling-stroke
 }
-.ring-track {
+#pc-hud .ring-track {
   stroke:rgba(255,255,255,.15)
 }
-.ring-progress {
+#pc-hud .ring-progress {
   stroke:var(--c);
   stroke-linecap:round;
   stroke-dasharray:182.212;
   stroke-dashoffset:calc(182.212 - (182.212 * var(--value) / 100));
   transition:stroke-dashoffset .22s ease
 }
-.stat-icon,.value {
+#pc-hud .stat-icon, #pc-hud .value {
   position:relative;
   z-index:1
 }
-.right-hud {
+#pc-hud .right-hud {
   position:absolute;
   right:14px;
   top:14px;
@@ -312,7 +310,7 @@ body.preview::after {
   transform-origin:top right;
   pointer-events:none;
 }
-.right-hud .right-gradient {
+#pc-hud .right-hud .right-gradient {
   position:absolute;
   right:-14px;
   top:-14px;
@@ -324,7 +322,7 @@ body.preview::after {
   mask-image:linear-gradient(to bottom,#000 0%,#000 84%,transparent 100%);
   z-index:0;
 }
-.right-hud .player-gradient {
+#pc-hud .right-hud .player-gradient {
   position:absolute;
   right:0;
   top:0;
@@ -333,7 +331,7 @@ body.preview::after {
   transform:none;
   z-index:2;
 }
-.right-hud .stats-row {
+#pc-hud .right-hud .stats-row {
   position:absolute;
   right:0;
   top:90px;
@@ -341,7 +339,7 @@ body.preview::after {
   transform:none;
   z-index:2;
 }
-.right-hud .money-wanted {
+#pc-hud .right-hud .money-wanted {
   position:absolute;
   right:0;
   top:164px;
@@ -350,13 +348,13 @@ body.preview::after {
   transform:none;
   z-index:2;
 }
-.right-hud .right-gradient {
+#pc-hud .right-hud .right-gradient {
   display:none
 }
-.right-hud .player-gradient, .right-hud .stats-row, .right-hud .money-wanted {
+#pc-hud .right-hud .player-gradient, #pc-hud .right-hud .stats-row, #pc-hud .right-hud .money-wanted {
   isolation:isolate
 }
-.right-hud .player-gradient::before, .right-hud .stats-row::before, .right-hud .money-wanted::before {
+#pc-hud .right-hud .player-gradient::before, #pc-hud .right-hud .stats-row::before, #pc-hud .right-hud .money-wanted::before {
   content:"";
   position:absolute;
   pointer-events:none;
@@ -364,130 +362,130 @@ body.preview::after {
   right:-14px;
   filter:blur(0.2px);
 }
-.right-hud .player-gradient {
+#pc-hud .right-hud .player-gradient {
   background:transparent;
   border:0;
   overflow:visible;
 }
-.right-hud .player-gradient::before {
+#pc-hud .right-hud .player-gradient::before {
   top:-24px;
   width:560px;
   height:130px;
   background:radial-gradient(ellipse 88% 72% at 100% 50%,     rgba(5,23,40,.88) 0%,     rgba(5,23,40,.68) 34%,     rgba(5,23,40,.34) 60%,     rgba(5,23,40,.10) 78%,     rgba(5,23,40,0) 100%);
 }
-.right-hud .stats-row::before {
+#pc-hud .right-hud .stats-row::before {
   top:-28px;
   width:650px;
   height:122px;
   background:radial-gradient(ellipse 90% 68% at 100% 50%,     rgba(5,23,40,.90) 0%,     rgba(5,23,40,.68) 35%,     rgba(5,23,40,.34) 62%,     rgba(5,23,40,.09) 82%,     rgba(5,23,40,0) 100%);
 }
-.right-hud .weapon {
+#pc-hud .right-hud .weapon {
   background:transparent;
   border:0;
   box-shadow:none;
 }
-.right-hud .money-wanted {
+#pc-hud .right-hud .money-wanted {
   background:transparent;
   border:0;
   box-shadow:none;
   overflow:visible;
 }
-.right-hud .money-wanted::before {
+#pc-hud .right-hud .money-wanted::before {
   top:-24px;
   width:420px;
   height:132px;
   background:radial-gradient(ellipse 92% 72% at 100% 48%,     rgba(5,23,40,.88) 0%,     rgba(5,23,40,.64) 38%,     rgba(5,23,40,.30) 64%,     rgba(5,23,40,.08) 82%,     rgba(5,23,40,0) 100%);
 }
-.right-hud .player-gradient::before, .right-hud .stats-row::before, .right-hud .money-wanted::before {
+#pc-hud .right-hud .player-gradient::before, #pc-hud .right-hud .stats-row::before, #pc-hud .right-hud .money-wanted::before {
   filter:none;
   border-radius:0;
   background:linear-gradient(90deg,     rgba(5,23,40,0) 0%,     rgba(5,23,40,.04) 20%,     rgba(5,23,40,.14) 40%,     rgba(5,23,40,.34) 62%,     rgba(5,23,40,.58) 80%,     rgba(5,23,40,.76) 100%);
   -webkit-mask-image:linear-gradient(to bottom,     transparent 0%,     rgba(0,0,0,.55) 14%,     #000 30%,     #000 70%,     rgba(0,0,0,.55) 86%,     transparent 100%);
   mask-image:linear-gradient(to bottom,     transparent 0%,     rgba(0,0,0,.55) 14%,     #000 30%,     #000 70%,     rgba(0,0,0,.55) 86%,     transparent 100%);
 }
-.right-hud .player-gradient::before {
+#pc-hud .right-hud .player-gradient::before {
   right:-14px;
   top:-18px;
   width:610px;
   height:118px;
 }
-.right-hud .stats-row::before {
+#pc-hud .right-hud .stats-row::before {
   right:-14px;
   top:-20px;
   width:690px;
   height:108px;
 }
-.right-hud .money-wanted::before {
+#pc-hud .right-hud .money-wanted::before {
   right:-14px;
   top:-18px;
   width:450px;
   height:118px;
 }
-.right-hud .player-gradient::before, .right-hud .stats-row::before, .right-hud .money-wanted::before {
+#pc-hud .right-hud .player-gradient::before, #pc-hud .right-hud .stats-row::before, #pc-hud .right-hud .money-wanted::before {
   filter:none !important;
   border-radius:0 !important;
   -webkit-mask-image:none !important;
   mask-image:none !important;
   background:linear-gradient(90deg,     rgba(5,23,40,0) 0%,     rgba(5,23,40,.08) 18%,     rgba(5,23,40,.22) 38%,     rgba(5,23,40,.44) 60%,     rgba(5,23,40,.68) 80%,     rgba(5,23,40,.88) 100%) !important;
 }
-.right-hud .player-gradient::before {
+#pc-hud .right-hud .player-gradient::before {
   right:-14px !important;
   top:-10px !important;
   width:610px !important;
   height:102px !important;
 }
-.right-hud .stats-row::before {
+#pc-hud .right-hud .stats-row::before {
   right:-14px !important;
   top:-8px !important;
   width:690px !important;
   height:82px !important;
 }
-.right-hud .money-wanted::before {
+#pc-hud .right-hud .money-wanted::before {
   right:-14px !important;
   top:-8px !important;
   width:450px !important;
   height:98px !important;
 }
-.right-hud .player-gradient::before {
+#pc-hud .right-hud .player-gradient::before {
   top:0 !important;
   height:78px !important;
 }
-.right-hud .stats-row::before {
+#pc-hud .right-hud .stats-row::before {
   top:0 !important;
   height:66px !important;
 }
-.right-hud .money-wanted::before {
+#pc-hud .right-hud .money-wanted::before {
   top:0 !important;
   height:82px !important;
 }
-.right-hud .player-gradient::before, .right-hud .stats-row::before, .right-hud .money-wanted::before {
+#pc-hud .right-hud .player-gradient::before, #pc-hud .right-hud .stats-row::before, #pc-hud .right-hud .money-wanted::before {
   right:-14px !important;
   width:610px !important;
   background:linear-gradient(90deg,     rgba(5,23,40,0) 0%,     rgba(5,23,40,.035) 24%,     rgba(5,23,40,.12) 38%,     rgba(5,23,40,.34) 58%,     rgba(5,23,40,.64) 78%,     rgba(5,23,40,.88) 100%) !important;
 }
-.right-hud .player-gradient::before {
+#pc-hud .right-hud .player-gradient::before {
   top:0 !important;
   height:87px !important;
 }
-.right-hud .stats-row::before {
+#pc-hud .right-hud .stats-row::before {
   top:0 !important;
   height:71px !important;
 }
-.right-hud .money-wanted::before {
+#pc-hud .right-hud .money-wanted::before {
   top:0 !important;
   height:76px !important;
 }
-.right-hud .money-wanted {
+#pc-hud .right-hud .money-wanted {
   align-items:center !important;
 }
-.right-hud .money-wanted .money {
+#pc-hud .right-hud .money-wanted .money {
   justify-content:center !important;
 }
-.right-hud .money-wanted .wanted {
+#pc-hud .right-hud .money-wanted .wanted {
   justify-content:center !important;
   align-self:center !important;
 }
-.right-hud .money-wanted {
+#pc-hud .right-hud .money-wanted {
   right:4px !important;
   width:max-content !important;
   min-width:148px !important;
@@ -496,34 +494,34 @@ body.preview::after {
   padding:8px 10px 7px 10px !important;
   align-items:center !important;
 }
-.right-hud .money-wanted .money {
+#pc-hud .right-hud .money-wanted .money {
   width:max-content !important;
   white-space:nowrap !important;
   justify-content:center !important;
   align-self:center !important;
 }
-.right-hud .money-wanted .wanted {
+#pc-hud .right-hud .money-wanted .wanted {
   width:max-content !important;
   white-space:nowrap !important;
   justify-content:center !important;
   align-self:center !important;
 }
-.right-hud .money-wanted::before {
+#pc-hud .right-hud .money-wanted::before {
   right:-4px !important;
   width:calc(100% + 245px) !important;
   height:76px !important;
 }
-.right-hud .money-wanted {
+#pc-hud .right-hud .money-wanted {
   right:0 !important;
   min-width:0 !important;
   width:max-content !important;
   padding:8px 2px 7px 8px !important;
 }
-.right-hud .money-wanted::before {
+#pc-hud .right-hud .money-wanted::before {
   right:0 !important;
   width:calc(100% + 150px) !important;
 }
-.right-hud .money-wanted {
+#pc-hud .right-hud .money-wanted {
   right:0 !important;
   width:max-content !important;
   min-width:0 !important;
@@ -531,48 +529,48 @@ body.preview::after {
   border-right:0 !important;
   overflow:visible !important;
 }
-.right-hud .money-wanted .money, .right-hud .money-wanted .wanted {
+#pc-hud .right-hud .money-wanted .money, #pc-hud .right-hud .money-wanted .wanted {
   margin-right:0 !important;
   padding-right:0 !important;
 }
-.right-hud .money-wanted::before {
+#pc-hud .right-hud .money-wanted::before {
   right:0 !important;
 }
-.right-hud .money-wanted {
+#pc-hud .right-hud .money-wanted {
   right:-11px !important;
 }
-.right-hud .money-wanted::before {
+#pc-hud .right-hud .money-wanted::before {
   right:0 !important;
 }
-.right-hud .money-wanted {
+#pc-hud .right-hud .money-wanted {
   right:-14px !important;
   padding-right:0 !important;
   margin-right:0 !important;
   border-right:0 !important;
 }
-.right-hud .money-wanted::before {
+#pc-hud .right-hud .money-wanted::before {
   right:0 !important;
 }
-.right-hud .stats-row::before {
+#pc-hud .right-hud .stats-row::before {
   width:470px !important;
   right:-14px !important;
 }
-.right-hud .player-gradient::before {
+#pc-hud .right-hud .player-gradient::before {
   width:470px !important;
   right:-14px !important;
 }
-.right-hud .player-gradient::before {
+#pc-hud .right-hud .player-gradient::before {
   background:linear-gradient(90deg,     rgba(5,23,40,0) 0%,     rgba(5,23,40,0) 23%,     rgba(5,23,40,.08) 34%,     rgba(5,23,40,.22) 48%,     rgba(5,23,40,.44) 64%,     rgba(5,23,40,.68) 82%,     rgba(5,23,40,.88) 100%) !important;
 }
-.right-hud .player-gradient {
+#pc-hud .right-hud .player-gradient {
   height:72px !important;
   padding-top:6px !important;
   padding-bottom:6px !important;
 }
-.right-hud .player-gradient::before {
+#pc-hud .right-hud .player-gradient::before {
   height:72px !important;
 }
-.right-hud .logo {
+#pc-hud .right-hud .logo {
   height:58px !important;
   width:auto !important;
   max-width:none !important;
@@ -580,51 +578,53 @@ body.preview::after {
   object-position:center !important;
   flex:0 0 auto !important;
 }
-.right-hud .stats-row {
+#pc-hud .right-hud .stats-row {
   top:75px !important;
   height:76px !important;
 }
-.right-hud .stats-row::before {
+#pc-hud .right-hud .stats-row::before {
   height:76px !important;
 }
-.chat-gradient {
+#pc-hud .chat-gradient {
   width:640px !important;
 }
-.weapon-icon {
+#pc-hud .weapon-icon {
   object-fit:contain;
   object-position:center;
   display:block
 }
-.right-hud .player-gradient::before {
+#pc-hud .right-hud .player-gradient::before {
   width:550px !important;
   right:-14px !important;
 }
-.hp .stat-icon {
+#pc-hud .hp .stat-icon {
   fill:#ff4b52;
   color:#ff4b52
 }
-.armor .stat-icon {
+#pc-hud .armor .stat-icon {
   fill:#64c9ff;
   color:#64c9ff
 }
-.hunger .stat-icon {
+#pc-hud .hunger .stat-icon {
   fill:#ffa32d;
   color:#ffa32d
 }
-.hunger .stat-icon circle {
+#pc-hud .hunger .stat-icon circle {
   fill:rgba(255,255,255,.78)
 }
-html, body {
+#pc-hud, #pc-hud {
   background: transparent !important;
 }
-body {
-  display: none;
+#pc-hud {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
 }
-body.pc-hud-visible {
-  display: block;
+#pc-hud.active {
+  opacity: 1;
+  visibility: visible;
 }
-
-.weapon-icon {
+#pc-hud .weapon-icon {
   width: 50px;
   height: 33px;
 }

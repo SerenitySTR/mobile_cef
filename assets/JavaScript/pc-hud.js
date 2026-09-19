@@ -16,10 +16,10 @@
   function setTime(time,date){ if(time!=null)$('clock').textContent=time; if(date!=null)$('date').textContent=date; }
   function setMoney(value){ $('money').textContent=fmtMoney(value); }
   function setAmmo(current,total){ $('ammoClip').textContent=Math.max(0,Math.trunc(Number(current)||0)); $('ammoTotal').textContent=Math.max(0,Math.trunc(Number(total)||0)); }
-  function updateWeapon(data){ if(!data)return; const id=Math.max(0,Math.trunc(Number(data.WeaponId!==undefined?data.WeaponId:data.weaponId)||0)); const clip=data.AmmoClip!==undefined?data.AmmoClip:(data.ammoClip??data.ammo??0); const total=data.AmmoTotal??data.ammoTotal??data.maxAmmo??data.MaxAmmo??data.max_ammo??data.totalAmmo??data.TotalAmmo??data.ammo_total??0; $('weaponImage').src='../../assets/CSS/Images/Hud/Weapons/'+(HUD_WEAPON_IMAGES[id]||HUD_WEAPON_IMAGES[0]); const ammo=$('ammo'); if(ammo)ammo.style.display=id===0?'none':''; setAmmo(clip,total); }
+  function updateWeapon(data){ if(!data)return; const id=Math.max(0,Math.trunc(Number(data.WeaponId!==undefined?data.WeaponId:data.weaponId)||0)); const clip=data.AmmoClip!==undefined?data.AmmoClip:(data.ammoClip??data.ammo??0); const total=data.AmmoTotal??data.ammoTotal??data.maxAmmo??data.MaxAmmo??data.max_ammo??data.totalAmmo??data.TotalAmmo??data.ammo_total??0; $('weaponImage').src='./assets/CSS/Images/Hud/Weapons/'+(HUD_WEAPON_IMAGES[id]||HUD_WEAPON_IMAGES[0]); const ammo=$('ammo'); if(ammo)ammo.style.display=id===0?'none':''; setAmmo(clip,total); }
   function updateHud(data){ if(!data)return; const hp=data.health??data.Health??data.hp??data.HP; const armor=data.armour??data.Armour??data.armor??data.Armor; const hunger=data.hunger??data.Hunger; const money=data.money??data.Money; const wanted=data.wanted??data.Wanted??data.wantedLevel??data.WantedLevel; const weapon=data.weapon??data.Weapon??data.weaponId??data.WeaponId; if(hp!==undefined)setStat('hp',hp); if(armor!==undefined)setStat('armor',armor); if(hunger!==undefined)setStat('hunger',hunger); if(money!==undefined)setMoney(money); if(wanted!==undefined)renderWanted(wanted); setPlayer(data.nickname??data.Nickname??data.name??data.Name, data.id??data.ID??data.playerId??data.PlayerId); setTime(data.time??data.Time,data.date??data.Date); if(weapon!==undefined || data.ammo!==undefined || data.ammoClip!==undefined || data.AmmoClip!==undefined || data.ammoTotal!==undefined || data.AmmoTotal!==undefined) updateWeapon(data); }
-  function showHud(){ document.body.style.display=''; }
-  function hideHud(){ document.body.style.display='none'; }
+  function showHud(){ if (window.hudMobilePlatform) return; const root=$('pc-hud'); if(root){root.classList.add('active');root.setAttribute('aria-hidden','false');} }
+  function hideHud(){ const root=$('pc-hud'); if(root){root.classList.remove('active');root.setAttribute('aria-hidden','true');} }
 
   window.AntaresHUD={setPlayer,setTime,setStats({hp,armor,hunger}={}){if(hp!=null)setStat('hp',hp);if(armor!=null)setStat('armor',armor);if(hunger!=null)setStat('hunger',hunger);},setAmmo,setMoney,setWanted:renderWanted,setWeapon:updateWeapon,update:updateHud};
 
@@ -55,22 +55,3 @@
   if(new URLSearchParams(location.search).get('preview')==='1')document.body.classList.add('preview');
   renderWanted(4);
 })();
-
-window.addEventListener("message", event => {
-  const message = event.data;
-  if (!message || message.source !== "antares-hud") return;
-
-  if (message.type === "show") {
-    document.body.classList.add("pc-hud-visible");
-    return;
-  }
-
-  if (message.type === "hide") {
-    document.body.classList.remove("pc-hud-visible");
-    return;
-  }
-
-  if (message.type === "update" && window.AntaresHUD) {
-    window.AntaresHUD.update(message.data || {});
-  }
-});

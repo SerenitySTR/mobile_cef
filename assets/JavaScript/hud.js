@@ -1,5 +1,3 @@
-const pcHudFrame = document.getElementById("pc-hud-frame");
-
 function isMobileHudPlatform() {
     const userAgent = navigator.userAgent || "";
     const mobileUserAgent = /Android|iPhone|iPad|iPod|Mobile/i.test(userAgent);
@@ -9,12 +7,10 @@ function isMobileHudPlatform() {
 }
 
 const hudMobilePlatform = isMobileHudPlatform();
+window.hudMobilePlatform = hudMobilePlatform;
 document.body.classList.add(hudMobilePlatform ? "hud-platform-mobile" : "hud-platform-pc");
 
-function sendPcHud(type, data = null) {
-    if (hudMobilePlatform || !pcHudFrame || !pcHudFrame.contentWindow) return;
-    pcHudFrame.contentWindow.postMessage({ source: "antares-hud", type, data }, "*");
-}
+function sendPcHud() {}
 
 const hud = document.getElementById("hud");
 
