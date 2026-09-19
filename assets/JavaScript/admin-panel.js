@@ -95,16 +95,90 @@ var AdminPanel = {
         if(data===undefined)return GameCef.send(eventName);
         return GameCef.sendJson(eventName,data);
     },
+    NormalizeProfile: function(profile) {
+        profile=profile||{};
+        return {
+            id: profile.id ?? profile.Id ?? profile.accountId ?? profile.AccountId ?? profile.playerId ?? profile.PlayerId ?? null,
+            playerId: profile.playerId ?? profile.PlayerId ?? null,
+            name: profile.name ?? profile.Name ?? "",
+            role: profile.role ?? profile.Role ?? ""
+        };
+    },
+    NormalizeAdmin: function(admin) {
+        admin=admin||{};
+        return {
+            id: admin.id ?? admin.Id ?? admin.accountId ?? admin.AccountId ?? admin.playerId ?? admin.PlayerId ?? null,
+            playerId: admin.playerId ?? admin.PlayerId ?? admin.id ?? admin.Id ?? null,
+            accountId: admin.accountId ?? admin.AccountId ?? null,
+            name: admin.name ?? admin.Name ?? ""
+        };
+    },
+    NormalizeMessage: function(message) {
+        message=message||{};
+        return {
+            senderId: message.senderId ?? message.SenderId ?? null,
+            senderName: message.senderName ?? message.SenderName ?? message.name ?? message.Name ?? "",
+            name: message.name ?? message.Name ?? message.senderName ?? message.SenderName ?? "",
+            message: message.message ?? message.Message ?? message.text ?? message.Text ?? "",
+            text: message.text ?? message.Text ?? message.message ?? message.Message ?? "",
+            isAdmin: message.isAdmin ?? message.IsAdmin ?? false,
+            role: message.role ?? message.Role ?? null,
+            date: message.date ?? message.Date ?? message.time ?? message.Time ?? "",
+            time: message.time ?? message.Time ?? message.date ?? message.Date ?? ""
+        };
+    },
+    NormalizeTicket: function(ticket) {
+        ticket=ticket||{};
+        var status=ticket.status ?? ticket.Status ?? "open";
+        if(typeof status==="number") status=status===1?"closed":"open";
+        status=String(status).toLowerCase();
+
+        return {
+            id: ticket.id ?? ticket.Id ?? null,
+            playerId: ticket.playerId ?? ticket.PlayerId ?? null,
+            playerName: ticket.playerName ?? ticket.PlayerName ?? "",
+            subject: ticket.subject ?? ticket.Subject ?? ticket.title ?? ticket.Title ?? "Звернення",
+            title: ticket.title ?? ticket.Title ?? ticket.subject ?? ticket.Subject ?? "Звернення",
+            status: status,
+            adminId: ticket.adminId ?? ticket.AdminId ?? ticket.assignedAdminId ?? ticket.AssignedAdminId ?? null,
+            adminName: ticket.adminName ?? ticket.AdminName ?? ticket.assignedAdminName ?? ticket.AssignedAdminName ?? null,
+            waitLabel: ticket.waitLabel ?? ticket.WaitLabel ?? "",
+            messages: (ticket.messages ?? ticket.Messages ?? []).map(this.NormalizeMessage.bind(this))
+        };
+    },
     SetData: function(data) {
         if(!data || typeof data!=="object") return false;
-        if(Array.isArray(data.tickets))this.state.tickets=data.tickets;
-        else if(Array.isArray(data.Tickets))this.state.tickets=data.Tickets;
-        var keys=["admins","commands","punishments","locations"];
-        for(var i=0;i<keys.length;i++) if(Array.isArray(data[keys[i]])) this.state[keys[i]]=data[keys[i]];
-        if(data.profile&&typeof data.profile==="object")this.state.profile=data.profile;
-        if(data.stats&&Array.isArray(data.stats.days))this.state.stats=data.stats;
-        if(data.items&&typeof data.items==="object")this.state.items= {
-            weapons:[],vehicles:[],skins:[],organizations:[],...data.items
+
+        var tickets=Array.isArray(data.tickets)?data.tickets:(Array.isArray(data.Tickets)?data.Tickets:null);
+        if(tickets)this.state.tickets=tickets.map(this.NormalizeTicket.bind(this));
+
+        var admins=Array.isArray(data.admins)?data.admins:(Array.isArray(data.Admins)?data.Admins:null);
+        if(admins)this.state.admins=admins.map(this.NormalizeAdmin.bind(this));
+
+        var commands=Array.isArray(data.commands)?data.commands:(Array.isArray(data.Commands)?data.Commands:null);
+        if(commands)this.state.commands=commands;
+        var punishments=Array.isArray(data.punishments)?data.punishments:(Array.isArray(data.Punishments)?data.Punishments:null);
+        if(punishments)this.state.punishments=punishments;
+        var locations=Array.isArray(data.locations)?data.locations:(Array.isArray(data.Locations)?data.Locations:null);
+        if(locations)this.state.locations=locations;
+
+        var profile=data.profile||data.Profile;
+        if(profile&&typeof profile==="object")this.state.profile=this.NormalizeProfile(profile);
+
+        var stats=data.stats||data.Stats;
+        if(stats&&typeof stats==="object") {
+            this.state.stats={
+                days: stats.days ?? stats.Days ?? [],
+                period: stats.period ?? stats.Period ?? ""
+            };
+        }
+
+        var items=data.items||data.Items;
+        if(items&&typeof items==="object")this.state.items= {
+            weapons:items.weapons ?? items.Weapons ?? [],
+            vehicles:items.vehicles ?? items.Vehicles ?? [],
+            skins:items.skins ?? items.Skins ?? [],
+            organizations:items.organizations ?? items.Organizations ?? []
         };
         if(this.pendingClaimTicket!=null) {
             var claimedId=this.pendingClaimTicket;
@@ -239,6 +313,8 @@ var AdminPanel = {
             this.query="";
             this.chatOpen=false;
             this.ticketFocus=false;
+            this.transferOpen=false;
+            this.transferAdminId=null;
             this.Render();
             return;
         }
@@ -247,12 +323,16 @@ var AdminPanel = {
             this.selectedTicket=null;
             this.chatOpen=false;
             this.ticketFocus=false;
+            this.transferOpen=false;
+            this.transferAdminId=null;
             this.Render();
             return;
         }
         if(b.dataset.adminTicket) {
             this.selectedTicket=b.dataset.adminTicket;
             this.chatOpen=true;
+            this.transferOpen=false;
+            this.transferAdminId=null;
             this.Render();
             return;
         }
@@ -339,7 +419,31 @@ var AdminPanel = {
                 this.Toast("Оберіть адміністратора");
                 return;
             }
-            this.Send("admin:ticket:transfer",{TicketId:Number(ticketId),AdminId:Number(adminId)});
+
+            var selectedAdmin=this.state.admins.find(function(admin){
+                return String(admin.id)===String(adminId);
+            });
+            if(!selectedAdmin) {
+                this.Toast("Адміністратора не знайдено");
+                return;
+            }
+
+            var targetId=Number(selectedAdmin.id);
+            var targetPlayerId=Number(selectedAdmin.playerId ?? selectedAdmin.id);
+            var targetAccountId=selectedAdmin.accountId==null?null:Number(selectedAdmin.accountId);
+
+            var sent=this.Send("admin:ticket:transfer",{
+                TicketId:Number(ticketId),
+                AdminId:targetId,
+                TargetAdminId:targetId,
+                TargetId:targetId,
+                AdminPlayerId:targetPlayerId,
+                TargetPlayerId:targetPlayerId,
+                AccountId:targetAccountId
+            });
+
+            if(!sent) this.Toast("CEF bridge недоступний");
+            this.transferOpen=false;
         }
     },
     Input: function(e) {

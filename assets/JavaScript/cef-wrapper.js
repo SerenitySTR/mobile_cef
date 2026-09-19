@@ -62,7 +62,17 @@ window.GameCef={
         return false;
     },
     sendJson(eventName,data){
-        return this.send(eventName,JSON.stringify(data));
+        const json=JSON.stringify(data);
+
+        // Some Android SA-MP CEF bridges corrupt non-ASCII characters while
+        // passing JS strings through the native layer. Keep the transport
+        // payload ASCII-only; JSON.parse / System.Text.Json restores the
+        // original Unicode characters from \uXXXX escapes.
+        const asciiJson=json.replace(/[\u007f-\uffff]/g,(char)=>{
+            return "\\u"+char.charCodeAt(0).toString(16).padStart(4,"0");
+        });
+
+        return this.send(eventName,asciiJson);
     },
     on(eventName,callback){
         const oldCallback=this.events[eventName];
