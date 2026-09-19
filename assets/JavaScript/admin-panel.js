@@ -235,6 +235,36 @@ var AdminPanel = {
         this.Q("#admin-content").innerHTML=({stats:this.Stats,tickets:this.Tickets,commands:this.Commands,punishments:this.Punishments,items:this.Items,spawns:this.Spawns}[this.tab]).call(this);
         var m=this.Q(".admin-messages");
         if(m)m.scrollTop=m.scrollHeight;
+
+        if(this.transferOpen) {
+            var self=this;
+            requestAnimationFrame(function(){ self.PositionTransferMenu(); });
+        }
+    },
+    PositionTransferMenu: function() {
+        var menu=this.Q(".admin-transfer-menu");
+        var toggle=this.Q(".admin-transfer-toggle");
+        if(!menu || !toggle) return;
+
+        menu.classList.remove("admin-transfer-menu-down");
+        menu.style.maxHeight="";
+
+        var toggleRect=toggle.getBoundingClientRect();
+        var rootRect=this.root.getBoundingClientRect();
+        var scale=this.root.offsetWidth ? rootRect.width / this.root.offsetWidth : 1;
+        if(!isFinite(scale) || scale<=0) scale=1;
+
+        var safeTop=Math.max(8,rootRect.top+8);
+        var safeBottom=Math.min(window.innerHeight-8,rootRect.bottom-8);
+        var spaceAbove=Math.max(0,toggleRect.top-safeTop-6);
+        var spaceBelow=Math.max(0,safeBottom-toggleRect.bottom-6);
+        var openDown=spaceBelow>spaceAbove;
+
+        menu.classList.toggle("admin-transfer-menu-down",openDown);
+
+        var available=openDown?spaceBelow:spaceAbove;
+        var maxLocal=Math.max(72,Math.floor(available/scale));
+        menu.style.maxHeight=Math.min(220,maxLocal)+"px";
     },
     Stats: function() {
         var d=this.state.stats.days||[],t=d.reduce(function(a,x){a.online+=Number(x.onlineMinutes)||0;a.closed+=Number(x.closed)||0;return a;},{online:0,closed:0}),self=this;

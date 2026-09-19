@@ -1160,3 +1160,22 @@
         min-height: 43px;
     }
 }
+
+/* Keep the custom transfer menu inside the visible panel on short landscape screens. */
+.admin-transfer-menu.admin-transfer-menu-down {
+    top: calc(100% + 5px);
+    bottom: auto;
+}
+
+#admin-panel.admin-mobile-landscape .admin-transfer-select {
+    position: relative;
+    min-width: 0;
+}
+
+#admin-panel.admin-mobile-landscape .admin-transfer-menu {
+    right: 0;
+    left: auto;
+    width: max(100%, 230px);
+    max-width: 100%;
+    overscroll-behavior: contain;
+}
