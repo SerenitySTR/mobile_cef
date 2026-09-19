@@ -1,9 +1,15 @@
 function isMobileHudPlatform() {
     const userAgent = navigator.userAgent || "";
     const mobileUserAgent = /Android|iPhone|iPad|iPod|Mobile/i.test(userAgent);
-    const touchDevice = (navigator.maxTouchPoints || 0) > 1;
-    const screenShortSide = Math.min(screen.width || innerWidth, screen.height || innerHeight);
-    return mobileUserAgent || (touchDevice && screenShortSide <= 900);
+    const touchDevice = (navigator.maxTouchPoints || 0) > 0;
+    const viewportShortSide = Math.min(window.innerWidth || 0, window.innerHeight || 0);
+    const screenShortSide = Math.min(screen.width || window.innerWidth, screen.height || window.innerHeight);
+    const devicePixelRatio = Number(window.devicePixelRatio) || 1;
+    const mobilePlatform = /Android|iPhone|iPad|iPod|Linux arm|aarch64/i.test(navigator.platform || "");
+
+    return mobileUserAgent || mobilePlatform ||
+        (touchDevice && screenShortSide <= 900) ||
+        (viewportShortSide > 0 && viewportShortSide <= 720 && devicePixelRatio > 1);
 }
 
 const hudMobilePlatform = isMobileHudPlatform();
