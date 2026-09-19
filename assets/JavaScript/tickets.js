@@ -1,4 +1,4 @@
-var TicketEvents = {
+const TicketEvents = {
     Show: "ticket:show",
     Hide: "ticket:hide",
     Update: "ticket:update",
@@ -8,353 +8,246 @@ var TicketEvents = {
     CloseUi: "ticket:close-ui"
 };
 
-var Tickets = {
+const Tickets = {
     root: null,
     tickets: [],
     selectedId: null,
     filter: "all",
     initialized: false,
 
-    Init: function() {
-        if (this.initialized)
-            return true;
+    Init() {
+        if (this.initialized) return;
 
         this.root = document.getElementById("tickets");
-
-        if (!this.root)
-            return false;
+        if (!this.root) return;
 
         this.initialized = true;
-        var self = this;
 
-        var closeButton = document.getElementById("tickets-close");
-        var createButton = document.getElementById("tickets-create");
-        var createCancelButton = document.getElementById("tickets-create-cancel");
-        var createSubmitButton = document.getElementById("tickets-create-submit");
-        var sendButton = document.getElementById("tickets-send");
-        var finishButton = document.getElementById("tickets-finish");
-        var messageInput = document.getElementById("tickets-message");
-        var newMessageInput = document.getElementById("tickets-new-message");
+        document.getElementById("tickets-close")?.addEventListener("click", () => this.CloseUi());
+        document.getElementById("tickets-create")?.addEventListener("click", () => this.OpenCreate());
+        document.getElementById("tickets-create-cancel")?.addEventListener("click", () => this.CloseCreate());
+        document.getElementById("tickets-create-submit")?.addEventListener("click", () => this.Create());
+        document.getElementById("tickets-send")?.addEventListener("click", () => this.SendMessage());
+        document.getElementById("tickets-finish")?.addEventListener("click", () => this.CloseTicket());
 
-        if (closeButton)
-            closeButton.onclick = function() { self.CloseUi(); };
+        document.getElementById("tickets-message")?.addEventListener("keydown", event => {
+            if (event.key !== "Enter" || event.shiftKey) return;
+            event.preventDefault();
+            this.SendMessage();
+        });
 
-        if (createButton)
-            createButton.onclick = function() { self.OpenCreate(); };
+        document.querySelectorAll("#tickets .tickets-tabs button").forEach(button => {
+            button.addEventListener("click", () => {
+                this.filter = button.dataset.filter || "all";
 
-        if (createCancelButton)
-            createCancelButton.onclick = function() { self.CloseCreate(); };
+                document.querySelectorAll("#tickets .tickets-tabs button").forEach(item => {
+                    item.classList.toggle("active", item === button);
+                });
 
-        if (createSubmitButton)
-            createSubmitButton.onclick = function() { self.Create(); };
-
-        if (sendButton)
-            sendButton.onclick = function() { self.SendMessage(); };
-
-        if (finishButton)
-            finishButton.onclick = function() { self.CloseTicket(); };
-
-        if (messageInput) {
-            messageInput.onkeydown = function(event) {
-                event = event || window.event;
-
-                if (event.keyCode !== 13 || event.shiftKey)
-                    return;
-
-                if (event.preventDefault)
-                    event.preventDefault();
-
-                self.SendMessage();
-            };
-        }
-
-        if (newMessageInput) {
-            newMessageInput.onkeydown = function(event) {
-                event = event || window.event;
-
-                if (event.keyCode !== 13 || event.shiftKey)
-                    return;
-
-                if (event.preventDefault)
-                    event.preventDefault();
-
-                self.Create();
-            };
-        }
-
-        var tabs = this.root.querySelectorAll(".tickets-tabs button");
-
-        for (var i = 0; i < tabs.length; i++) {
-            tabs[i].onclick = function() {
-                self.filter = this.getAttribute("data-filter") || "all";
-
-                for (var j = 0; j < tabs.length; j++)
-                    tabs[j].className = tabs[j] === this ? "active" : "";
-
-                self.RenderList();
-            };
-        }
-
-        return true;
+                this.RenderList();
+            });
+        });
     },
 
-    Show: function(data) {
-        if (!this.Init())
-            return;
+    Show(data) {
+        this.Init();
+        if (!this.root) return;
 
-        var payload = this.Parse(data);
-        var list = payload ? this.Get(payload, ["Tickets", "tickets"]) : null;
+        const payload = this.Parse(data);
+        const list = this.Get(payload, "Tickets", "tickets");
 
-        this.tickets = list instanceof Array ? list : [];
+        if (Array.isArray(list)) {
+            this.tickets = list;
+        } else if (Array.isArray(payload)) {
+            this.tickets = payload;
+        }
 
-        if (this.selectedId !== null && !this.Find(this.selectedId))
+        if (this.selectedId !== null && !this.Find(this.selectedId)) {
             this.selectedId = null;
+        }
 
-        if (this.selectedId === null && this.tickets.length > 0)
-            this.selectedId = this.Id(this.tickets[0]);
-
-        this.root.className = this.AddClass(this.root.className, "active");
+        this.root.classList.add("active");
         this.root.setAttribute("aria-hidden", "false");
 
         this.Render();
     },
 
-    Hide: function() {
-        if (!this.Init())
-            return;
+    Hide() {
+        this.Init();
+        if (!this.root) return;
 
-        this.root.className = this.RemoveClass(this.root.className, "active");
+        this.root.classList.remove("active");
         this.root.setAttribute("aria-hidden", "true");
         this.CloseCreate();
     },
 
-    Update: function(data) {
-        if (!this.Init())
-            return;
+    Update(data) {
+        this.Init();
 
-        var payload = this.Parse(data);
+        const payload = this.Parse(data);
+        if (!payload) return;
 
-        if (!payload)
-            return;
-
-        var list = this.Get(payload, ["Tickets", "tickets"]);
-
-        if (list instanceof Array) {
+        const list = this.Get(payload, "Tickets", "tickets");
+        if (Array.isArray(list)) {
             this.tickets = list;
             this.Render();
             return;
         }
 
-        var ticket = this.Get(payload, ["Ticket", "ticket"]);
+        const ticket = this.Get(payload, "Ticket", "ticket") || payload;
+        const id = this.Id(ticket);
+        if (id === null) return;
 
-        if (!ticket)
-            ticket = payload;
+        const index = this.tickets.findIndex(item => this.Id(item) === id);
 
-        var id = this.Id(ticket);
-
-        if (id === null)
-            return;
-
-        var found = false;
-
-        for (var i = 0; i < this.tickets.length; i++) {
-            if (this.Id(this.tickets[i]) === id) {
-                this.tickets[i] = ticket;
-                found = true;
-                break;
-            }
+        if (index === -1) {
+            this.tickets.unshift(ticket);
+        } else {
+            this.tickets[index] = ticket;
         }
 
-        if (!found)
-            this.tickets.unshift(ticket);
-
-        if (this.selectedId === null)
+        if (this.selectedId === null) {
             this.selectedId = id;
+        }
 
         this.Render();
     },
 
-    Render: function() {
+    Render() {
         this.RenderList();
         this.RenderThread();
     },
 
-    RenderList: function() {
-        var list = document.getElementById("tickets-list");
-
-        if (!list)
-            return;
+    RenderList() {
+        const list = document.getElementById("tickets-list");
+        if (!list) return;
 
         list.innerHTML = "";
-        var self = this;
 
-        for (var i = 0; i < this.tickets.length; i++) {
-            var ticket = this.tickets[i];
-            var closed = this.IsClosed(ticket);
+        const tickets = this.tickets.filter(ticket => {
+            if (this.filter === "all") return true;
+            return this.IsClosed(ticket) ? this.filter === "closed" : this.filter === "open";
+        });
 
-            if (this.filter === "open" && closed)
-                continue;
+        tickets.forEach(ticket => {
+            const id = this.Id(ticket);
+            const row = document.createElement("button");
+            const title = this.Get(ticket, "Title", "title") || "Звернення";
+            const author = this.Get(ticket, "Author", "author", "PlayerName", "playerName") || "";
+            const date = this.Get(ticket, "Date", "date", "CreatedAt", "createdAt") || "";
+            const closed = this.IsClosed(ticket);
 
-            if (this.filter === "closed" && !closed)
-                continue;
-
-            var id = this.Id(ticket);
-            var title = this.Get(ticket, ["Title", "title"]) || "Звернення";
-            var author = this.Get(ticket, ["Author", "author"]) || "";
-            var date = this.Get(ticket, ["Date", "date"]) || "";
-
-            var row = document.createElement("button");
             row.type = "button";
             row.className = "ticket-row" + (id === this.selectedId ? " active" : "");
-            row.setAttribute("data-ticket-id", id === null ? "" : String(id));
 
-            var top = document.createElement("div");
+            const top = document.createElement("div");
             top.className = "ticket-row-top";
 
-            var number = document.createElement("span");
-            number.appendChild(document.createTextNode(id === null ? "" : "#" + id));
+            const number = document.createElement("span");
+            number.textContent = id !== null ? `#${id}` : "";
 
-            var status = document.createElement("span");
-            status.className = "tickets-status" + (closed ? " closed" : "");
-            status.appendChild(document.createTextNode(closed ? "Закрито" : "Відкрито"));
+            const status = document.createElement("span");
+            status.className = "tickets-status";
+            status.textContent = closed ? "Закрито" : "Відкрито";
 
-            var strong = document.createElement("strong");
-            strong.appendChild(document.createTextNode(title));
+            const strong = document.createElement("strong");
+            strong.textContent = title;
 
-            var small = document.createElement("small");
-            var info = author;
+            const small = document.createElement("small");
+            small.textContent = [author, this.FormatDate(date)].filter(Boolean).join(" · ");
 
-            if (date)
-                info += (info ? " · " : "") + date;
+            top.append(number, status);
+            row.append(top, strong, small);
 
-            small.appendChild(document.createTextNode(info));
-            top.appendChild(number);
-            top.appendChild(status);
-            row.appendChild(top);
-            row.appendChild(strong);
-            row.appendChild(small);
-
-            row.onclick = function() {
-                var value = Number(this.getAttribute("data-ticket-id"));
-
-                if (isNaN(value))
-                    return;
-
-                self.selectedId = value;
-                self.Render();
-            };
+            row.addEventListener("click", () => {
+                this.selectedId = id;
+                this.Render();
+            });
 
             list.appendChild(row);
-        }
+        });
     },
 
-    RenderThread: function() {
-        var empty = document.getElementById("tickets-empty");
-        var thread = document.getElementById("tickets-thread");
-        var ticket = this.Find(this.selectedId);
+    RenderThread() {
+        const empty = document.getElementById("tickets-empty");
+        const thread = document.getElementById("tickets-thread");
+        const ticket = this.Find(this.selectedId);
 
         if (!ticket) {
-            if (empty)
-                empty.className = this.RemoveClass(empty.className, "hidden");
-
-            if (thread)
-                thread.className = this.AddClass(thread.className, "hidden");
-
+            empty?.classList.remove("hidden");
+            thread?.classList.add("hidden");
             return;
         }
 
-        if (empty)
-            empty.className = this.AddClass(empty.className, "hidden");
+        empty?.classList.add("hidden");
+        thread?.classList.remove("hidden");
 
-        if (thread)
-            thread.className = this.RemoveClass(thread.className, "hidden");
+        const id = this.Id(ticket);
+        const title = this.Get(ticket, "Title", "title") || "Звернення";
+        const author = this.Get(ticket, "Author", "author", "PlayerName", "playerName") || "";
+        const adminName = this.Get(ticket, "AdminName", "adminName") || "";
+        const date = this.Get(ticket, "Date", "date", "CreatedAt", "createdAt") || "";
+        const messages = this.Get(ticket, "Messages", "messages") || [];
+        const closed = this.IsClosed(ticket);
 
-        var id = this.Id(ticket);
-        var title = this.Get(ticket, ["Title", "title"]) || "Звернення";
-        var author = this.Get(ticket, ["Author", "author"]) || "";
-        var date = this.Get(ticket, ["Date", "date"]) || "";
-        var adminName = this.Get(ticket, ["AdminName", "adminName"]) || "";
-        var messages = this.Get(ticket, ["Messages", "messages"]);
-        var closed = this.IsClosed(ticket);
+        const titleElement = document.getElementById("tickets-title");
+        const metaElement = document.getElementById("tickets-meta");
+        const statusElement = document.getElementById("tickets-status");
+        const messagesElement = document.getElementById("tickets-messages");
+        const replyElement = document.getElementById("tickets-reply");
+        const finishButton = document.getElementById("tickets-finish");
 
-        if (!(messages instanceof Array))
-            messages = [];
-
-        var titleElement = document.getElementById("tickets-title");
-        var metaElement = document.getElementById("tickets-meta");
-        var statusElement = document.getElementById("tickets-status");
-        var messagesElement = document.getElementById("tickets-messages");
-        var replyElement = document.getElementById("tickets-reply");
-        var finishButton = document.getElementById("tickets-finish");
-
-        if (titleElement)
-            titleElement.textContent = title + (id !== null ? " #" + id : "");
+        if (titleElement) titleElement.textContent = `${title}${id !== null ? ` #${id}` : ""}`;
 
         if (metaElement) {
-            var meta = author;
-
-            if (date)
-                meta += (meta ? " · " : "") + date;
-
-            if (adminName)
-                meta += (meta ? " · " : "") + "Адміністратор: " + adminName;
-
-            metaElement.textContent = meta;
+            const meta = [author, this.FormatDate(date)];
+            if (adminName) meta.push(`Адміністратор: ${adminName}`);
+            metaElement.textContent = meta.filter(Boolean).join(" · ");
         }
 
         if (statusElement) {
-            statusElement.textContent = closed ? "Закрито" : (adminName ? "В роботі" : "Очікує відповіді");
-            statusElement.className = "tickets-status" + (closed ? " closed" : "");
+            statusElement.textContent = closed ? "Закрито" : adminName ? "В роботі" : "Очікує відповіді";
         }
 
         if (messagesElement) {
             messagesElement.innerHTML = "";
-
-            for (var i = 0; i < messages.length; i++)
-                messagesElement.appendChild(this.MessageElement(messages[i]));
-
+            messages.forEach(message => messagesElement.appendChild(this.MessageElement(message)));
             messagesElement.scrollTop = messagesElement.scrollHeight;
         }
 
-        if (replyElement)
-            replyElement.className = closed ? this.AddClass(replyElement.className, "hidden") : this.RemoveClass(replyElement.className, "hidden");
-
-        if (finishButton)
-            finishButton.className = closed ? this.AddClass(finishButton.className, "hidden") : this.RemoveClass(finishButton.className, "hidden");
+        replyElement?.classList.toggle("hidden", closed);
+        finishButton?.classList.toggle("hidden", closed);
     },
 
-    MessageElement: function(message) {
-        var isAdmin = this.Get(message, ["IsAdmin", "isAdmin"]) === true;
-        var author = this.Get(message, ["Author", "author"]) || (isAdmin ? "Адміністратор" : "Ви");
-        var text = this.Get(message, ["Text", "text"]) || "";
-        var time = this.Get(message, ["Time", "time"]) || "";
+    MessageElement(message) {
+        const isAdmin = Boolean(this.Get(message, "IsAdmin", "isAdmin"));
+        const author = this.Get(message, "Author", "author", "SenderName", "senderName") || (isAdmin ? "Адміністратор" : "Ви");
+        const text = this.Get(message, "Text", "text", "Message", "message") || "";
+        const time = this.Get(message, "Time", "time", "Date", "date") || "";
 
-        var item = document.createElement("div");
+        const item = document.createElement("div");
         item.className = "ticket-message" + (isAdmin ? " admin" : "");
 
-        var header = document.createElement("div");
-        var name = document.createElement("b");
-        var date = document.createElement("time");
-        var body = document.createElement("p");
+        const header = document.createElement("div");
+        const name = document.createElement("b");
+        const date = document.createElement("time");
+        const body = document.createElement("p");
 
-        name.appendChild(document.createTextNode(author));
-        date.appendChild(document.createTextNode(time));
-        body.appendChild(document.createTextNode(text));
+        name.textContent = author;
+        date.textContent = this.FormatDate(time);
+        body.textContent = text;
 
-        header.appendChild(name);
-        header.appendChild(date);
-        item.appendChild(header);
-        item.appendChild(body);
+        header.append(name, date);
+        item.append(header, body);
 
         return item;
     },
 
-    OpenCreate: function() {
-        var modal = document.getElementById("tickets-create-modal");
-        var input = document.getElementById("tickets-new-message");
+    OpenCreate() {
+        const modal = document.getElementById("tickets-create-modal");
+        const input = document.getElementById("tickets-new-message");
 
-        if (modal)
-            modal.className = this.RemoveClass(modal.className, "hidden");
+        modal?.classList.remove("hidden");
 
         if (input) {
             input.value = "";
@@ -362,23 +255,16 @@ var Tickets = {
         }
     },
 
-    CloseCreate: function() {
-        var modal = document.getElementById("tickets-create-modal");
-
-        if (modal)
-            modal.className = this.AddClass(modal.className, "hidden");
+    CloseCreate() {
+        document.getElementById("tickets-create-modal")?.classList.add("hidden");
     },
 
-    Create: function() {
-        var input = document.getElementById("tickets-new-message");
+    Create() {
+        const input = document.getElementById("tickets-new-message");
+        if (!input) return;
 
-        if (!input)
-            return;
-
-        var message = input.value.replace(/^\s+|\s+$/g, "");
-
-        if (!message)
-            return;
+        const message = input.value.trim();
+        if (!message) return;
 
         GameCef.sendJson(TicketEvents.Create, {
             Message: encodeURIComponent(message)
@@ -388,18 +274,16 @@ var Tickets = {
         this.CloseCreate();
     },
 
-    SendMessage: function() {
-        var ticket = this.Find(this.selectedId);
-        var input = document.getElementById("tickets-message");
+    SendMessage() {
+        const ticket = this.Find(this.selectedId);
+        const input = document.getElementById("tickets-message");
 
-        if (!ticket || !input || this.IsClosed(ticket))
-            return;
+        if (!ticket || !input || this.IsClosed(ticket)) return;
 
-        var id = this.Id(ticket);
-        var message = input.value.replace(/^\s+|\s+$/g, "");
+        const message = input.value.trim();
+        const id = this.Id(ticket);
 
-        if (id === null || !message)
-            return;
+        if (!message || id === null) return;
 
         GameCef.sendJson(TicketEvents.Message, {
             TicketId: id,
@@ -410,120 +294,86 @@ var Tickets = {
         input.focus();
     },
 
-    CloseTicket: function() {
-        var ticket = this.Find(this.selectedId);
+    CloseTicket() {
+        const ticket = this.Find(this.selectedId);
+        if (!ticket || this.IsClosed(ticket)) return;
 
-        if (!ticket || this.IsClosed(ticket))
-            return;
-
-        var id = this.Id(ticket);
-
-        if (id === null)
-            return;
+        const id = this.Id(ticket);
+        if (id === null) return;
 
         GameCef.sendJson(TicketEvents.Close, {
             TicketId: id
         });
     },
 
-    CloseUi: function() {
+    CloseUi() {
         GameCef.sendJson(TicketEvents.CloseUi, {});
         this.Hide();
     },
 
-    Find: function(id) {
-        if (id === null || id === undefined)
-            return null;
-
-        id = Number(id);
-
-        for (var i = 0; i < this.tickets.length; i++) {
-            if (this.Id(this.tickets[i]) === id)
-                return this.tickets[i];
-        }
-
-        return null;
+    Find(id) {
+        if (id === null || id === undefined) return null;
+        return this.tickets.find(ticket => this.Id(ticket) === Number(id)) || null;
     },
 
-    Id: function(ticket) {
-        var id = this.Get(ticket, ["Id", "id"]);
+    Id(ticket) {
+        const id = this.Get(ticket, "Id", "id", "TicketId", "ticketId");
+        if (id === null || id === undefined || id === "") return null;
 
-        if (id === null || id === undefined || id === "")
-            return null;
-
-        id = Number(id);
-        return isNaN(id) ? null : id;
+        const value = Number(id);
+        return Number.isNaN(value) ? null : value;
     },
 
-    IsClosed: function(ticket) {
-        var status = this.Get(ticket, ["Status", "status"]);
+    IsClosed(ticket) {
+        const status = this.Get(ticket, "Status", "status");
+        const isClosed = this.Get(ticket, "IsClosed", "isClosed");
+
+        if (typeof isClosed === "boolean") return isClosed;
+        if (typeof status === "number") return status === 1;
+
         return String(status || "").toLowerCase() === "closed";
     },
 
-    Get: function(object, keys) {
-        if (!object || typeof object !== "object")
-            return null;
+    Get(object, ...keys) {
+        if (!object || typeof object !== "object") return null;
 
-        for (var i = 0; i < keys.length; i++) {
-            if (Object.prototype.hasOwnProperty.call(object, keys[i]))
-                return object[keys[i]];
+        for (const key of keys) {
+            if (Object.prototype.hasOwnProperty.call(object, key)) return object[key];
         }
 
         return null;
     },
 
-    Parse: function(data) {
-        if (data && typeof data === "object")
-            return data;
-
-        if (typeof data !== "string" || !data)
-            return {};
+    Parse(data) {
+        if (data && typeof data === "object") return data;
+        if (typeof data !== "string" || !data.trim()) return null;
 
         try {
             return JSON.parse(data);
-        } catch (error) {
-            return {};
+        } catch {
+            return null;
         }
     },
 
-    AddClass: function(value, className) {
-        value = value || "";
-        var parts = value.split(/\s+/);
+    FormatDate(value) {
+        if (!value) return "";
 
-        for (var i = 0; i < parts.length; i++) {
-            if (parts[i] === className)
-                return value;
-        }
+        const text = String(value);
+        if (/^\d{1,2}:\d{2}$/.test(text)) return text;
 
-        return (value + " " + className).replace(/^\s+|\s+$/g, "");
-    },
+        const date = new Date(value);
+        if (Number.isNaN(date.getTime())) return text;
 
-    RemoveClass: function(value, className) {
-        value = value || "";
-        var parts = value.split(/\s+/);
-        var result = [];
-
-        for (var i = 0; i < parts.length; i++) {
-            if (parts[i] && parts[i] !== className)
-                result.push(parts[i]);
-        }
-
-        return result.join(" ");
+        return date.toLocaleTimeString("uk-UA", {
+            hour: "2-digit",
+            minute: "2-digit"
+        });
     }
 };
 
-GameCef.on(TicketEvents.Show, function(data) {
-    Tickets.Show(data);
-});
+GameCef.on(TicketEvents.Show, data => Tickets.Show(data));
+GameCef.on(TicketEvents.Hide, () => Tickets.Hide());
+GameCef.on(TicketEvents.Update, data => Tickets.Update(data));
 
-GameCef.on(TicketEvents.Hide, function() {
-    Tickets.Hide();
-});
+window.addEventListener("DOMContentLoaded", () => Tickets.Init());
 
-GameCef.on(TicketEvents.Update, function(data) {
-    Tickets.Update(data);
-});
-
-window.addEventListener("DOMContentLoaded", function() {
-    Tickets.Init();
-});
