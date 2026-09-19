@@ -14,11 +14,11 @@ var AdminPanel = {
         if (!this.root || this.root.dataset.ready) return;
         this.root.dataset.ready = "1";
         var self = this;
-        this.root.querySelector("#admin-close").onclick = function(){ self.Hide(); };
+        this.root.querySelector("#admin-close").onclick = function(){ self.Close(); };
         this.root.querySelector("#admin-zone").onclick = function(){ self.NotConnected(); };
         this.root.addEventListener("click", function(e){ self.Click(e); });
         this.root.addEventListener("input", function(e){ self.Input(e); });
-        document.addEventListener("keydown", function(e){ if(e.key === "Escape" && self.root.classList.contains("active")) self.Hide(); });
+        document.addEventListener("keydown", function(e){ if(e.key === "Escape" && self.root.classList.contains("active")) self.Close(); });
         window.addEventListener("resize", function(){ self.Scale(); });
         this.Scale();
     },
@@ -29,6 +29,7 @@ var AdminPanel = {
     Report: function(){var self=this;return this.state.reports.find(function(r){return String(r.id)===String(self.selectedReport);});},
     Show: function(data){this.Init();if(data)this.SetData(data);this.root.classList.add("active");this.root.setAttribute("aria-hidden","false");this.Render();},
     Hide: function(){this.Init();this.root.classList.remove("active");this.root.setAttribute("aria-hidden","true");},
+    Close: function(){this.Hide();if(window.GameCef)GameCef.send("admin:close");},
     SetData: function(data){
         if(!data || typeof data!=="object") return false;
         var keys=["admins","reports","commands","punishments","locations"];
