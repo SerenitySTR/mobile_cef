@@ -14,6 +14,8 @@ const Tickets = {
     selectedId: null,
     filter: "all",
     initialized: false,
+    syncing: false,
+    messageParts: {},
 
     Init() {
         if (this.initialized) return;
@@ -54,16 +56,25 @@ const Tickets = {
         if (!this.root) return;
 
         const payload = this.Parse(data);
-        const list = this.Get(payload, "Tickets", "tickets");
+        const sync = this.Get(payload, "sync", "Sync");
 
-        if (Array.isArray(list)) {
-            this.tickets = list;
-        } else if (Array.isArray(payload)) {
-            this.tickets = payload;
-        }
-
-        if (this.selectedId !== null && !this.Find(this.selectedId)) {
+        if (sync === "begin") {
+            this.syncing = true;
+            this.messageParts = {};
+            this.tickets = [];
             this.selectedId = null;
+        } else {
+            const list = this.Get(payload, "Tickets", "tickets");
+
+            if (Array.isArray(list)) {
+                this.tickets = list;
+            } else if (Array.isArray(payload)) {
+                this.tickets = payload;
+            }
+
+            if (this.selectedId !== null && !this.Find(this.selectedId)) {
+                this.selectedId = null;
+            }
         }
 
         this.root.classList.add("active");
@@ -86,6 +97,35 @@ const Tickets = {
 
         const payload = this.Parse(data);
         if (!payload) return;
+
+        const sync = this.Get(payload, "sync", "Sync");
+        if (sync === "ticket") {
+            const ticket = this.Get(payload, "ticket", "Ticket");
+            if (!ticket) return;
+
+            const id = this.Id(ticket);
+            if (id === null) return;
+
+            ticket.Messages = [];
+            const index = this.tickets.findIndex(item => this.Id(item) === id);
+            if (index === -1) this.tickets.unshift(ticket);
+            else this.tickets[index] = ticket;
+
+            if (this.selectedId === null) this.selectedId = id;
+            return;
+        }
+
+        if (sync === "message") {
+            this.AddSyncedMessage(payload);
+            return;
+        }
+
+        if (sync === "end") {
+            this.syncing = false;
+            this.messageParts = {};
+            this.Render();
+            return;
+        }
 
         const list = this.Get(payload, "Tickets", "tickets");
         if (Array.isArray(list)) {
@@ -111,6 +151,42 @@ const Tickets = {
         }
 
         this.Render();
+    },
+
+    AddSyncedMessage(payload) {
+        const ticketId = Number(this.Get(payload, "ticketId", "TicketId"));
+        const messageIndex = Number(this.Get(payload, "messageIndex", "MessageIndex") || 0);
+        const partIndex = Number(this.Get(payload, "partIndex", "PartIndex") || 0);
+        const partCount = Number(this.Get(payload, "partCount", "PartCount") || 1);
+        const message = this.Get(payload, "message", "Message") || {};
+        const ticket = this.Find(ticketId);
+        if (!ticket) return;
+
+        const key = `${ticketId}:${messageIndex}`;
+        const text = this.Get(message, "Text", "text", "Message", "message") || "";
+
+        if (!this.messageParts[key]) {
+            this.messageParts[key] = {
+                parts: new Array(Math.max(1, partCount)),
+                message: {
+                    Author: this.Get(message, "Author", "author", "SenderName", "senderName") || "",
+                    Text: "",
+                    Time: this.Get(message, "Time", "time", "Date", "date") || "",
+                    IsAdmin: Boolean(this.Get(message, "IsAdmin", "isAdmin"))
+                }
+            };
+        }
+
+        const bucket = this.messageParts[key];
+        bucket.parts[partIndex] = String(text);
+
+        if (!bucket.parts.every(part => part !== undefined)) return;
+
+        bucket.message.Text = bucket.parts.join("");
+        const messages = this.Get(ticket, "Messages", "messages") || [];
+        messages[messageIndex] = bucket.message;
+        ticket.Messages = messages;
+        delete this.messageParts[key];
     },
 
     Render() {
@@ -264,7 +340,7 @@ const Tickets = {
         if (!input) return;
 
         const message = input.value.trim();
-        if (!message) return;
+        if (!message || message.length > 280) return;
 
         GameCef.sendJson(TicketEvents.Create, {
             Message: encodeURIComponent(message)
@@ -283,7 +359,7 @@ const Tickets = {
         const message = input.value.trim();
         const id = this.Id(ticket);
 
-        if (!message || id === null) return;
+        if (!message || id === null || message.length > 280) return;
 
         GameCef.sendJson(TicketEvents.Message, {
             TicketId: id,
