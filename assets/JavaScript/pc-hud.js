@@ -23,7 +23,7 @@
 
   window.AntaresHUD={setPlayer,setTime,setStats({hp,armor,hunger}={}){if(hp!=null)setStat('hp',hp);if(armor!=null)setStat('armor',armor);if(hunger!=null)setStat('hunger',hunger);},setAmmo,setMoney,setWanted:renderWanted,setWeapon:updateWeapon,update:updateHud};
 
-  if(window.GameCef){
+  if(window.GameCef && !window.hudMobilePlatform){
     GameCef.on('hud:show',showHud); GameCef.on('hud:hide',hideHud);
     GameCef.on('hud:update',d=>{const p=parsePayload(d);if(p)updateHud(p)});
     GameCef.on('hud:player',d=>{const p=parsePayload(d);if(p)updateHud(p)});
@@ -35,6 +35,7 @@
   }
   let directBound=false;
   function bindDirect(){
+    if(window.hudMobilePlatform)return false;
     if(directBound||!window.cef||typeof window.cef.on!=='function'||typeof window.cef.emit!=='function')return false;
     window.cef.on('game:data:wantedLevel',renderWanted);
     window.cef.on('game:data:hud',v=>{const p=parsePayload(v);if(p)updateHud(p)});
@@ -47,9 +48,9 @@
     });
     window.cef.emit('game:data:pollPlayerStats',true,50); directBound=true; return true;
   }
-  if(!bindDirect()){const t=setInterval(()=>{if(bindDirect())clearInterval(t)},250);setTimeout(()=>clearInterval(t),15000)}
-  window.addEventListener('load',()=>{if(bindDirect()&&window.cef)window.cef.emit('game:data:pollPlayerStats',true,50);else if(directBound&&window.cef)window.cef.emit('game:data:pollPlayerStats',true,50)});
-  window.addEventListener('focus',()=>{if(bindDirect()||directBound){if(window.cef&&typeof window.cef.emit==='function')window.cef.emit('game:data:pollPlayerStats',true,50)}});
+  if(!window.hudMobilePlatform && !bindDirect()){const t=setInterval(()=>{if(bindDirect())clearInterval(t)},250);setTimeout(()=>clearInterval(t),15000)}
+  window.addEventListener('load',()=>{if(window.hudMobilePlatform)return;if(bindDirect()&&window.cef)window.cef.emit('game:data:pollPlayerStats',true,50);else if(directBound&&window.cef)window.cef.emit('game:data:pollPlayerStats',true,50)});
+  window.addEventListener('focus',()=>{if(window.hudMobilePlatform)return;if(bindDirect()||directBound){if(window.cef&&typeof window.cef.emit==='function')window.cef.emit('game:data:pollPlayerStats',true,50)}});
 
   function updateScale(){const scale=Math.min(innerWidth/1920,innerHeight/1080);document.documentElement.style.setProperty('--hud-scale',String(scale))} updateScale(); addEventListener('resize',updateScale,{passive:true});
   if(new URLSearchParams(location.search).get('preview')==='1')document.body.classList.add('preview');
