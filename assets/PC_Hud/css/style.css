@@ -1,0 +1,630 @@
+:root {
+  --ui:#07192b;
+  --ui2:#0a2742;
+  --text:#f4f7fb;
+  --cyan:#168cff;
+  --red:#ff2438;
+  --orange:#ff9818;
+  --green:#22d24d;
+  --hud-scale:1
+}
+* {
+  box-sizing:border-box
+}
+html,body {
+  margin:0;
+  width:100%;
+  height:100%;
+  overflow:hidden;
+  background:transparent;
+  font-family:Arial,Helvetica,sans-serif;
+  color:var(--text);
+  user-select:none
+}
+.hud {
+  position:fixed;
+  inset:0;
+  pointer-events:none
+}
+.chat-gradient {
+  position:absolute;
+  left:0;
+  top:12px;
+  width:720px;
+  height:252px;
+  transform:scale(var(--hud-scale));
+  transform-origin:top left;
+  background:transparent;
+  mask-image:none;
+  -webkit-mask-image:none
+}
+.player-gradient {
+  position:absolute;
+  right:14px;
+  top:14px;
+  width:390px;
+  height:82px;
+  transform:scale(var(--hud-scale));
+  transform-origin:top right;
+  border-radius:12px;
+  display:flex;
+  align-items:center;
+  justify-content:flex-end;
+  padding:9px 12px 9px 20px;
+  gap:14px;
+  background:linear-gradient(90deg,rgba(5,23,40,0) 0%,rgba(5,23,40,.34) 22%,rgba(5,23,40,.72) 58%,rgba(5,23,40,.9) 100%)
+}
+.identity {
+  display:flex;
+  align-items:center;
+  gap:13px;
+  font-size:13px;
+  line-height:1.2
+}
+.identity .col {
+  display:grid;
+  gap:10px;
+  white-space:nowrap
+}
+.identity .line {
+  display:flex;
+  align-items:center;
+  gap:8px
+}
+.identity .ico {
+  width:16px;
+  text-align:center;
+  color:white;
+  font-size:13px
+}
+.divider {
+  width:1px;
+  height:50px;
+  background:rgba(255,255,255,.7)
+}
+.logo {
+  width:76px;
+  height:64px;
+  object-fit:contain;
+  object-position:center;
+  flex:0 0 auto
+}
+.stats-row {
+  position:absolute;
+  right:14px;
+  top:103px;
+  height:66px;
+  transform:scale(var(--hud-scale));
+  transform-origin:top right;
+  display:flex;
+  align-items:center;
+  gap:9px
+}
+.stat {
+  width:62px;
+  height:62px;
+  flex:0 0 62px
+}
+.ring {
+  --c:var(--cyan);
+  position:relative;
+  width:62px;
+  height:62px;
+  border-radius:50%;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  background:radial-gradient(circle at center,rgba(5,23,40,.96) 0 72%,transparent 73%),conic-gradient(from -90deg,var(--c) calc(var(--value)*1%),rgba(255,255,255,.16) 0);
+  box-shadow:inset 0 0 12px rgba(0,0,0,.18),0 0 0 1px rgba(0,0,0,.28)
+}
+.hp .ring {
+  --c:var(--red)
+}
+.armor .ring {
+  --c:var(--cyan)
+}
+.hunger .ring {
+  --c:var(--orange)
+}
+.stat-icon {
+  width:21px;
+  height:21px;
+  fill:#f7f9fc;
+  display:block;
+  margin-bottom:1px
+}
+.hunger .stat-icon {
+  fill:var(--orange);
+  width:23px
+}
+.value {
+  font-size:12px;
+  line-height:13px;
+  font-weight:700;
+  color:#fff
+}
+.glass {
+  background:linear-gradient(90deg,rgba(5,23,40,.68),rgba(5,23,40,.93));
+  border:1px solid rgba(28,132,214,.16);
+  border-radius:11px
+}
+.weapon {
+  height:62px;
+  width:148px;
+  flex:0 0 148px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:12px;
+  font-size:16px;
+  font-weight:600
+}
+.weapon-icon {
+  width:43px;
+  height:28px;
+  fill:#f4f7fb;
+  filter:drop-shadow(0 1px 1px rgba(0,0,0,.25))
+}
+.ammo-slash {
+  color:rgba(255,255,255,.65);
+  padding:0 2px
+}
+.money-wanted {
+  position:absolute;
+  right:14px;
+  top:171px;
+  width:184px;
+  height:82px;
+  transform:scale(var(--hud-scale));
+  transform-origin:top right;
+  padding:10px 13px;
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between
+}
+.money {
+  display:flex;
+  align-items:center;
+  gap:10px;
+  font-size:16px
+}
+.money span {
+  color:var(--green);
+  font-size:25px;
+  font-weight:800
+}
+.money b {
+  font-weight:500
+}
+.wanted {
+  display:flex;
+  justify-content:flex-end;
+  gap:7px;
+  font-size:18px;
+  letter-spacing:0
+}
+.wanted .off {
+  color:#02070c
+}
+.wanted .on {
+  color:white
+}
+@media(max-width:900px),(max-height:540px) {
+  .identity {
+    font-size:12px
+  }
+}
+body.preview {
+  background:radial-gradient(circle at 45% 45%,#45515b 0,#222b33 55%,#111820 100%)
+}
+body.preview::after {
+  content:"BROWSER PREVIEW — CEF BACKGROUND IS TRANSPARENT IN GAME";
+  position:fixed;
+  left:50%;
+  bottom:18px;
+  transform:translateX(-50%);
+  font-size:12px;
+  letter-spacing:.08em;
+  color:rgba(255,255,255,.38)
+}
+.right-gradient {
+  position:absolute;
+  right:0;
+  top:0;
+  width:650px;
+  height:285px;
+  transform:scale(var(--hud-scale));
+  transform-origin:top right;
+  background:linear-gradient(90deg,     rgba(5,23,40,0) 0%,     rgba(5,23,40,.06) 18%,     rgba(5,23,40,.20) 36%,     rgba(5,23,40,.46) 58%,     rgba(5,23,40,.72) 78%,     rgba(5,23,40,.88) 100%);
+  -webkit-mask-image:linear-gradient(to bottom,#000 0%,#000 82%,transparent 100%);
+  mask-image:linear-gradient(to bottom,#000 0%,#000 82%,transparent 100%);
+  pointer-events:none;
+}
+.player-gradient {
+  background:transparent
+}
+.stats-row {
+  z-index:2
+}
+.player-gradient,.money-wanted {
+  z-index:2
+}
+.ring {
+  background:radial-gradient(circle at center,rgba(5,23,40,.94) 0 70%,transparent 71%),conic-gradient(from -90deg,var(--c) calc(var(--value)*1%),rgba(255,255,255,.16) 0);
+  box-shadow:0 0 0 1px rgba(0,0,0,.34),inset 0 0 10px rgba(0,0,0,.28)
+}
+.stat-icon {
+  width:22px;
+  height:22px;
+  margin-bottom:0
+}
+.hunger .stat-icon {
+  width:24px;
+  height:24px
+}
+.weapon {
+  background:linear-gradient(90deg,rgba(5,23,40,.72),rgba(5,23,40,.94))
+}
+.money-wanted {
+  background:linear-gradient(90deg,rgba(5,23,40,.72),rgba(5,23,40,.94))
+}
+.ring {
+  background:rgba(5,23,40,.94);
+  overflow:visible;
+  box-shadow:inset 0 0 10px rgba(0,0,0,.28)
+}
+.progress-ring {
+  position:absolute;
+  inset:-1px;
+  width:64px;
+  height:64px;
+  overflow:visible;
+  transform:rotate(-90deg);
+  pointer-events:none
+}
+.ring-track,.ring-progress {
+  fill:none;
+  stroke-width:3;
+  vector-effect:non-scaling-stroke
+}
+.ring-track {
+  stroke:rgba(255,255,255,.15)
+}
+.ring-progress {
+  stroke:var(--c);
+  stroke-linecap:round;
+  stroke-dasharray:182.212;
+  stroke-dashoffset:calc(182.212 - (182.212 * var(--value) / 100));
+  transition:stroke-dashoffset .22s ease
+}
+.stat-icon,.value {
+  position:relative;
+  z-index:1
+}
+.right-hud {
+  position:absolute;
+  right:14px;
+  top:14px;
+  width:520px;
+  height:250px;
+  transform:scale(var(--hud-scale));
+  transform-origin:top right;
+  pointer-events:none;
+}
+.right-hud .right-gradient {
+  position:absolute;
+  right:-14px;
+  top:-14px;
+  width:650px;
+  height:270px;
+  transform:none;
+  background:linear-gradient(90deg,rgba(5,23,40,0) 0%,rgba(5,23,40,.06) 18%,rgba(5,23,40,.20) 36%,rgba(5,23,40,.46) 58%,rgba(5,23,40,.72) 78%,rgba(5,23,40,.88) 100%);
+  -webkit-mask-image:linear-gradient(to bottom,#000 0%,#000 84%,transparent 100%);
+  mask-image:linear-gradient(to bottom,#000 0%,#000 84%,transparent 100%);
+  z-index:0;
+}
+.right-hud .player-gradient {
+  position:absolute;
+  right:0;
+  top:0;
+  width:390px;
+  height:82px;
+  transform:none;
+  z-index:2;
+}
+.right-hud .stats-row {
+  position:absolute;
+  right:0;
+  top:90px;
+  height:66px;
+  transform:none;
+  z-index:2;
+}
+.right-hud .money-wanted {
+  position:absolute;
+  right:0;
+  top:164px;
+  width:184px;
+  height:82px;
+  transform:none;
+  z-index:2;
+}
+.right-hud .right-gradient {
+  display:none
+}
+.right-hud .player-gradient, .right-hud .stats-row, .right-hud .money-wanted {
+  isolation:isolate
+}
+.right-hud .player-gradient::before, .right-hud .stats-row::before, .right-hud .money-wanted::before {
+  content:"";
+  position:absolute;
+  pointer-events:none;
+  z-index:-1;
+  right:-14px;
+  filter:blur(0.2px);
+}
+.right-hud .player-gradient {
+  background:transparent;
+  border:0;
+  overflow:visible;
+}
+.right-hud .player-gradient::before {
+  top:-24px;
+  width:560px;
+  height:130px;
+  background:radial-gradient(ellipse 88% 72% at 100% 50%,     rgba(5,23,40,.88) 0%,     rgba(5,23,40,.68) 34%,     rgba(5,23,40,.34) 60%,     rgba(5,23,40,.10) 78%,     rgba(5,23,40,0) 100%);
+}
+.right-hud .stats-row::before {
+  top:-28px;
+  width:650px;
+  height:122px;
+  background:radial-gradient(ellipse 90% 68% at 100% 50%,     rgba(5,23,40,.90) 0%,     rgba(5,23,40,.68) 35%,     rgba(5,23,40,.34) 62%,     rgba(5,23,40,.09) 82%,     rgba(5,23,40,0) 100%);
+}
+.right-hud .weapon {
+  background:transparent;
+  border:0;
+  box-shadow:none;
+}
+.right-hud .money-wanted {
+  background:transparent;
+  border:0;
+  box-shadow:none;
+  overflow:visible;
+}
+.right-hud .money-wanted::before {
+  top:-24px;
+  width:420px;
+  height:132px;
+  background:radial-gradient(ellipse 92% 72% at 100% 48%,     rgba(5,23,40,.88) 0%,     rgba(5,23,40,.64) 38%,     rgba(5,23,40,.30) 64%,     rgba(5,23,40,.08) 82%,     rgba(5,23,40,0) 100%);
+}
+.right-hud .player-gradient::before, .right-hud .stats-row::before, .right-hud .money-wanted::before {
+  filter:none;
+  border-radius:0;
+  background:linear-gradient(90deg,     rgba(5,23,40,0) 0%,     rgba(5,23,40,.04) 20%,     rgba(5,23,40,.14) 40%,     rgba(5,23,40,.34) 62%,     rgba(5,23,40,.58) 80%,     rgba(5,23,40,.76) 100%);
+  -webkit-mask-image:linear-gradient(to bottom,     transparent 0%,     rgba(0,0,0,.55) 14%,     #000 30%,     #000 70%,     rgba(0,0,0,.55) 86%,     transparent 100%);
+  mask-image:linear-gradient(to bottom,     transparent 0%,     rgba(0,0,0,.55) 14%,     #000 30%,     #000 70%,     rgba(0,0,0,.55) 86%,     transparent 100%);
+}
+.right-hud .player-gradient::before {
+  right:-14px;
+  top:-18px;
+  width:610px;
+  height:118px;
+}
+.right-hud .stats-row::before {
+  right:-14px;
+  top:-20px;
+  width:690px;
+  height:108px;
+}
+.right-hud .money-wanted::before {
+  right:-14px;
+  top:-18px;
+  width:450px;
+  height:118px;
+}
+.right-hud .player-gradient::before, .right-hud .stats-row::before, .right-hud .money-wanted::before {
+  filter:none !important;
+  border-radius:0 !important;
+  -webkit-mask-image:none !important;
+  mask-image:none !important;
+  background:linear-gradient(90deg,     rgba(5,23,40,0) 0%,     rgba(5,23,40,.08) 18%,     rgba(5,23,40,.22) 38%,     rgba(5,23,40,.44) 60%,     rgba(5,23,40,.68) 80%,     rgba(5,23,40,.88) 100%) !important;
+}
+.right-hud .player-gradient::before {
+  right:-14px !important;
+  top:-10px !important;
+  width:610px !important;
+  height:102px !important;
+}
+.right-hud .stats-row::before {
+  right:-14px !important;
+  top:-8px !important;
+  width:690px !important;
+  height:82px !important;
+}
+.right-hud .money-wanted::before {
+  right:-14px !important;
+  top:-8px !important;
+  width:450px !important;
+  height:98px !important;
+}
+.right-hud .player-gradient::before {
+  top:0 !important;
+  height:78px !important;
+}
+.right-hud .stats-row::before {
+  top:0 !important;
+  height:66px !important;
+}
+.right-hud .money-wanted::before {
+  top:0 !important;
+  height:82px !important;
+}
+.right-hud .player-gradient::before, .right-hud .stats-row::before, .right-hud .money-wanted::before {
+  right:-14px !important;
+  width:610px !important;
+  background:linear-gradient(90deg,     rgba(5,23,40,0) 0%,     rgba(5,23,40,.035) 24%,     rgba(5,23,40,.12) 38%,     rgba(5,23,40,.34) 58%,     rgba(5,23,40,.64) 78%,     rgba(5,23,40,.88) 100%) !important;
+}
+.right-hud .player-gradient::before {
+  top:0 !important;
+  height:87px !important;
+}
+.right-hud .stats-row::before {
+  top:0 !important;
+  height:71px !important;
+}
+.right-hud .money-wanted::before {
+  top:0 !important;
+  height:76px !important;
+}
+.right-hud .money-wanted {
+  align-items:center !important;
+}
+.right-hud .money-wanted .money {
+  justify-content:center !important;
+}
+.right-hud .money-wanted .wanted {
+  justify-content:center !important;
+  align-self:center !important;
+}
+.right-hud .money-wanted {
+  right:4px !important;
+  width:max-content !important;
+  min-width:148px !important;
+  height:76px !important;
+  box-sizing:border-box !important;
+  padding:8px 10px 7px 10px !important;
+  align-items:center !important;
+}
+.right-hud .money-wanted .money {
+  width:max-content !important;
+  white-space:nowrap !important;
+  justify-content:center !important;
+  align-self:center !important;
+}
+.right-hud .money-wanted .wanted {
+  width:max-content !important;
+  white-space:nowrap !important;
+  justify-content:center !important;
+  align-self:center !important;
+}
+.right-hud .money-wanted::before {
+  right:-4px !important;
+  width:calc(100% + 245px) !important;
+  height:76px !important;
+}
+.right-hud .money-wanted {
+  right:0 !important;
+  min-width:0 !important;
+  width:max-content !important;
+  padding:8px 2px 7px 8px !important;
+}
+.right-hud .money-wanted::before {
+  right:0 !important;
+  width:calc(100% + 150px) !important;
+}
+.right-hud .money-wanted {
+  right:0 !important;
+  width:max-content !important;
+  min-width:0 !important;
+  padding:8px 0 7px 8px !important;
+  border-right:0 !important;
+  overflow:visible !important;
+}
+.right-hud .money-wanted .money, .right-hud .money-wanted .wanted {
+  margin-right:0 !important;
+  padding-right:0 !important;
+}
+.right-hud .money-wanted::before {
+  right:0 !important;
+}
+.right-hud .money-wanted {
+  right:-11px !important;
+}
+.right-hud .money-wanted::before {
+  right:0 !important;
+}
+.right-hud .money-wanted {
+  right:-14px !important;
+  padding-right:0 !important;
+  margin-right:0 !important;
+  border-right:0 !important;
+}
+.right-hud .money-wanted::before {
+  right:0 !important;
+}
+.right-hud .stats-row::before {
+  width:470px !important;
+  right:-14px !important;
+}
+.right-hud .player-gradient::before {
+  width:470px !important;
+  right:-14px !important;
+}
+.right-hud .player-gradient::before {
+  background:linear-gradient(90deg,     rgba(5,23,40,0) 0%,     rgba(5,23,40,0) 23%,     rgba(5,23,40,.08) 34%,     rgba(5,23,40,.22) 48%,     rgba(5,23,40,.44) 64%,     rgba(5,23,40,.68) 82%,     rgba(5,23,40,.88) 100%) !important;
+}
+.right-hud .player-gradient {
+  height:72px !important;
+  padding-top:6px !important;
+  padding-bottom:6px !important;
+}
+.right-hud .player-gradient::before {
+  height:72px !important;
+}
+.right-hud .logo {
+  height:58px !important;
+  width:auto !important;
+  max-width:none !important;
+  object-fit:contain !important;
+  object-position:center !important;
+  flex:0 0 auto !important;
+}
+.right-hud .stats-row {
+  top:75px !important;
+  height:76px !important;
+}
+.right-hud .stats-row::before {
+  height:76px !important;
+}
+.chat-gradient {
+  width:640px !important;
+}
+.weapon-icon {
+  object-fit:contain;
+  object-position:center;
+  display:block
+}
+.right-hud .player-gradient::before {
+  width:550px !important;
+  right:-14px !important;
+}
+.hp .stat-icon {
+  fill:#ff4b52;
+  color:#ff4b52
+}
+.armor .stat-icon {
+  fill:#64c9ff;
+  color:#64c9ff
+}
+.hunger .stat-icon {
+  fill:#ffa32d;
+  color:#ffa32d
+}
+.hunger .stat-icon circle {
+  fill:rgba(255,255,255,.78)
+}
+html, body {
+  background: transparent !important;
+}
+body {
+  display: none;
+}
+body.pc-hud-visible {
+  display: block;
+}
+
+.weapon-icon {
+  width: 50px;
+  height: 33px;
+}
