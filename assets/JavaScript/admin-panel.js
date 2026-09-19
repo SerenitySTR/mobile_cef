@@ -194,12 +194,15 @@ var AdminPanel = {
         if(this.root&&this.root.classList.contains("active"))this.Render();
         return true;
     },
+    IsMobileLandscape: function() {
+        return window.innerWidth > window.innerHeight && window.innerHeight <= 600;
+    },
     Scale: function() {
         if(!this.root)return;
 
         var width=window.innerWidth;
         var height=window.innerHeight;
-        var mobileLandscape=width>height && height<=600;
+        var mobileLandscape=this.IsMobileLandscape();
 
         this.root.classList.toggle("admin-mobile-landscape",mobileLandscape);
 
@@ -236,10 +239,37 @@ var AdminPanel = {
         var m=this.Q(".admin-messages");
         if(m)m.scrollTop=m.scrollHeight;
 
+        var oldTransferLayer=this.root.querySelector(".admin-transfer-mobile-layer");
+        if(oldTransferLayer)oldTransferLayer.remove();
+
         if(this.transferOpen) {
-            var self=this;
-            requestAnimationFrame(function(){ self.PositionTransferMenu(); });
+            if(this.IsMobileLandscape()) {
+                this.RenderMobileTransfer();
+            } else {
+                var self=this;
+                requestAnimationFrame(function(){ self.PositionTransferMenu(); });
+            }
         }
+    },
+    RenderMobileTransfer: function() {
+        var self=this;
+        var admins=this.state.admins.filter(function(admin){
+            return String(admin.id)!==String(self.state.profile.id);
+        });
+
+        var layer=document.createElement("div");
+        layer.className="admin-transfer-mobile-layer";
+        layer.innerHTML='<button type="button" class="admin-transfer-mobile-backdrop" data-admin-transfer-close aria-label="Закрити"></button>'
+            +'<div class="admin-transfer-mobile-sheet" role="dialog" aria-modal="true" aria-label="Передати звернення">'
+            +'<div class="admin-transfer-mobile-head"><div><strong>Передати звернення</strong><small>Оберіть адміністратора</small></div><button type="button" class="admin-transfer-mobile-close" data-admin-transfer-close>×</button></div>'
+            +'<div class="admin-transfer-mobile-list">'
+            +(admins.length?admins.map(function(admin){
+                var active=String(self.transferAdminId)===String(admin.id)?" active":"";
+                return '<button type="button" class="admin-transfer-mobile-option'+active+'" data-admin-transfer-option="'+self.Escape(admin.id)+'"><span>'+self.Escape(admin.name)+'</span><small>ID: '+self.Escape(admin.id)+'</small></button>';
+            }).join(""):'<div class="admin-transfer-mobile-empty">Немає адміністраторів онлайн</div>')
+            +'</div>'
+            +'</div>';
+        this.root.appendChild(layer);
     },
     PositionTransferMenu: function() {
         var menu=this.Q(".admin-transfer-menu");
@@ -293,7 +323,7 @@ var AdminPanel = {
             controls='<div class="admin-composer">'
             +'<div class="admin-ticket-controls">'
             +'<div class="admin-quick-wrap"><button type="button" class="admin-quick-toggle" data-admin-quick-toggle>Швидкі відповіді '+(this.quickOpen?'▴':'▾')+'</button>'+quickMenu+'</div>'
-            +'<div class="admin-transfer-row"><div class="admin-transfer-select"><button type="button" class="admin-select admin-transfer-toggle" data-admin-transfer-toggle>'+this.TransferAdminLabel(admins)+'</button>'+(this.transferOpen?'<div class="admin-transfer-menu">'+(admins.length?admins.map(function(a){return '<button type="button" class="admin-transfer-option '+(String(self.transferAdminId)===String(a.id)?"active":"")+'" data-admin-transfer-option="'+self.Escape(a.id)+'">'+self.Escape(a.name)+' ['+self.Escape(a.id)+']</button>';}).join(""):'<div class="admin-transfer-empty">Немає адміністраторів онлайн</div>')+'</div>':'')+'</div><button type="button" data-admin-action="transfer">Передати</button><button type="button" data-admin-action="release">Звільнити</button></div>'
+            +'<div class="admin-transfer-row"><div class="admin-transfer-select"><button type="button" class="admin-select admin-transfer-toggle" data-admin-transfer-toggle>'+this.TransferAdminLabel(admins)+'</button>'+(this.transferOpen&&!this.IsMobileLandscape()?'<div class="admin-transfer-menu">'+(admins.length?admins.map(function(a){return '<button type="button" class="admin-transfer-option '+(String(self.transferAdminId)===String(a.id)?"active":"")+'" data-admin-transfer-option="'+self.Escape(a.id)+'">'+self.Escape(a.name)+' ['+self.Escape(a.id)+']</button>';}).join(""):'<div class="admin-transfer-empty">Немає адміністраторів онлайн</div>')+'</div>':'')+'</div><button type="button" data-admin-action="transfer">Передати</button><button type="button" data-admin-action="release">Звільнити</button></div>'
             +'</div>'
             +'<div class="admin-send-row"><textarea class="admin-textarea" data-admin-draft placeholder="Напишіть повідомлення…"></textarea><button type="button" class="admin-send admin-primary" data-admin-action="send">Надіслати</button></div>'
             +'<button type="button" class="admin-close-ticket" data-admin-action="resolve">Закрити тікет</button>'
@@ -397,6 +427,11 @@ var AdminPanel = {
                 var menu=this.Q(".admin-quick-menu");
                 if(menu)menu.style.display="none";
             }
+            return;
+        }
+        if(b.dataset.adminTransferClose!==undefined) {
+            this.transferOpen=false;
+            this.Render();
             return;
         }
         if(b.dataset.adminTransferToggle!==undefined) {
