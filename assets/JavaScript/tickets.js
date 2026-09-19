@@ -1,312 +1,565 @@
-var Tickets = {
+const TicketEvents = {
+    Show: "ticket:show",
+    Hide: "ticket:hide",
+    Update: "ticket:update",
+
+    Create: "ticket:create",
+    Message: "ticket:message",
+    Close: "ticket:close",
+    CloseUi: "ticket:close-ui"
+};
+
+const Tickets = {
     root: null,
-    list: null,
-    messages: null,
-    selectedId: null,
-    filter: "all",
-    data: {
-        Tickets: []
-    },
+    ticket: null,
+    initialized: false,
 
     Init: function() {
-        this.root = document.getElementById("tickets");
-        this.list = document.getElementById("tickets-list");
-        this.messages = document.getElementById("tickets-messages");
-    },
-
-    Parse: function(data) {
-        if (data && typeof data === "object")
-            return data;
-
-        if (typeof data !== "string" || !data.trim())
-            return null;
-
-        try {
-            return JSON.parse(data);
-        } catch {
-            return null;
+        if (this.initialized) {
+            return;
         }
-    },
 
-    NormalizeList: function(payload) {
-        if (!payload)
-            return [];
+        this.root = document.getElementById("tickets");
 
-        return payload.Tickets || payload.tickets || [];
+        if (!this.root) {
+            console.error("[Tickets] #tickets not found");
+            return;
+        }
+
+        this.initialized = true;
+
+        const self = this;
+
+        const closeButton = document.getElementById("tickets-close");
+        const createButton = document.getElementById("tickets-create-submit");
+        const createCancelButton = document.getElementById("tickets-create-cancel");
+        const sendButton = document.getElementById("tickets-send");
+        const finishButton = document.getElementById("tickets-finish");
+        const newButton = document.getElementById("tickets-new");
+        const messageInput = document.getElementById("tickets-message");
+        const newMessageInput = document.getElementById("tickets-new-message");
+
+        if (closeButton) {
+            closeButton.addEventListener("click", function() {
+                self.CloseUi();
+            });
+        }
+
+        if (newButton) {
+            newButton.addEventListener("click", function() {
+                self.OpenCreateModal();
+            });
+        }
+
+        if (createCancelButton) {
+            createCancelButton.addEventListener("click", function() {
+                self.CloseCreateModal();
+            });
+        }
+
+        if (createButton) {
+            createButton.addEventListener("click", function() {
+                self.Create();
+            });
+        }
+
+        if (sendButton) {
+            sendButton.addEventListener("click", function() {
+                self.SendMessage();
+            });
+        }
+
+        if (finishButton) {
+            finishButton.addEventListener("click", function() {
+                self.CloseTicket();
+            });
+        }
+
+        if (messageInput) {
+            messageInput.addEventListener("keydown", function(event) {
+                if (event.key !== "Enter" || event.shiftKey) {
+                    return;
+                }
+
+                event.preventDefault();
+
+                self.SendMessage();
+            });
+        }
+
+        if (newMessageInput) {
+            newMessageInput.addEventListener("keydown", function(event) {
+                if (event.key !== "Enter" || event.shiftKey) {
+                    return;
+                }
+
+                event.preventDefault();
+
+                self.Create();
+            });
+        }
+
+        this.root.addEventListener("click", function(event) {
+            const quickReply = event.target.closest("[data-reply]");
+
+            if (!quickReply) {
+                return;
+            }
+
+            const input = document.getElementById("tickets-message");
+
+            if (!input) {
+                return;
+            }
+
+            input.value = quickReply.dataset.reply || "";
+            input.focus();
+        });
     },
 
     Show: function(data) {
-        var payload = this.Parse(data);
+        this.Init();
 
-        if (payload)
-            this.data.Tickets = this.NormalizeList(payload);
+        if (!this.root) {
+            return;
+        }
 
         this.root.classList.add("active");
+        this.root.classList.remove("hidden");
         this.root.setAttribute("aria-hidden", "false");
-        this.Render();
+
+        if (data) {
+            this.SetData(data);
+        } else {
+            this.Render();
+        }
     },
 
     Hide: function() {
-        this.root.classList.remove("active");
-        this.root.setAttribute("aria-hidden", "true");
-        document.getElementById("tickets-create-modal").classList.add("hidden");
-    },
+        this.Init();
 
-    GetTicket: function(id) {
-        return this.data.Tickets.find(function(ticket) {
-            return Number(ticket.Id ?? ticket.id) === Number(id);
-        });
-    },
-
-    Value: function(object, pascal, camel, fallback) {
-        if (!object)
-            return fallback;
-
-        if (object[pascal] !== undefined && object[pascal] !== null)
-            return object[pascal];
-
-        if (object[camel] !== undefined && object[camel] !== null)
-            return object[camel];
-
-        return fallback;
-    },
-
-    Render: function() {
-        var self = this;
-        var tickets = this.data.Tickets.filter(function(ticket) {
-            var status = self.Value(ticket, "Status", "status", "");
-            var closed = String(status).toLowerCase() === "closed";
-
-            if (self.filter === "open")
-                return !closed;
-
-            if (self.filter === "closed")
-                return closed;
-
-            return true;
-        });
-
-        this.list.innerHTML = "";
-
-        tickets.forEach(function(ticket) {
-            var id = self.Value(ticket, "Id", "id", 0);
-            var title = self.Value(ticket, "Title", "title", "Звернення");
-            var date = self.Value(ticket, "Date", "date", "");
-            var status = self.Value(ticket, "Status", "status", "");
-            var button = document.createElement("button");
-            button.type = "button";
-            button.className = "ticket-row";
-
-            if (Number(id) === Number(self.selectedId))
-                button.classList.add("active");
-
-            button.innerHTML =
-                '<span class="ticket-row-top">' +
-                    '<span>#' + Number(id) + '</span>' +
-                    '<span>' + self.Escape(date) + '</span>' +
-                '</span>' +
-                '<strong>' + self.Escape(title) + '</strong>' +
-                '<small>' + self.StatusText(status) + '</small>';
-
-            button.onclick = function() {
-                self.Select(id);
-            };
-
-            self.list.appendChild(button);
-        });
-
-        if (this.selectedId != null && this.GetTicket(this.selectedId))
-            this.Select(this.selectedId);
-        else if (tickets.length > 0)
-            this.Select(this.Value(tickets[0], "Id", "id", 0));
-        else
-            this.ShowEmpty();
-    },
-
-    Select: function(id) {
-        var ticket = this.GetTicket(id);
-
-        if (!ticket)
+        if (!this.root) {
             return;
+        }
 
-        var ticketId = this.Value(ticket, "Id", "id", 0);
-        var title = this.Value(ticket, "Title", "title", "Звернення");
-        var adminName = this.Value(ticket, "AdminName", "adminName", "");
-        var statusValue = this.Value(ticket, "Status", "status", "");
-        var messages = this.Value(ticket, "Messages", "messages", []);
+        this.root.classList.remove("active");
+        this.root.classList.add("hidden");
+        this.root.setAttribute("aria-hidden", "true");
 
-        this.selectedId = Number(ticketId);
-
-        document.getElementById("tickets-empty").classList.add("hidden");
-        document.getElementById("tickets-thread").classList.remove("hidden");
-        document.getElementById("tickets-title").textContent = "#" + ticketId + "  " + title;
-        document.getElementById("tickets-meta").textContent = adminName ? "Адміністратор: " + adminName : "Очікує адміністратора";
-
-        var closed = String(statusValue).toLowerCase() === "closed";
-        var status = document.getElementById("tickets-status");
-
-        status.textContent = this.StatusText(statusValue);
-        status.className = "tickets-status" + (closed ? " closed" : "");
-
-        document.getElementById("tickets-reply").classList.toggle("hidden", closed);
-        document.getElementById("tickets-finish").classList.toggle("hidden", closed);
-
-        this.messages.innerHTML = "";
-        messages.forEach(this.AddMessage.bind(this));
-        this.messages.scrollTop = this.messages.scrollHeight;
-
-        this.RenderListSelection();
-    },
-
-    RenderListSelection: function() {
-        var self = this;
-
-        this.list.querySelectorAll(".ticket-row").forEach(function(button) {
-            var id = Number(button.querySelector(".ticket-row-top span").textContent.replace("#", ""));
-            button.classList.toggle("active", id === Number(self.selectedId));
-        });
-    },
-
-    ShowEmpty: function() {
-        this.selectedId = null;
-        document.getElementById("tickets-empty").classList.remove("hidden");
-        document.getElementById("tickets-thread").classList.add("hidden");
-    },
-
-    AddMessage: function(message) {
-        var isAdmin = this.Value(message, "IsAdmin", "isAdmin", false);
-        var senderName = this.Value(message, "SenderName", "senderName", this.Value(message, "Author", "author", "Гравець"));
-        var date = this.Value(message, "Date", "date", this.Value(message, "Time", "time", ""));
-        var text = this.Value(message, "Message", "message", this.Value(message, "Text", "text", ""));
-        var element = document.createElement("div");
-
-        element.className = "ticket-message" + (isAdmin ? " admin" : "");
-        element.innerHTML =
-            "<b>" + this.Escape(senderName) + "</b>" +
-            "<time>" + this.Escape(date) + "</time>" +
-            "<p>" + this.Escape(text) + "</p>";
-
-        this.messages.appendChild(element);
+        this.CloseCreateModal();
     },
 
     Update: function(data) {
-        var ticket = this.Parse(data);
+        this.Init();
 
-        if (!ticket)
+        if (!data) {
             return;
+        }
 
-        if (ticket.Ticket || ticket.ticket)
-            ticket = ticket.Ticket || ticket.ticket;
+        this.SetData(data);
+    },
 
-        var ticketId = this.Value(ticket, "Id", "id", null);
-
-        if (ticketId == null)
+    SetData: function(data) {
+        if (!data || typeof data !== "object") {
             return;
+        }
 
-        var index = this.data.Tickets.findIndex(function(item) {
-            return Number(item.Id ?? item.id) === Number(ticketId);
-        });
+        if (Object.prototype.hasOwnProperty.call(data, "ticket")) {
+            this.ticket = data.ticket;
+        } else if (Object.prototype.hasOwnProperty.call(data, "Ticket")) {
+            this.ticket = data.Ticket;
+        } else if (
+            Object.prototype.hasOwnProperty.call(data, "id") ||
+            Object.prototype.hasOwnProperty.call(data, "Id")
+        ) {
+            this.ticket = data;
+        }
 
-        if (index >= 0)
-            this.data.Tickets[index] = ticket;
-        else
-            this.data.Tickets.unshift(ticket);
-
-        this.selectedId = Number(ticketId);
         this.Render();
     },
 
-    StatusText: function(status) {
-        return String(status).toLowerCase() === "closed" ? "Закрито" : "Відкрито";
+    Render: function() {
+        this.Init();
+
+        if (!this.root) {
+            return;
+        }
+
+        const empty = document.getElementById("tickets-empty");
+        const chat = document.getElementById("tickets-chat");
+        const newButton = document.getElementById("tickets-new");
+
+        if (!this.ticket) {
+            if (empty) {
+                empty.classList.remove("hidden");
+            }
+
+            if (chat) {
+                chat.classList.add("hidden");
+            }
+
+            if (newButton) {
+                newButton.classList.remove("hidden");
+            }
+
+            return;
+        }
+
+        if (empty) {
+            empty.classList.add("hidden");
+        }
+
+        if (chat) {
+            chat.classList.remove("hidden");
+        }
+
+        if (newButton) {
+            newButton.classList.add("hidden");
+        }
+
+        const ticketId = this.GetValue(this.ticket, "id", "Id");
+        const status = this.GetValue(this.ticket, "status", "Status");
+        const adminName = this.GetValue(
+            this.ticket,
+            "adminName",
+            "AdminName"
+        );
+
+        const messages = this.GetValue(
+            this.ticket,
+            "messages",
+            "Messages"
+        ) || [];
+
+        const title = document.getElementById("tickets-chat-title");
+        const statusElement = document.getElementById("tickets-status");
+        const adminElement = document.getElementById("tickets-admin");
+        const messagesElement = document.getElementById("tickets-messages");
+        const messageInput = document.getElementById("tickets-message");
+        const sendButton = document.getElementById("tickets-send");
+        const finishButton = document.getElementById("tickets-finish");
+
+        if (title) {
+            title.textContent = ticketId != null
+                ? "Звернення #" + ticketId
+                : "Звернення";
+        }
+
+        const closed = this.IsClosed(status);
+
+        if (statusElement) {
+            if (closed) {
+                statusElement.textContent = "Закрито";
+            } else if (adminName) {
+                statusElement.textContent = "В роботі";
+            } else {
+                statusElement.textContent = "Очікує адміністратора";
+            }
+        }
+
+        if (adminElement) {
+            adminElement.textContent = adminName
+                ? "Адміністратор: " + adminName
+                : "Адміністратор ще не призначений";
+        }
+
+        if (messagesElement) {
+            messagesElement.innerHTML = "";
+
+            for (let i = 0; i < messages.length; i++) {
+                messagesElement.appendChild(
+                    this.CreateMessageElement(messages[i])
+                );
+            }
+
+            messagesElement.scrollTop = messagesElement.scrollHeight;
+        }
+
+        if (messageInput) {
+            messageInput.disabled = closed;
+
+            if (closed) {
+                messageInput.value = "";
+                messageInput.placeholder = "Звернення закрито";
+            } else {
+                messageInput.placeholder = "Написати повідомлення...";
+            }
+        }
+
+        if (sendButton) {
+            sendButton.disabled = closed;
+        }
+
+        if (finishButton) {
+            finishButton.disabled = closed;
+            finishButton.classList.toggle("hidden", closed);
+        }
     },
 
-    Escape: function(value) {
-        var element = document.createElement("div");
-        element.textContent = String(value == null ? "" : value);
-        return element.innerHTML;
+    CreateMessageElement: function(message) {
+        const isAdmin = Boolean(
+            this.GetValue(message, "isAdmin", "IsAdmin")
+        );
+
+        const senderName =
+            this.GetValue(message, "senderName", "SenderName") ||
+            this.GetValue(message, "name", "Name") ||
+            (isAdmin ? "Адміністратор" : "Ви");
+
+        const text =
+            this.GetValue(message, "message", "Message") ||
+            this.GetValue(message, "text", "Text") ||
+            "";
+
+        const date =
+            this.GetValue(message, "date", "Date") ||
+            this.GetValue(message, "time", "Time") ||
+            "";
+
+        const wrapper = document.createElement("div");
+
+        wrapper.className = isAdmin
+            ? "tickets-message tickets-message-admin"
+            : "tickets-message tickets-message-player";
+
+        const info = document.createElement("small");
+        const bubble = document.createElement("div");
+
+        info.className = "tickets-message-info";
+        bubble.className = "tickets-message-bubble";
+
+        info.textContent = date
+            ? senderName + " · " + this.FormatDate(date)
+            : senderName;
+
+        bubble.textContent = text;
+
+        wrapper.appendChild(info);
+        wrapper.appendChild(bubble);
+
+        return wrapper;
+    },
+
+    Create: function() {
+        const input = document.getElementById("tickets-new-message");
+
+        if (!input) {
+            return;
+        }
+
+        const message = input.value.trim();
+
+        if (!message) {
+            return;
+        }
+
+        if (!window.GameCef) {
+            return;
+        }
+
+        GameCef.sendJson(TicketEvents.Create, {
+            Message: message
+        });
+
+        input.value = "";
+
+        this.CloseCreateModal();
+    },
+
+    SendMessage: function() {
+        if (!this.ticket) {
+            return;
+        }
+
+        const input = document.getElementById("tickets-message");
+
+        if (!input) {
+            return;
+        }
+
+        const message = input.value.trim();
+
+        if (!message) {
+            return;
+        }
+
+        const ticketId = this.GetValue(
+            this.ticket,
+            "id",
+            "Id"
+        );
+
+        if (ticketId == null) {
+            return;
+        }
+
+        if (!window.GameCef) {
+            return;
+        }
+
+        GameCef.sendJson(TicketEvents.Message, {
+            TicketId: Number(ticketId),
+            Message: message
+        });
+
+        input.value = "";
+        input.focus();
+    },
+
+    CloseTicket: function() {
+        if (!this.ticket) {
+            return;
+        }
+
+        const ticketId = this.GetValue(
+            this.ticket,
+            "id",
+            "Id"
+        );
+
+        if (ticketId == null) {
+            return;
+        }
+
+        if (!window.GameCef) {
+            return;
+        }
+
+        GameCef.sendJson(TicketEvents.Close, {
+            TicketId: Number(ticketId)
+        });
+    },
+
+    CloseUi: function() {
+        this.Hide();
+
+        if (!window.GameCef) {
+            return;
+        }
+
+        GameCef.send(TicketEvents.CloseUi);
+    },
+
+    OpenCreateModal: function() {
+        const modal = document.getElementById("tickets-create-modal");
+
+        if (!modal) {
+            return;
+        }
+
+        modal.classList.remove("hidden");
+
+        const input = document.getElementById("tickets-new-message");
+
+        if (input) {
+            input.value = "";
+
+            setTimeout(function() {
+                input.focus();
+            }, 0);
+        }
+    },
+
+    CloseCreateModal: function() {
+        const modal = document.getElementById("tickets-create-modal");
+
+        if (!modal) {
+            return;
+        }
+
+        modal.classList.add("hidden");
+    },
+
+    IsClosed: function(status) {
+        if (status == null) {
+            return false;
+        }
+
+        if (typeof status === "number") {
+            return status === 1;
+        }
+
+        return String(status).toLowerCase() === "closed";
+    },
+
+    GetValue: function(object, camelCase, pascalCase) {
+        if (!object) {
+            return null;
+        }
+
+        if (Object.prototype.hasOwnProperty.call(object, camelCase)) {
+            return object[camelCase];
+        }
+
+        if (Object.prototype.hasOwnProperty.call(object, pascalCase)) {
+            return object[pascalCase];
+        }
+
+        return null;
+    },
+
+    FormatDate: function(value) {
+        if (!value) {
+            return "";
+        }
+
+        const text = String(value);
+
+        if (/^\d{1,2}:\d{2}$/.test(text)) {
+            return text;
+        }
+
+        const date = new Date(value);
+
+        if (Number.isNaN(date.getTime())) {
+            return text;
+        }
+
+        return date.toLocaleTimeString("uk-UA", {
+            hour: "2-digit",
+            minute: "2-digit"
+        });
     }
 };
 
+function parseTicketPayload(data) {
+    if (data && typeof data === "object") {
+        return data;
+    }
+
+    if (typeof data !== "string" || !data.trim()) {
+        return null;
+    }
+
+    try {
+        return JSON.parse(data);
+    } catch {
+        return null;
+    }
+}
+
 window.addEventListener("DOMContentLoaded", function() {
     Tickets.Init();
-
-    document.getElementById("tickets-close").onclick = function() {
-        Tickets.Hide();
-        GameCef.send("ticket:hide");
-    };
-
-    document.getElementById("tickets-create").onclick = function() {
-        document.getElementById("tickets-new-message").value = "";
-        document.getElementById("tickets-create-modal").classList.remove("hidden");
-    };
-
-    document.getElementById("tickets-create-cancel").onclick = function() {
-        document.getElementById("tickets-create-modal").classList.add("hidden");
-    };
-
-    document.getElementById("tickets-create-submit").onclick = function() {
-        var input = document.getElementById("tickets-new-message");
-        var message = input.value.trim();
-
-        if (!message)
-            return;
-
-        GameCef.sendJson("ticket:create", {
-            Title: "Звернення",
-            Message: encodeURIComponent(message)
-        });
-
-        input.value = "";
-        document.getElementById("tickets-create-modal").classList.add("hidden");
-    };
-
-    document.getElementById("tickets-send").onclick = function() {
-        var input = document.getElementById("tickets-message");
-        var message = input.value.trim();
-
-        if (!message || Tickets.selectedId == null)
-            return;
-
-        GameCef.sendJson("ticket:message", {
-            TicketId: Tickets.selectedId,
-            Message: encodeURIComponent(message)
-        });
-
-        input.value = "";
-    };
-
-    document.getElementById("tickets-finish").onclick = function() {
-        if (Tickets.selectedId == null)
-            return;
-
-        GameCef.sendJson("ticket:close", {
-            TicketId: Tickets.selectedId
-        });
-    };
-
-    document.querySelectorAll(".tickets-tabs button").forEach(function(button) {
-        button.onclick = function() {
-            document.querySelectorAll(".tickets-tabs button").forEach(function(item) {
-                item.classList.remove("active");
-            });
-
-            button.classList.add("active");
-            Tickets.filter = button.dataset.filter;
-            Tickets.Render();
-        };
-    });
 });
 
 if (window.GameCef) {
-    GameCef.on("ticket:show", function(data) {
-        Tickets.Show(data);
+    GameCef.on(TicketEvents.Show, function(data) {
+        const payload = parseTicketPayload(data);
+
+        Tickets.Show(payload);
     });
 
-    GameCef.on("ticket:update", function(data) {
-        Tickets.Update(data);
-    });
-
-    GameCef.on("ticket:hide", function() {
+    GameCef.on(TicketEvents.Hide, function() {
         Tickets.Hide();
+    });
+
+    GameCef.on(TicketEvents.Update, function(data) {
+        const payload = parseTicketPayload(data);
+
+        if (!payload) {
+            return;
+        }
+
+        Tickets.Update(payload);
     });
 }
