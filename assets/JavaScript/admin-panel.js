@@ -194,6 +194,99 @@ var AdminPanel = {
         if(this.root&&this.root.classList.contains("active"))this.Render();
         return true;
     },
+    ResetAdminData: function() {
+        this.state.admins = [];
+        this.state.tickets = [];
+    },
+    AddAdminData: function(data) {
+        var admin = this.NormalizeAdmin(data);
+        if(admin.id == null) return;
+
+        var index = this.state.admins.findIndex(function(item){
+            return String(item.id) === String(admin.id);
+        });
+
+        if(index === -1) this.state.admins.push(admin);
+        else this.state.admins[index] = admin;
+    },
+    AddTicketData: function(data) {
+        var ticket = this.NormalizeTicket(data);
+        if(ticket.id == null) return;
+
+        var index = this.state.tickets.findIndex(function(item){
+            return String(item.id) === String(ticket.id);
+        });
+
+        if(index === -1) {
+            this.state.tickets.push(ticket);
+        } else {
+            var messages = this.state.tickets[index].messages || [];
+            this.state.tickets[index] = Object.assign({}, this.state.tickets[index], ticket, { messages: messages });
+        }
+    },
+    SetTicketDetail: function(data) {
+        var detail = this.NormalizeTicket(data);
+        if(detail.id == null) return;
+
+        var index = this.state.tickets.findIndex(function(item){
+            return String(item.id) === String(detail.id);
+        });
+
+        if(index === -1) {
+            this.state.tickets.push(detail);
+        } else {
+            var messages = this.state.tickets[index].messages || [];
+            this.state.tickets[index] = Object.assign({}, this.state.tickets[index], detail, { messages: messages });
+        }
+    },
+    ResetTicketMessages: function(data) {
+        var ticketId = data && (data.ticketId ?? data.TicketId);
+        var ticket = this.state.tickets.find(function(item){
+            return String(item.id) === String(ticketId);
+        });
+        if(ticket) ticket.messages = [];
+    },
+    AddTicketMessageData: function(data) {
+        if(!data) return;
+        var ticketId = data.ticketId ?? data.TicketId;
+        var message = data.message ?? data.Message;
+        if(!message) return;
+
+        var ticket = this.state.tickets.find(function(item){
+            return String(item.id) === String(ticketId);
+        });
+        if(!ticket) return;
+
+        ticket.messages = ticket.messages || [];
+        ticket.messages.push(this.NormalizeMessage(message));
+    },
+    RequestSelectedTicket: function() {
+        if(this.selectedTicket == null) return;
+        this.Send("admin:ticket:open", { TicketId: Number(this.selectedTicket) });
+    },
+    FinishAdminData: function() {
+        var self = this;
+
+        if(this.pendingClaimTicket != null) {
+            var claimedId = this.pendingClaimTicket;
+            var claimed = this.state.tickets.find(function(ticket){
+                return String(ticket.id) === String(claimedId);
+            });
+
+            if(claimed && String(claimed.adminId) === String(this.state.profile.id)) {
+                this.tab = "tickets";
+                this.filter = "mine";
+                this.selectedTicket = claimed.id;
+                this.chatOpen = true;
+                this.pendingClaimTicket = null;
+            }
+        }
+
+        if(this.root && this.root.classList.contains("active")) {
+            this.Render();
+            if(this.tab === "tickets") this.RequestSelectedTicket();
+        }
+    },
     IsMobileLandscape: function() {
         return window.innerWidth > window.innerHeight && window.innerHeight <= 600;
     },
@@ -376,6 +469,7 @@ var AdminPanel = {
             this.transferOpen=false;
             this.transferAdminId=null;
             this.Render();
+            if(this.tab === "tickets") this.RequestSelectedTicket();
             return;
         }
         if(b.dataset.adminFilter) {
@@ -386,6 +480,7 @@ var AdminPanel = {
             this.transferOpen=false;
             this.transferAdminId=null;
             this.Render();
+            this.RequestSelectedTicket();
             return;
         }
         if(b.dataset.adminTicket) {
@@ -394,6 +489,7 @@ var AdminPanel = {
             this.transferOpen=false;
             this.transferAdminId=null;
             this.Render();
+            this.RequestSelectedTicket();
             return;
         }
         if(b.dataset.adminItems) {
@@ -494,17 +590,9 @@ var AdminPanel = {
             }
 
             var targetId=Number(selectedAdmin.id);
-            var targetPlayerId=Number(selectedAdmin.playerId ?? selectedAdmin.id);
-            var targetAccountId=selectedAdmin.accountId==null?null:Number(selectedAdmin.accountId);
-
             var sent=this.Send("admin:ticket:transfer",{
                 TicketId:Number(ticketId),
-                AdminId:targetId,
-                TargetAdminId:targetId,
-                TargetId:targetId,
-                AdminPlayerId:targetPlayerId,
-                TargetPlayerId:targetPlayerId,
-                AccountId:targetAccountId
+                AdminId:targetId
             });
 
             if(!sent) this.Toast("CEF bridge недоступний");
@@ -544,13 +632,45 @@ function parseAdminPayload(data) {
 }
 if (window.GameCef) {
     GameCef.on("admin:show", function(data) {
-    AdminPanel.Show(parseAdminPayload(data));
+        AdminPanel.Show(parseAdminPayload(data));
     });
     GameCef.on("admin:hide", function() {
-    AdminPanel.Hide();
+        AdminPanel.Hide();
     });
     GameCef.on("admin:update", function(data) {
-    var payload = parseAdminPayload(data);
-    if (payload) AdminPanel.SetData(payload);
+        var payload = parseAdminPayload(data);
+        if(payload) AdminPanel.SetData(payload);
+    });
+
+    // Large admin data is intentionally streamed as small events.
+    // CefService itself stays unchanged.
+    GameCef.on("admin:data:reset", function() {
+        AdminPanel.ResetAdminData();
+    });
+    GameCef.on("admin:data:admin", function(data) {
+        var payload = parseAdminPayload(data);
+        if(payload) AdminPanel.AddAdminData(payload);
+    });
+    GameCef.on("admin:data:ticket", function(data) {
+        var payload = parseAdminPayload(data);
+        if(payload) AdminPanel.AddTicketData(payload);
+    });
+    GameCef.on("admin:data:ready", function() {
+        AdminPanel.FinishAdminData();
+    });
+    GameCef.on("admin:ticket:detail", function(data) {
+        var payload = parseAdminPayload(data);
+        if(payload) AdminPanel.SetTicketDetail(payload);
+    });
+    GameCef.on("admin:ticket:messages:reset", function(data) {
+        var payload = parseAdminPayload(data);
+        if(payload) AdminPanel.ResetTicketMessages(payload);
+    });
+    GameCef.on("admin:ticket:message:data", function(data) {
+        var payload = parseAdminPayload(data);
+        if(payload) AdminPanel.AddTicketMessageData(payload);
+    });
+    GameCef.on("admin:ticket:detail:ready", function() {
+        if(AdminPanel.root && AdminPanel.root.classList.contains("active")) AdminPanel.Render();
     });
 }
