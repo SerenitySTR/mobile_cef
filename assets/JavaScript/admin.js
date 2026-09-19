@@ -1,4 +1,3 @@
-// Local CEF reference content. Fill the empty reference lists later. No game events.
 window.AntaresAdminContent = {
   "commands": [],
   "punishments": [],
@@ -35,7 +34,6 @@ window.AntaresAdminContent = {
     }
   ]
 };
-/* Selects the PC canvas only on desktop; mobile uses its real viewport. */
 (function(){'use strict';
  function resize(){
   var desktop=typeof window.matchMedia==='function'?window.matchMedia('(min-width: 768px)').matches:window.innerWidth>=768;
