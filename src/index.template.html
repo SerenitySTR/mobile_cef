@@ -17,7 +17,7 @@
     <link rel="stylesheet" href="./assets/CSS/styles/main-menu.css">
     <link rel="stylesheet" href="./assets/CSS/styles/dialog.css">
     <link rel="stylesheet" href="./assets/CSS/styles/tickets.css">
-    <link rel="stylesheet" href="./assets/CSS/styles/admin-embed.css">
+    <link rel="stylesheet" href="./assets/CSS/styles/admin.css">
 </head>
 
 <body>
@@ -33,9 +33,7 @@
     <!-- @include sections/main-menu.html -->
     <!-- @include sections/dialog.html -->
     <!-- @include sections/tickets.html -->
-
-    <!-- ANTARES administrator system: isolated in an iframe so its desktop/mobile styles do not conflict with the existing HUD/UI. -->
-    <iframe id="admin-cef-frame" src="./assets/Admin/index.html" title="Панель адміністратора" hidden></iframe>
+    <!-- @include sections/admin.html -->
 
     <script src="./assets/JavaScript/cef-wrapper.js"></script>
     <script src="./assets/JavaScript/loading.js"></script>
@@ -50,6 +48,6 @@
     <script src="./assets/JavaScript/main-menu.js"></script>
     <script src="./assets/JavaScript/dialog.js"></script>
     <script src="./assets/JavaScript/tickets.js"></script>
-    <script src="./assets/JavaScript/admin-embed.js"></script>
+    <script src="./assets/JavaScript/admin.js"></script>
 </body>
 </html>

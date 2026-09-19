@@ -17,7 +17,7 @@
     <link rel="stylesheet" href="./assets/CSS/styles/main-menu.css">
     <link rel="stylesheet" href="./assets/CSS/styles/dialog.css">
     <link rel="stylesheet" href="./assets/CSS/styles/tickets.css">
-    <link rel="stylesheet" href="./assets/CSS/styles/admin-embed.css">
+    <link rel="stylesheet" href="./assets/CSS/styles/admin.css">
 </head>
 
 <body>
@@ -738,9 +738,24 @@
     </div>
 </section>
 
+    <section id="admin-panel" aria-hidden="true">
+    <main id="panel" hidden>
+        <aside>
+            <div class="brand">ПАНЕЛЬ АДМІНІСТРАТОРА</div>
+            <nav id="nav"></nav>
+            <button id="adminZone" class="zone">↪ &nbsp; В адмін-зону</button>
+        </aside>
+        <section class="workspace">
+            <header>
+                <h1 id="title"></h1>
+                <button id="close" aria-label="Закрити">×</button>
+            </header>
+            <div id="content"></div>
+        </section>
+    </main>
+    <div id="toast" role="status"></div>
+</section>
 
-    <!-- ANTARES administrator system: isolated in an iframe so its desktop/mobile styles do not conflict with the existing HUD/UI. -->
-    <iframe id="admin-cef-frame" src="./assets/Admin/index.html" title="Панель адміністратора" hidden></iframe>
 
     <script src="./assets/JavaScript/cef-wrapper.js"></script>
     <script src="./assets/JavaScript/loading.js"></script>
@@ -755,6 +770,6 @@
     <script src="./assets/JavaScript/main-menu.js"></script>
     <script src="./assets/JavaScript/dialog.js"></script>
     <script src="./assets/JavaScript/tickets.js"></script>
-    <script src="./assets/JavaScript/admin-embed.js"></script>
+    <script src="./assets/JavaScript/admin.js"></script>
 </body>
 </html>
