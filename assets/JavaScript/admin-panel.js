@@ -1,5 +1,5 @@
 var AdminPanel = {
-    root: null, tab: "stats", filter: "mine", selectedTicket: null, query: "", chatOpen: false, ticketFocus: false, itemCategory: "weapons", pendingClaimTicket: null, quickOpen: false, transferOpen: false, transferAdminId: null, searchTimer: null, composingSearch: false,
+    root: null, tab: "stats", filter: "mine", selectedTicket: null, query: "", chatOpen: false, ticketFocus: false, itemCategory: "weapons", pendingClaimTicket: null, quickOpen: false, transferOpen: false, transferAdminId: null, searchTimer: null, composingSearch: false, syncId: null, messageLoadTokens: {},
     state: {
         profile: {
             id:null,name:"",role:""
@@ -201,10 +201,16 @@ var AdminPanel = {
         if(!patch) return this.SetData(payload);
 
         if(patch==="reset") {
+            this.syncId=payload.syncId ?? null;
             this.state.admins=[];
             this.state.tickets=[];
+            this.messageLoadTokens={};
             if(payload.profile) this.state.profile=this.NormalizeProfile(payload.profile);
             return true;
+        }
+
+        if(payload.syncId!=null && this.syncId!=null && String(payload.syncId)!==String(this.syncId)) {
+            return false;
         }
 
         if(patch==="admin") {
@@ -216,16 +222,47 @@ var AdminPanel = {
             return true;
         }
 
+        if(patch==="tickets") {
+            var incoming=Array.isArray(payload.tickets)?payload.tickets:[];
+            for(var i=0;i<incoming.length;i++) {
+                var ticket=this.NormalizeTicket(incoming[i]);
+                if(ticket.id==null) continue;
+                var index=this.state.tickets.findIndex(function(item){ return String(item.id)===String(ticket.id); });
+                if(index===-1) this.state.tickets.push(ticket);
+                else {
+                    var oldMessages=this.state.tickets[index].messages||[];
+                    ticket.messages=oldMessages;
+                    this.state.tickets[index]=ticket;
+                }
+            }
+            return true;
+        }
+
         if(patch==="ticket") {
-            var ticket=this.NormalizeTicket(payload.ticket);
-            if(ticket.id==null) return false;
-            var ticketIndex=this.state.tickets.findIndex(function(item){ return String(item.id)===String(ticket.id); });
-            if(ticketIndex===-1) this.state.tickets.push(ticket);
-            else this.state.tickets[ticketIndex]=ticket;
+            var single=this.NormalizeTicket(payload.ticket);
+            if(single.id==null) return false;
+            var singleIndex=this.state.tickets.findIndex(function(item){ return String(item.id)===String(single.id); });
+            if(singleIndex===-1) this.state.tickets.push(single);
+            else {
+                var preserved=this.state.tickets[singleIndex].messages||[];
+                single.messages=preserved;
+                this.state.tickets[singleIndex]=single;
+            }
+            this.state.tickets.sort(function(a,b){ return Number(b.id)-Number(a.id); });
+            if(this.root&&this.root.classList.contains("active")) this.Render();
+            return true;
+        }
+
+        if(patch==="messages-reset") {
+            var resetTicket=this.state.tickets.find(function(item){ return String(item.id)===String(payload.ticketId); });
+            if(!resetTicket) return false;
+            this.messageLoadTokens[String(payload.ticketId)]=payload.loadId;
+            resetTicket.messages=[];
             return true;
         }
 
         if(patch==="message") {
+            if(payload.loadId!=null && String(this.messageLoadTokens[String(payload.ticketId)])!==String(payload.loadId)) return false;
             var targetTicket=this.state.tickets.find(function(item){ return String(item.id)===String(payload.ticketId); });
             if(!targetTicket) return false;
 
@@ -242,12 +279,27 @@ var AdminPanel = {
             return true;
         }
 
+        if(patch==="message-append") {
+            var appendTicket=this.state.tickets.find(function(item){ return String(item.id)===String(payload.ticketId); });
+            if(!appendTicket) return false;
+            appendTicket.messages.push(this.NormalizeMessage(payload.message));
+            if(String(this.selectedTicket)===String(payload.ticketId) && this.root&&this.root.classList.contains("active")) this.Render();
+            return true;
+        }
+
+        if(patch==="messages-ready") {
+            if(payload.loadId!=null && String(this.messageLoadTokens[String(payload.ticketId)])!==String(payload.loadId)) return false;
+            if(String(this.selectedTicket)===String(payload.ticketId) && this.root&&this.root.classList.contains("active")) this.Render();
+            return true;
+        }
+
         if(patch==="ready") {
+            if(payload.syncId!=null) this.syncId=payload.syncId;
             this.state.tickets.sort(function(a,b){ return Number(b.id)-Number(a.id); });
 
             if(this.pendingClaimTicket!=null) {
                 var claimedId=this.pendingClaimTicket;
-                var claimed=this.state.tickets.find(function(ticket){ return String(ticket.id)===String(claimedId); });
+                var claimed=this.state.tickets.find(function(ticket){return String(ticket.id)===String(claimedId);});
                 if(claimed && String(claimed.adminId)===String(this.state.profile.id)) {
                     this.tab="tickets";
                     this.filter="mine";
@@ -257,12 +309,16 @@ var AdminPanel = {
                 }
             }
 
-            if(this.root && this.root.classList.contains("active")) this.Render();
+            if(this.root && this.root.classList.contains("active")) {
+                this.Render();
+                if(this.tab==="tickets" && this.selectedTicket!=null) this.Send("admin:ticket:open",{TicketId:Number(this.selectedTicket)});
+            }
             return true;
         }
 
         return false;
     },
+
     IsMobileLandscape: function() {
         return window.innerWidth > window.innerHeight && window.innerHeight <= 600;
     },
@@ -445,6 +501,7 @@ var AdminPanel = {
             this.transferOpen=false;
             this.transferAdminId=null;
             this.Render();
+            if(this.tab==="tickets" && this.selectedTicket!=null) this.Send("admin:ticket:open",{TicketId:Number(this.selectedTicket)});
             return;
         }
         if(b.dataset.adminFilter) {
@@ -455,6 +512,7 @@ var AdminPanel = {
             this.transferOpen=false;
             this.transferAdminId=null;
             this.Render();
+            if(this.selectedTicket!=null) this.Send("admin:ticket:open",{TicketId:Number(this.selectedTicket)});
             return;
         }
         if(b.dataset.adminTicket) {
@@ -462,7 +520,10 @@ var AdminPanel = {
             this.chatOpen=true;
             this.transferOpen=false;
             this.transferAdminId=null;
+            var selected=this.Ticket();
+            if(selected) selected.messages=[];
             this.Render();
+            this.Send("admin:ticket:open",{TicketId:Number(this.selectedTicket)});
             return;
         }
         if(b.dataset.adminItems) {
