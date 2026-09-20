@@ -250,6 +250,11 @@ var AdminPanel = {
                 else this.state.tickets[index]=ticket;
             }
 
+            this.state.tickets.sort(function(a,b){ return Number(b.id)-Number(a.id); });
+
+            if(this.root && this.root.classList.contains("active"))
+                this.Render();
+
             return true;
         }
 
