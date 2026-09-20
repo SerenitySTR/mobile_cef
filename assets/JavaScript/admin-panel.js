@@ -429,7 +429,7 @@ var AdminPanel = {
     RenderMobileTransfer: function() {
         var self=this;
         var admins=this.state.admins.filter(function(admin){
-            return String(admin.id)!==String(self.state.profile.playerId);
+            return String(admin.id)!==String(self.state.profile.id);
         });
 
         var layer=document.createElement("div");
@@ -493,7 +493,7 @@ var AdminPanel = {
         return '<div class="admin-tabs">'+[["free","Вільні"],["busy","Зайняті"],["mine","Мої"],["closed","Закриті"]].map(function(x){return '<button type="button" data-admin-filter="'+x[0]+'" class="'+(self.filter===x[0]?"active":"")+'">'+x[1]+" · "+counts[x[0]]+"</button>";}).join("")+'</div><div class="admin-ticket-layout '+(this.chatOpen?"admin-chat-open ":"")+(this.ticketFocus?"admin-ticket-focus":"")+'"><div class="admin-tickets"><input class="admin-search" data-admin-search value="'+this.Escape(this.query)+'" placeholder="Пошук за назвою, ID або описом">'+(rows.map(function(x){return '<button type="button" class="admin-ticket '+(String(x.id)===String(self.selectedTicket)?"active":"")+'" data-admin-ticket="'+self.Escape(x.id)+'"><span>#'+self.Escape(x.id)+' · '+self.Escape(x.waitLabel||"")+'</span><strong>'+self.Escape(x.playerName)+' ['+self.Escape(x.playerId)+']</strong><small>'+self.Escape(x.subject)+'</small></button>';}).join("")||'<div class="admin-empty">Звернень немає</div>')+'</div><div class="admin-chat">'+(r?this.Chat(r):'<div class="admin-empty">Оберіть звернення</div>')+'</div></div>';
     },
     Chat: function(r) {
-        var owned=this.Mine(r),closed=r.status==="closed",self=this,admins=this.state.admins.filter(function(a){return String(a.id)!==String(self.state.profile.playerId);});
+        var owned=this.Mine(r),closed=r.status==="closed",self=this,admins=this.state.admins.filter(function(a){return String(a.id)!==String(self.state.profile.id);});
         var quickMenu=this.quickOpen?'<div class="admin-quick-menu">'+this.quickReplies.map(function(q,i){return '<button type="button" data-admin-quick="'+i+'">'+self.Escape(q.label)+'</button>';}).join("")+'</div>':'';
         var messages=(r.messages||[]).map(function(m){var role=m.role||(m.isAdmin?"admin":"player");return '<div class="admin-message '+(role==="admin"?"admin-own":"admin-player")+'"><small>'+self.Escape(m.name||m.senderName)+' · '+self.Escape(m.time||m.date||"")+'</small><div class="admin-bubble">'+self.Escape(m.text||m.message)+'</div></div>';}).join("");
         var controls='';
