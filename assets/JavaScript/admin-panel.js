@@ -438,17 +438,60 @@ var AdminPanel = {
 
         var layer=document.createElement("div");
         layer.className="admin-transfer-mobile-layer";
-        layer.innerHTML='<button type="button" class="admin-transfer-mobile-backdrop" data-admin-transfer-close aria-label="Закрити"></button>'
-            +'<div class="admin-transfer-mobile-sheet" role="dialog" aria-modal="true" aria-label="Передати звернення">'
-            +'<div class="admin-transfer-mobile-head"><div><strong>Передати звернення</strong><small>Оберіть адміністратора</small></div><button type="button" class="admin-transfer-mobile-close" data-admin-transfer-close>×</button></div>'
-            +'<div class="admin-transfer-mobile-list">'
-            +(admins.length?admins.map(function(admin){
-                var active=String(self.transferAdminId)===String(admin.id)?" active":"";
-                return '<button type="button" class="admin-transfer-mobile-option'+active+'" data-admin-transfer-option="'+self.Escape(admin.id)+'"><span>'+self.Escape(admin.name)+'</span><small>ID: '+self.Escape(admin.id)+'</small></button>';
-            }).join(""):'<div class="admin-transfer-mobile-empty">Немає адміністраторів онлайн</div>')
-            +'</div>'
-            +'</div>';
+        layer.style.cssText="position:fixed;left:0;top:0;width:100vw;height:100vh;z-index:2147483647;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.55);padding:16px;box-sizing:border-box;";
+
+        var sheet=document.createElement("div");
+        sheet.style.cssText="width:86vw;max-width:520px;max-height:76vh;display:flex;flex-direction:column;background:#071827;border:1px solid rgba(91,166,218,.35);border-radius:12px;box-shadow:0 18px 60px rgba(0,0,0,.55);overflow:hidden;color:#fff;font-family:Arial,sans-serif;";
+
+        var head=document.createElement("div");
+        head.style.cssText="display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 16px;border-bottom:1px solid rgba(255,255,255,.1);";
+
+        var title=document.createElement("div");
+        title.innerHTML='<strong style="display:block;font-size:18px;">Передати звернення</strong><small style="display:block;margin-top:3px;opacity:.65;font-size:13px;">Оберіть адміністратора</small>';
+
+        var close=document.createElement("button");
+        close.type="button";
+        close.setAttribute("data-admin-transfer-close","");
+        close.textContent="×";
+        close.style.cssText="width:42px;height:42px;flex:0 0 42px;border:0;border-radius:9px;background:#102b40;color:#fff;font-size:24px;line-height:42px;";
+
+        head.appendChild(title);
+        head.appendChild(close);
+
+        var list=document.createElement("div");
+        list.style.cssText="overflow-y:auto;padding:10px;display:flex;flex-direction:column;gap:8px;";
+
+        if(admins.length) {
+            admins.forEach(function(admin){
+                var option=document.createElement("button");
+                option.type="button";
+                option.setAttribute("data-admin-transfer-option",String(admin.id));
+                option.style.cssText="display:flex;align-items:center;justify-content:space-between;gap:12px;width:100%;padding:13px 14px;border:1px solid rgba(91,166,218,.25);border-radius:9px;background:#0b2234;color:#fff;text-align:left;font-size:16px;box-sizing:border-box;";
+                option.innerHTML='<span>'+self.Escape(admin.name)+'</span><small style="opacity:.65;white-space:nowrap;">ID: '+self.Escape(admin.id)+'</small>';
+
+                if(String(self.transferAdminId)===String(admin.id))
+                    option.style.outline="2px solid rgba(70,170,255,.8)";
+
+                list.appendChild(option);
+            });
+        } else {
+            var empty=document.createElement("div");
+            empty.textContent="Немає адміністраторів онлайн";
+            empty.style.cssText="padding:24px 12px;text-align:center;opacity:.65;font-size:15px;";
+            list.appendChild(empty);
+        }
+
+        sheet.appendChild(head);
+        sheet.appendChild(list);
+        layer.appendChild(sheet);
+
         layer.addEventListener("click",function(e){
+            if(e.target===layer) {
+                self.transferOpen=false;
+                self.Render();
+                return;
+            }
+
             self.Click(e);
         });
 
@@ -514,7 +557,7 @@ var AdminPanel = {
             +'<div class="admin-send-row"><textarea class="admin-textarea" data-admin-draft placeholder="Напишіть повідомлення…"></textarea><button type="button" class="admin-send admin-primary" data-admin-action="send">Надіслати</button></div>'
             +'<button type="button" class="admin-close-ticket" data-admin-action="resolve">Закрити тікет</button>'
             +'</div>';
-        }else if(!closed&&r.adminId==null) {
+        }else if(!closed) {
             controls='<div class="admin-composer"><button type="button" class="admin-primary admin-claim-ticket" data-admin-action="claim">Взяти звернення</button></div>';
         }else {
             controls='<div class="admin-composer admin-muted">Перегляд історії листування</div>';
