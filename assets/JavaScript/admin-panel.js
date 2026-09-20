@@ -122,6 +122,10 @@ var AdminPanel = {
     },
     Hide: function() {
         this.Init();
+
+        var transferLayer=document.querySelector(".admin-transfer-mobile-layer");
+        if(transferLayer) transferLayer.remove();
+
         this.root.classList.remove("active");
         this.root.setAttribute("aria-hidden","true");
     },
@@ -414,12 +418,16 @@ var AdminPanel = {
         var m=this.Q(".admin-messages");
         if(m)m.scrollTop=m.scrollHeight;
 
-        var oldTransferLayer=this.root.querySelector(".admin-transfer-mobile-layer");
+        var oldTransferLayer=document.querySelector(".admin-transfer-mobile-layer");
         if(oldTransferLayer)oldTransferLayer.remove();
 
         if(this.transferOpen) {
-            var self=this;
-            requestAnimationFrame(function(){ self.PositionTransferMenu(); });
+            if(this.IsMobileLandscape()) {
+                this.RenderMobileTransfer();
+            } else {
+                var self=this;
+                requestAnimationFrame(function(){ self.PositionTransferMenu(); });
+            }
         }
     },
     RenderMobileTransfer: function() {
@@ -440,7 +448,11 @@ var AdminPanel = {
             }).join(""):'<div class="admin-transfer-mobile-empty">Немає адміністраторів онлайн</div>')
             +'</div>'
             +'</div>';
-        this.root.appendChild(layer);
+        layer.addEventListener("click",function(e){
+            self.Click(e);
+        });
+
+        document.body.appendChild(layer);
     },
     PositionTransferMenu: function() {
         var menu=this.Q(".admin-transfer-menu");
@@ -497,7 +509,7 @@ var AdminPanel = {
             controls='<div class="admin-composer">'
             +'<div class="admin-ticket-controls">'
             +'<div class="admin-quick-wrap"><button type="button" class="admin-quick-toggle" data-admin-quick-toggle>Швидкі відповіді '+(this.quickOpen?'▴':'▾')+'</button>'+quickMenu+'</div>'
-            +'<div class="admin-transfer-row"><div class="admin-transfer-select"><button type="button" class="admin-select admin-transfer-toggle" data-admin-transfer-toggle>'+this.TransferAdminLabel(admins)+'</button>'+(this.transferOpen?'<div class="admin-transfer-menu">'+(admins.length?admins.map(function(a){return '<button type="button" class="admin-transfer-option '+(String(self.transferAdminId)===String(a.id)?"active":"")+'" data-admin-transfer-option="'+self.Escape(a.id)+'">'+self.Escape(a.name)+' ['+self.Escape(a.id)+']</button>';}).join(""):'<div class="admin-transfer-empty">Немає адміністраторів онлайн</div>')+'</div>':'')+'</div><button type="button" data-admin-action="transfer">Передати</button><button type="button" data-admin-action="release">Звільнити</button></div>'
+            +'<div class="admin-transfer-row"><div class="admin-transfer-select"><button type="button" class="admin-select admin-transfer-toggle" data-admin-transfer-toggle>'+this.TransferAdminLabel(admins)+'</button>'+(this.transferOpen&&!this.IsMobileLandscape()?'<div class="admin-transfer-menu">'+(admins.length?admins.map(function(a){return '<button type="button" class="admin-transfer-option '+(String(self.transferAdminId)===String(a.id)?"active":"")+'" data-admin-transfer-option="'+self.Escape(a.id)+'">'+self.Escape(a.name)+' ['+self.Escape(a.id)+']</button>';}).join(""):'<div class="admin-transfer-empty">Немає адміністраторів онлайн</div>')+'</div>':'')+'</div><button type="button" data-admin-action="transfer">Передати</button><button type="button" data-admin-action="release">Звільнити</button></div>'
             +'</div>'
             +'<div class="admin-send-row"><textarea class="admin-textarea" data-admin-draft placeholder="Напишіть повідомлення…"></textarea><button type="button" class="admin-send admin-primary" data-admin-action="send">Надіслати</button></div>'
             +'<button type="button" class="admin-close-ticket" data-admin-action="resolve">Закрити тікет</button>'
