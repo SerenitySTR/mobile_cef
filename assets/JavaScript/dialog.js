@@ -411,8 +411,11 @@ if (dialogPasswordToggle) {
 }
 
 document.addEventListener("keydown", function(event) {
-    if (event.defaultPrevented || event.isComposing || event.keyCode === 229 || event.repeat)
+    if (event.isComposing || event.keyCode === 229 || event.repeat)
         return;
+
+    if (!Dialog.screen)
+        Dialog.Init();
 
     if (!Dialog.screen || !Dialog.screen.classList.contains("active"))
         return;
@@ -420,28 +423,39 @@ document.addEventListener("keydown", function(event) {
     if (document.getElementById("error-screen")?.classList.contains("active"))
         return;
 
-    if (event.key === "Escape") {
+    var keyCode = event.keyCode || event.which || 0;
+    var isEscape = event.key === "Escape" || event.key === "Esc" || keyCode === 27;
+    var isEnter = event.key === "Enter" || event.key === "NumpadEnter" || keyCode === 13;
+
+    if (isEscape) {
         event.preventDefault();
         event.stopImmediatePropagation();
         Dialog.Close();
         return;
     }
 
-    if (event.key !== "Enter" || event.shiftKey || event.ctrlKey || event.altKey || event.metaKey)
+    if (!isEnter || event.shiftKey || event.ctrlKey || event.altKey || event.metaKey)
         return;
 
     var target = event.target;
-    if (target && (target.tagName === "BUTTON" || target.tagName === "A"))
-        return;
 
-    var primary = document.querySelector("#dialog-buttons .dialog-button-primary");
-    if (!primary || primary.disabled)
+    if (target && target.classList && target.classList.contains("dialog-button") && !target.disabled) {
+        event.preventDefault();
+        event.stopImmediatePropagation();
+        target.click();
+        return;
+    }
+
+    var button = document.querySelector("#dialog-buttons .dialog-button-primary:not(:disabled)") ||
+                 document.querySelector("#dialog-buttons .dialog-button:not(:disabled)");
+
+    if (!button)
         return;
 
     event.preventDefault();
     event.stopImmediatePropagation();
-    primary.click();
-});
+    button.click();
+}, true);
 
 GameCef.on("dialog:show", function(data) {
     Dialog.Show(data);
