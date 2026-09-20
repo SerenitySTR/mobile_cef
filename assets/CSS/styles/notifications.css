@@ -757,3 +757,476 @@
         font-size: 13px;
     }
 }
+
+/* =========================================================
+   Responsive notifications: PC / laptop / mobile
+   Uses the platform classes set by hud.js on <body>.
+   ========================================================= */
+
+.notification-title,
+.notification-text,
+.notification-subtext,
+.notification-brand {
+    overflow-wrap: anywhere;
+    word-break: normal;
+}
+
+#notification-toast-container,
+#notification-banner-container,
+#notification-bottom-container {
+    box-sizing: border-box;
+}
+
+/* Laptop / compact PC: prevent the desktop +10/+20% rules from becoming oversized. */
+body.hud-platform-pc #notification-toast-container,
+body.hud-platform-pc #notification-banner-container,
+body.hud-platform-pc #notification-bottom-container {
+    transition: width 0.15s ease;
+}
+
+@media (min-width: 1100px) and (max-width: 1600px) and (min-height: 651px) {
+    body.hud-platform-pc #notification-toast-container {
+        left: max(18px, env(safe-area-inset-left));
+        width: clamp(360px, 29vw, 420px);
+        gap: 8px;
+    }
+
+    body.hud-platform-pc .notification-toast {
+        min-height: 78px;
+        padding: 12px 14px 12px 15px;
+        grid-template-columns: 40px minmax(0, 1fr);
+        gap: 11px;
+    }
+
+    body.hud-platform-pc .notification-toast .notification-icon {
+        width: 40px;
+        height: 40px;
+    }
+
+    body.hud-platform-pc .notification-toast .notification-icon svg {
+        width: 23px;
+        height: 23px;
+    }
+
+    body.hud-platform-pc .notification-toast .notification-title {
+        font-size: clamp(15px, 1.15vw, 18px);
+    }
+
+    body.hud-platform-pc .notification-toast .notification-text {
+        font-size: clamp(12px, 0.95vw, 15px);
+    }
+
+    body.hud-platform-pc .notification-toast .notification-time {
+        font-size: clamp(10px, 0.8vw, 12px);
+    }
+
+    body.hud-platform-pc #notification-banner-container {
+        top: max(16px, env(safe-area-inset-top));
+        width: clamp(460px, 40vw, 560px);
+    }
+
+    body.hud-platform-pc .notification-banner {
+        min-height: 88px;
+        padding: 12px 43px 12px 14px;
+        grid-template-columns: 34px minmax(0, 1fr);
+        gap: 11px;
+    }
+
+    body.hud-platform-pc .notification-banner .notification-icon {
+        width: 34px;
+        height: 34px;
+    }
+
+    body.hud-platform-pc .notification-banner-label {
+        font-size: 10px;
+    }
+
+    body.hud-platform-pc .notification-banner .notification-title {
+        font-size: clamp(14px, 1.1vw, 17px);
+    }
+
+    body.hud-platform-pc .notification-banner .notification-text {
+        font-size: clamp(10px, 0.82vw, 12px);
+    }
+
+    body.hud-platform-pc .notification-subtext {
+        font-size: 10px;
+    }
+
+    body.hud-platform-pc #notification-bottom-container {
+        bottom: max(18px, env(safe-area-inset-bottom));
+        width: clamp(420px, 36vw, 510px);
+    }
+
+    body.hud-platform-pc .notification-bottom {
+        min-height: 76px;
+        padding: 10px 13px;
+        grid-template-columns: 38px minmax(0, 1fr) auto;
+        gap: 10px;
+    }
+
+    body.hud-platform-pc .notification-bottom .notification-icon {
+        width: 36px;
+        height: 36px;
+    }
+
+    body.hud-platform-pc .notification-bottom-label {
+        font-size: 9px;
+    }
+
+    body.hud-platform-pc .notification-bottom .notification-title {
+        font-size: clamp(14px, 1.05vw, 16px);
+    }
+
+    body.hud-platform-pc .notification-bottom .notification-text {
+        font-size: clamp(9px, 0.75vw, 11px);
+    }
+
+    body.hud-platform-pc .notification-brand {
+        min-width: 72px;
+        padding-left: 11px;
+        font-size: 10px;
+    }
+}
+
+/* Low-height laptops / 1280x720-like PC windows. */
+@media (min-width: 1000px) and (max-height: 760px) {
+    body.hud-platform-pc #notification-toast-container {
+        width: clamp(330px, 28vw, 390px);
+        gap: 6px;
+    }
+
+    body.hud-platform-pc .notification-toast {
+        min-height: 68px;
+        padding: 9px 11px 9px 12px;
+        grid-template-columns: 34px minmax(0, 1fr);
+        gap: 9px;
+    }
+
+    body.hud-platform-pc .notification-toast .notification-icon {
+        width: 34px;
+        height: 34px;
+    }
+
+    body.hud-platform-pc .notification-toast .notification-icon svg {
+        width: 19px;
+        height: 19px;
+    }
+
+    body.hud-platform-pc .notification-toast .notification-title {
+        font-size: 15px;
+    }
+
+    body.hud-platform-pc .notification-toast .notification-text {
+        font-size: 12px;
+    }
+
+    body.hud-platform-pc .notification-toast .notification-time {
+        font-size: 10px;
+    }
+
+    body.hud-platform-pc #notification-banner-container {
+        top: max(10px, env(safe-area-inset-top));
+        width: clamp(420px, 39vw, 520px);
+    }
+
+    body.hud-platform-pc .notification-banner {
+        min-height: 76px;
+        padding: 9px 38px 9px 11px;
+        grid-template-columns: 30px minmax(0, 1fr);
+        gap: 9px;
+    }
+
+    body.hud-platform-pc .notification-banner .notification-icon {
+        width: 30px;
+        height: 30px;
+    }
+
+    body.hud-platform-pc .notification-banner-label {
+        margin-bottom: 3px;
+        font-size: 9px;
+    }
+
+    body.hud-platform-pc .notification-banner .notification-title {
+        margin-bottom: 3px;
+        font-size: 14px;
+    }
+
+    body.hud-platform-pc .notification-banner .notification-text,
+    body.hud-platform-pc .notification-subtext {
+        font-size: 9px;
+    }
+
+    body.hud-platform-pc #notification-bottom-container {
+        bottom: max(10px, env(safe-area-inset-bottom));
+        width: clamp(390px, 35vw, 470px);
+    }
+
+    body.hud-platform-pc .notification-bottom {
+        min-height: 64px;
+        padding: 8px 10px;
+        grid-template-columns: 32px minmax(0, 1fr) auto;
+        gap: 8px;
+    }
+
+    body.hud-platform-pc .notification-bottom .notification-icon {
+        width: 32px;
+        height: 32px;
+    }
+
+    body.hud-platform-pc .notification-bottom-label {
+        font-size: 8px;
+    }
+
+    body.hud-platform-pc .notification-bottom .notification-title {
+        font-size: 13px;
+    }
+
+    body.hud-platform-pc .notification-bottom .notification-text {
+        font-size: 9px;
+    }
+
+    body.hud-platform-pc .notification-brand {
+        min-width: 68px;
+        padding-left: 9px;
+        font-size: 9px;
+        letter-spacing: 1.3px;
+    }
+}
+
+/* Mobile is selected by platform, not by resolution: 1280x720 phones no longer receive PC sizing. */
+body.hud-platform-mobile #notification-banner-container {
+    top: max(10px, env(safe-area-inset-top));
+    width: min(460px, calc(100vw - 24px - env(safe-area-inset-left) - env(safe-area-inset-right)));
+}
+
+body.hud-platform-mobile #notification-toast-container {
+    top: 50%;
+    left: max(10px, env(safe-area-inset-left));
+    right: auto;
+    width: min(330px, 35vw);
+    max-height: calc(100vh - 24px - env(safe-area-inset-top) - env(safe-area-inset-bottom));
+    gap: 6px;
+    transform: translateY(-50%);
+}
+
+body.hud-platform-mobile #notification-bottom-container {
+    bottom: max(10px, env(safe-area-inset-bottom));
+    width: min(430px, calc(100vw - 24px - env(safe-area-inset-left) - env(safe-area-inset-right)));
+}
+
+body.hud-platform-mobile .notification {
+    border-radius: 8px;
+}
+
+body.hud-platform-mobile .notification-toast {
+    min-height: 62px;
+    padding: 8px 10px 8px 11px;
+    grid-template-columns: 30px minmax(0, 1fr);
+    gap: 8px;
+}
+
+body.hud-platform-mobile .notification-toast .notification-icon {
+    width: 30px;
+    height: 30px;
+    border-width: 1.5px;
+}
+
+body.hud-platform-mobile .notification-toast .notification-icon svg {
+    width: 17px;
+    height: 17px;
+}
+
+body.hud-platform-mobile .notification-title {
+    font-size: clamp(11px, 1.8vw, 13px);
+}
+
+body.hud-platform-mobile .notification-text {
+    font-size: clamp(8px, 1.35vw, 10px);
+    line-height: 1.3;
+}
+
+body.hud-platform-mobile .notification-time {
+    font-size: clamp(8px, 1.2vw, 9px);
+}
+
+body.hud-platform-mobile .notification-banner {
+    min-height: 70px;
+    padding: 9px 34px 9px 10px;
+    grid-template-columns: 29px minmax(0, 1fr);
+    gap: 9px;
+}
+
+body.hud-platform-mobile .notification-banner .notification-icon {
+    width: 29px;
+    height: 29px;
+}
+
+body.hud-platform-mobile .notification-banner-label {
+    margin-bottom: 3px;
+    font-size: 8px;
+}
+
+body.hud-platform-mobile .notification-banner .notification-title {
+    margin-bottom: 3px;
+    font-size: clamp(11px, 1.7vw, 13px);
+}
+
+body.hud-platform-mobile .notification-banner .notification-text,
+body.hud-platform-mobile .notification-subtext {
+    font-size: clamp(7px, 1.2vw, 9px);
+}
+
+body.hud-platform-mobile .notification-subtext {
+    margin-top: 3px;
+}
+
+body.hud-platform-mobile .notification-close {
+    top: 6px;
+    right: 7px;
+    width: 23px;
+    height: 23px;
+    font-size: 19px;
+}
+
+body.hud-platform-mobile .notification-bottom {
+    min-height: 56px;
+    padding: 7px 9px;
+    grid-template-columns: 30px minmax(0, 1fr) auto;
+    gap: 8px;
+}
+
+body.hud-platform-mobile .notification-bottom .notification-icon {
+    width: 30px;
+    height: 30px;
+}
+
+body.hud-platform-mobile .notification-bottom-label {
+    margin-bottom: 2px;
+    font-size: 7px;
+}
+
+body.hud-platform-mobile .notification-bottom .notification-title {
+    margin-bottom: 1px;
+    font-size: clamp(10px, 1.55vw, 12px);
+}
+
+body.hud-platform-mobile .notification-bottom .notification-text {
+    font-size: clamp(7px, 1.1vw, 9px);
+}
+
+body.hud-platform-mobile .notification-brand {
+    min-width: 62px;
+    padding-left: 8px;
+    font-size: 8px;
+    letter-spacing: 1px;
+}
+
+body.hud-platform-mobile .notification-brand span {
+    font-size: 5px;
+    letter-spacing: 1.8px;
+}
+
+/* Very low mobile screens (common SA:MP landscape CEF sizes). */
+@media (max-height: 480px) and (orientation: landscape) {
+    body.hud-platform-mobile #notification-banner-container {
+        top: max(6px, env(safe-area-inset-top));
+        width: min(400px, 48vw);
+    }
+
+    body.hud-platform-mobile #notification-toast-container {
+        left: max(6px, env(safe-area-inset-left));
+        width: min(285px, 34vw);
+        gap: 4px;
+    }
+
+    body.hud-platform-mobile #notification-bottom-container {
+        bottom: max(6px, env(safe-area-inset-bottom));
+        width: min(390px, 46vw);
+    }
+
+    body.hud-platform-mobile .notification-toast {
+        min-height: 50px;
+        padding: 6px 8px;
+        grid-template-columns: 25px minmax(0, 1fr);
+        gap: 6px;
+    }
+
+    body.hud-platform-mobile .notification-toast .notification-icon,
+    body.hud-platform-mobile .notification-banner .notification-icon {
+        width: 25px;
+        height: 25px;
+    }
+
+    body.hud-platform-mobile .notification-toast .notification-icon svg {
+        width: 14px;
+        height: 14px;
+    }
+
+    body.hud-platform-mobile .notification-title,
+    body.hud-platform-mobile .notification-banner .notification-title {
+        font-size: 10px;
+    }
+
+    body.hud-platform-mobile .notification-text,
+    body.hud-platform-mobile .notification-banner .notification-text,
+    body.hud-platform-mobile .notification-time,
+    body.hud-platform-mobile .notification-subtext {
+        font-size: 7px;
+    }
+
+    body.hud-platform-mobile .notification-banner {
+        min-height: 57px;
+        padding: 7px 30px 7px 8px;
+        grid-template-columns: 25px minmax(0, 1fr);
+        gap: 7px;
+    }
+
+    body.hud-platform-mobile .notification-banner-label,
+    body.hud-platform-mobile .notification-bottom-label {
+        font-size: 7px;
+    }
+
+    body.hud-platform-mobile .notification-bottom {
+        min-height: 48px;
+        padding: 6px 8px;
+        grid-template-columns: 26px minmax(0, 1fr) auto;
+        gap: 6px;
+    }
+
+    body.hud-platform-mobile .notification-bottom .notification-icon {
+        width: 26px;
+        height: 26px;
+    }
+
+    body.hud-platform-mobile .notification-bottom .notification-title {
+        font-size: 10px;
+    }
+
+    body.hud-platform-mobile .notification-bottom .notification-text {
+        font-size: 7px;
+    }
+
+    body.hud-platform-mobile .notification-brand {
+        min-width: 56px;
+        padding-left: 6px;
+        font-size: 7px;
+    }
+}
+
+/* Mobile portrait / narrow embedded browser. */
+@media (max-width: 760px) and (orientation: portrait) {
+    body.hud-platform-mobile #notification-banner-container,
+    body.hud-platform-mobile #notification-bottom-container {
+        width: calc(100vw - 20px - env(safe-area-inset-left) - env(safe-area-inset-right));
+    }
+
+    body.hud-platform-mobile #notification-toast-container {
+        left: max(10px, env(safe-area-inset-left));
+        width: min(360px, calc(100vw - 20px - env(safe-area-inset-left) - env(safe-area-inset-right)));
+    }
+
+    body.hud-platform-mobile .notification-brand {
+        display: none;
+    }
+}

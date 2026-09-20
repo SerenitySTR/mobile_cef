@@ -4,6 +4,20 @@ class Notifications {
     static #bottomContainer=document.getElementById("notification-bottom-container");
 
     static #maxToasts=4;
+
+    static #GetMaxToasts(){
+        const height=window.innerHeight||document.documentElement.clientHeight||720;
+        const mobile=document.body.classList.contains("hud-platform-mobile");
+
+        if(mobile){
+            if(height<=480) return 2;
+            if(height<=650) return 3;
+        }
+
+        if(height<=700) return 3;
+
+        return 4;
+    }
     static #counter=0;
     static #timers=new Map();
 
@@ -252,12 +266,18 @@ class Notifications {
     }
 
     static #TrimToasts(){
+        this.#maxToasts=this.#GetMaxToasts();
+
         const items=[...this.#toastContainer.children];
 
         while(items.length>this.#maxToasts){
             const element=items.pop();
             this.#Remove(element,true);
         }
+    }
+
+    static Resize(){
+        this.#TrimToasts();
     }
 
     static #TypeClass(type){
@@ -381,3 +401,7 @@ GameCef.on("notification:clear",()=>{
     Notifications.Clear();
 });
 
+
+
+window.addEventListener("resize",()=>Notifications.Resize(),{passive:true});
+window.addEventListener("orientationchange",()=>setTimeout(()=>Notifications.Resize(),120),{passive:true});
