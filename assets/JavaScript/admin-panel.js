@@ -237,6 +237,17 @@ var AdminPanel = {
             return true;
         }
 
+        if(patch==="admins") {
+            var admins=Array.isArray(payload.items)?payload.items:[];
+
+            this.state.admins=admins.map(this.NormalizeAdmin.bind(this));
+
+            if(this.root && this.root.classList.contains("active"))
+                this.Render();
+
+            return true;
+        }
+
         if(patch==="tickets") {
             var tickets=Array.isArray(payload.items)?payload.items:[];
 
@@ -532,6 +543,10 @@ var AdminPanel = {
             this.transferOpen=false;
             this.transferAdminId=null;
             this.Render();
+
+            if(this.tab==="tickets" && this.selectedTicket!=null)
+                this.Send("admin:ticket:open",{TicketId:Number(this.selectedTicket)});
+
             return;
         }
         if(b.dataset.adminFilter) {
@@ -542,6 +557,10 @@ var AdminPanel = {
             this.transferOpen=false;
             this.transferAdminId=null;
             this.Render();
+
+            if(this.selectedTicket!=null)
+                this.Send("admin:ticket:open",{TicketId:Number(this.selectedTicket)});
+
             return;
         }
         if(b.dataset.adminTicket) {
@@ -593,6 +612,10 @@ var AdminPanel = {
         }
         if(b.dataset.adminTransferToggle!==undefined) {
             this.transferOpen=!this.transferOpen;
+
+            if(this.transferOpen && this.selectedTicket!=null)
+                this.Send("admin:ticket:open",{TicketId:Number(this.selectedTicket)});
+
             this.Render();
             return;
         }
