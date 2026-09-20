@@ -1230,3 +1230,108 @@ body.hud-platform-mobile .notification-brand span {
         display: none;
     }
 }
+
+/* PC laptops only: slightly more compact than desktop notifications.
+   Mobile is excluded by the platform class, while larger desktop screens
+   keep the regular PC notification sizing above. */
+@media (min-width: 1100px) and (max-width: 1600px) and (min-height: 651px) and (max-height: 1000px) {
+    body.hud-platform-pc #notification-toast-container {
+        width: min(430px, 35.5vw);
+        gap: 8px;
+    }
+
+    body.hud-platform-pc .notification-toast {
+        min-height: 86px;
+        padding: 14px 16px 14px 17px;
+        grid-template-columns: 44px minmax(0, 1fr);
+        gap: 12px;
+    }
+
+    body.hud-platform-pc .notification-toast .notification-icon {
+        width: 44px;
+        height: 44px;
+    }
+
+    body.hud-platform-pc .notification-toast .notification-icon svg {
+        width: 25px;
+        height: 25px;
+    }
+
+    body.hud-platform-pc .notification-toast .notification-title {
+        font-size: 17px;
+    }
+
+    body.hud-platform-pc .notification-toast .notification-text {
+        font-size: 14px;
+    }
+
+    body.hud-platform-pc .notification-toast .notification-time {
+        font-size: 12px;
+    }
+
+    body.hud-platform-pc #notification-banner-container {
+        width: min(570px, 50vw);
+    }
+
+    body.hud-platform-pc .notification-banner {
+        min-height: 100px;
+        padding: 14px 48px 14px 16px;
+        grid-template-columns: 39px minmax(0, 1fr);
+        gap: 13px;
+    }
+
+    body.hud-platform-pc .notification-banner .notification-icon {
+        width: 39px;
+        height: 39px;
+    }
+
+    body.hud-platform-pc .notification-banner-label {
+        font-size: 10px;
+    }
+
+    body.hud-platform-pc .notification-banner .notification-title {
+        font-size: 16px;
+    }
+
+    body.hud-platform-pc .notification-banner .notification-text {
+        font-size: 11px;
+    }
+
+    body.hud-platform-pc .notification-subtext {
+        font-size: 10px;
+    }
+
+    body.hud-platform-pc #notification-bottom-container {
+        width: min(500px, 46vw);
+    }
+
+    body.hud-platform-pc .notification-bottom {
+        min-height: 82px;
+        padding: 12px 14px;
+        grid-template-columns: 42px minmax(0, 1fr) auto;
+        gap: 12px;
+    }
+
+    body.hud-platform-pc .notification-bottom .notification-icon {
+        width: 40px;
+        height: 40px;
+    }
+
+    body.hud-platform-pc .notification-bottom-label {
+        font-size: 10px;
+    }
+
+    body.hud-platform-pc .notification-bottom .notification-title {
+        font-size: 16px;
+    }
+
+    body.hud-platform-pc .notification-bottom .notification-text {
+        font-size: 10px;
+    }
+
+    body.hud-platform-pc .notification-brand {
+        min-width: 78px;
+        padding-left: 13px;
+        font-size: 11px;
+    }
+}
