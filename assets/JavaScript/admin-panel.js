@@ -107,6 +107,15 @@ var AdminPanel = {
     Show: function(data) {
         this.Init();
         if(data)this.SetData(data);
+
+        this.tab="stats";
+        this.query="";
+        this.chatOpen=false;
+        this.ticketFocus=false;
+        this.quickOpen=false;
+        this.transferOpen=false;
+        this.transferAdminId=null;
+
         this.root.classList.add("active");
         this.root.setAttribute("aria-hidden","false");
         this.Render();
@@ -137,9 +146,7 @@ var AdminPanel = {
     NormalizeAdmin: function(admin) {
         admin=admin||{};
         return {
-            id: admin.id ?? admin.Id ?? admin.accountId ?? admin.AccountId ?? admin.playerId ?? admin.PlayerId ?? null,
-            playerId: admin.playerId ?? admin.PlayerId ?? admin.id ?? admin.Id ?? null,
-            accountId: admin.accountId ?? admin.AccountId ?? null,
+            id: admin.id ?? admin.Id ?? admin.playerId ?? admin.PlayerId ?? null,
             name: admin.name ?? admin.Name ?? ""
         };
     },
@@ -421,7 +428,7 @@ var AdminPanel = {
     RenderMobileTransfer: function() {
         var self=this;
         var admins=this.state.admins.filter(function(admin){
-            return String(admin.id)!==String(self.state.profile.id);
+            return String(admin.id)!==String(self.state.profile.playerId);
         });
 
         var layer=document.createElement("div");
@@ -482,7 +489,7 @@ var AdminPanel = {
         return '<div class="admin-tabs">'+[["free","Вільні"],["mine","Мої"],["closed","Закриті"]].map(function(x){return '<button type="button" data-admin-filter="'+x[0]+'" class="'+(self.filter===x[0]?"active":"")+'">'+x[1]+" · "+counts[x[0]]+"</button>";}).join("")+'</div><div class="admin-ticket-layout '+(this.chatOpen?"admin-chat-open ":"")+(this.ticketFocus?"admin-ticket-focus":"")+'"><div class="admin-tickets"><input class="admin-search" data-admin-search value="'+this.Escape(this.query)+'" placeholder="Пошук за назвою, ID або описом">'+(rows.map(function(x){return '<button type="button" class="admin-ticket '+(String(x.id)===String(self.selectedTicket)?"active":"")+'" data-admin-ticket="'+self.Escape(x.id)+'"><span>#'+self.Escape(x.id)+' · '+self.Escape(x.waitLabel||"")+'</span><strong>'+self.Escape(x.playerName)+' ['+self.Escape(x.playerId)+']</strong><small>'+self.Escape(x.subject)+'</small></button>';}).join("")||'<div class="admin-empty">Звернень немає</div>')+'</div><div class="admin-chat">'+(r?this.Chat(r):'<div class="admin-empty">Оберіть звернення</div>')+'</div></div>';
     },
     Chat: function(r) {
-        var owned=this.Mine(r),closed=r.status==="closed",self=this,admins=this.state.admins.filter(function(a){return String(a.id)!==String(self.state.profile.id);});
+        var owned=this.Mine(r),closed=r.status==="closed",self=this,admins=this.state.admins.filter(function(a){return String(a.id)!==String(self.state.profile.playerId);});
         var quickMenu=this.quickOpen?'<div class="admin-quick-menu">'+this.quickReplies.map(function(q,i){return '<button type="button" data-admin-quick="'+i+'">'+self.Escape(q.label)+'</button>';}).join("")+'</div>':'';
         var messages=(r.messages||[]).map(function(m){var role=m.role||(m.isAdmin?"admin":"player");return '<div class="admin-message '+(role==="admin"?"admin-own":"admin-player")+'"><small>'+self.Escape(m.name||m.senderName)+' · '+self.Escape(m.time||m.date||"")+'</small><div class="admin-bubble">'+self.Escape(m.text||m.message)+'</div></div>';}).join("");
         var controls='';
@@ -677,18 +684,9 @@ var AdminPanel = {
                 return;
             }
 
-            var targetId=Number(selectedAdmin.id);
-            var targetPlayerId=Number(selectedAdmin.playerId ?? selectedAdmin.id);
-            var targetAccountId=selectedAdmin.accountId==null?null:Number(selectedAdmin.accountId);
-
             var sent=this.Send("admin:ticket:transfer",{
                 TicketId:Number(ticketId),
-                AdminId:targetId,
-                TargetAdminId:targetId,
-                TargetId:targetId,
-                AdminPlayerId:targetPlayerId,
-                TargetPlayerId:targetPlayerId,
-                AccountId:targetAccountId
+                AdminId:Number(selectedAdmin.id)
             });
 
             if(!sent) this.Toast("CEF bridge недоступний");
