@@ -43,7 +43,21 @@
   // PC HUD is render-only so GameCef.on() callbacks are never overwritten.
 
 
-  function updateScale(){const scale=Math.min(innerWidth/1920,innerHeight/1080);document.documentElement.style.setProperty('--hud-scale',String(scale))} updateScale(); addEventListener('resize',updateScale,{passive:true});
+  function updateScale(){
+    const root=$('pc-hud');
+    if(!root)return;
+
+    const width=Math.max(1,window.innerWidth||1920);
+    const height=Math.max(1,window.innerHeight||1080);
+
+    // Full HD keeps the original size. Laptop resolutions are reduced smoothly,
+    // but not so aggressively that player info and ammo become unreadable.
+    const scale=Math.max(0.76,Math.min(1,width/1700,height/930));
+    root.style.setProperty('--hud-scale',scale.toFixed(3));
+  }
+  updateScale();
+  addEventListener('resize',updateScale,{passive:true});
+  if(window.visualViewport)visualViewport.addEventListener('resize',updateScale,{passive:true});
   if(new URLSearchParams(location.search).get('preview')==='1')document.body.classList.add('preview');
   renderWanted(4);
 })();

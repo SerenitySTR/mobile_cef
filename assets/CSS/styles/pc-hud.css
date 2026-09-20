@@ -628,3 +628,22 @@
   width: 50px;
   height: 33px;
 }
+
+/* Laptop / compact PC viewport tuning. The whole right HUD is scaled by
+   --hud-scale in pc-hud.js; these small adjustments preserve readability. */
+@media (max-width:1600px), (max-height:900px) {
+  #pc-hud .identity {
+    font-size:14px;
+  }
+
+  #pc-hud .value {
+    font-size:13px;
+  }
+}
+
+@media (max-width:1366px), (max-height:768px) {
+  #pc-hud .right-hud {
+    right:10px;
+    top:10px;
+  }
+}
