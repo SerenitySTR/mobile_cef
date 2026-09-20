@@ -20,6 +20,22 @@ errorCloseButton.addEventListener("click", () => {
     hideError();
 });
 
+
+document.addEventListener("keydown", (event) => {
+    if (event.defaultPrevented || event.isComposing || event.keyCode === 229 || event.repeat)
+        return;
+
+    if (!errorScreen.classList.contains("active") || (event.key !== "Escape" && event.key !== "Enter"))
+        return;
+
+    if (event.key === "Enter" && (event.shiftKey || event.ctrlKey || event.altKey || event.metaKey))
+        return;
+
+    event.preventDefault();
+    event.stopImmediatePropagation();
+    hideError();
+});
+
 GameCef.on("error:show", (data) => {
     try {
         const error = JSON.parse(data);

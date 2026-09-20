@@ -51,7 +51,37 @@ var AdminPanel = {
                 self.Input(e);
             }
         });
-        document.addEventListener("keydown", function(e){ if(e.key === "Escape" && self.root.classList.contains("active")) self.Close(); });
+        document.addEventListener("keydown", function(e){
+            if(e.defaultPrevented||e.isComposing||e.keyCode===229||e.repeat||!self.root.classList.contains("active")) return;
+            if(document.getElementById("error-screen")?.classList.contains("active")||document.getElementById("dialog-screen")?.classList.contains("active")) return;
+
+            if(e.key==="Escape") {
+                e.preventDefault();
+                e.stopImmediatePropagation();
+
+                if(self.transferOpen) {
+                    self.transferOpen=false;
+                    self.Render();
+                    return;
+                }
+
+                if(self.quickOpen) {
+                    self.quickOpen=false;
+                    self.Render();
+                    return;
+                }
+
+                self.Close();
+                return;
+            }
+
+            if(e.key!=="Enter"||e.shiftKey||e.ctrlKey||e.altKey||e.metaKey) return;
+            if(!e.target.matches||!e.target.matches("[data-admin-draft]")) return;
+
+            e.preventDefault();
+            e.stopImmediatePropagation();
+            self.Action("send");
+        });
         window.addEventListener("resize", function(){ self.Scale(); });
         this.Scale();
     },

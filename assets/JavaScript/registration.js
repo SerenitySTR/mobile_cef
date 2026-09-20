@@ -166,6 +166,37 @@ registerButton.addEventListener("click", () => {
     GameCef.sendJson("registration:submit", data);
 });
 
+
+document.addEventListener("keydown", (event) => {
+    if (event.defaultPrevented || event.isComposing || event.keyCode === 229 || event.repeat)
+        return;
+
+    if (!registration.classList.contains("active"))
+        return;
+
+    if (document.getElementById("error-screen")?.classList.contains("active") ||
+        document.getElementById("dialog-screen")?.classList.contains("active"))
+        return;
+
+    if (event.key === "Escape" && step2.classList.contains("active")) {
+        event.preventDefault();
+        event.stopImmediatePropagation();
+        backButton.click();
+        return;
+    }
+
+    if (event.key !== "Enter" || event.shiftKey || event.ctrlKey || event.altKey || event.metaKey)
+        return;
+
+    const target = event.target;
+    if (target?.tagName === "BUTTON" || target?.tagName === "A")
+        return;
+
+    event.preventDefault();
+    event.stopImmediatePropagation();
+    (step2.classList.contains("active") ? registerButton : nextButton).click();
+});
+
 GameCef.on("registration:show", (data) => {
     usernameInput.value = data;
     Loading.Transition(registration,()=>{

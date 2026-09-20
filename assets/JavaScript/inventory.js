@@ -108,6 +108,38 @@ var Inventory={
             drop.onclick=function(){
                 self.SendAction("inventory:drop");
             };
+
+        document.addEventListener("keydown",function(event){
+            if(event.defaultPrevented||event.isComposing||event.keyCode===229||event.repeat)
+                return;
+
+            if(!self.screen||!self.screen.classList.contains("active"))
+                return;
+
+            if(document.getElementById("error-screen")?.classList.contains("active")||
+               document.getElementById("dialog-screen")?.classList.contains("active"))
+                return;
+
+            if(event.key==="Escape"){
+                event.preventDefault();
+                event.stopImmediatePropagation();
+                if(close) close.click();
+                return;
+            }
+
+            if(event.key!=="Enter"||event.shiftKey||event.ctrlKey||event.altKey||event.metaKey)
+                return;
+
+            if(event.target===self.search||event.target?.tagName==="BUTTON"||event.target?.tagName==="A")
+                return;
+
+            if(self.selectedId===null||!use||use.disabled)
+                return;
+
+            event.preventDefault();
+            event.stopImmediatePropagation();
+            use.click();
+        });
     },
 
     Show:function(data){

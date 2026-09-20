@@ -332,6 +332,24 @@ if (mainMenuClose) {
     };
 }
 
+
+document.addEventListener("keydown", function(event) {
+    if (event.defaultPrevented || event.isComposing || event.keyCode === 229 || event.repeat || event.key !== "Escape")
+        return;
+
+    var screen = document.getElementById("main-menu");
+    if (!screen || !screen.classList.contains("active"))
+        return;
+
+    if (document.getElementById("error-screen")?.classList.contains("active") ||
+        document.getElementById("dialog-screen")?.classList.contains("active"))
+        return;
+
+    event.preventDefault();
+    event.stopImmediatePropagation();
+    mainMenuClose.click();
+});
+
 GameCef.on("main-menu:show", function(data) {
     MainMenu.Show(data);
 });

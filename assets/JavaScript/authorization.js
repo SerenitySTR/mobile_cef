@@ -46,6 +46,26 @@ authorizationButton.addEventListener("click", () => {
     });
 });
 
+
+document.addEventListener("keydown", (event) => {
+    if (event.defaultPrevented || event.isComposing || event.keyCode === 229 || event.repeat)
+        return;
+
+    if (!authorization.classList.contains("active") || event.key !== "Enter")
+        return;
+
+    if (document.getElementById("error-screen")?.classList.contains("active") ||
+        document.getElementById("dialog-screen")?.classList.contains("active"))
+        return;
+
+    if (event.shiftKey || event.ctrlKey || event.altKey || event.metaKey)
+        return;
+
+    event.preventDefault();
+    event.stopImmediatePropagation();
+    authorizationButton.click();
+});
+
 GameCef.on("authorization:show", (data) => {
     authorizationUsernameInput.value = data;
     authorizationPasswordInput.value = "";

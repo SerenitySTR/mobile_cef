@@ -33,7 +33,45 @@ const Tickets = {
         document.getElementById("tickets-message")?.addEventListener("keydown", event => {
             if (event.key !== "Enter" || event.shiftKey) return;
             event.preventDefault();
+            event.stopPropagation();
             this.SendMessage();
+        });
+
+        document.addEventListener("keydown", event => {
+            if (event.defaultPrevented || event.isComposing || event.keyCode === 229 || event.repeat)
+                return;
+
+            if (!this.root?.classList.contains("active"))
+                return;
+
+            if (document.getElementById("error-screen")?.classList.contains("active") ||
+                document.getElementById("dialog-screen")?.classList.contains("active"))
+                return;
+
+            const modal = document.getElementById("tickets-create-modal");
+            const modalOpen = modal && !modal.classList.contains("hidden");
+
+            if (event.key === "Escape") {
+                event.preventDefault();
+                event.stopImmediatePropagation();
+
+                if (modalOpen)
+                    this.CloseCreate();
+                else
+                    this.CloseUi();
+
+                return;
+            }
+
+            if (!modalOpen || event.key !== "Enter" || event.shiftKey || event.ctrlKey || event.altKey || event.metaKey)
+                return;
+
+            if (event.target?.tagName === "BUTTON" || event.target?.tagName === "A")
+                return;
+
+            event.preventDefault();
+            event.stopImmediatePropagation();
+            this.Create();
         });
 
         document.querySelectorAll("#tickets .tickets-tabs button").forEach(button => {

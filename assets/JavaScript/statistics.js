@@ -374,6 +374,25 @@ if(statisticsCloseButton){
     });
 }
 
+
+document.addEventListener("keydown",function(event){
+    if(event.defaultPrevented||event.isComposing||event.keyCode===229||event.repeat||event.key!=="Escape")
+        return;
+
+    var screen=document.getElementById("statistics");
+    if(!screen||!screen.classList.contains("active"))
+        return;
+
+    if(document.getElementById("error-screen")?.classList.contains("active")||
+       document.getElementById("dialog-screen")?.classList.contains("active"))
+        return;
+
+    event.preventDefault();
+    event.stopImmediatePropagation();
+    Statistics.Hide();
+    GameCef.send("statistics:close","");
+});
+
 GameCef.on("statistics:show",function(data){
     Statistics.Show(data);
 });

@@ -410,17 +410,38 @@ if (dialogPasswordToggle) {
     };
 }
 
-if (dialogInput) {
-    dialogInput.addEventListener("keydown", function(event) {
-        if (event.key !== "Enter")
-            return;
+document.addEventListener("keydown", function(event) {
+    if (event.defaultPrevented || event.isComposing || event.keyCode === 229 || event.repeat)
+        return;
 
-        var primary = document.querySelector("#dialog-buttons .dialog-button-primary");
+    if (!Dialog.screen || !Dialog.screen.classList.contains("active"))
+        return;
 
-        if (primary)
-            primary.click();
-    });
-}
+    if (document.getElementById("error-screen")?.classList.contains("active"))
+        return;
+
+    if (event.key === "Escape") {
+        event.preventDefault();
+        event.stopImmediatePropagation();
+        Dialog.Close();
+        return;
+    }
+
+    if (event.key !== "Enter" || event.shiftKey || event.ctrlKey || event.altKey || event.metaKey)
+        return;
+
+    var target = event.target;
+    if (target && (target.tagName === "BUTTON" || target.tagName === "A"))
+        return;
+
+    var primary = document.querySelector("#dialog-buttons .dialog-button-primary");
+    if (!primary || primary.disabled)
+        return;
+
+    event.preventDefault();
+    event.stopImmediatePropagation();
+    primary.click();
+});
 
 GameCef.on("dialog:show", function(data) {
     Dialog.Show(data);
