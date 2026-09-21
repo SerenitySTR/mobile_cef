@@ -224,27 +224,3 @@ document.addEventListener("keydown", (event) => {
     event.stopImmediatePropagation();
     (step2.classList.contains("active") ? registerButton : nextButton).click();
 });
-
-// Временный локальный тест регистрации.
-// Автоматически работает только при file://, localhost или 127.0.0.1.
-function testShowRegistration() {
-    if (typeof Loading !== "undefined" && Loading.Hide)
-        Loading.Hide();
-
-    document.getElementById("authorization")?.classList.remove("active");
-
-    usernameInput.value = "Test_Player";
-    resetRegistrationState();
-    showRegistration();
-}
-
-const isRegistrationLocalTest =
-    location.protocol === "file:" ||
-    location.hostname === "localhost" ||
-    location.hostname === "127.0.0.1";
-
-if (isRegistrationLocalTest) {
-    setTimeout(() => {
-        testShowRegistration();
-    }, 500);
-}

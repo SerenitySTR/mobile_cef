@@ -136,8 +136,8 @@
 }
 
 .registration-logo {
-    width: min(72vw, 320px);
-    max-height: 160px;
+    width: min(62vw, 275px);
+    max-height: 138px;
     margin: 0 auto 8px;
     object-fit: contain;
     filter: drop-shadow(0 12px 24px rgba(0, 0, 0, 0.38));
@@ -551,8 +551,8 @@
     }
 
     body.hud-platform-pc .registration-logo {
-        width: min(50vw, 265px);
-        max-height: 126px;
+        width: min(43vw, 225px);
+        max-height: 108px;
         margin-bottom: 4px;
     }
 
@@ -632,8 +632,8 @@
     }
 
     body.hud-platform-pc .registration-logo {
-        width: 220px;
-        max-height: 100px;
+        width: 188px;
+        max-height: 86px;
         margin-bottom: 0;
     }
 
@@ -720,8 +720,8 @@
 
     body.hud-platform-mobile .registration-logo {
         grid-column: 1;
-        width: min(31vw, 250px);
-        max-height: 135px;
+        width: min(27vw, 212px);
+        max-height: 115px;
         margin: 0 auto;
         align-self: end;
     }
@@ -913,7 +913,7 @@
     }
 
     body.hud-platform-mobile .registration-logo {
-        width: min(29vw, 285px);
+        width: min(25vw, 242px);
     }
 
     body.hud-platform-mobile .registration-headline h1 {
@@ -946,8 +946,8 @@
     }
 
     body.hud-platform-mobile .registration-logo {
-        width: min(25vw, 190px);
-        max-height: 92px;
+        width: min(22vw, 162px);
+        max-height: 78px;
     }
 
     body.hud-platform-mobile .registration-headline h1 {
@@ -1029,8 +1029,8 @@
     }
 
     body.hud-platform-mobile .registration-logo {
-        width: min(74vw, 285px);
-        max-height: 130px;
+        width: min(64vw, 242px);
+        max-height: 110px;
         margin-bottom: 5px;
     }
 
@@ -1092,7 +1092,7 @@
     }
 
     body.hud-platform-mobile .registration-logo {
-        width: min(72vw, 245px);
+        width: min(63vw, 208px);
     }
 
     body.hud-platform-mobile .registration-headline h1 {
