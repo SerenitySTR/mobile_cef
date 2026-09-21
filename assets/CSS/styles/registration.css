@@ -4,27 +4,27 @@
 }
 
 #registration {
-    --reg-panel-width: 560px;
-    --reg-form-width: 460px;
-    --reg-panel-padding-x: 34px;
-    --reg-panel-padding-y: 30px;
-    --reg-field-height: 60px;
-    --reg-radius: 15px;
+    --reg-card-width: 520px;
+    --reg-form-width: 430px;
+    --reg-field-height: 56px;
+    --reg-card-px: 30px;
+    --reg-card-py: 24px;
+    --reg-radius: 14px;
+
     display: none;
     position: fixed;
     inset: 0;
     width: 100vw;
     height: 100vh;
-    min-height: 100vh;
     align-items: center;
     justify-content: center;
     overflow: hidden;
     isolation: isolate;
     padding:
-        max(24px, env(safe-area-inset-top))
-        max(20px, env(safe-area-inset-right))
-        max(24px, env(safe-area-inset-bottom))
-        max(20px, env(safe-area-inset-left));
+        max(16px, env(safe-area-inset-top))
+        max(16px, env(safe-area-inset-right))
+        max(16px, env(safe-area-inset-bottom))
+        max(16px, env(safe-area-inset-left));
 }
 
 #registration.active {
@@ -64,9 +64,9 @@
 }
 
 .registration-container {
-    width: min(100%, var(--reg-panel-width));
-    max-width: var(--reg-panel-width);
-    margin: 0 auto;
+    width: min(100%, var(--reg-card-width));
+    max-width: var(--reg-card-width);
+    margin: auto;
     flex-direction: column;
     align-items: center;
     justify-content: center;
@@ -83,14 +83,13 @@
 .registration-panel {
     position: relative;
     width: 100%;
-    margin: 0 auto;
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: var(--reg-panel-padding-y) var(--reg-panel-padding-x) 24px;
+    padding: var(--reg-card-py) var(--reg-card-px) 18px;
     border: 1px solid rgba(89, 195, 255, 0.68);
-    border-radius: 28px;
-    background: linear-gradient(180deg, rgba(4, 15, 30, 0.88), rgba(3, 10, 21, 0.78));
+    border-radius: 26px;
+    background: linear-gradient(180deg, rgba(4, 15, 30, 0.9), rgba(3, 10, 21, 0.8));
     box-shadow:
         inset 0 1px 0 rgba(255, 255, 255, 0.08),
         0 24px 60px rgba(0, 6, 16, 0.5),
@@ -103,7 +102,7 @@
     content: "";
     position: absolute;
     inset: 1px;
-    border-radius: 26px;
+    border-radius: 24px;
     border: 1px solid rgba(113, 214, 255, 0.1);
     pointer-events: none;
 }
@@ -122,62 +121,64 @@
 
 .registration-badge {
     position: absolute;
-    top: 22px;
-    right: 22px;
-    padding: 6px 10px;
+    top: 18px;
+    right: 18px;
+    z-index: 3;
+    padding: 5px 9px;
     border: 1px solid rgba(122, 215, 255, 0.24);
     border-radius: 999px;
     background: rgba(6, 23, 41, 0.62);
     color: #aedfff;
-    font-size: 12px;
+    font-size: 11px;
     font-weight: 700;
     letter-spacing: 0.12em;
-    z-index: 3;
 }
 
 .registration-logo {
-    width: min(62vw, 275px);
-    max-height: 138px;
-    margin: 0 auto 8px;
+    width: min(58vw, 225px);
+    max-height: 108px;
+    margin: 0 auto 4px;
     object-fit: contain;
-    filter: drop-shadow(0 12px 24px rgba(0, 0, 0, 0.38));
+    filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.38));
 }
 
 .registration-headline {
     width: min(100%, var(--reg-form-width));
-    margin: 0 auto 22px;
+    margin: 0 auto 14px;
     text-align: center;
 }
 
 .registration-headline h1 {
-    margin: 0 0 7px;
+    margin: 0 0 5px;
     color: #f4fbff;
-    font-size: clamp(28px, 2.2vw, 34px);
+    font-size: 27px;
     font-weight: 800;
     letter-spacing: -0.02em;
+    line-height: 1.05;
 }
 
 .registration-headline p {
     margin: 0 auto;
-    max-width: 450px;
+    max-width: 410px;
     color: rgba(218, 238, 255, 0.78);
-    font-size: 15px;
-    line-height: 1.42;
+    font-size: 13px;
+    line-height: 1.34;
 }
 
 .registration-field {
     position: relative;
     width: min(100%, var(--reg-form-width));
     height: var(--reg-field-height);
-    margin: 0 auto 13px;
+    margin: 0 auto 10px;
+    flex: 0 0 auto;
 }
 
 .registration-field > img {
     position: absolute;
-    left: 19px;
+    left: 17px;
     top: 50%;
-    width: 20px;
-    height: 20px;
+    width: 19px;
+    height: 19px;
     transform: translateY(-50%);
     opacity: 0.86;
     z-index: 2;
@@ -187,17 +188,14 @@
 .registration-field input {
     width: 100%;
     height: 100%;
-    padding: 0 56px;
+    padding: 0 52px;
     border: 1px solid rgba(93, 196, 255, 0.22);
     border-radius: var(--reg-radius);
     outline: 0;
     background: linear-gradient(90deg, rgba(5, 15, 26, 0.9), rgba(4, 11, 21, 0.74));
     color: #f6fbff;
-    font-size: 16px;
-    transition:
-        border-color 0.25s ease,
-        box-shadow 0.25s ease,
-        background 0.25s ease;
+    font-size: 14px;
+    transition: border-color 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;
 }
 
 .registration-field input::placeholder {
@@ -219,15 +217,15 @@
 
 .password-eye {
     position: absolute;
-    right: 11px;
+    right: 9px;
     top: 50%;
-    width: 38px;
-    height: 38px;
+    width: 34px;
+    height: 34px;
     display: grid;
     place-items: center;
     transform: translateY(-50%);
     border: 0;
-    border-radius: 10px;
+    border-radius: 9px;
     background: transparent;
     cursor: pointer;
     opacity: 0.72;
@@ -240,8 +238,8 @@
 }
 
 .password-eye img {
-    width: 20px;
-    height: 20px;
+    width: 19px;
+    height: 19px;
 }
 
 #registration-next-button,
@@ -257,10 +255,9 @@
     border: 1px solid rgba(88, 195, 255, 0.9);
     border-radius: var(--reg-radius);
     background: linear-gradient(180deg, rgba(23, 133, 221, 0.98), rgba(13, 76, 148, 0.98));
-    color: #ffffff;
-    font-size: 18px;
+    color: #fff;
+    font-size: 16px;
     font-weight: 700;
-    letter-spacing: -0.01em;
     box-shadow:
         inset 0 1px 0 rgba(255, 255, 255, 0.16),
         0 10px 26px rgba(11, 103, 189, 0.34);
@@ -268,15 +265,15 @@
 }
 
 #registration-next-button {
-    margin-top: 5px;
+    margin-top: 2px;
 }
 
 .registration-button-arrow {
     position: absolute;
-    right: 22px;
+    right: 19px;
     top: 50%;
     transform: translateY(-50%);
-    font-size: 22px;
+    font-size: 19px;
     line-height: 1;
 }
 
@@ -299,9 +296,6 @@
 #registration-next-button:hover,
 #registration-button:hover {
     filter: brightness(1.06);
-    box-shadow:
-        inset 0 1px 0 rgba(255, 255, 255, 0.18),
-        0 12px 28px rgba(11, 103, 189, 0.4);
 }
 
 #registration-next-button:active,
@@ -313,16 +307,16 @@
 }
 
 .registration-progress {
-    width: 84px;
-    margin: 17px auto 0;
+    width: 72px;
+    margin: 10px auto 0;
     display: flex;
     justify-content: center;
-    gap: 10px;
+    gap: 8px;
 }
 
 .registration-progress span {
-    width: 30px;
-    height: 6px;
+    width: 26px;
+    height: 5px;
     border-radius: 999px;
     background: rgba(135, 184, 222, 0.22);
 }
@@ -332,42 +326,41 @@
     box-shadow: 0 0 14px rgba(60, 174, 255, 0.28);
 }
 
-/* Step 2 */
+/* Step 2 stays vertical too; only gender buttons are side by side. */
 .gender-selector {
     width: min(100%, var(--reg-form-width));
-    margin: 0 auto 15px;
+    margin: 0 auto 10px;
     display: flex;
-    gap: 12px;
+    gap: 10px;
 }
 
 .gender-button {
-    width: 50%;
-    height: 78px;
-    min-height: 78px;
+    flex: 1;
+    height: 62px;
+    min-height: 62px;
     display: flex;
-    flex-direction: row;
     align-items: center;
     justify-content: center;
-    gap: 14px;
-    padding: 0 20px;
+    gap: 10px;
+    padding: 0 14px;
     border: 1px solid rgba(255, 255, 255, 0.16);
-    border-radius: 15px;
+    border-radius: 13px;
     background: linear-gradient(180deg, rgba(7, 18, 31, 0.9), rgba(4, 11, 21, 0.76));
     color: rgba(228, 241, 255, 0.72);
-    font-size: 17px;
+    font-size: 14px;
     font-weight: 600;
     cursor: pointer;
 }
 
 .gender-button:hover {
     border-color: rgba(88, 195, 255, 0.46);
-    color: #ffffff;
+    color: #fff;
 }
 
 .gender-button.active {
     border-color: rgba(88, 195, 255, 0.86);
     background: linear-gradient(180deg, rgba(16, 70, 123, 0.94), rgba(8, 35, 65, 0.94));
-    color: #ffffff;
+    color: #fff;
     box-shadow:
         inset 0 1px 0 rgba(255, 255, 255, 0.08),
         0 0 0 1px rgba(88, 195, 255, 0.14),
@@ -375,21 +368,20 @@
 }
 
 .gender-icon {
-    flex: 0 0 auto;
-    font-size: 34px;
+    font-size: 28px;
     line-height: 1;
     color: #86dfff;
 }
 
 .age-container {
     width: min(100%, var(--reg-form-width));
-    margin: 0 auto 14px;
+    margin: 0 auto 10px;
 }
 
 .age-title {
-    margin: 0 0 9px;
+    margin: 0 0 6px;
     color: rgba(239, 248, 255, 0.86);
-    font-size: 14px;
+    font-size: 12px;
     font-weight: 600;
     text-align: center;
 }
@@ -398,73 +390,58 @@
     width: 100%;
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 8px;
 }
 
 .age-selector button,
 .age-selector input {
-    height: 56px;
+    height: 46px;
     border: 1px solid rgba(93, 196, 255, 0.22);
-    border-radius: 14px;
+    border-radius: 12px;
     background: linear-gradient(180deg, rgba(7, 18, 31, 0.9), rgba(4, 11, 21, 0.76));
-    color: #ffffff;
+    color: #fff;
 }
 
 .age-selector button {
-    width: 56px;
-    min-width: 56px;
+    width: 46px;
+    min-width: 46px;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    font-size: 29px;
-    line-height: 1;
-    cursor: pointer;
     color: #86dfff;
-}
-
-.age-selector button:hover {
-    border-color: rgba(88, 195, 255, 0.5);
+    font-size: 24px;
+    cursor: pointer;
 }
 
 .age-selector input {
     width: 100%;
     padding: 0 10px;
-    text-align: center;
-    font-size: 22px;
-    font-weight: 700;
     outline: 0;
+    text-align: center;
+    font-size: 19px;
+    font-weight: 700;
 }
 
 .age-selector input:focus {
     border-color: rgba(88, 201, 255, 0.92);
-    box-shadow:
-        0 0 0 1px rgba(88, 201, 255, 0.12),
-        0 0 18px rgba(55, 179, 255, 0.12);
-}
-
-.age-selector input::-webkit-inner-spin-button,
-.age-selector input::-webkit-outer-spin-button {
-    margin: 0;
-    -webkit-appearance: none;
-    appearance: none;
 }
 
 .age-description {
-    margin: 7px 0 0;
+    margin: 5px 0 0;
     color: rgba(204, 224, 240, 0.54);
-    font-size: 12px;
+    font-size: 10px;
     text-align: center;
 }
 
 .registration-referral-field {
-    margin-bottom: 14px;
+    margin-bottom: 10px;
 }
 
 .registration-buttons {
     width: min(100%, var(--reg-form-width));
     margin: 0 auto;
     display: flex;
-    gap: 11px;
+    gap: 9px;
 }
 
 #registration-back-button {
@@ -474,14 +451,9 @@
     border-radius: var(--reg-radius);
     background: linear-gradient(180deg, rgba(9, 19, 31, 0.92), rgba(5, 13, 23, 0.84));
     color: rgba(235, 244, 255, 0.82);
-    font-size: 16px;
+    font-size: 14px;
     font-weight: 700;
     cursor: pointer;
-}
-
-#registration-back-button:hover {
-    border-color: rgba(88, 195, 255, 0.4);
-    color: #ffffff;
 }
 
 .registration-buttons #registration-button {
@@ -491,11 +463,11 @@
 
 /* Animations */
 #registration.active .registration-step.active .registration-panel {
-    animation: registrationEnter 0.42s cubic-bezier(0.22, 1, 0.36, 1) both;
+    animation: registrationEnter 0.4s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
 #registration.active .registration-step.active .registration-logo {
-    animation: registrationLogoEnter 0.44s cubic-bezier(0.22, 1, 0.36, 1) both;
+    animation: registrationLogoEnter 0.42s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
 #registration.active .registration-step.active .registration-headline,
@@ -505,136 +477,63 @@
 #registration.active .registration-step.active .registration-buttons,
 #registration.active .registration-step.active #registration-next-button,
 #registration.active .registration-step.active .registration-progress {
-    animation: registrationItemEnter 0.36s ease both;
+    animation: registrationItemEnter 0.34s ease both;
 }
 
 @keyframes registrationEnter {
-    from { opacity: 0; transform: translateY(22px) scale(0.975); }
+    from { opacity: 0; transform: translateY(16px) scale(0.98); }
     to { opacity: 1; transform: translateY(0) scale(1); }
 }
 
 @keyframes registrationLogoEnter {
-    from { opacity: 0; transform: translateY(-12px) scale(0.94); }
+    from { opacity: 0; transform: translateY(-10px) scale(0.95); }
     to { opacity: 1; transform: translateY(0) scale(1); }
 }
 
 @keyframes registrationItemEnter {
-    from { opacity: 0; transform: translateY(10px); }
+    from { opacity: 0; transform: translateY(8px); }
     to { opacity: 1; transform: translateY(0); }
 }
 
-/* =========================
-   PC / large desktop
-   ========================= */
-@media (min-width: 1601px) and (min-height: 900px) {
+/* Desktop 1920x1080+ */
+@media (min-width: 1600px) and (min-height: 900px) {
     #registration {
-        --reg-panel-width: 560px;
-        --reg-form-width: 460px;
-        --reg-field-height: 60px;
+        --reg-card-width: 540px;
+        --reg-form-width: 440px;
+        --reg-field-height: 58px;
+        --reg-card-px: 34px;
+        --reg-card-py: 26px;
+    }
+
+    .registration-logo {
+        width: 235px;
+        max-height: 114px;
+    }
+
+    .registration-headline h1 {
+        font-size: 29px;
+    }
+
+    .registration-field input {
+        font-size: 15px;
     }
 }
 
-/* =========================
-   Laptop / compact desktop
-   1280x720, 1366x768, 1440x900, 1600x900
-   ========================= */
+/* Laptop / compact desktop */
 @media (max-width: 1600px), (max-height: 899px) {
     body.hud-platform-pc #registration {
-        --reg-panel-width: 500px;
-        --reg-form-width: 414px;
-        --reg-panel-padding-x: 28px;
-        --reg-panel-padding-y: 22px;
-        --reg-field-height: 52px;
-        --reg-radius: 13px;
-        padding-top: max(14px, env(safe-area-inset-top));
-        padding-bottom: max(14px, env(safe-area-inset-bottom));
+        --reg-card-width: 485px;
+        --reg-form-width: 400px;
+        --reg-field-height: 48px;
+        --reg-card-px: 26px;
+        --reg-card-py: 18px;
+        --reg-radius: 12px;
     }
 
     body.hud-platform-pc .registration-logo {
-        width: min(43vw, 225px);
-        max-height: 108px;
-        margin-bottom: 4px;
-    }
-
-    body.hud-platform-pc .registration-headline {
-        margin-bottom: 15px;
-    }
-
-    body.hud-platform-pc .registration-headline h1 {
-        font-size: 27px;
-        margin-bottom: 5px;
-    }
-
-    body.hud-platform-pc .registration-headline p {
-        font-size: 13px;
-        line-height: 1.34;
-    }
-
-    body.hud-platform-pc .registration-field {
-        margin-bottom: 10px;
-    }
-
-    body.hud-platform-pc .registration-field input {
-        font-size: 14px;
-    }
-
-    body.hud-platform-pc .registration-progress {
-        margin-top: 12px;
-    }
-
-    body.hud-platform-pc .gender-button {
-        height: 68px;
-        min-height: 68px;
-        font-size: 15px;
-        gap: 11px;
-    }
-
-    body.hud-platform-pc .gender-icon {
-        font-size: 30px;
-    }
-
-    body.hud-platform-pc .age-container {
-        margin-bottom: 10px;
-    }
-
-    body.hud-platform-pc .age-selector button,
-    body.hud-platform-pc .age-selector input {
-        height: 48px;
-    }
-
-    body.hud-platform-pc .age-selector button {
-        width: 48px;
-        min-width: 48px;
-        font-size: 25px;
-    }
-
-    body.hud-platform-pc .age-selector input {
-        font-size: 19px;
-    }
-
-    body.hud-platform-pc .age-description {
-        margin-top: 5px;
-        font-size: 11px;
-    }
-}
-
-/* Extra-low PC / small laptop screens */
-@media (max-height: 700px) and (min-width: 900px) {
-    body.hud-platform-pc #registration {
-        --reg-panel-width: 475px;
-        --reg-form-width: 395px;
-        --reg-panel-padding-y: 15px;
-        --reg-field-height: 46px;
-    }
-
-    body.hud-platform-pc .registration-panel {
-        padding-bottom: 14px;
-    }
-
-    body.hud-platform-pc .registration-logo {
-        width: 188px;
-        max-height: 86px;
-        margin-bottom: 0;
+        width: 190px;
+        max-height: 90px;
+        margin-bottom: 1px;
     }
 
     body.hud-platform-pc .registration-headline {
@@ -646,7 +545,7 @@
     }
 
     body.hud-platform-pc .registration-headline p {
-        font-size: 12px;
+        font-size: 11.5px;
     }
 
     body.hud-platform-pc .registration-field {
@@ -654,445 +553,277 @@
     }
 
     body.hud-platform-pc .gender-button {
-        height: 58px;
-        min-height: 58px;
+        height: 54px;
+        min-height: 54px;
     }
 
     body.hud-platform-pc .age-selector button,
     body.hud-platform-pc .age-selector input {
-        height: 42px;
+        height: 40px;
     }
 
     body.hud-platform-pc .age-selector button {
-        width: 42px;
-        min-width: 42px;
+        width: 40px;
+        min-width: 40px;
     }
 
     body.hud-platform-pc .registration-progress {
-        margin-top: 8px;
+        margin-top: 7px;
     }
 }
 
-/* =========================
-   Mobile + tablet landscape
-   ========================= */
-@media (orientation: landscape) and (min-width: 600px) {
-    body.hud-platform-mobile #registration {
-        --reg-panel-width: 980px;
-        --reg-form-width: 100%;
-        --reg-field-height: 48px;
-        --reg-panel-padding-x: 24px;
-        --reg-panel-padding-y: 18px;
-        --reg-radius: 12px;
-        padding:
-            max(8px, env(safe-area-inset-top))
-            max(12px, env(safe-area-inset-right))
-            max(8px, env(safe-area-inset-bottom))
-            max(12px, env(safe-area-inset-left));
+/* Small laptop / low desktop */
+@media (max-height: 700px) and (min-width: 900px) {
+    body.hud-platform-pc #registration {
+        --reg-card-width: 455px;
+        --reg-form-width: 380px;
+        --reg-field-height: 42px;
+        --reg-card-px: 22px;
+        --reg-card-py: 12px;
     }
 
-    body.hud-platform-mobile .registration-container {
-        width: min(96vw, var(--reg-panel-width));
-        max-width: var(--reg-panel-width);
+    body.hud-platform-pc .registration-logo {
+        width: 155px;
+        max-height: 70px;
     }
 
-    body.hud-platform-mobile .registration-panel {
-        width: 100%;
-        max-width: none;
-        display: grid;
-        grid-template-columns: minmax(190px, 0.76fr) minmax(390px, 1.24fr);
-        column-gap: clamp(18px, 3vw, 34px);
-        row-gap: 8px;
-        align-items: center;
-        border-radius: 22px;
+    body.hud-platform-pc .registration-headline {
+        margin-bottom: 7px;
     }
 
-    body.hud-platform-mobile .registration-panel::before {
-        border-radius: 20px;
-    }
-
-    body.hud-platform-mobile .registration-badge {
-        top: 13px;
-        right: 15px;
-        padding: 5px 9px;
-        font-size: 10px;
-    }
-
-    body.hud-platform-mobile .registration-logo {
-        grid-column: 1;
-        width: min(27vw, 212px);
-        max-height: 115px;
-        margin: 0 auto;
-        align-self: end;
-    }
-
-    body.hud-platform-mobile .registration-headline {
-        grid-column: 1;
-        width: 100%;
-        margin: 0;
-        padding: 0 4px;
-        align-self: start;
-    }
-
-    body.hud-platform-mobile .registration-headline h1 {
-        font-size: clamp(20px, 3.7vh, 27px);
-        margin-bottom: 5px;
-    }
-
-    body.hud-platform-mobile .registration-headline p {
-        max-width: 280px;
-        font-size: clamp(10px, 2.05vh, 13px);
-        line-height: 1.3;
-    }
-
-    body.hud-platform-mobile #registration-step-1 .registration-logo {
-        grid-row: 1 / 4;
-    }
-
-    body.hud-platform-mobile #registration-step-1 .registration-headline {
-        grid-row: 4 / 7;
-    }
-
-    body.hud-platform-mobile #registration-step-1 .registration-field,
-    body.hud-platform-mobile #registration-step-1 #registration-next-button,
-    body.hud-platform-mobile #registration-step-1 .registration-progress {
-        grid-column: 2;
-        width: 100%;
-        margin-left: 0;
-        margin-right: 0;
-    }
-
-    body.hud-platform-mobile #registration-step-1 .registration-field {
-        height: clamp(40px, 7.8vh, 48px);
-        margin-bottom: 0;
-    }
-
-    body.hud-platform-mobile #registration-step-1 #registration-next-button {
-        height: clamp(40px, 7.8vh, 48px);
-        margin-top: 1px;
-    }
-
-    body.hud-platform-mobile .registration-field > img {
-        left: 15px;
-        width: 18px;
-        height: 18px;
-    }
-
-    body.hud-platform-mobile .registration-field input {
-        padding-left: 46px;
-        padding-right: 48px;
-        font-size: clamp(12px, 2.2vh, 14px);
-    }
-
-    body.hud-platform-mobile .password-eye {
-        right: 7px;
-        width: 34px;
-        height: 34px;
-    }
-
-    body.hud-platform-mobile .registration-button-arrow {
-        right: 16px;
-        font-size: 18px;
-    }
-
-    body.hud-platform-mobile .registration-progress {
-        margin-top: 1px;
-        gap: 7px;
-    }
-
-    body.hud-platform-mobile .registration-progress span {
-        width: 24px;
-        height: 4px;
-    }
-
-    /* Step 2 */
-    body.hud-platform-mobile #registration-step-2 .registration-logo {
-        grid-row: 1 / 3;
-    }
-
-    body.hud-platform-mobile #registration-step-2 .registration-headline {
-        grid-row: 3 / 6;
-    }
-
-    body.hud-platform-mobile #registration-step-2 .gender-selector,
-    body.hud-platform-mobile #registration-step-2 .age-container,
-    body.hud-platform-mobile #registration-step-2 .registration-referral-field,
-    body.hud-platform-mobile #registration-step-2 .registration-buttons,
-    body.hud-platform-mobile #registration-step-2 .registration-progress {
-        grid-column: 2;
-        width: 100%;
-        margin-left: 0;
-        margin-right: 0;
-    }
-
-    body.hud-platform-mobile #registration-step-2 .gender-selector {
-        margin-bottom: 0;
-        gap: 9px;
-    }
-
-    body.hud-platform-mobile #registration-step-2 .gender-button {
-        height: clamp(46px, 8.9vh, 58px);
-        min-height: 0;
-        flex-direction: row;
-        gap: 9px;
-        padding: 0 13px;
-        border-radius: 11px;
-        font-size: clamp(12px, 2.15vh, 14px);
-    }
-
-    body.hud-platform-mobile #registration-step-2 .gender-icon {
-        font-size: clamp(23px, 4.4vh, 28px);
-    }
-
-    body.hud-platform-mobile #registration-step-2 .age-container {
-        margin-bottom: 0;
-    }
-
-    body.hud-platform-mobile #registration-step-2 .age-title {
-        margin-bottom: 4px;
-        font-size: 11px;
-    }
-
-    body.hud-platform-mobile #registration-step-2 .age-selector {
-        gap: 7px;
-    }
-
-    body.hud-platform-mobile #registration-step-2 .age-selector button,
-    body.hud-platform-mobile #registration-step-2 .age-selector input {
-        height: clamp(36px, 7vh, 44px);
-        border-radius: 10px;
-    }
-
-    body.hud-platform-mobile #registration-step-2 .age-selector button {
-        width: clamp(36px, 7vh, 44px);
-        min-width: clamp(36px, 7vh, 44px);
-        font-size: 23px;
-    }
-
-    body.hud-platform-mobile #registration-step-2 .age-selector input {
-        font-size: 18px;
-    }
-
-    body.hud-platform-mobile #registration-step-2 .age-description {
-        margin-top: 3px;
-        font-size: 9px;
-    }
-
-    body.hud-platform-mobile #registration-step-2 .registration-referral-field,
-    body.hud-platform-mobile #registration-step-2 #registration-back-button,
-    body.hud-platform-mobile #registration-step-2 #registration-button {
-        height: clamp(38px, 7.3vh, 46px);
-    }
-
-    body.hud-platform-mobile #registration-step-2 .registration-referral-field {
-        margin-bottom: 0;
-    }
-
-    body.hud-platform-mobile #registration-step-2 .registration-buttons {
-        gap: 8px;
-    }
-
-    body.hud-platform-mobile #registration-step-2 #registration-back-button,
-    body.hud-platform-mobile #registration-step-2 #registration-button {
-        border-radius: 10px;
-        font-size: clamp(12px, 2vh, 14px);
-    }
-}
-
-/* Tablet landscape gets a slightly roomier panel */
-@media (orientation: landscape) and (min-width: 900px) and (min-height: 600px) {
-    body.hud-platform-mobile #registration {
-        --reg-panel-width: 1040px;
-        --reg-panel-padding-x: 30px;
-        --reg-panel-padding-y: 22px;
-    }
-
-    body.hud-platform-mobile .registration-panel {
-        grid-template-columns: minmax(230px, 0.8fr) minmax(470px, 1.2fr);
-        column-gap: 38px;
-    }
-
-    body.hud-platform-mobile .registration-logo {
-        width: min(25vw, 242px);
-    }
-
-    body.hud-platform-mobile .registration-headline h1 {
-        font-size: 28px;
-    }
-
-    body.hud-platform-mobile .registration-headline p {
-        font-size: 13px;
-    }
-
-    body.hud-platform-mobile #registration-step-2 .gender-button {
-        height: 62px;
-        font-size: 15px;
-    }
-}
-
-/* Very short phones: 640x360 / 740x360 / similar */
-@media (orientation: landscape) and (max-height: 430px) and (min-width: 600px) {
-    body.hud-platform-mobile #registration {
-        --reg-panel-padding-x: 16px;
-        --reg-panel-padding-y: 9px;
-        padding-top: max(5px, env(safe-area-inset-top));
-        padding-bottom: max(5px, env(safe-area-inset-bottom));
-    }
-
-    body.hud-platform-mobile .registration-panel {
-        grid-template-columns: minmax(150px, 0.7fr) minmax(360px, 1.3fr);
-        column-gap: 16px;
-        row-gap: 4px;
-    }
-
-    body.hud-platform-mobile .registration-logo {
-        width: min(22vw, 162px);
-        max-height: 78px;
-    }
-
-    body.hud-platform-mobile .registration-headline h1 {
-        font-size: 18px;
-    }
-
-    body.hud-platform-mobile .registration-headline p {
-        font-size: 9px;
-        line-height: 1.2;
-    }
-
-    body.hud-platform-mobile #registration-step-1 .registration-field,
-    body.hud-platform-mobile #registration-step-1 #registration-next-button {
-        height: 35px;
-    }
-
-    body.hud-platform-mobile .registration-field input {
-        font-size: 11px;
-    }
-
-    body.hud-platform-mobile #registration-step-2 .gender-button {
-        height: 38px;
-    }
-
-    body.hud-platform-mobile #registration-step-2 .gender-icon {
+    body.hud-platform-pc .registration-headline h1 {
         font-size: 20px;
     }
 
-    body.hud-platform-mobile #registration-step-2 .age-selector button,
-    body.hud-platform-mobile #registration-step-2 .age-selector input,
-    body.hud-platform-mobile #registration-step-2 .registration-referral-field,
-    body.hud-platform-mobile #registration-step-2 #registration-back-button,
-    body.hud-platform-mobile #registration-step-2 #registration-button {
-        height: 32px;
+    body.hud-platform-pc .registration-headline p {
+        font-size: 10px;
     }
 
-    body.hud-platform-mobile #registration-step-2 .age-selector button {
-        width: 32px;
-        min-width: 32px;
+    body.hud-platform-pc .registration-field {
+        margin-bottom: 6px;
     }
 
-    body.hud-platform-mobile #registration-step-2 .age-description {
+    body.hud-platform-pc .gender-button {
+        height: 46px;
+        min-height: 46px;
+    }
+
+    body.hud-platform-pc .age-selector button,
+    body.hud-platform-pc .age-selector input {
+        height: 35px;
+    }
+
+    body.hud-platform-pc .age-selector button {
+        width: 35px;
+        min-width: 35px;
+    }
+
+    body.hud-platform-pc .age-description {
         display: none;
     }
 }
 
-/* =========================
-   Mobile / tablet portrait
-   ========================= */
-@media (orientation: portrait) and (max-width: 900px) {
+/* =========================================================
+   Mobile/tablet landscape
+   Screen is horizontal, but registration itself stays vertical.
+   ========================================================= */
+@media (orientation: landscape) {
     body.hud-platform-mobile #registration {
-        --reg-panel-width: 560px;
-        --reg-form-width: 100%;
-        --reg-panel-padding-x: clamp(18px, 5vw, 30px);
-        --reg-panel-padding-y: 24px;
-        --reg-field-height: 54px;
-        --reg-radius: 13px;
-        align-items: flex-start;
-        overflow-y: auto;
+        --reg-card-width: 470px;
+        --reg-form-width: 390px;
+        --reg-field-height: 43px;
+        --reg-card-px: 24px;
+        --reg-card-py: 12px;
+        --reg-radius: 11px;
         padding:
-            max(16px, env(safe-area-inset-top))
-            max(14px, env(safe-area-inset-right))
-            max(16px, env(safe-area-inset-bottom))
-            max(14px, env(safe-area-inset-left));
+            max(6px, env(safe-area-inset-top))
+            max(10px, env(safe-area-inset-right))
+            max(6px, env(safe-area-inset-bottom))
+            max(10px, env(safe-area-inset-left));
     }
 
     body.hud-platform-mobile .registration-container {
-        width: min(94vw, var(--reg-panel-width));
-        max-width: var(--reg-panel-width);
-        margin: auto;
+        width: min(72vw, var(--reg-card-width));
+        max-width: var(--reg-card-width);
     }
 
     body.hud-platform-mobile .registration-panel {
-        border-radius: 22px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: var(--reg-card-py) var(--reg-card-px) 10px;
+        border-radius: 21px;
     }
 
     body.hud-platform-mobile .registration-panel::before {
-        border-radius: 20px;
+        border-radius: 19px;
+    }
+
+    body.hud-platform-mobile .registration-badge {
+        top: 11px;
+        right: 13px;
+        padding: 4px 8px;
+        font-size: 9px;
     }
 
     body.hud-platform-mobile .registration-logo {
-        width: min(64vw, 242px);
-        max-height: 110px;
-        margin-bottom: 5px;
+        width: min(22vw, 145px);
+        max-height: 68px;
+        margin-bottom: 0;
     }
 
     body.hud-platform-mobile .registration-headline {
-        margin-bottom: 18px;
+        width: min(100%, var(--reg-form-width));
+        margin-bottom: 8px;
+        padding: 0;
     }
 
     body.hud-platform-mobile .registration-headline h1 {
-        font-size: 27px;
+        margin-bottom: 2px;
+        font-size: clamp(18px, 4vh, 21px);
     }
 
     body.hud-platform-mobile .registration-headline p {
-        font-size: 13px;
+        max-width: 360px;
+        font-size: clamp(8px, 2vh, 10px);
+        line-height: 1.2;
     }
 
     body.hud-platform-mobile .registration-field {
-        margin-bottom: 11px;
+        width: min(100%, var(--reg-form-width));
+        height: var(--reg-field-height);
+        margin-bottom: 7px;
+    }
+
+    body.hud-platform-mobile .registration-field > img {
+        left: 14px;
+        width: 17px;
+        height: 17px;
     }
 
     body.hud-platform-mobile .registration-field input {
-        font-size: 14px;
+        padding-left: 43px;
+        padding-right: 44px;
+        font-size: clamp(10.5px, 2.2vh, 12.5px);
+    }
+
+    body.hud-platform-mobile .password-eye {
+        right: 6px;
+        width: 31px;
+        height: 31px;
+    }
+
+    body.hud-platform-mobile #registration-next-button,
+    body.hud-platform-mobile #registration-button,
+    body.hud-platform-mobile #registration-back-button {
+        height: var(--reg-field-height);
+        font-size: 12px;
+    }
+
+    body.hud-platform-mobile #registration-next-button {
+        width: min(100%, var(--reg-form-width));
+        margin-top: 0;
+    }
+
+    body.hud-platform-mobile .registration-button-arrow {
+        right: 15px;
+        font-size: 17px;
+    }
+
+    body.hud-platform-mobile .registration-progress {
+        margin-top: 5px;
+        gap: 6px;
+    }
+
+    body.hud-platform-mobile .registration-progress span {
+        width: 22px;
+        height: 4px;
+    }
+
+    body.hud-platform-mobile .gender-selector,
+    body.hud-platform-mobile .age-container,
+    body.hud-platform-mobile .registration-buttons {
+        width: min(100%, var(--reg-form-width));
+    }
+
+    body.hud-platform-mobile .gender-selector {
+        margin-bottom: 7px;
+        gap: 8px;
     }
 
     body.hud-platform-mobile .gender-button {
-        height: 66px;
-        min-height: 66px;
-        font-size: 14px;
-        gap: 10px;
-        padding: 0 12px;
+        height: 43px;
+        min-height: 43px;
+        gap: 7px;
+        padding: 0 10px;
+        border-radius: 10px;
+        font-size: 11px;
     }
 
     body.hud-platform-mobile .gender-icon {
-        font-size: 28px;
+        font-size: 21px;
+    }
+
+    body.hud-platform-mobile .age-container {
+        margin-bottom: 7px;
+    }
+
+    body.hud-platform-mobile .age-title {
+        margin-bottom: 3px;
+        font-size: 9px;
+    }
+
+    body.hud-platform-mobile .age-selector {
+        gap: 6px;
     }
 
     body.hud-platform-mobile .age-selector button,
     body.hud-platform-mobile .age-selector input {
-        height: 48px;
+        height: 34px;
+        border-radius: 9px;
     }
 
     body.hud-platform-mobile .age-selector button {
-        width: 48px;
-        min-width: 48px;
+        width: 34px;
+        min-width: 34px;
+        font-size: 20px;
+    }
+
+    body.hud-platform-mobile .age-selector input {
+        font-size: 16px;
+    }
+
+    body.hud-platform-mobile .age-description {
+        margin-top: 2px;
+        font-size: 8px;
+    }
+
+    body.hud-platform-mobile .registration-referral-field {
+        margin-bottom: 7px;
+    }
+
+    body.hud-platform-mobile .registration-buttons {
+        gap: 8px;
     }
 }
 
-/* Narrow phones portrait */
-@media (orientation: portrait) and (max-width: 430px) {
+/* Larger landscape tablets */
+@media (orientation: landscape) and (min-height: 600px) {
     body.hud-platform-mobile #registration {
-        --reg-panel-padding-x: 17px;
-        --reg-panel-padding-y: 20px;
-        --reg-field-height: 50px;
+        --reg-card-width: 500px;
+        --reg-form-width: 415px;
+        --reg-field-height: 48px;
+        --reg-card-px: 28px;
+        --reg-card-py: 17px;
     }
 
-    body.hud-platform-mobile .registration-badge {
-        top: 15px;
-        right: 15px;
-        font-size: 10px;
+    body.hud-platform-mobile .registration-container {
+        width: min(66vw, var(--reg-card-width));
     }
 
     body.hud-platform-mobile .registration-logo {
-        width: min(63vw, 208px);
+        width: 170px;
+        max-height: 82px;
     }
 
     body.hud-platform-mobile .registration-headline h1 {
@@ -1100,359 +831,243 @@
     }
 
     body.hud-platform-mobile .registration-headline p {
-        font-size: 12px;
-    }
-
-    body.hud-platform-mobile .registration-field > img {
-        left: 15px;
-        width: 18px;
-        height: 18px;
+        font-size: 11px;
     }
 
     body.hud-platform-mobile .registration-field input {
-        padding-left: 46px;
-        padding-right: 46px;
         font-size: 13px;
-    }
-
-    body.hud-platform-mobile .gender-selector {
-        gap: 8px;
     }
 
     body.hud-platform-mobile .gender-button {
-        height: 58px;
-        min-height: 58px;
-        font-size: 13px;
-        gap: 7px;
-    }
-
-    body.hud-platform-mobile .gender-icon {
-        font-size: 25px;
-    }
-
-    body.hud-platform-mobile .registration-buttons {
-        gap: 8px;
-    }
-
-    body.hud-platform-mobile #registration-back-button {
-        width: 38%;
-        font-size: 14px;
-    }
-
-    body.hud-platform-mobile .registration-buttons #registration-button {
-        width: 62%;
-        font-size: 14px;
+        height: 50px;
+        min-height: 50px;
+        font-size: 12px;
     }
 }
 
-/* =========================================================
-   Mobile landscape v2: true horizontal registration layout
-   Works even when mobile CEF reports < 600 CSS px width.
-   ========================================================= */
-@media (orientation: landscape) {
+/* Typical landscape phones, around 450–520px high */
+@media (orientation: landscape) and (max-height: 520px) {
     body.hud-platform-mobile #registration {
-        --reg-panel-width: 1080px;
-        --reg-form-width: 100%;
-        --reg-field-height: clamp(38px, 7.4vh, 48px);
-        --reg-panel-padding-x: clamp(12px, 2.6vw, 26px);
-        --reg-panel-padding-y: clamp(8px, 2vh, 18px);
-        align-items: center;
-        justify-content: center;
-        overflow: hidden;
-        padding:
-            max(6px, env(safe-area-inset-top))
-            max(8px, env(safe-area-inset-right))
-            max(6px, env(safe-area-inset-bottom))
-            max(8px, env(safe-area-inset-left));
+        --reg-card-width: 445px;
+        --reg-form-width: 365px;
+        --reg-field-height: 38px;
+        --reg-card-px: 21px;
+        --reg-card-py: 8px;
     }
 
     body.hud-platform-mobile .registration-container {
-        width: min(97vw, var(--reg-panel-width));
-        max-width: var(--reg-panel-width);
-        margin: auto;
+        width: min(70vw, var(--reg-card-width));
     }
 
     body.hud-platform-mobile .registration-panel {
-        width: 100%;
-        max-width: none;
-        display: grid;
-        grid-template-columns: minmax(118px, 0.62fr) minmax(0, 1fr) minmax(0, 1fr);
-        grid-auto-rows: auto;
-        column-gap: clamp(8px, 1.8vw, 22px);
-        row-gap: clamp(5px, 1.4vh, 10px);
-        align-items: center;
-        padding: var(--reg-panel-padding-y) var(--reg-panel-padding-x);
-        border-radius: 20px;
-    }
-
-    body.hud-platform-mobile .registration-panel::before {
-        border-radius: 18px;
-    }
-
-    body.hud-platform-mobile .registration-badge {
-        top: 10px;
-        right: 12px;
-        padding: 4px 8px;
-        font-size: 9px;
+        padding-bottom: 7px;
     }
 
     body.hud-platform-mobile .registration-logo {
-        grid-column: 1;
-        width: min(25vw, 190px);
-        max-height: 92px;
-        margin: 0 auto 2px;
-        align-self: end;
+        width: min(19vw, 122px);
+        max-height: 56px;
+        margin-bottom: -2px;
     }
 
     body.hud-platform-mobile .registration-headline {
-        grid-column: 1;
-        width: 100%;
-        margin: 0;
-        padding: 0 2px;
-        text-align: center;
-        align-self: start;
+        margin-bottom: 5px;
     }
 
     body.hud-platform-mobile .registration-headline h1 {
-        margin: 0 0 3px;
-        font-size: clamp(17px, 4.4vh, 25px);
-        line-height: 1.08;
-    }
-
-    body.hud-platform-mobile .registration-headline p {
-        max-width: 220px;
-        margin: auto;
-        font-size: clamp(8.5px, 2vh, 12px);
-        line-height: 1.22;
-    }
-
-    body.hud-platform-mobile .registration-field {
-        width: 100%;
-        height: var(--reg-field-height);
-        margin: 0;
-    }
-
-    body.hud-platform-mobile .registration-field > img {
-        left: 13px;
-        width: 17px;
-        height: 17px;
-    }
-
-    body.hud-platform-mobile .registration-field input {
-        padding-left: 40px;
-        padding-right: 42px;
-        border-radius: 10px;
-        font-size: clamp(10.5px, 2.25vh, 14px);
-    }
-
-    body.hud-platform-mobile .password-eye {
-        right: 5px;
-        width: 31px;
-        height: 31px;
-    }
-
-    body.hud-platform-mobile .password-eye img {
-        width: 17px;
-        height: 17px;
-    }
-
-    /* Step 1: real horizontal 2x2 form grid */
-    body.hud-platform-mobile #registration-step-1 .registration-logo {
-        grid-column: 1;
-        grid-row: 1 / 3;
-    }
-
-    body.hud-platform-mobile #registration-step-1 .registration-headline {
-        grid-column: 1;
-        grid-row: 3 / 5;
-    }
-
-    body.hud-platform-mobile #registration-step-1 .registration-field-name {
-        grid-column: 2;
-        grid-row: 1;
-    }
-
-    body.hud-platform-mobile #registration-step-1 .registration-field-email {
-        grid-column: 3;
-        grid-row: 1;
-    }
-
-    body.hud-platform-mobile #registration-step-1 .registration-field-password {
-        grid-column: 2;
-        grid-row: 2;
-    }
-
-    body.hud-platform-mobile #registration-step-1 .registration-field-password-repeat {
-        grid-column: 3;
-        grid-row: 2;
-    }
-
-    body.hud-platform-mobile #registration-step-1 #registration-next-button {
-        grid-column: 2 / 4;
-        grid-row: 3;
-        width: 100%;
-        height: var(--reg-field-height);
-        margin: 0;
-        border-radius: 10px;
-        font-size: clamp(12px, 2.4vh, 15px);
-    }
-
-    body.hud-platform-mobile #registration-step-1 .registration-progress {
-        grid-column: 2 / 4;
-        grid-row: 4;
-        width: 100%;
-        margin: 0;
-        gap: 6px;
-    }
-
-    /* Step 2: horizontal content, age and referral side-by-side */
-    body.hud-platform-mobile #registration-step-2 .registration-logo {
-        grid-column: 1;
-        grid-row: 1 / 3;
-    }
-
-    body.hud-platform-mobile #registration-step-2 .registration-headline {
-        grid-column: 1;
-        grid-row: 3 / 5;
-    }
-
-    body.hud-platform-mobile #registration-step-2 .gender-selector {
-        grid-column: 2 / 4;
-        grid-row: 1;
-        width: 100%;
-        margin: 0;
-        gap: 8px;
-    }
-
-    body.hud-platform-mobile #registration-step-2 .gender-button {
-        height: clamp(38px, 7.6vh, 50px);
-        min-height: 0;
-        flex-direction: row;
-        justify-content: center;
-        gap: 8px;
-        padding: 0 10px;
-        border-radius: 10px;
-        font-size: clamp(11px, 2.2vh, 14px);
-    }
-
-    body.hud-platform-mobile #registration-step-2 .gender-icon {
-        font-size: clamp(21px, 4.2vh, 27px);
-    }
-
-    body.hud-platform-mobile #registration-step-2 .age-container {
-        grid-column: 2;
-        grid-row: 2;
-        width: 100%;
-        margin: 0;
-    }
-
-    body.hud-platform-mobile #registration-step-2 .age-title {
-        margin: 0 0 3px;
-        font-size: 10px;
-    }
-
-    body.hud-platform-mobile #registration-step-2 .age-selector {
-        gap: 6px;
-    }
-
-    body.hud-platform-mobile #registration-step-2 .age-selector button,
-    body.hud-platform-mobile #registration-step-2 .age-selector input {
-        height: clamp(34px, 6.8vh, 42px);
-        border-radius: 9px;
-    }
-
-    body.hud-platform-mobile #registration-step-2 .age-selector button {
-        width: clamp(34px, 6.8vh, 42px);
-        min-width: clamp(34px, 6.8vh, 42px);
-        font-size: 22px;
-    }
-
-    body.hud-platform-mobile #registration-step-2 .age-selector input {
         font-size: 17px;
     }
 
-    body.hud-platform-mobile #registration-step-2 .age-description {
-        margin-top: 2px;
-        font-size: 8.5px;
+    body.hud-platform-mobile .registration-headline p {
+        font-size: 7.5px;
+        line-height: 1.12;
     }
 
-    body.hud-platform-mobile #registration-step-2 .registration-referral-field {
-        grid-column: 3;
-        grid-row: 2;
-        align-self: center;
-        height: clamp(38px, 7.4vh, 46px);
-        margin: 12px 0 0;
+    body.hud-platform-mobile .registration-field {
+        margin-bottom: 5px;
     }
 
-    body.hud-platform-mobile #registration-step-2 .registration-buttons {
-        grid-column: 2 / 4;
-        grid-row: 3;
-        width: 100%;
-        margin: 0;
-        gap: 8px;
+    body.hud-platform-mobile .registration-field input {
+        font-size: 10.5px;
     }
 
-    body.hud-platform-mobile #registration-step-2 #registration-back-button,
-    body.hud-platform-mobile #registration-step-2 #registration-button {
-        height: var(--reg-field-height);
-        border-radius: 10px;
-        font-size: clamp(11px, 2.2vh, 14px);
+    body.hud-platform-mobile .gender-button {
+        height: 36px;
+        min-height: 36px;
+        font-size: 10px;
     }
 
-    body.hud-platform-mobile #registration-step-2 .registration-progress {
-        grid-column: 2 / 4;
-        grid-row: 4;
-        width: 100%;
-        margin: 0;
-    }
-}
-
-/* Roomier tablets in landscape */
-@media (orientation: landscape) and (min-width: 900px) and (min-height: 600px) {
-    body.hud-platform-mobile .registration-panel {
-        grid-template-columns: minmax(180px, 0.68fr) minmax(0, 1fr) minmax(0, 1fr);
-        column-gap: 24px;
-        row-gap: 10px;
+    body.hud-platform-mobile .gender-icon {
+        font-size: 18px;
     }
 
-    body.hud-platform-mobile .registration-logo {
-        width: min(22vw, 215px);
-        max-height: 104px;
+    body.hud-platform-mobile .age-selector button,
+    body.hud-platform-mobile .age-selector input {
+        height: 30px;
+    }
+
+    body.hud-platform-mobile .age-selector button {
+        width: 30px;
+        min-width: 30px;
+    }
+
+    body.hud-platform-mobile .age-description {
+        display: none;
     }
 }
 
-/* Very short mobile landscape */
+/* Very low landscape phones, e.g. 640x360 / 740x360 */
 @media (orientation: landscape) and (max-height: 390px) {
     body.hud-platform-mobile #registration {
-        --reg-field-height: 36px;
-        --reg-panel-padding-y: 6px;
+        --reg-card-width: 405px;
+        --reg-form-width: 335px;
+        --reg-field-height: 31px;
+        --reg-card-px: 18px;
+        --reg-card-py: 5px;
+        --reg-radius: 9px;
+    }
+
+    body.hud-platform-mobile .registration-container {
+        width: min(72vw, var(--reg-card-width));
     }
 
     body.hud-platform-mobile .registration-panel {
-        grid-template-columns: minmax(104px, 0.56fr) minmax(0, 1fr) minmax(0, 1fr);
-        column-gap: 7px;
-        row-gap: 4px;
+        padding-bottom: 5px;
+        border-radius: 17px;
+    }
+
+    body.hud-platform-mobile .registration-panel::before {
+        border-radius: 15px;
+    }
+
+    body.hud-platform-mobile .registration-badge {
+        top: 7px;
+        right: 9px;
+        font-size: 7px;
+        padding: 3px 6px;
     }
 
     body.hud-platform-mobile .registration-logo {
-        width: min(22vw, 145px);
-        max-height: 68px;
+        width: min(16vw, 88px);
+        max-height: 40px;
+        margin-bottom: -3px;
+    }
+
+    body.hud-platform-mobile .registration-headline {
+        margin-bottom: 3px;
     }
 
     body.hud-platform-mobile .registration-headline h1 {
-        font-size: 16px;
+        font-size: 14px;
+        margin-bottom: 1px;
     }
 
     body.hud-platform-mobile .registration-headline p {
+        font-size: 6.4px;
+        line-height: 1.05;
+    }
+
+    body.hud-platform-mobile .registration-field {
+        margin-bottom: 3px;
+    }
+
+    body.hud-platform-mobile .registration-field > img {
+        left: 10px;
+        width: 14px;
+        height: 14px;
+    }
+
+    body.hud-platform-mobile .registration-field input {
+        padding-left: 34px;
+        padding-right: 36px;
+        font-size: 8.8px;
+    }
+
+    body.hud-platform-mobile .password-eye {
+        width: 26px;
+        height: 26px;
+        right: 4px;
+    }
+
+    body.hud-platform-mobile .password-eye img {
+        width: 14px;
+        height: 14px;
+    }
+
+    body.hud-platform-mobile #registration-next-button,
+    body.hud-platform-mobile #registration-button,
+    body.hud-platform-mobile #registration-back-button {
+        font-size: 9px;
+    }
+
+    body.hud-platform-mobile .registration-progress {
+        margin-top: 2px;
+    }
+
+    body.hud-platform-mobile .registration-progress span {
+        width: 18px;
+        height: 3px;
+    }
+
+    body.hud-platform-mobile .gender-selector {
+        margin-bottom: 4px;
+    }
+
+    body.hud-platform-mobile .gender-button {
+        height: 29px;
+        min-height: 29px;
         font-size: 8px;
     }
 
-    body.hud-platform-mobile #registration-step-2 .age-description,
-    body.hud-platform-mobile .registration-progress {
+    body.hud-platform-mobile .gender-icon {
+        font-size: 15px;
+    }
+
+    body.hud-platform-mobile .age-title,
+    body.hud-platform-mobile .age-description {
         display: none;
     }
 
-    body.hud-platform-mobile #registration-step-2 .registration-referral-field {
-        margin-top: 9px;
+    body.hud-platform-mobile .age-container {
+        margin-bottom: 3px;
+    }
+
+    body.hud-platform-mobile .age-selector button,
+    body.hud-platform-mobile .age-selector input {
+        height: 26px;
+    }
+
+    body.hud-platform-mobile .age-selector button {
+        width: 26px;
+        min-width: 26px;
+        font-size: 16px;
+    }
+
+    body.hud-platform-mobile .registration-referral-field {
+        margin-bottom: 3px;
+    }
+}
+
+/* Fallback for narrow portrait browsers; not the in-game mobile target. */
+@media (orientation: portrait) and (max-width: 600px) {
+    #registration {
+        --reg-card-width: 92vw;
+        --reg-form-width: 100%;
+        --reg-field-height: 50px;
+        --reg-card-px: 18px;
+        --reg-card-py: 18px;
+        align-items: flex-start;
+        overflow-y: auto;
+    }
+
+    .registration-logo {
+        width: min(60vw, 190px);
+    }
+
+    .registration-headline h1 {
+        font-size: 23px;
+    }
+
+    .registration-headline p {
+        font-size: 12px;
     }
 }
