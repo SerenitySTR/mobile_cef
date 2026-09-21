@@ -224,3 +224,16 @@ document.addEventListener("keydown", (event) => {
     event.stopImmediatePropagation();
     (step2.classList.contains("active") ? registerButton : nextButton).click();
 });
+
+GameCef.on("registration:show", (data) => {
+    usernameInput.value = data;
+    resetRegistrationState();
+
+    Loading.Transition(registration, () => {
+        showRegistration();
+    });
+});
+
+GameCef.on("registration:hide", () => {
+    hideRegistration();
+});
