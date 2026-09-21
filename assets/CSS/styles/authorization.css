@@ -902,3 +902,63 @@ body {
         font-size: 14px;
     }
 }
+
+/* =========================================================
+   Keep authorization logo exactly in sync with registration.
+   ========================================================= */
+.authorization-logo {
+    width: min(62vw, 275px);
+    max-height: 138px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+@media (max-width: 1600px), (max-height: 899px) {
+    body.hud-platform-pc .authorization-logo {
+        width: min(43vw, 225px);
+        max-height: 108px;
+    }
+}
+
+@media (max-height: 700px) and (min-width: 900px) {
+    body.hud-platform-pc .authorization-logo {
+        width: 188px;
+        max-height: 86px;
+    }
+}
+
+@media (orientation: landscape) {
+    body.hud-platform-mobile .authorization-logo {
+        width: min(25vw, 190px);
+        max-height: 92px;
+        margin: 0 auto 2px;
+    }
+}
+
+@media (orientation: landscape) and (min-width: 900px) and (min-height: 600px) {
+    body.hud-platform-mobile .authorization-logo {
+        width: min(22vw, 215px);
+        max-height: 104px;
+    }
+}
+
+@media (orientation: landscape) and (max-height: 390px) {
+    body.hud-platform-mobile .authorization-logo {
+        width: min(22vw, 145px);
+        max-height: 68px;
+    }
+}
+
+@media (orientation: portrait) and (max-width: 900px) {
+    body.hud-platform-mobile .authorization-logo {
+        width: min(64vw, 242px);
+        max-height: 110px;
+    }
+}
+
+@media (orientation: portrait) and (max-width: 430px) {
+    body.hud-platform-mobile .authorization-logo {
+        width: min(63vw, 208px);
+        max-height: 100px;
+    }
+}

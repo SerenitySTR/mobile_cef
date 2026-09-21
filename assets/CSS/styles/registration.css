@@ -1144,3 +1144,315 @@
         font-size: 14px;
     }
 }
+
+/* =========================================================
+   Mobile landscape v2: true horizontal registration layout
+   Works even when mobile CEF reports < 600 CSS px width.
+   ========================================================= */
+@media (orientation: landscape) {
+    body.hud-platform-mobile #registration {
+        --reg-panel-width: 1080px;
+        --reg-form-width: 100%;
+        --reg-field-height: clamp(38px, 7.4vh, 48px);
+        --reg-panel-padding-x: clamp(12px, 2.6vw, 26px);
+        --reg-panel-padding-y: clamp(8px, 2vh, 18px);
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+        padding:
+            max(6px, env(safe-area-inset-top))
+            max(8px, env(safe-area-inset-right))
+            max(6px, env(safe-area-inset-bottom))
+            max(8px, env(safe-area-inset-left));
+    }
+
+    body.hud-platform-mobile .registration-container {
+        width: min(97vw, var(--reg-panel-width));
+        max-width: var(--reg-panel-width);
+        margin: auto;
+    }
+
+    body.hud-platform-mobile .registration-panel {
+        width: 100%;
+        max-width: none;
+        display: grid;
+        grid-template-columns: minmax(118px, 0.62fr) minmax(0, 1fr) minmax(0, 1fr);
+        grid-auto-rows: auto;
+        column-gap: clamp(8px, 1.8vw, 22px);
+        row-gap: clamp(5px, 1.4vh, 10px);
+        align-items: center;
+        padding: var(--reg-panel-padding-y) var(--reg-panel-padding-x);
+        border-radius: 20px;
+    }
+
+    body.hud-platform-mobile .registration-panel::before {
+        border-radius: 18px;
+    }
+
+    body.hud-platform-mobile .registration-badge {
+        top: 10px;
+        right: 12px;
+        padding: 4px 8px;
+        font-size: 9px;
+    }
+
+    body.hud-platform-mobile .registration-logo {
+        grid-column: 1;
+        width: min(25vw, 190px);
+        max-height: 92px;
+        margin: 0 auto 2px;
+        align-self: end;
+    }
+
+    body.hud-platform-mobile .registration-headline {
+        grid-column: 1;
+        width: 100%;
+        margin: 0;
+        padding: 0 2px;
+        text-align: center;
+        align-self: start;
+    }
+
+    body.hud-platform-mobile .registration-headline h1 {
+        margin: 0 0 3px;
+        font-size: clamp(17px, 4.4vh, 25px);
+        line-height: 1.08;
+    }
+
+    body.hud-platform-mobile .registration-headline p {
+        max-width: 220px;
+        margin: auto;
+        font-size: clamp(8.5px, 2vh, 12px);
+        line-height: 1.22;
+    }
+
+    body.hud-platform-mobile .registration-field {
+        width: 100%;
+        height: var(--reg-field-height);
+        margin: 0;
+    }
+
+    body.hud-platform-mobile .registration-field > img {
+        left: 13px;
+        width: 17px;
+        height: 17px;
+    }
+
+    body.hud-platform-mobile .registration-field input {
+        padding-left: 40px;
+        padding-right: 42px;
+        border-radius: 10px;
+        font-size: clamp(10.5px, 2.25vh, 14px);
+    }
+
+    body.hud-platform-mobile .password-eye {
+        right: 5px;
+        width: 31px;
+        height: 31px;
+    }
+
+    body.hud-platform-mobile .password-eye img {
+        width: 17px;
+        height: 17px;
+    }
+
+    /* Step 1: real horizontal 2x2 form grid */
+    body.hud-platform-mobile #registration-step-1 .registration-logo {
+        grid-column: 1;
+        grid-row: 1 / 3;
+    }
+
+    body.hud-platform-mobile #registration-step-1 .registration-headline {
+        grid-column: 1;
+        grid-row: 3 / 5;
+    }
+
+    body.hud-platform-mobile #registration-step-1 .registration-field-name {
+        grid-column: 2;
+        grid-row: 1;
+    }
+
+    body.hud-platform-mobile #registration-step-1 .registration-field-email {
+        grid-column: 3;
+        grid-row: 1;
+    }
+
+    body.hud-platform-mobile #registration-step-1 .registration-field-password {
+        grid-column: 2;
+        grid-row: 2;
+    }
+
+    body.hud-platform-mobile #registration-step-1 .registration-field-password-repeat {
+        grid-column: 3;
+        grid-row: 2;
+    }
+
+    body.hud-platform-mobile #registration-step-1 #registration-next-button {
+        grid-column: 2 / 4;
+        grid-row: 3;
+        width: 100%;
+        height: var(--reg-field-height);
+        margin: 0;
+        border-radius: 10px;
+        font-size: clamp(12px, 2.4vh, 15px);
+    }
+
+    body.hud-platform-mobile #registration-step-1 .registration-progress {
+        grid-column: 2 / 4;
+        grid-row: 4;
+        width: 100%;
+        margin: 0;
+        gap: 6px;
+    }
+
+    /* Step 2: horizontal content, age and referral side-by-side */
+    body.hud-platform-mobile #registration-step-2 .registration-logo {
+        grid-column: 1;
+        grid-row: 1 / 3;
+    }
+
+    body.hud-platform-mobile #registration-step-2 .registration-headline {
+        grid-column: 1;
+        grid-row: 3 / 5;
+    }
+
+    body.hud-platform-mobile #registration-step-2 .gender-selector {
+        grid-column: 2 / 4;
+        grid-row: 1;
+        width: 100%;
+        margin: 0;
+        gap: 8px;
+    }
+
+    body.hud-platform-mobile #registration-step-2 .gender-button {
+        height: clamp(38px, 7.6vh, 50px);
+        min-height: 0;
+        flex-direction: row;
+        justify-content: center;
+        gap: 8px;
+        padding: 0 10px;
+        border-radius: 10px;
+        font-size: clamp(11px, 2.2vh, 14px);
+    }
+
+    body.hud-platform-mobile #registration-step-2 .gender-icon {
+        font-size: clamp(21px, 4.2vh, 27px);
+    }
+
+    body.hud-platform-mobile #registration-step-2 .age-container {
+        grid-column: 2;
+        grid-row: 2;
+        width: 100%;
+        margin: 0;
+    }
+
+    body.hud-platform-mobile #registration-step-2 .age-title {
+        margin: 0 0 3px;
+        font-size: 10px;
+    }
+
+    body.hud-platform-mobile #registration-step-2 .age-selector {
+        gap: 6px;
+    }
+
+    body.hud-platform-mobile #registration-step-2 .age-selector button,
+    body.hud-platform-mobile #registration-step-2 .age-selector input {
+        height: clamp(34px, 6.8vh, 42px);
+        border-radius: 9px;
+    }
+
+    body.hud-platform-mobile #registration-step-2 .age-selector button {
+        width: clamp(34px, 6.8vh, 42px);
+        min-width: clamp(34px, 6.8vh, 42px);
+        font-size: 22px;
+    }
+
+    body.hud-platform-mobile #registration-step-2 .age-selector input {
+        font-size: 17px;
+    }
+
+    body.hud-platform-mobile #registration-step-2 .age-description {
+        margin-top: 2px;
+        font-size: 8.5px;
+    }
+
+    body.hud-platform-mobile #registration-step-2 .registration-referral-field {
+        grid-column: 3;
+        grid-row: 2;
+        align-self: center;
+        height: clamp(38px, 7.4vh, 46px);
+        margin: 12px 0 0;
+    }
+
+    body.hud-platform-mobile #registration-step-2 .registration-buttons {
+        grid-column: 2 / 4;
+        grid-row: 3;
+        width: 100%;
+        margin: 0;
+        gap: 8px;
+    }
+
+    body.hud-platform-mobile #registration-step-2 #registration-back-button,
+    body.hud-platform-mobile #registration-step-2 #registration-button {
+        height: var(--reg-field-height);
+        border-radius: 10px;
+        font-size: clamp(11px, 2.2vh, 14px);
+    }
+
+    body.hud-platform-mobile #registration-step-2 .registration-progress {
+        grid-column: 2 / 4;
+        grid-row: 4;
+        width: 100%;
+        margin: 0;
+    }
+}
+
+/* Roomier tablets in landscape */
+@media (orientation: landscape) and (min-width: 900px) and (min-height: 600px) {
+    body.hud-platform-mobile .registration-panel {
+        grid-template-columns: minmax(180px, 0.68fr) minmax(0, 1fr) minmax(0, 1fr);
+        column-gap: 24px;
+        row-gap: 10px;
+    }
+
+    body.hud-platform-mobile .registration-logo {
+        width: min(22vw, 215px);
+        max-height: 104px;
+    }
+}
+
+/* Very short mobile landscape */
+@media (orientation: landscape) and (max-height: 390px) {
+    body.hud-platform-mobile #registration {
+        --reg-field-height: 36px;
+        --reg-panel-padding-y: 6px;
+    }
+
+    body.hud-platform-mobile .registration-panel {
+        grid-template-columns: minmax(104px, 0.56fr) minmax(0, 1fr) minmax(0, 1fr);
+        column-gap: 7px;
+        row-gap: 4px;
+    }
+
+    body.hud-platform-mobile .registration-logo {
+        width: min(22vw, 145px);
+        max-height: 68px;
+    }
+
+    body.hud-platform-mobile .registration-headline h1 {
+        font-size: 16px;
+    }
+
+    body.hud-platform-mobile .registration-headline p {
+        font-size: 8px;
+    }
+
+    body.hud-platform-mobile #registration-step-2 .age-description,
+    body.hud-platform-mobile .registration-progress {
+        display: none;
+    }
+
+    body.hud-platform-mobile #registration-step-2 .registration-referral-field {
+        margin-top: 9px;
+    }
+}
