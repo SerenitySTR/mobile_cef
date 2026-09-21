@@ -16,7 +16,42 @@ const hudMobilePlatform = isMobileHudPlatform();
 window.hudMobilePlatform = hudMobilePlatform;
 document.body.classList.add(hudMobilePlatform ? "hud-platform-mobile" : "hud-platform-pc");
 
-function sendPcHud() {}
+const pcHudPendingCalls = [];
+
+function sendPcHud(action, data) {
+    if (hudMobilePlatform)
+        return;
+
+    const api = window.AntaresHUD;
+
+    if (!api) {
+        pcHudPendingCalls.push([action, data]);
+        return;
+    }
+
+    if (action === "show") {
+        api.show?.();
+        return;
+    }
+
+    if (action === "hide") {
+        api.hide?.();
+        return;
+    }
+
+    if (action === "update")
+        api.update?.(data);
+}
+
+window.flushPcHudPendingCalls = function () {
+    if (hudMobilePlatform || !window.AntaresHUD)
+        return;
+
+    while (pcHudPendingCalls.length > 0) {
+        const [action, data] = pcHudPendingCalls.shift();
+        sendPcHud(action, data);
+    }
+};
 
 const hud = document.getElementById("hud");
 

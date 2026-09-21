@@ -60,4 +60,5 @@
   if(window.visualViewport)visualViewport.addEventListener('resize',updateScale,{passive:true});
   if(new URLSearchParams(location.search).get('preview')==='1')document.body.classList.add('preview');
   renderWanted(4);
+  window.flushPcHudPendingCalls?.();
 })();
