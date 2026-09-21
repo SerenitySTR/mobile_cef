@@ -4,36 +4,31 @@ const spawnButton=document.getElementById("spawn-button");
 const spawnPreviewImage=document.getElementById("spawn-preview-image");
 const spawnPreviewTitle=document.getElementById("spawn-preview-title");
 const spawnPreviewText=document.getElementById("spawn-preview-text");
-const spawnPreviewLocation=document.getElementById("spawn-preview-location");
 
 const spawnData={
     LastPosition:{
         id:0,
         title:"Останнє місце",
-        text:"Поверніться до місця, де завершили попередню ігрову сесію.",
-        location:"SAN ANDREAS",
-        image:"./assets/CSS/Images/Spawn/last-position.svg"
-    },
-    House:{
-        id:1,
-        title:"Будинок",
-        text:"Почніть гру у власному будинку та одразу опиніться вдома.",
-        location:"ВАШ БУДИНОК",
-        image:"./assets/CSS/Images/Spawn/house.svg"
+        text:"Поверніться до вашого останнього місця виходу з гри. Ви з'явитесь саме там, де востаннє завершили гру.",
+        image:"./assets/CSS/Images/Spawn/last-position-new.webp"
     },
     Standard:{
         id:2,
         title:"Стандартний",
-        text:"Стандартне місце появи для швидкого початку гри у місті.",
-        location:"СТАНДАРТНИЙ СПАВН",
-        image:"./assets/CSS/Images/Spawn/standard.svg"
+        text:"Почніть гру зі стандартної точки появи — зручного місця для швидкого старту та знайомства з містом.",
+        image:"./assets/CSS/Images/Spawn/standard-new.webp"
+    },
+    House:{
+        id:1,
+        title:"Будинок",
+        text:"З'явіться біля власного будинку та продовжіть гру без зайвих переміщень містом.",
+        image:"./assets/CSS/Images/Spawn/house-new.webp"
     },
     FamilyHouse:{
         id:3,
         title:"Будинок родини",
-        text:"З'явіться у будинку своєї родини поруч з іншими її учасниками.",
-        location:"БУДИНОК РОДИНИ",
-        image:"./assets/CSS/Images/Spawn/family-house.svg"
+        text:"Почніть гру біля будинку своєї родини поруч з іншими її учасниками.",
+        image:"./assets/CSS/Images/Spawn/family-house-new.webp"
     }
 };
 
@@ -71,10 +66,22 @@ function selectSpawn(value){
     });
 
     const data=spawnData[type];
-    spawnPreviewImage.src=data.image;
+
+    spawnPreviewImage.style.opacity="0";
+    spawnPreviewImage.style.transform="scale(1.025)";
+
+    const nextImage=new Image();
+    nextImage.onload=()=>{
+        spawnPreviewImage.src=data.image;
+        requestAnimationFrame(()=>{
+            spawnPreviewImage.style.opacity="1";
+            spawnPreviewImage.style.transform="scale(1.012)";
+        });
+    };
+    nextImage.src=data.image;
+
     spawnPreviewTitle.textContent=data.title;
     spawnPreviewText.textContent=data.text;
-    spawnPreviewLocation.textContent=data.location;
 }
 
 spawnItems.forEach(item=>{
@@ -86,7 +93,6 @@ spawnButton.addEventListener("click",()=>{
         SpawnType:spawnData[selectedSpawn].id
     });
 });
-
 
 document.addEventListener("keydown",event=>{
     if(event.defaultPrevented||event.isComposing||event.keyCode===229||event.repeat)

@@ -2,83 +2,95 @@
     <div class="spawn-background"></div>
 
     <div class="spawn-container">
-        <img class="spawn-logo" src="./assets/CSS/Images/Registration/logo.svg" alt="Antares RolePlay">
+        <img class="spawn-logo" src="./assets/CSS/Images/Registration/logo-variant1.png" alt="Antares RolePlay">
 
-        <div class="spawn-title">
-            <span></span>
-            <h1>Вибір спавну</h1>
-            <span></span>
+        <div class="spawn-heading">
+            <h1>Вибір точки появи</h1>
+            <p>Оберіть зручне місце для початку гри</p>
         </div>
 
-        <p class="spawn-description">Оберіть зручне місце для початку гри</p>
-
-        <div class="spawn-content">
+        <div class="spawn-panel">
             <div class="spawn-list">
                 <button class="spawn-item active" type="button" data-spawn="LastPosition">
                     <span class="spawn-item-image">
-                        <img src="./assets/CSS/Images/Spawn/icon-location.svg" alt="">
+                        <img src="./assets/CSS/Images/Spawn/thumb-last.webp" alt="">
                     </span>
+                    <span class="spawn-item-icon"><img src="./assets/CSS/Images/Spawn/icon-location.svg" alt=""></span>
                     <span class="spawn-item-info">
                         <strong>Останнє місце</strong>
-                        <small>Повернутися туди, де ви були</small>
+                        <small>Повернення до точки виходу</small>
+                    </span>
+                    <span class="spawn-item-arrow">›</span>
+                </button>
+
+                <button class="spawn-item" type="button" data-spawn="Standard">
+                    <span class="spawn-item-image">
+                        <img src="./assets/CSS/Images/Spawn/thumb-standard.webp" alt="">
+                    </span>
+                    <span class="spawn-item-icon spawn-item-icon-standard">✦</span>
+                    <span class="spawn-item-info">
+                        <strong>Стандартний</strong>
+                        <small>Зручне місце для початку гри</small>
                     </span>
                     <span class="spawn-item-arrow">›</span>
                 </button>
 
                 <button class="spawn-item" type="button" data-spawn="House">
                     <span class="spawn-item-image">
-                        <img src="./assets/CSS/Images/Spawn/icon-house.svg" alt="">
+                        <img src="./assets/CSS/Images/Spawn/thumb-house.webp" alt="">
                     </span>
+                    <span class="spawn-item-icon"><img src="./assets/CSS/Images/Spawn/icon-house.svg" alt=""></span>
                     <span class="spawn-item-info">
                         <strong>Будинок</strong>
-                        <small>З'явитися у власному будинку</small>
-                    </span>
-                    <span class="spawn-item-arrow">›</span>
-                </button>
-
-                <button class="spawn-item" type="button" data-spawn="Standard">
-                    <span class="spawn-item-image spawn-item-preview-image">
-                        <img src="./assets/CSS/Images/Spawn/standard.svg" alt="">
-                    </span>
-                    <span class="spawn-item-info">
-                        <strong>Стандартний</strong>
-                        <small>Стандартне місце появи</small>
+                        <small>Якщо у вас є власна нерухомість</small>
                     </span>
                     <span class="spawn-item-arrow">›</span>
                 </button>
 
                 <button class="spawn-item" type="button" data-spawn="FamilyHouse">
-                    <span class="spawn-item-image spawn-item-preview-image">
-                        <img src="./assets/CSS/Images/Spawn/family-house.svg" alt="">
+                    <span class="spawn-item-image">
+                        <img src="./assets/CSS/Images/Spawn/thumb-family.webp" alt="">
                     </span>
+                    <span class="spawn-item-icon spawn-item-icon-family"><img src="./assets/CSS/Images/Spawn/icon-family-house.svg" alt=""></span>
                     <span class="spawn-item-info">
                         <strong>Будинок родини</strong>
-                        <small>З'явитися у будинку родини</small>
+                        <small>Спавн біля сімейного дому</small>
                     </span>
                     <span class="spawn-item-arrow">›</span>
                 </button>
             </div>
 
             <div class="spawn-preview">
-                <img id="spawn-preview-image" src="./assets/CSS/Images/Spawn/last-position.svg" alt="">
-                <div class="spawn-preview-shadow"></div>
-
-                <div class="spawn-preview-info">
-                    <span>Попередній перегляд</span>
-                    <h2 id="spawn-preview-title">Останнє місце</h2>
-                    <i></i>
-                    <p id="spawn-preview-text">Поверніться до місця, де завершили попередню ігрову сесію.</p>
+                <div class="spawn-preview-media">
+                    <img id="spawn-preview-image" src="./assets/CSS/Images/Spawn/last-position-new.webp" alt="">
+                    <div class="spawn-preview-media-shade"></div>
                 </div>
 
-                <div class="spawn-preview-location">
-                    <img src="./assets/CSS/Images/Spawn/icon-location.svg" alt="">
-                    <span id="spawn-preview-location">SAN ANDREAS</span>
+                <div class="spawn-preview-body">
+                    <div class="spawn-preview-heading-row">
+                        <div class="spawn-preview-heading">
+                            <span class="spawn-preview-heading-icon"><img src="./assets/CSS/Images/Spawn/icon-location.svg" alt=""></span>
+                            <h2 id="spawn-preview-title">Останнє місце</h2>
+                        </div>
+                    </div>
+
+                    <p id="spawn-preview-text">Поверніться до вашого останнього місця виходу з гри. Ви з'явитесь саме там, де востаннє завершили гру.</p>
+
+                    <div class="spawn-preview-story">Твоя історія продовжується тут</div>
                 </div>
             </div>
         </div>
 
         <div class="spawn-buttons">
-            <button id="spawn-button" type="button">Продовжити</button>
-</div>
+            <button id="spawn-button" type="button">
+                <span>Продовжити</span>
+                <span class="spawn-button-arrow">→</span>
+            </button>
+        </div>
+
+        <div class="spawn-footer">
+            <span>ANTARES ROLEPLAY</span>
+            <span>БІЛЬШЕ НІЖ ГРА</span>
+        </div>
     </div>
 </section>
