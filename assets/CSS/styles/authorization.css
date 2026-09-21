@@ -64,6 +64,7 @@ body {
 }
 
 .authorization-panel {
+    --authorization-form-width: 420px;
     position: relative;
     width: 100%;
     display: flex;
@@ -147,9 +148,9 @@ body {
 
 .authorization-field {
     position: relative;
-    width: 100%;
+    width: min(100%, var(--authorization-form-width));
     height: 62px;
-    margin-bottom: 14px;
+    margin: 0 auto 14px;
 }
 
 .authorization-field > img {
@@ -225,9 +226,10 @@ body {
 }
 
 #authorization-button {
-    width: 100%;
+    position: relative;
+    width: min(100%, var(--authorization-form-width));
     height: 60px;
-    margin-top: 6px;
+    margin: 6px auto 0;
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -258,12 +260,18 @@ body {
 }
 
 .authorization-button-arrow {
+    position: absolute;
+    right: 22px;
+    top: 50%;
+    transform: translateY(-50%);
     font-size: 22px;
     line-height: 1;
 }
 
 .authorization-footer {
-    width: 100%;
+    width: min(100%, var(--authorization-form-width));
+    margin-left: auto;
+    margin-right: auto;
     display: flex;
     align-items: center;
     gap: 10px;

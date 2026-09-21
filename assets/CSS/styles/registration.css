@@ -68,6 +68,7 @@
 }
 
 .registration-panel {
+    --registration-form-width: 440px;
     position: relative;
     width: 100%;
     display: flex;
@@ -150,9 +151,9 @@
 
 .registration-field {
     position: relative;
-    width: 100%;
+    width: min(100%, var(--registration-form-width));
     height: 62px;
-    margin-bottom: 14px;
+    margin: 0 auto 14px;
 }
 
 .registration-field > img {
@@ -229,8 +230,11 @@
 
 #registration-next-button,
 #registration-button {
-    width: 100%;
+    position: relative;
+    width: min(100%, var(--registration-form-width));
     height: 60px;
+    margin-left: auto;
+    margin-right: auto;
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -253,6 +257,10 @@
 }
 
 .registration-button-arrow {
+    position: absolute;
+    right: 22px;
+    top: 50%;
+    transform: translateY(-50%);
     font-size: 22px;
     line-height: 1;
 }
@@ -291,6 +299,8 @@
 
 .registration-progress {
     width: 84px;
+    margin-left: auto;
+    margin-right: auto;
     display: flex;
     justify-content: center;
     gap: 10px;
@@ -310,7 +320,9 @@
 }
 
 .gender-selector {
-    width: 100%;
+    width: min(100%, var(--registration-form-width));
+    margin-left: auto;
+    margin-right: auto;
     display: flex;
     gap: 14px;
     margin-bottom: 18px;
@@ -355,8 +367,8 @@
 }
 
 .age-container {
-    width: 100%;
-    margin-bottom: 16px;
+    width: min(100%, var(--registration-form-width));
+    margin: 0 auto 16px;
 }
 
 .age-title {
@@ -434,7 +446,9 @@
 }
 
 .registration-buttons {
-    width: 100%;
+    width: min(100%, var(--registration-form-width));
+    margin-left: auto;
+    margin-right: auto;
     display: flex;
     gap: 12px;
 }
@@ -458,6 +472,8 @@
 
 .registration-buttons #registration-button {
     width: 64%;
+    margin-left: 0;
+    margin-right: 0;
 }
 
 #registration.active #registration-step-1.active .registration-panel,
