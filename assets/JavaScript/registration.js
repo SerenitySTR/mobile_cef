@@ -225,29 +225,6 @@ document.addEventListener("keydown", (event) => {
     (step2.classList.contains("active") ? registerButton : nextButton).click();
 });
 
-// TEMP: local registration preview. Remove this block before production.
-function testShowRegistration() {
-    if (typeof Loading !== "undefined" && Loading.Hide)
-        Loading.Hide();
-
-    document.getElementById("authorization")?.classList.remove("active");
-
-    usernameInput.value = "Test_Mob5";
-    resetRegistrationState();
-    showRegistration();
-}
-
-const isRegistrationLocalTest =
-    location.protocol === "file:" ||
-    location.hostname === "localhost" ||
-    location.hostname === "127.0.0.1";
-
-if (isRegistrationLocalTest) {
-    setTimeout(() => {
-        testShowRegistration();
-    }, 500);
-}
-
 GameCef.on("registration:show", (data) => {
     usernameInput.value = data;
     resetRegistrationState();
