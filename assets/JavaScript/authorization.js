@@ -6,8 +6,16 @@ const authorizationPasswordInput = document.getElementById("authorization-passwo
 const authorizationButton = document.getElementById("authorization-button");
 const authorizationPasswordEye = document.querySelector(".authorization-password-eye");
 
+function focusAuthorizationPassword() {
+    requestAnimationFrame(() => {
+        authorizationPasswordInput.focus();
+        authorizationPasswordInput.select?.();
+    });
+}
+
 function showAuthorization() {
     authorization.classList.add("active");
+    focusAuthorizationPassword();
 }
 
 function hideAuthorization() {
@@ -18,6 +26,8 @@ authorizationPasswordEye.addEventListener("click", () => {
     authorizationPasswordInput.type = authorizationPasswordInput.type === "password"
         ? "text"
         : "password";
+
+    focusAuthorizationPassword();
 });
 
 authorizationButton.addEventListener("click", () => {
@@ -33,7 +43,7 @@ authorizationButton.addEventListener("click", () => {
         return;
     }
 
-    if (!/^[\x21-\x7E]+$/.test(password)) {
+    if (!/^[!-~]+$/.test(password)) {
         showError("Невірний пароль", "Пароль може містити латинські літери, цифри та спеціальні символи без пробілів.");
         return;
     }
@@ -45,7 +55,6 @@ authorizationButton.addEventListener("click", () => {
         Password: password
     });
 });
-
 
 document.addEventListener("keydown", (event) => {
     if (event.defaultPrevented || event.isComposing || event.keyCode === 229 || event.repeat)
@@ -69,8 +78,9 @@ document.addEventListener("keydown", (event) => {
 GameCef.on("authorization:show", (data) => {
     authorizationUsernameInput.value = data;
     authorizationPasswordInput.value = "";
+    authorizationPasswordInput.type = "password";
 
-    Loading.Transition(authorization,()=>{
+    Loading.Transition(authorization, () => {
         showAuthorization();
     });
 });

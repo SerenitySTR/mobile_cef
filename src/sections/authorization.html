@@ -2,28 +2,40 @@
     <div class="authorization-background"></div>
 
     <div class="authorization-container">
-        <img class="authorization-logo" src="./assets/CSS/Images/Registration/logo.svg" alt="Antares RolePlay">
+        <div class="authorization-panel">
+            <div class="authorization-badge">Вхід</div>
 
-        <div class="authorization-title">
-            <span></span>
-            <h1>Авторизація</h1>
-            <span></span>
-        </div>
+            <img class="authorization-logo" src="./assets/CSS/Images/Registration/logo-neon.svg" alt="Antares RolePlay">
 
-        <div class="authorization-field">
-            <img src="./assets/CSS/Images/Registration/icon-user.svg" alt="">
-            <input type="text" id="authorization-username" placeholder="Ім'я користувача" readonly>
-        </div>
+            <div class="authorization-headline">
+                <h1>Авторизація</h1>
+                <p>Увійдіть до свого акаунта та продовжіть історію в Antares RolePlay</p>
+            </div>
 
-        <div class="authorization-field">
-            <img src="./assets/CSS/Images/Registration/icon-lock.svg" alt="">
-            <input type="password" id="authorization-password" placeholder="Введіть пароль" autocomplete="off" lang="uk" dir="auto" spellcheck="false">
+            <div class="authorization-field authorization-field-readonly">
+                <img src="./assets/CSS/Images/Registration/icon-user-neon.svg" alt="">
+                <input type="text" id="authorization-username" placeholder="Ім'я користувача" readonly>
+            </div>
 
-            <button class="authorization-password-eye" type="button">
-                <img src="./assets/CSS/Images/Registration/icon-eye.svg" alt="">
+            <div class="authorization-field">
+                <img src="./assets/CSS/Images/Registration/icon-lock-neon.svg" alt="">
+                <input type="password" id="authorization-password" placeholder="Введіть пароль" autocomplete="off" lang="uk" dir="auto" spellcheck="false">
+
+                <button class="authorization-password-eye" type="button" aria-label="Показати пароль">
+                    <img src="./assets/CSS/Images/Registration/icon-eye-neon.svg" alt="">
+                </button>
+            </div>
+
+            <button id="authorization-button" type="button">
+                <span>Увійти</span>
+                <span class="authorization-button-arrow">→</span>
             </button>
-        </div>
 
-        <button id="authorization-button" type="button">Увійти</button>
+            <div class="authorization-footer">
+                <span></span>
+                <small>ANTARES ROLEPLAY</small>
+                <span></span>
+            </div>
+        </div>
     </div>
 </section>

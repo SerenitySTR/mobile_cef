@@ -2,88 +2,108 @@
     <div class="registration-background"></div>
 
     <div class="registration-container registration-step active" id="registration-step-1">
-        <img class="registration-logo" src="./assets/CSS/Images/Registration/logo.svg" alt="Antares RolePlay">
+        <div class="registration-panel">
+            <div class="registration-badge">1/2</div>
 
-        <div class="registration-title">
-            <span></span>
-            <h1>Реєстрація</h1>
-            <span></span>
-        </div>
+            <img class="registration-logo" src="./assets/CSS/Images/Registration/logo-neon.svg" alt="Antares RolePlay">
 
-        <div class="registration-field">
-            <img src="./assets/CSS/Images/Registration/icon-user.svg" alt="">
-            <input type="text" id="username" placeholder="Ім'я персонажа" readonly>
-        </div>
+            <div class="registration-headline">
+                <h1>Реєстрація</h1>
+                <p>Створіть свого персонажа та почніть нову історію в Antares RolePlay</p>
+            </div>
 
-        <div class="registration-field">
-            <img src="./assets/CSS/Images/Registration/icon-mail.svg" alt="">
-            <input type="email" id="email" placeholder="Введіть E-mail" autocomplete="off" lang="uk" dir="auto" spellcheck="false">
-        </div>
+            <div class="registration-field registration-field-readonly">
+                <img src="./assets/CSS/Images/Registration/icon-user-neon.svg" alt="">
+                <input type="text" id="username" placeholder="Ім'я персонажа" readonly>
+            </div>
 
-        <div class="registration-field">
-            <img src="./assets/CSS/Images/Registration/icon-user.svg" alt="">
-            <input type="text" id="referal" placeholder="Введіть реферала (необов'язково)" autocomplete="off" lang="uk" dir="auto" spellcheck="false">
-        </div>
+            <div class="registration-field">
+                <img src="./assets/CSS/Images/Registration/icon-mail-neon.svg" alt="">
+                <input type="email" id="email" placeholder="Введіть E-mail" autocomplete="off" lang="uk" dir="auto" spellcheck="false">
+            </div>
 
-        <div class="registration-field">
-            <img src="./assets/CSS/Images/Registration/icon-lock.svg" alt="">
-            <input type="password" id="password" placeholder="Введіть пароль" autocomplete="off" lang="uk" dir="auto" spellcheck="false">
+            <div class="registration-field">
+                <img src="./assets/CSS/Images/Registration/icon-lock-neon.svg" alt="">
+                <input type="password" id="password" placeholder="Введіть пароль" autocomplete="off" lang="uk" dir="auto" spellcheck="false">
 
-            <button class="password-eye" type="button" data-target="password">
-                <img src="./assets/CSS/Images/Registration/icon-eye.svg" alt="">
+                <button class="password-eye" type="button" data-target="password" aria-label="Показати пароль">
+                    <img src="./assets/CSS/Images/Registration/icon-eye-neon.svg" alt="">
+                </button>
+            </div>
+
+            <div class="registration-field">
+                <img src="./assets/CSS/Images/Registration/icon-lock-neon.svg" alt="">
+                <input type="password" id="password-repeat" placeholder="Повторіть пароль" autocomplete="off" lang="uk" dir="auto" spellcheck="false">
+
+                <button class="password-eye" type="button" data-target="password-repeat" aria-label="Показати пароль">
+                    <img src="./assets/CSS/Images/Registration/icon-eye-neon.svg" alt="">
+                </button>
+            </div>
+
+            <button id="registration-next-button" type="button">
+                <span>Продовжити</span>
+                <span class="registration-button-arrow">→</span>
             </button>
+
+            <div class="registration-progress" aria-hidden="true">
+                <span class="active"></span>
+                <span></span>
+            </div>
         </div>
-
-        <div class="registration-field">
-            <img src="./assets/CSS/Images/Registration/icon-lock.svg" alt="">
-            <input type="password" id="password-repeat" placeholder="Повторіть пароль" autocomplete="off" lang="uk" dir="auto" spellcheck="false">
-
-            <button class="password-eye" type="button" data-target="password-repeat">
-                <img src="./assets/CSS/Images/Registration/icon-eye.svg" alt="">
-            </button>
-        </div>
-
-        <button id="registration-next-button" type="button">Продовжити</button>
     </div>
 
     <div class="registration-container registration-step" id="registration-step-2">
-        <img class="registration-logo" src="./assets/CSS/Images/Registration/logo.svg" alt="Antares RolePlay">
+        <div class="registration-panel">
+            <div class="registration-badge">2/2</div>
 
-        <div class="registration-title">
-            <span></span>
-            <h1>Персонаж</h1>
-            <span></span>
-        </div>
+            <img class="registration-logo" src="./assets/CSS/Images/Registration/logo-neon.svg" alt="Antares RolePlay">
 
-        <p class="registration-description">Оберіть стать та вкажіть вік персонажа</p>
-
-        <div class="gender-selector">
-            <button class="gender-button" type="button" data-gender="male">
-                <span class="gender-icon">♂</span>
-                <span>Чоловіча</span>
-            </button>
-
-            <button class="gender-button" type="button" data-gender="female">
-                <span class="gender-icon">♀</span>
-                <span>Жіноча</span>
-            </button>
-        </div>
-
-        <div class="age-container">
-            <p class="age-title">Вік персонажа</p>
-
-            <div class="age-selector">
-                <button id="age-minus" type="button">−</button>
-                <input type="text" id="age" value="18" inputmode="numeric" maxlength="2" autocomplete="off">
-                <button id="age-plus" type="button">+</button>
+            <div class="registration-headline">
+                <h1>Персонаж</h1>
+                <p>Оберіть стать, вкажіть вік та за бажанням додайте реферала</p>
             </div>
 
-            <p class="age-description">Допустимий вік: від 18 до 70 років</p>
-        </div>
+            <div class="gender-selector">
+                <button class="gender-button" type="button" data-gender="male">
+                    <span class="gender-icon">♂</span>
+                    <span>Чоловіча</span>
+                </button>
 
-        <div class="registration-buttons">
-            <button id="registration-back-button" type="button">Назад</button>
-            <button id="registration-button" type="button">Зареєструватися</button>
+                <button class="gender-button" type="button" data-gender="female">
+                    <span class="gender-icon">♀</span>
+                    <span>Жіноча</span>
+                </button>
+            </div>
+
+            <div class="age-container">
+                <p class="age-title">Вік персонажа</p>
+
+                <div class="age-selector">
+                    <button id="age-minus" type="button">−</button>
+                    <input type="text" id="age" value="18" inputmode="numeric" maxlength="2" autocomplete="off">
+                    <button id="age-plus" type="button">+</button>
+                </div>
+
+                <p class="age-description">Допустимий вік: від 18 до 70 років</p>
+            </div>
+
+            <div class="registration-field registration-referral-field">
+                <img src="./assets/CSS/Images/Registration/icon-user-neon.svg" alt="">
+                <input type="text" id="referal" placeholder="Введіть реферала (необов'язково)" autocomplete="off" lang="uk" dir="auto" spellcheck="false">
+            </div>
+
+            <div class="registration-buttons">
+                <button id="registration-back-button" type="button">Назад</button>
+                <button id="registration-button" type="button">
+                    <span>Зареєструватися</span>
+                    <span class="registration-button-arrow">→</span>
+                </button>
+            </div>
+
+            <div class="registration-progress" aria-hidden="true">
+                <span></span>
+                <span class="active"></span>
+            </div>
         </div>
     </div>
 </section>

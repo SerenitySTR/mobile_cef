@@ -1,34 +1,7 @@
-* {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-}
-
-html,
-body {
-    width: 100%;
-    height: 100%;
-    margin: 0;
-    padding: 0;
-}
-
-body {
-    background: transparent;
-    font-family: Arial, sans-serif;
-}
-
-button,
-input {
-    font: inherit;
-}
-
-button {
-    border: 0;
-}
-
 #registration {
     display: none;
-    position: relative;
+    position: fixed;
+    inset: 0;
     width: 100vw;
     height: 100vh;
     min-height: 100vh;
@@ -37,9 +10,10 @@ button {
     overflow: hidden;
     isolation: isolate;
     padding:
-        max(24px, env(safe-area-inset-top))
-        20px
-        max(24px, env(safe-area-inset-bottom));
+        max(26px, env(safe-area-inset-top))
+        max(18px, env(safe-area-inset-right))
+        max(26px, env(safe-area-inset-bottom))
+        max(18px, env(safe-area-inset-left));
 }
 
 #registration.active {
@@ -50,29 +24,37 @@ button {
     position: absolute;
     inset: 0;
     background:
-        url("../Images/Registration/background.svg")
-        center center / cover
-        no-repeat;
+        radial-gradient(circle at 50% 12%, rgba(73, 187, 255, 0.18), transparent 34%),
+        radial-gradient(circle at 18% 82%, rgba(16, 91, 164, 0.28), transparent 28%),
+        linear-gradient(180deg, rgba(4, 11, 24, 0.16), rgba(1, 6, 14, 0.56)),
+        url("../Images/Registration/background-reference.png") center center / cover no-repeat;
     z-index: -2;
+    transform: scale(1.02);
 }
 
+#registration::before,
 #registration::after {
     content: "";
     position: absolute;
     inset: 0;
-    background: linear-gradient(
-        180deg,
-        rgba(1, 7, 15, 0.08),
-        rgba(1, 7, 15, 0.18) 55%,
-        rgba(1, 7, 15, 0.45)
-    );
-    z-index: -1;
     pointer-events: none;
+}
+
+#registration::before {
+    background:
+        radial-gradient(circle at 50% 18%, rgba(87, 199, 255, 0.12), transparent 24%),
+        radial-gradient(circle at 50% 100%, rgba(23, 123, 198, 0.16), transparent 34%);
+    z-index: -1;
+}
+
+#registration::after {
+    background: linear-gradient(180deg, rgba(1, 7, 15, 0.12), rgba(1, 7, 15, 0.32) 58%, rgba(1, 7, 15, 0.5));
+    z-index: -1;
 }
 
 .registration-container {
     width: 100%;
-    max-width: 420px;
+    max-width: 520px;
     flex-direction: column;
     align-items: center;
 }
@@ -85,67 +67,102 @@ button {
     display: flex;
 }
 
-.registration-logo {
-    width: 78vw;
-    max-width: 360px;
-    max-height: 180px;
-    object-fit: contain;
-    margin-bottom: 12px;
-    filter: drop-shadow(
-        0 7px 12px rgba(0, 0, 0, 0.45)
-    );
-}
-
-.registration-title {
+.registration-panel {
+    position: relative;
     width: 100%;
     display: flex;
+    flex-direction: column;
     align-items: center;
-    gap: 10px;
-    margin-bottom: 18px;
-    color: #48beff;
+    padding: 32px 30px 24px;
+    border: 1px solid rgba(89, 195, 255, 0.68);
+    border-radius: 28px;
+    background: linear-gradient(180deg, rgba(4, 15, 30, 0.88), rgba(3, 10, 21, 0.78));
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.08),
+        0 24px 60px rgba(0, 6, 16, 0.5),
+        0 0 32px rgba(46, 161, 255, 0.12);
+    backdrop-filter: blur(14px);
+    overflow: hidden;
 }
 
-.registration-title span {
-    height: 1px;
-    flex: 1;
-    background: linear-gradient(
-        90deg,
-        transparent,
-        rgba(72, 190, 255, 0.8)
-    );
+.registration-panel::before {
+    content: "";
+    position: absolute;
+    inset: 1px;
+    border-radius: 26px;
+    border: 1px solid rgba(113, 214, 255, 0.1);
+    pointer-events: none;
 }
 
-.registration-title span:last-child {
-    background: linear-gradient(
-        90deg,
-        rgba(72, 190, 255, 0.8),
-        transparent
-    );
+.registration-panel::after {
+    content: "";
+    position: absolute;
+    left: 10%;
+    right: 10%;
+    bottom: -12px;
+    height: 44px;
+    background: radial-gradient(circle, rgba(58, 189, 255, 0.22), transparent 70%);
+    filter: blur(14px);
+    pointer-events: none;
 }
 
-.registration-title h1 {
-    font-size: clamp(16px, 4vw, 20px);
+.registration-badge {
+    position: absolute;
+    top: 24px;
+    right: 24px;
+    padding: 6px 10px;
+    border: 1px solid rgba(122, 215, 255, 0.24);
+    border-radius: 999px;
+    background: rgba(6, 23, 41, 0.62);
+    color: #aedfff;
+    font-size: 12px;
     font-weight: 700;
-    letter-spacing: 1.5px;
-    white-space: nowrap;
-    text-transform: uppercase;
+    letter-spacing: 0.12em;
+}
+
+.registration-logo {
+    width: min(78vw, 330px);
+    margin-bottom: 10px;
+    object-fit: contain;
+    filter: drop-shadow(0 12px 24px rgba(0, 0, 0, 0.38));
+}
+
+.registration-headline {
+    width: 100%;
+    margin-bottom: 24px;
+    text-align: center;
+}
+
+.registration-headline h1 {
+    margin: 0 0 8px;
+    color: #f4fbff;
+    font-size: clamp(28px, 3vw, 34px);
+    font-weight: 800;
+    letter-spacing: -0.02em;
+}
+
+.registration-headline p {
+    margin: 0;
+    color: rgba(218, 238, 255, 0.78);
+    font-size: 15px;
+    line-height: 1.45;
 }
 
 .registration-field {
     position: relative;
     width: 100%;
-    height: 54px;
-    margin-bottom: 12px;
+    height: 62px;
+    margin-bottom: 14px;
 }
 
 .registration-field > img {
     position: absolute;
-    left: 17px;
+    left: 20px;
     top: 50%;
     width: 20px;
     height: 20px;
     transform: translateY(-50%);
-    opacity: 0.72;
+    opacity: 0.86;
     z-index: 2;
     pointer-events: none;
 }
@@ -153,43 +170,56 @@ button {
 .registration-field input {
     width: 100%;
     height: 100%;
-    padding: 0 52px 0 54px;
-    border: 1px solid rgba(255, 255, 255, 0.22);
-    border-radius: 11px;
+    padding: 0 58px 0 58px;
+    border: 1px solid rgba(93, 196, 255, 0.22);
+    border-radius: 15px;
     outline: 0;
-    background: linear-gradient(
-        90deg,
-        rgba(5, 13, 22, 0.88),
-        rgba(4, 11, 19, 0.76)
-    );
-    color: #fff;
-    font-size: 15px;
+    background: linear-gradient(90deg, rgba(5, 15, 26, 0.9), rgba(4, 11, 21, 0.74));
+    color: #f6fbff;
+    font-size: 16px;
+    transition:
+        border-color 0.25s ease,
+        box-shadow 0.25s ease,
+        background 0.25s ease;
 }
 
 .registration-field input::placeholder {
-    color: rgba(255, 255, 255, 0.56);
+    color: rgba(216, 231, 243, 0.52);
 }
 
 .registration-field input:focus {
-    border-color: rgba(54, 185, 255, 0.86);
-    background: rgba(5, 20, 32, 0.92);
+    border-color: rgba(88, 201, 255, 0.92);
+    background: linear-gradient(90deg, rgba(6, 21, 36, 0.96), rgba(5, 16, 28, 0.86));
     box-shadow:
-        0 0 0 1px rgba(54, 185, 255, 0.1),
-        0 0 16px rgba(54, 185, 255, 0.08);
+        0 0 0 1px rgba(88, 201, 255, 0.12),
+        0 0 18px rgba(55, 179, 255, 0.12);
+}
+
+.registration-field-readonly input {
+    color: rgba(255, 255, 255, 0.82);
+    background: linear-gradient(90deg, rgba(8, 22, 37, 0.88), rgba(5, 15, 26, 0.74));
 }
 
 .password-eye {
     position: absolute;
-    right: 11px;
+    right: 12px;
     top: 50%;
-    width: 36px;
-    height: 36px;
+    width: 38px;
+    height: 38px;
     display: grid;
     place-items: center;
     transform: translateY(-50%);
+    border: 0;
+    border-radius: 10px;
     background: transparent;
     cursor: pointer;
-    opacity: 0.65;
+    opacity: 0.72;
+    transition: opacity 0.2s ease, background 0.2s ease;
+}
+
+.password-eye:hover {
+    opacity: 1;
+    background: rgba(72, 190, 255, 0.08);
 }
 
 .password-eye img {
@@ -200,97 +230,139 @@ button {
 #registration-next-button,
 #registration-button {
     width: 100%;
-    height: 54px;
-    margin-top: 4px;
-    border: 1px solid rgba(48, 184, 255, 0.72);
-    border-radius: 11px;
-    background: linear-gradient(
-        180deg,
-        rgba(8, 56, 87, 0.88),
-        rgba(4, 24, 41, 0.94)
-    );
-    color: #38c6ff;
-    font-size: 15px;
+    height: 60px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    border: 1px solid rgba(88, 195, 255, 0.9);
+    border-radius: 15px;
+    background: linear-gradient(180deg, rgba(23, 133, 221, 0.98), rgba(13, 76, 148, 0.98));
+    color: #ffffff;
+    font-size: 18px;
     font-weight: 700;
-    letter-spacing: 1px;
+    letter-spacing: -0.01em;
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.16),
+        0 10px 26px rgba(11, 103, 189, 0.34);
     cursor: pointer;
 }
 
-.registration-description {
-    width: 100%;
-    margin-top: -4px;
-    margin-bottom: 20px;
-    color: rgba(255, 255, 255, 0.55);
-    font-size: 14px;
-    line-height: 20px;
-    text-align: center;
+#registration-next-button {
+    margin-top: 6px;
+}
+
+.registration-button-arrow {
+    font-size: 22px;
+    line-height: 1;
+}
+
+#registration-next-button,
+#registration-button,
+#registration-back-button,
+.gender-button,
+.age-selector button,
+.password-eye {
+    transition:
+        transform 0.2s ease,
+        filter 0.2s ease,
+        border-color 0.25s ease,
+        background 0.25s ease,
+        box-shadow 0.25s ease,
+        color 0.25s ease,
+        opacity 0.2s ease;
+}
+
+#registration-next-button:hover,
+#registration-button:hover {
+    filter: brightness(1.06);
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.18),
+        0 12px 28px rgba(11, 103, 189, 0.4);
+}
+
+#registration-next-button:active,
+#registration-button:active,
+#registration-back-button:active,
+.gender-button:active,
+.age-selector button:active {
+    transform: translateY(1px) scale(0.99);
+}
+
+.registration-progress {
+    width: 84px;
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 18px;
+}
+
+.registration-progress span {
+    width: 30px;
+    height: 6px;
+    border-radius: 999px;
+    background: rgba(135, 184, 222, 0.22);
+}
+
+.registration-progress span.active {
+    background: linear-gradient(90deg, #6ed3ff, #3caeff);
+    box-shadow: 0 0 14px rgba(60, 174, 255, 0.28);
 }
 
 .gender-selector {
     width: 100%;
     display: flex;
-    gap: 12px;
-    margin-bottom: 22px;
+    gap: 14px;
+    margin-bottom: 18px;
 }
 
 .gender-button {
     width: 50%;
-    height: 100px;
+    min-height: 120px;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 8px;
-    border: 1px solid rgba(255, 255, 255, 0.18);
-    border-radius: 11px;
-    background: linear-gradient(
-        180deg,
-        rgba(5, 15, 25, 0.88),
-        rgba(4, 11, 19, 0.8)
-    );
-    color: rgba(255, 255, 255, 0.6);
-    font-size: 14px;
+    gap: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    border-radius: 17px;
+    background: linear-gradient(180deg, rgba(7, 18, 31, 0.9), rgba(4, 11, 21, 0.76));
+    color: rgba(228, 241, 255, 0.72);
+    font-size: 18px;
     font-weight: 600;
     cursor: pointer;
-    transition:
-        border-color 0.3s ease,
-        color 0.3s ease,
-        background 0.3s ease,
-        transform 0.2s ease;
 }
 
 .gender-button:hover {
-    border-color: rgba(72, 190, 255, 0.6);
-    color: #fff;
+    border-color: rgba(88, 195, 255, 0.46);
+    color: #ffffff;
 }
 
 .gender-button.active {
-    border-color: #48beff;
-    background: linear-gradient(
-        180deg,
-        rgba(10, 61, 94, 0.9),
-        rgba(5, 28, 46, 0.92)
-    );
-    color: #48beff;
+    border-color: rgba(88, 195, 255, 0.86);
+    background: linear-gradient(180deg, rgba(16, 70, 123, 0.94), rgba(8, 35, 65, 0.94));
+    color: #ffffff;
     box-shadow:
-        0 0 0 1px rgba(72, 190, 255, 0.08),
-        0 0 18px rgba(72, 190, 255, 0.12);
+        inset 0 1px 0 rgba(255, 255, 255, 0.08),
+        0 0 0 1px rgba(88, 195, 255, 0.14),
+        0 16px 28px rgba(8, 46, 88, 0.25);
 }
 
 .gender-icon {
-    font-size: 31px;
-    font-weight: 400;
+    font-size: 42px;
+    line-height: 1;
+    color: #86dfff;
 }
 
 .age-container {
     width: 100%;
-    margin-bottom: 18px;
+    margin-bottom: 16px;
 }
 
 .age-title {
     margin-bottom: 10px;
-    color: rgba(255, 255, 255, 0.8);
-    font-size: 14px;
+    color: rgba(239, 248, 255, 0.86);
+    font-size: 15px;
     font-weight: 600;
     text-align: center;
 }
@@ -299,37 +371,48 @@ button {
     width: 100%;
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 12px;
+}
+
+.age-selector button,
+.age-selector input {
+    height: 62px;
+    border: 1px solid rgba(93, 196, 255, 0.22);
+    border-radius: 15px;
+    background: linear-gradient(180deg, rgba(7, 18, 31, 0.9), rgba(4, 11, 21, 0.76));
+    color: #ffffff;
 }
 
 .age-selector button {
-    width: 54px;
-    min-width: 54px;
-    height: 54px;
-    border: 1px solid rgba(255, 255, 255, 0.18);
-    border-radius: 11px;
-    background: rgba(5, 13, 22, 0.88);
-    color: #48beff;
-    font-size: 25px;
-    font-weight: 400;
+    width: 62px;
+    min-width: 62px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 31px;
+    line-height: 1;
     cursor: pointer;
+    color: #86dfff;
+}
+
+.age-selector button:hover {
+    border-color: rgba(88, 195, 255, 0.5);
 }
 
 .age-selector input {
     width: 100%;
-    height: 54px;
-    border: 1px solid rgba(255, 255, 255, 0.22);
-    border-radius: 11px;
-    outline: 0;
-    background: rgba(5, 13, 22, 0.88);
-    color: #fff;
-    font-size: 18px;
-    font-weight: 700;
+    padding: 0 10px;
     text-align: center;
+    font-size: 24px;
+    font-weight: 700;
+    outline: 0;
 }
 
 .age-selector input:focus {
-    border-color: rgba(54, 185, 255, 0.86);
+    border-color: rgba(88, 201, 255, 0.92);
+    box-shadow:
+        0 0 0 1px rgba(88, 201, 255, 0.12),
+        0 0 18px rgba(55, 179, 255, 0.12);
 }
 
 .age-selector input::-webkit-inner-spin-button,
@@ -341,93 +424,114 @@ button {
 
 .age-description {
     margin-top: 8px;
-    color: rgba(255, 255, 255, 0.4);
+    color: rgba(204, 224, 240, 0.54);
     font-size: 12px;
     text-align: center;
+}
+
+.registration-referral-field {
+    margin-bottom: 16px;
 }
 
 .registration-buttons {
     width: 100%;
     display: flex;
-    gap: 10px;
+    gap: 12px;
 }
 
 #registration-back-button {
     width: 36%;
-    height: 54px;
-    border: 1px solid rgba(255, 255, 255, 0.18);
-    border-radius: 11px;
-    background: rgba(5, 13, 22, 0.88);
-    color: rgba(255, 255, 255, 0.7);
-    font-size: 14px;
+    height: 60px;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 15px;
+    background: linear-gradient(180deg, rgba(9, 19, 31, 0.92), rgba(5, 13, 23, 0.84));
+    color: rgba(235, 244, 255, 0.82);
+    font-size: 17px;
     font-weight: 700;
     cursor: pointer;
 }
 
+#registration-back-button:hover {
+    border-color: rgba(88, 195, 255, 0.4);
+    color: #ffffff;
+}
+
 .registration-buttons #registration-button {
     width: 64%;
-    margin-top: 0;
 }
 
-#registration-next-button,
-#registration-button,
-#registration-back-button,
-.age-selector button {
-    transition:
-        border-color 0.3s ease,
-        color 0.3s ease,
-        background 0.3s ease,
-        transform 0.2s ease;
+#registration.active #registration-step-1.active .registration-panel,
+#registration.active #registration-step-2.active .registration-panel {
+    animation: registrationEnter 0.42s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
-#registration-next-button:active,
-#registration-button:active,
-#registration-back-button:active,
-.gender-button:active,
-.age-selector button:active {
-    transform: scale(0.98);
+#registration.active .registration-step.active .registration-logo {
+    animation: registrationLogoEnter 0.44s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
-#registration.active .registration-background {
-    
+#registration.active .registration-step.active .registration-headline,
+#registration.active .registration-step.active .registration-field,
+#registration.active .registration-step.active .gender-selector,
+#registration.active .registration-step.active .age-container,
+#registration.active .registration-step.active .registration-buttons,
+#registration.active .registration-step.active #registration-next-button,
+#registration.active .registration-step.active .registration-progress {
+    animation: registrationItemEnter 0.36s ease both;
 }
 
-#registration.active #registration-step-1.active {
-    animation: registrationEnter 0.4s cubic-bezier(0.22, 1, 0.36, 1) both;
+#registration.active #registration-step-1.active .registration-headline,
+#registration.active #registration-step-2.active .registration-headline {
+    animation-delay: 0.03s;
 }
 
-#registration.active #registration-step-1.active .registration-logo {
-    animation: registrationLogoEnter 0.45s cubic-bezier(0.22, 1, 0.36, 1) both;
-}
-
-#registration.active #registration-step-1.active .registration-title {
-    animation: registrationItemEnter 0.35s ease 0.02s both;
+#registration.active #registration-step-1.active .registration-field:nth-of-type(1) {
+    animation-delay: 0.06s;
 }
 
 #registration.active #registration-step-1.active .registration-field:nth-of-type(2) {
-    animation: registrationItemEnter 0.35s ease 0.04s both;
+    animation-delay: 0.09s;
 }
 
 #registration.active #registration-step-1.active .registration-field:nth-of-type(3) {
-    animation: registrationItemEnter 0.35s ease 0.06s both;
+    animation-delay: 0.12s;
 }
 
 #registration.active #registration-step-1.active .registration-field:nth-of-type(4) {
-    animation: registrationItemEnter 0.35s ease 0.08s both;
-}
-
-#registration.active #registration-step-1.active .registration-field:nth-of-type(5) {
-    animation: registrationItemEnter 0.35s ease 0.10s both;
+    animation-delay: 0.15s;
 }
 
 #registration.active #registration-step-1.active #registration-next-button {
-    animation: registrationItemEnter 0.35s ease 0.12s both;
+    animation-delay: 0.18s;
+}
+
+#registration.active #registration-step-1.active .registration-progress {
+    animation-delay: 0.21s;
+}
+
+#registration.active #registration-step-2.active .gender-selector {
+    animation-delay: 0.07s;
+}
+
+#registration.active #registration-step-2.active .age-container {
+    animation-delay: 0.1s;
+}
+
+#registration.active #registration-step-2.active .registration-referral-field {
+    animation-delay: 0.13s;
+}
+
+#registration.active #registration-step-2.active .registration-buttons {
+    animation-delay: 0.16s;
+}
+
+#registration.active #registration-step-2.active .registration-progress {
+    animation-delay: 0.19s;
 }
 
 @keyframes registrationEnter {
     from {
         opacity: 0;
-        transform: translateY(18px) scale(0.98);
+        transform: translateY(22px) scale(0.975);
     }
 
     to {
@@ -439,7 +543,7 @@ button {
 @keyframes registrationLogoEnter {
     from {
         opacity: 0;
-        transform: translateY(-14px) scale(0.94);
+        transform: translateY(-12px) scale(0.94);
     }
 
     to {
@@ -460,43 +564,59 @@ button {
     }
 }
 
-@media (max-width: 430px) {
-    #registration {
-        padding-left: 16px;
-        padding-right: 16px;
-    }
-
+@media (max-width: 540px) {
     .registration-container {
         max-width: 100%;
     }
 
+    .registration-panel {
+        padding: 28px 22px 20px;
+        border-radius: 24px;
+    }
+
+    .registration-panel::before {
+        border-radius: 22px;
+    }
+
+    .registration-badge {
+        top: 18px;
+        right: 18px;
+    }
+
     .registration-logo {
-        width: 82vw;
-        max-width: 320px;
+        width: min(80vw, 300px);
     }
 
-    .registration-field {
-        height: 52px;
+    .registration-headline h1 {
+        font-size: 29px;
     }
 
+    .registration-field,
+    .age-selector button,
+    .age-selector input,
     #registration-next-button,
     #registration-button,
     #registration-back-button {
-        height: 52px;
+        height: 58px;
     }
 
     .gender-button {
-        height: 94px;
+        min-height: 110px;
+        font-size: 17px;
+    }
+}
+
+@media (max-width: 430px) {
+    .registration-buttons {
+        gap: 10px;
     }
 
-    .age-selector button,
-    .age-selector input {
-        height: 52px;
+    #registration-back-button {
+        width: 38%;
     }
 
-    .age-selector button {
-        width: 52px;
-        min-width: 52px;
+    .registration-buttons #registration-button {
+        width: 62%;
     }
 }
 
@@ -506,17 +626,143 @@ button {
         padding-right: 14px;
     }
 
-    .registration-logo {
-        width: 86vw;
-        max-width: 290px;
+    .registration-panel {
+        padding: 24px 18px 18px;
     }
 
-    .registration-title {
-        margin-bottom: 14px;
+    .registration-headline {
+        margin-bottom: 20px;
     }
 
-    .registration-title h1 {
+    .registration-headline h1 {
+        font-size: 26px;
+    }
+
+    .registration-headline p {
+        font-size: 14px;
+    }
+
+    .registration-field {
+        height: 54px;
+        margin-bottom: 12px;
+    }
+
+    .registration-field input {
+        padding-left: 52px;
         font-size: 15px;
+    }
+
+    #registration-next-button,
+    #registration-button,
+    #registration-back-button {
+        height: 54px;
+        font-size: 16px;
+    }
+
+    .registration-button-arrow {
+        font-size: 20px;
+    }
+
+    .gender-selector {
+        gap: 10px;
+        margin-bottom: 16px;
+    }
+
+    .gender-button {
+        min-height: 96px;
+        font-size: 15px;
+    }
+
+    .gender-icon {
+        font-size: 36px;
+    }
+
+    .age-selector {
+        gap: 10px;
+    }
+
+    .age-selector button,
+    .age-selector input {
+        height: 54px;
+    }
+
+    .age-selector button {
+        width: 54px;
+        min-width: 54px;
+        font-size: 28px;
+    }
+
+    .age-selector input {
+        font-size: 21px;
+    }
+
+    #registration-back-button {
+        width: 40%;
+    }
+
+    .registration-buttons #registration-button {
+        width: 60%;
+    }
+}
+
+@media (max-height: 780px) {
+    .registration-logo {
+        width: min(66vw, 280px);
+        margin-bottom: 6px;
+    }
+
+    .registration-headline {
+        margin-bottom: 18px;
+    }
+
+    .registration-field {
+        height: 56px;
+        margin-bottom: 12px;
+    }
+
+    .gender-button {
+        min-height: 100px;
+    }
+
+    .age-selector button,
+    .age-selector input,
+    #registration-next-button,
+    #registration-button,
+    #registration-back-button {
+        height: 56px;
+    }
+}
+
+@media (max-height: 660px) {
+    #registration {
+        align-items: flex-start;
+    }
+
+    .registration-panel {
+        margin-top: 8px;
+        padding-top: 24px;
+        padding-bottom: 18px;
+    }
+
+    .registration-badge {
+        top: 16px;
+    }
+
+    .registration-logo {
+        width: min(54vw, 220px);
+        margin-bottom: 2px;
+    }
+
+    .registration-headline {
+        margin-bottom: 16px;
+    }
+
+    .registration-headline h1 {
+        font-size: 24px;
+    }
+
+    .registration-headline p {
+        font-size: 13px;
     }
 
     .registration-field {
@@ -524,78 +770,18 @@ button {
         margin-bottom: 10px;
     }
 
-    .registration-field input {
-        font-size: 14px;
-    }
-
-    .registration-description {
-        margin-bottom: 16px;
-        font-size: 13px;
-    }
-
-    .gender-selector {
-        gap: 9px;
-        margin-bottom: 18px;
-    }
-
-    .gender-button {
-        height: 86px;
-        font-size: 13px;
-    }
-
-    .gender-icon {
-        font-size: 27px;
-    }
-
-    .age-selector button,
-    .age-selector input {
-        height: 50px;
-    }
-
-    .age-selector button {
-        width: 50px;
-        min-width: 50px;
-    }
-
-    #registration-next-button,
-    #registration-button,
-    #registration-back-button {
-        height: 50px;
-        font-size: 14px;
-    }
-}
-
-@media (max-height: 700px) {
-    .registration-logo {
-        width: 62vw;
-        max-width: 280px;
-        max-height: 130px;
-        margin-bottom: 6px;
-    }
-
-    .registration-title {
-        margin-bottom: 12px;
-    }
-
-    .registration-field {
-        height: 48px;
-        margin-bottom: 9px;
-    }
-
-    .registration-description {
-        margin-bottom: 13px;
-    }
-
     .gender-selector {
         margin-bottom: 14px;
     }
 
     .gender-button {
-        height: 78px;
+        min-height: 84px;
+        gap: 6px;
+        font-size: 14px;
     }
 
     .gender-icon {
-        font-size: 25px;
+        font-size: 32px;
     }
 
     .age-container {
@@ -603,59 +789,28 @@ button {
     }
 
     .age-selector button,
-    .age-selector input {
-        height: 48px;
-    }
-
-    .age-selector button {
-        width: 48px;
-        min-width: 48px;
-    }
-
+    .age-selector input,
     #registration-next-button,
     #registration-button,
     #registration-back-button {
-        height: 48px;
-    }
-}
-
-@media (max-height: 600px) {
-    #registration {
-        padding-top: 20px;
-        padding-bottom: 14px;
-    }
-
-    .registration-logo {
-        width: 52vw;
-        max-width: 230px;
-        max-height: 100px;
-    }
-
-    .registration-title h1 {
-        font-size: 14px;
-    }
-
-    .registration-field {
-        height: 44px;
-    }
-
-    .gender-button {
-        height: 70px;
-    }
-
-    .age-selector button,
-    .age-selector input {
-        height: 44px;
+        height: 50px;
     }
 
     .age-selector button {
-        width: 44px;
-        min-width: 44px;
+        width: 50px;
+        min-width: 50px;
+        font-size: 26px;
     }
 
-    #registration-next-button,
-    #registration-button,
-    #registration-back-button {
-        height: 44px;
+    .age-description {
+        margin-top: 6px;
+    }
+
+    .registration-referral-field {
+        margin-bottom: 14px;
+    }
+
+    .registration-progress {
+        margin-top: 14px;
     }
 }

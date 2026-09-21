@@ -89,16 +89,10 @@ spawnButton.addEventListener("click",()=>{
 
 
 document.addEventListener("keydown",event=>{
-    if(event.isComposing||event.keyCode===229||event.repeat)
+    if(event.defaultPrevented||event.isComposing||event.keyCode===229||event.repeat)
         return;
 
-    if(!spawnSelection.classList.contains("active"))
-        return;
-
-    const keyCode=event.keyCode||event.which||0;
-    const isEnter=event.key==="Enter"||event.key==="NumpadEnter"||keyCode===13;
-
-    if(!isEnter)
+    if(!spawnSelection.classList.contains("active")||event.key!=="Enter")
         return;
 
     if(document.getElementById("error-screen")?.classList.contains("active")||
@@ -108,10 +102,13 @@ document.addEventListener("keydown",event=>{
     if(event.shiftKey||event.ctrlKey||event.altKey||event.metaKey)
         return;
 
+    if(event.target?.tagName==="BUTTON"||event.target?.tagName==="A")
+        return;
+
     event.preventDefault();
     event.stopImmediatePropagation();
     spawnButton.click();
-},true);
+});
 
 GameCef.on("spawn:show",data=>{
     if(data){

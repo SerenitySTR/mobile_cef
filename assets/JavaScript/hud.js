@@ -16,35 +16,7 @@ const hudMobilePlatform = isMobileHudPlatform();
 window.hudMobilePlatform = hudMobilePlatform;
 document.body.classList.add(hudMobilePlatform ? "hud-platform-mobile" : "hud-platform-pc");
 
-function sendPcHud(type, data = null) {
-    if (hudMobilePlatform) return;
-
-    const pcHud = document.getElementById("pc-hud");
-
-    if (type === "show") {
-        if (window.AntaresHUD && typeof window.AntaresHUD.show === "function") {
-            window.AntaresHUD.show();
-        } else if (pcHud) {
-            pcHud.classList.add("active");
-            pcHud.setAttribute("aria-hidden", "false");
-        }
-        return;
-    }
-
-    if (type === "hide") {
-        if (window.AntaresHUD && typeof window.AntaresHUD.hide === "function") {
-            window.AntaresHUD.hide();
-        } else if (pcHud) {
-            pcHud.classList.remove("active");
-            pcHud.setAttribute("aria-hidden", "true");
-        }
-        return;
-    }
-
-    if (type === "update" && window.AntaresHUD && typeof window.AntaresHUD.update === "function") {
-        window.AntaresHUD.update(data || {});
-    }
-}
+function sendPcHud() {}
 
 const hud = document.getElementById("hud");
 
@@ -208,37 +180,14 @@ function updateHudWanted(value) {
 
 createWantedStars();
 
-function normalizeHudWeaponPayload(data) {
-    if (data === undefined || data === null) return null;
-
-    if (typeof data === "number") {
-        return { WeaponId: data };
-    }
-
-    if (typeof data === "string") {
-        const value = data.trim();
-        if (!value) return null;
-
-        try {
-            const parsed = JSON.parse(value);
-            if (parsed !== data) return normalizeHudWeaponPayload(parsed);
-        } catch {}
-
-        const weaponId = Number(value);
-        return Number.isFinite(weaponId) ? { WeaponId: weaponId } : null;
-    }
-
-    return typeof data === "object" ? data : null;
-}
-
 function updateHudWeapon(data) {
-    data = normalizeHudWeaponPayload(data);
-    if (!data) return;
+    if (data) sendPcHud("update", data);
+    if (!data) {
+        return;
+    }
 
-    sendPcHud("update", data);
-
-    const weaponId = Math.max(0, Math.trunc(Number(data.WeaponId ?? data.weaponId ?? data.weapon ?? data.Weapon) || 0));
-    const ammoClip = Math.max(0, Math.trunc(Number(data.AmmoClip ?? data.ammoClip ?? data.ammo ?? data.Ammo) || 0));
+    const weaponId = Math.max(0, Math.trunc(Number(data.WeaponId !== undefined ? data.WeaponId : data.weaponId) || 0));
+    const ammoClip = Math.max(0, Math.trunc(Number(data.AmmoClip !== undefined ? data.AmmoClip : data.ammoClip) || 0));
     const ammoTotalValue = data.AmmoTotal ?? data.ammoTotal ?? data.maxAmmo ?? data.MaxAmmo ?? data.max_ammo ?? data.totalAmmo ?? data.TotalAmmo ?? data.ammo_total;
     const ammoTotal = Math.max(0, Math.trunc(Number(ammoTotalValue) || 0));
     const weaponFile = HUD_WEAPON_IMAGES[weaponId] || HUD_WEAPON_IMAGES[0];
@@ -432,7 +381,11 @@ if (window.GameCef) {
     GameCef.on("hud:wanted", data => updateHudWanted(data));
     GameCef.on("hud:wantedLevel", data => updateHudWanted(data));
 
-    GameCef.on("hud:weapon", data => updateHudWeapon(data));
+    GameCef.on("hud:weapon", data => {
+        try {
+            updateHudWeapon(typeof data === "string" ? JSON.parse(data) : data);
+        } catch {}
+    });
 
     GameCef.on("hud:ammo", data => {
         try {

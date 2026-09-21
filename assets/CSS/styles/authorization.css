@@ -9,17 +9,15 @@ body {
     display: none;
     position: fixed;
     inset: 0;
-    width: auto;
-    height: auto;
-    min-height: 0;
     align-items: center;
     justify-content: center;
+    padding:
+        max(26px, env(safe-area-inset-top))
+        max(18px, env(safe-area-inset-right))
+        max(26px, env(safe-area-inset-bottom))
+        max(18px, env(safe-area-inset-left));
     overflow: hidden;
     isolation: isolate;
-    padding:
-        max(24px, env(safe-area-inset-top))
-        20px
-        max(24px, env(safe-area-inset-bottom));
 }
 
 #authorization.active {
@@ -30,95 +28,138 @@ body {
     position: absolute;
     inset: 0;
     background:
-        url("../Images/Registration/background.svg")
-        center center / cover
-        no-repeat;
+        radial-gradient(circle at 50% 12%, rgba(73, 187, 255, 0.18), transparent 34%),
+        radial-gradient(circle at 18% 82%, rgba(16, 91, 164, 0.28), transparent 28%),
+        linear-gradient(180deg, rgba(4, 11, 24, 0.16), rgba(1, 6, 14, 0.56)),
+        url("../Images/Registration/background-reference.png") center center / cover no-repeat;
     z-index: -2;
+    transform: scale(1.02);
 }
 
+#authorization::before,
 #authorization::after {
     content: "";
     position: absolute;
     inset: 0;
-    background: linear-gradient(
-        180deg,
-        rgba(1, 7, 15, 0.08),
-        rgba(1, 7, 15, 0.18) 55%,
-        rgba(1, 7, 15, 0.45)
-    );
-    z-index: -1;
     pointer-events: none;
+}
+
+#authorization::before {
+    background:
+        radial-gradient(circle at 50% 18%, rgba(87, 199, 255, 0.12), transparent 24%),
+        radial-gradient(circle at 50% 100%, rgba(23, 123, 198, 0.16), transparent 34%);
+    z-index: -1;
+}
+
+#authorization::after {
+    background: linear-gradient(180deg, rgba(1, 7, 15, 0.12), rgba(1, 7, 15, 0.32) 58%, rgba(1, 7, 15, 0.5));
+    z-index: -1;
 }
 
 .authorization-container {
     width: 100%;
-    max-width: 420px;
+    max-width: 500px;
+    display: flex;
+    justify-content: center;
+}
+
+.authorization-panel {
+    position: relative;
+    width: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;
+    padding: 32px 30px 24px;
+    border: 1px solid rgba(89, 195, 255, 0.68);
+    border-radius: 28px;
+    background: linear-gradient(180deg, rgba(4, 15, 30, 0.88), rgba(3, 10, 21, 0.78));
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.08),
+        0 24px 60px rgba(0, 6, 16, 0.5),
+        0 0 32px rgba(46, 161, 255, 0.12);
+    backdrop-filter: blur(14px);
+    overflow: hidden;
+}
+
+.authorization-panel::before {
+    content: "";
+    position: absolute;
+    inset: 1px;
+    border-radius: 26px;
+    border: 1px solid rgba(113, 214, 255, 0.1);
+    pointer-events: none;
+}
+
+.authorization-panel::after {
+    content: "";
+    position: absolute;
+    left: 10%;
+    right: 10%;
+    bottom: -12px;
+    height: 44px;
+    background: radial-gradient(circle, rgba(58, 189, 255, 0.22), transparent 70%);
+    filter: blur(14px);
+    pointer-events: none;
+}
+
+.authorization-badge {
+    position: absolute;
+    top: 24px;
+    right: 24px;
+    padding: 6px 10px;
+    border: 1px solid rgba(122, 215, 255, 0.24);
+    border-radius: 999px;
+    background: rgba(6, 23, 41, 0.62);
+    color: #aedfff;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
 }
 
 .authorization-logo {
-    width: 78vw;
-    max-width: 360px;
-    max-height: 180px;
+    width: min(78vw, 330px);
+    margin-bottom: 10px;
+    filter: drop-shadow(0 12px 24px rgba(0, 0, 0, 0.38));
     object-fit: contain;
-    margin-bottom: 12px;
-    filter: drop-shadow(
-        0 7px 12px rgba(0, 0, 0, 0.45)
-    );
 }
 
-.authorization-title {
+.authorization-headline {
     width: 100%;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 18px;
-    color: #48beff;
+    margin-bottom: 24px;
+    text-align: center;
 }
 
-.authorization-title span {
-    height: 1px;
-    flex: 1;
-    background: linear-gradient(
-        90deg,
-        transparent,
-        rgba(72, 190, 255, 0.8)
-    );
+.authorization-headline h1 {
+    margin: 0 0 8px;
+    color: #f4fbff;
+    font-size: clamp(28px, 3vw, 34px);
+    font-weight: 800;
+    letter-spacing: -0.02em;
 }
 
-.authorization-title span:last-child {
-    background: linear-gradient(
-        90deg,
-        rgba(72, 190, 255, 0.8),
-        transparent
-    );
-}
-
-.authorization-title h1 {
-    font-size: clamp(16px, 4vw, 20px);
-    font-weight: 700;
-    letter-spacing: 1.5px;
-    white-space: nowrap;
-    text-transform: uppercase;
+.authorization-headline p {
+    margin: 0;
+    color: rgba(218, 238, 255, 0.78);
+    font-size: 15px;
+    line-height: 1.45;
 }
 
 .authorization-field {
     position: relative;
     width: 100%;
-    height: 54px;
-    margin-bottom: 12px;
+    height: 62px;
+    margin-bottom: 14px;
 }
 
 .authorization-field > img {
     position: absolute;
-    left: 17px;
+    left: 20px;
     top: 50%;
     width: 20px;
     height: 20px;
     transform: translateY(-50%);
-    opacity: 0.72;
+    opacity: 0.86;
     z-index: 2;
     pointer-events: none;
 }
@@ -126,43 +167,56 @@ body {
 .authorization-field input {
     width: 100%;
     height: 100%;
-    padding: 0 52px 0 54px;
-    border: 1px solid rgba(255, 255, 255, 0.22);
-    border-radius: 11px;
+    padding: 0 58px 0 58px;
+    border: 1px solid rgba(93, 196, 255, 0.22);
+    border-radius: 15px;
     outline: 0;
-    background: linear-gradient(
-        90deg,
-        rgba(5, 13, 22, 0.88),
-        rgba(4, 11, 19, 0.76)
-    );
-    color: #fff;
-    font-size: 15px;
+    background: linear-gradient(90deg, rgba(5, 15, 26, 0.9), rgba(4, 11, 21, 0.74));
+    color: #f6fbff;
+    font-size: 16px;
+    transition:
+        border-color 0.25s ease,
+        box-shadow 0.25s ease,
+        background 0.25s ease;
 }
 
 .authorization-field input::placeholder {
-    color: rgba(255, 255, 255, 0.56);
+    color: rgba(216, 231, 243, 0.52);
 }
 
 .authorization-field input:focus {
-    border-color: rgba(54, 185, 255, 0.86);
-    background: rgba(5, 20, 32, 0.92);
+    border-color: rgba(88, 201, 255, 0.92);
+    background: linear-gradient(90deg, rgba(6, 21, 36, 0.96), rgba(5, 16, 28, 0.86));
     box-shadow:
-        0 0 0 1px rgba(54, 185, 255, 0.1),
-        0 0 16px rgba(54, 185, 255, 0.08);
+        0 0 0 1px rgba(88, 201, 255, 0.12),
+        0 0 18px rgba(55, 179, 255, 0.12);
+}
+
+.authorization-field-readonly input {
+    color: rgba(255, 255, 255, 0.82);
+    background: linear-gradient(90deg, rgba(8, 22, 37, 0.88), rgba(5, 15, 26, 0.74));
 }
 
 .authorization-password-eye {
     position: absolute;
-    right: 11px;
+    right: 12px;
     top: 50%;
-    width: 36px;
-    height: 36px;
+    width: 38px;
+    height: 38px;
     display: grid;
     place-items: center;
     transform: translateY(-50%);
+    border: 0;
+    border-radius: 10px;
     background: transparent;
     cursor: pointer;
-    opacity: 0.65;
+    opacity: 0.72;
+    transition: opacity 0.2s ease, background 0.2s ease;
+}
+
+.authorization-password-eye:hover {
+    opacity: 1;
+    background: rgba(72, 190, 255, 0.08);
 }
 
 .authorization-password-eye img {
@@ -172,67 +226,107 @@ body {
 
 #authorization-button {
     width: 100%;
-    height: 54px;
-    margin-top: 4px;
-    border: 1px solid rgba(48, 184, 255, 0.72);
-    border-radius: 11px;
-    background: linear-gradient(
-        180deg,
-        rgba(8, 56, 87, 0.88),
-        rgba(4, 24, 41, 0.94)
-    );
-    color: #38c6ff;
-    font-size: 15px;
+    height: 60px;
+    margin-top: 6px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    border: 1px solid rgba(88, 195, 255, 0.9);
+    border-radius: 15px;
+    background: linear-gradient(180deg, rgba(23, 133, 221, 0.98), rgba(13, 76, 148, 0.98));
+    color: #ffffff;
+    font-size: 18px;
     font-weight: 700;
-    letter-spacing: 1px;
+    letter-spacing: -0.01em;
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.16),
+        0 10px 26px rgba(11, 103, 189, 0.34);
     cursor: pointer;
-    transition:
-        border-color 0.3s ease,
-        color 0.3s ease,
-        transform 0.2s ease;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
 }
 
 #authorization-button:hover {
-    border-color: #58caff;
-    color: #89ddff;
+    filter: brightness(1.06);
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.18),
+        0 12px 28px rgba(11, 103, 189, 0.4);
 }
 
 #authorization-button:active {
-    transform: scale(0.98);
+    transform: translateY(1px) scale(0.99);
 }
 
-#authorization.active .authorization-background {
-    
+.authorization-button-arrow {
+    font-size: 22px;
+    line-height: 1;
 }
 
-#authorization.active .authorization-container {
-    animation: authorizationEnter 0.4s cubic-bezier(0.22, 1, 0.36, 1) both;
+.authorization-footer {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 18px;
+    color: rgba(170, 209, 236, 0.58);
+}
+
+.authorization-footer span {
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(96, 200, 255, 0.38));
+}
+
+.authorization-footer span:last-child {
+    background: linear-gradient(90deg, rgba(96, 200, 255, 0.38), transparent);
+}
+
+.authorization-footer small {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.24em;
+    white-space: nowrap;
+}
+
+#authorization.active .authorization-panel {
+    animation: authorizationEnter 0.42s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
 #authorization.active .authorization-logo {
-    animation: authorizationLogoEnter 0.45s cubic-bezier(0.22, 1, 0.36, 1) both;
+    animation: authorizationLogoEnter 0.44s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
-#authorization.active .authorization-title {
-    animation: authorizationItemEnter 0.35s ease 0.02s both;
+#authorization.active .authorization-headline,
+#authorization.active .authorization-field,
+#authorization.active #authorization-button,
+#authorization.active .authorization-footer {
+    animation: authorizationItemEnter 0.36s ease both;
+}
+
+#authorization.active .authorization-headline {
+    animation-delay: 0.03s;
+}
+
+#authorization.active .authorization-field:nth-of-type(1) {
+    animation-delay: 0.06s;
 }
 
 #authorization.active .authorization-field:nth-of-type(2) {
-    animation: authorizationItemEnter 0.35s ease 0.04s both;
-}
-
-#authorization.active .authorization-field:nth-of-type(3) {
-    animation: authorizationItemEnter 0.35s ease 0.06s both;
+    animation-delay: 0.09s;
 }
 
 #authorization.active #authorization-button {
-    animation: authorizationItemEnter 0.35s ease 0.08s both;
+    animation-delay: 0.12s;
+}
+
+#authorization.active .authorization-footer {
+    animation-delay: 0.15s;
 }
 
 @keyframes authorizationEnter {
     from {
         opacity: 0;
-        transform: translateY(18px) scale(0.98);
+        transform: translateY(22px) scale(0.975);
     }
 
     to {
@@ -244,7 +338,7 @@ body {
 @keyframes authorizationLogoEnter {
     from {
         opacity: 0;
-        transform: translateY(-14px) scale(0.94);
+        transform: translateY(-12px) scale(0.94);
     }
 
     to {
@@ -265,24 +359,40 @@ body {
     }
 }
 
-@media (max-width: 430px) {
-    #authorization {
-        padding-left: 16px;
-        padding-right: 16px;
-    }
-
+@media (max-width: 540px) {
     .authorization-container {
         max-width: 100%;
     }
 
-    .authorization-logo {
-        width: 82vw;
-        max-width: 320px;
+    .authorization-panel {
+        padding: 28px 22px 20px;
+        border-radius: 24px;
     }
 
-    .authorization-field,
+    .authorization-panel::before {
+        border-radius: 22px;
+    }
+
+    .authorization-badge {
+        top: 18px;
+        right: 18px;
+    }
+
+    .authorization-logo {
+        width: min(80vw, 300px);
+    }
+
+    .authorization-headline h1 {
+        font-size: 29px;
+    }
+
+    .authorization-field {
+        height: 58px;
+    }
+
     #authorization-button {
-        height: 52px;
+        height: 56px;
+        font-size: 17px;
     }
 }
 
@@ -292,70 +402,94 @@ body {
         padding-right: 14px;
     }
 
-    .authorization-logo {
-        width: 86vw;
-        max-width: 290px;
+    .authorization-panel {
+        padding: 24px 18px 18px;
     }
 
-    .authorization-title {
-        margin-bottom: 14px;
+    .authorization-headline {
+        margin-bottom: 20px;
     }
 
-    .authorization-title h1 {
+    .authorization-headline h1 {
+        font-size: 26px;
+    }
+
+    .authorization-headline p {
+        font-size: 14px;
+    }
+
+    .authorization-field {
+        height: 54px;
+        margin-bottom: 12px;
+    }
+
+    .authorization-field input {
+        padding-left: 52px;
         font-size: 15px;
+    }
+
+    #authorization-button {
+        height: 54px;
+        font-size: 16px;
+    }
+}
+
+@media (max-height: 720px) {
+    .authorization-logo {
+        width: min(64vw, 280px);
+        margin-bottom: 6px;
+    }
+
+    .authorization-headline {
+        margin-bottom: 18px;
+    }
+
+    .authorization-field {
+        height: 56px;
+        margin-bottom: 12px;
+    }
+
+    #authorization-button {
+        height: 56px;
+    }
+}
+
+@media (max-height: 610px) {
+    #authorization {
+        align-items: flex-start;
+    }
+
+    .authorization-panel {
+        margin-top: 8px;
+        padding-top: 24px;
+    }
+
+    .authorization-badge {
+        top: 16px;
+    }
+
+    .authorization-logo {
+        width: min(52vw, 220px);
+        margin-bottom: 2px;
+    }
+
+    .authorization-headline h1 {
+        font-size: 24px;
+    }
+
+    .authorization-headline p {
+        font-size: 13px;
     }
 
     .authorization-field {
         height: 50px;
-        margin-bottom: 10px;
-    }
-
-    .authorization-field input {
-        font-size: 14px;
     }
 
     #authorization-button {
         height: 50px;
-        font-size: 14px;
-    }
-}
-
-@media (max-height: 700px) {
-    .authorization-logo {
-        width: 62vw;
-        max-width: 280px;
-        max-height: 130px;
-        margin-bottom: 6px;
     }
 
-    .authorization-title {
-        margin-bottom: 12px;
-    }
-
-    .authorization-field,
-    #authorization-button {
-        height: 48px;
-    }
-}
-
-@media (max-height: 600px) {
-    #authorization {
-        padding-top: 20px;
-        padding-bottom: 14px;
-    }
-
-    .authorization-logo {
-        width: 52vw;
-        max-width: 230px;
-        max-height: 100px;
-    }
-
-    .authorization-title h1 {
-        font-size: 14px;
-    }
-
-    .authorization-field,
-    #authorization-button {
-        height: 44px;
+    .authorization-footer {
+        margin-top: 14px;
     }
 }

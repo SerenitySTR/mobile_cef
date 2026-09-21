@@ -22,21 +22,48 @@ const passwordEyeButtons = document.querySelectorAll(".password-eye");
 
 let selectedGender = null;
 
+function focusRegistrationInput(input) {
+    if (!input)
+        return;
+
+    requestAnimationFrame(() => {
+        input.focus();
+        input.select?.();
+    });
+}
+
+function resetRegistrationState() {
+    emailInput.value = "";
+    referalInput.value = "";
+    passwordInput.value = "";
+    passwordInput.type = "password";
+    passwordRepeatInput.value = "";
+    passwordRepeatInput.type = "password";
+    selectedGender = null;
+    genderButtons.forEach((button) => button.classList.remove("active"));
+    setAge(18);
+}
+
 function showRegistration() {
     registration.classList.add("active");
-    step1.classList.add("active");
-    step2.classList.remove("active");
+    showRegistrationStep(step1, false);
+    focusRegistrationInput(emailInput);
 }
 
 function hideRegistration() {
     registration.classList.remove("active");
 }
 
-function showRegistrationStep(step) {
+function showRegistrationStep(step, shouldFocus = true) {
     step1.classList.remove("active");
     step2.classList.remove("active");
 
     step.classList.add("active");
+
+    if (!shouldFocus)
+        return;
+
+    focusRegistrationInput(step === step2 ? ageInput : emailInput);
 }
 
 function isValidEmail(email) {
@@ -64,6 +91,8 @@ passwordEyeButtons.forEach((button) => {
         input.type = input.type === "password"
             ? "text"
             : "password";
+
+        focusRegistrationInput(input);
     });
 });
 
@@ -129,7 +158,7 @@ nextButton.addEventListener("click", () => {
         return;
     }
 
-    if (!/^[\x21-\x7E]+$/.test(password)) {
+    if (!/^[!-~]+$/.test(password)) {
         showError("Невірний пароль", "Пароль може містити латинські літери, цифри та спеціальні символи без пробілів.");
         return;
     }
@@ -166,7 +195,6 @@ registerButton.addEventListener("click", () => {
     GameCef.sendJson("registration:submit", data);
 });
 
-
 document.addEventListener("keydown", (event) => {
     if (event.defaultPrevented || event.isComposing || event.keyCode === 229 || event.repeat)
         return;
@@ -199,7 +227,9 @@ document.addEventListener("keydown", (event) => {
 
 GameCef.on("registration:show", (data) => {
     usernameInput.value = data;
-    Loading.Transition(registration,()=>{
+    resetRegistrationState();
+
+    Loading.Transition(registration, () => {
         showRegistration();
     });
 });
@@ -207,4 +237,3 @@ GameCef.on("registration:show", (data) => {
 GameCef.on("registration:hide", () => {
     hideRegistration();
 });
-
