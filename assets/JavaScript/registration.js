@@ -225,15 +225,26 @@ document.addEventListener("keydown", (event) => {
     (step2.classList.contains("active") ? registerButton : nextButton).click();
 });
 
-GameCef.on("registration:show", (data) => {
-    usernameInput.value = data;
+// Временный локальный тест регистрации.
+// Автоматически работает только при file://, localhost или 127.0.0.1.
+function testShowRegistration() {
+    if (typeof Loading !== "undefined" && Loading.Hide)
+        Loading.Hide();
+
+    document.getElementById("authorization")?.classList.remove("active");
+
+    usernameInput.value = "Test_Player";
     resetRegistrationState();
+    showRegistration();
+}
 
-    Loading.Transition(registration, () => {
-        showRegistration();
-    });
-});
+const isRegistrationLocalTest =
+    location.protocol === "file:" ||
+    location.hostname === "localhost" ||
+    location.hostname === "127.0.0.1";
 
-GameCef.on("registration:hide", () => {
-    hideRegistration();
-});
+if (isRegistrationLocalTest) {
+    setTimeout(() => {
+        testShowRegistration();
+    }, 500);
+}
