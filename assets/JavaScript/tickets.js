@@ -222,7 +222,7 @@ const Tickets = {
             number.textContent = id !== null ? `#${id}` : "";
 
             const status = document.createElement("span");
-            status.className = "tickets-status";
+            status.className = `tickets-status${closed ? " closed" : ""}`;
             status.textContent = closed ? "Закрито" : "Відкрито";
 
             const strong = document.createElement("strong");
@@ -281,6 +281,7 @@ const Tickets = {
         }
 
         if (statusElement) {
+            statusElement.className = `tickets-status${closed ? " closed" : ""}`;
             statusElement.textContent = closed ? "Закрито" : adminName ? "В роботі" : "Очікує відповіді";
         }
 

@@ -1,0 +1,236 @@
+:root {
+    --neo-btn-border: rgba(86, 216, 255, 0.78);
+    --neo-btn-border-strong: rgba(111, 231, 255, 0.96);
+    --neo-btn-bg-top: rgba(5, 19, 35, 0.96);
+    --neo-btn-bg-bottom: rgba(3, 11, 22, 0.94);
+    --neo-btn-text: #f6fbff;
+    --neo-btn-shadow: 0 0 0 1px rgba(74, 183, 255, 0.10), 0 12px 28px rgba(0, 0, 0, 0.32), 0 0 20px rgba(53, 183, 255, 0.16);
+    --neo-btn-shadow-hover: 0 0 0 1px rgba(74, 183, 255, 0.14), 0 14px 30px rgba(0, 0, 0, 0.34), 0 0 28px rgba(77, 202, 255, 0.24);
+    --neo-btn-glow: inset 0 0 0 1px rgba(151, 237, 255, 0.11), inset 0 0 18px rgba(22, 139, 190, 0.16);
+    --neo-btn-glow-strong: inset 0 0 0 1px rgba(190, 244, 255, 0.14), inset 0 0 26px rgba(28, 166, 226, 0.24), 0 0 18px rgba(75, 211, 255, 0.24);
+    --neo-btn-radius: 12px;
+}
+
+/* Base neon rectangular button style inspired by the provided reference. */
+#authorization-button,
+#registration-next-button,
+#registration-button,
+#registration-back-button,
+.gender-button,
+.age-selector button,
+#spawn-button,
+.dialog-button,
+#error-close-button,
+#statistics-close-button,
+.tickets-tabs button,
+#tickets-create,
+#tickets-send,
+#tickets-finish,
+#tickets-create-submit,
+#tickets-create-cancel,
+.tickets-modal-card > div button,
+.tickets-quick-replies button,
+#admin-panel button:not(#admin-close) {
+    border: 1px solid var(--neo-btn-border);
+    border-radius: var(--neo-btn-radius);
+    background:
+        linear-gradient(180deg, rgba(5, 18, 34, 0.98), rgba(3, 11, 22, 0.96));
+    color: var(--neo-btn-text);
+    box-shadow: var(--neo-btn-shadow), var(--neo-btn-glow);
+    text-shadow: 0 0 10px rgba(188, 240, 255, 0.10);
+    transition:
+        transform 0.18s ease,
+        border-color 0.22s ease,
+        box-shadow 0.22s ease,
+        filter 0.22s ease,
+        background 0.22s ease,
+        color 0.22s ease;
+}
+
+#authorization-button:hover,
+#registration-next-button:hover,
+#registration-button:hover,
+#registration-back-button:hover,
+.gender-button:hover,
+.age-selector button:hover,
+#spawn-button:hover,
+.dialog-button:hover,
+#error-close-button:hover,
+#statistics-close-button:hover,
+.tickets-tabs button:hover,
+#tickets-create:hover,
+#tickets-send:hover,
+#tickets-finish:hover,
+#tickets-create-submit:hover,
+#tickets-create-cancel:hover,
+.tickets-modal-card > div button:hover,
+.tickets-quick-replies button:hover,
+#admin-panel button:not(#admin-close):hover {
+    border-color: var(--neo-btn-border-strong);
+    box-shadow: var(--neo-btn-shadow-hover), var(--neo-btn-glow-strong);
+    filter: brightness(1.03);
+}
+
+#authorization-button:active,
+#registration-next-button:active,
+#registration-button:active,
+#registration-back-button:active,
+.gender-button:active,
+.age-selector button:active,
+#spawn-button:active,
+.dialog-button:active,
+#error-close-button:active,
+#statistics-close-button:active,
+.tickets-tabs button:active,
+#tickets-create:active,
+#tickets-send:active,
+#tickets-finish:active,
+#tickets-create-submit:active,
+#tickets-create-cancel:active,
+.tickets-modal-card > div button:active,
+.tickets-quick-replies button:active,
+#admin-panel button:not(#admin-close):active {
+    transform: translateY(1px) scale(0.992);
+}
+
+/* Bright action buttons */
+#authorization-button,
+#registration-next-button,
+#registration-button,
+#spawn-button,
+.dialog-button-primary,
+#tickets-create,
+#tickets-send,
+#tickets-create-submit,
+#admin-panel .admin-send-row button:last-child,
+#admin-panel .admin-transfer-row button:last-child,
+#admin-panel .admin-quick-menu button,
+#admin-panel .admin-zone {
+    border-color: rgba(106, 232, 255, 0.96);
+    background:
+        linear-gradient(180deg, rgba(8, 32, 57, 0.98), rgba(3, 16, 30, 0.96));
+    box-shadow:
+        0 0 0 1px rgba(88, 195, 255, 0.14),
+        0 14px 30px rgba(0, 0, 0, 0.34),
+        0 0 24px rgba(52, 188, 255, 0.22),
+        inset 0 0 0 1px rgba(179, 241, 255, 0.18),
+        inset 0 0 26px rgba(31, 170, 229, 0.24);
+}
+
+#authorization-button:hover,
+#registration-next-button:hover,
+#registration-button:hover,
+#spawn-button:hover,
+.dialog-button-primary:hover,
+#tickets-create:hover,
+#tickets-send:hover,
+#tickets-create-submit:hover,
+#admin-panel .admin-send-row button:last-child:hover,
+#admin-panel .admin-transfer-row button:last-child:hover,
+#admin-panel .admin-quick-menu button:hover,
+#admin-panel .admin-zone:hover {
+    box-shadow:
+        0 0 0 1px rgba(94, 211, 255, 0.18),
+        0 16px 34px rgba(0, 0, 0, 0.36),
+        0 0 30px rgba(66, 202, 255, 0.30),
+        inset 0 0 0 1px rgba(202, 247, 255, 0.22),
+        inset 0 0 30px rgba(31, 180, 235, 0.30);
+}
+
+/* Active/selected rectangular buttons */
+.gender-button.active,
+.tickets-tabs button.active,
+#admin-panel .admin-sidebar nav button.active,
+#admin-panel .admin-tabs button.active,
+#admin-panel .admin-ticket.active,
+#admin-panel .admin-quick button.active,
+#admin-panel .admin-quick-menu button.active {
+    border-color: rgba(115, 231, 255, 0.98);
+    background:
+        linear-gradient(180deg, rgba(9, 38, 66, 0.98), rgba(4, 20, 36, 0.96));
+    box-shadow:
+        0 0 0 1px rgba(89, 197, 255, 0.16),
+        0 0 28px rgba(57, 194, 255, 0.24),
+        inset 0 0 0 1px rgba(186, 243, 255, 0.18),
+        inset 0 0 24px rgba(30, 172, 231, 0.22);
+    color: #ffffff;
+}
+
+/* Keep admin sidebar buttons aligned while giving them the neon frame. */
+#admin-panel .admin-sidebar nav button {
+    margin: 0 12px;
+    border: 1px solid rgba(78, 186, 242, 0.24);
+    border-radius: 10px;
+    border-left-width: 1px;
+    padding: 14px 16px;
+}
+
+#admin-panel .admin-sidebar nav button.active {
+    border-left-width: 1px;
+}
+
+/* Ticket cards keep card-like feel with the same language. */
+.ticket-row {
+    border-color: rgba(72, 186, 242, 0.40);
+    border-radius: 12px;
+    background: linear-gradient(180deg, rgba(5, 18, 32, 0.96), rgba(3, 11, 22, 0.94));
+    box-shadow: inset 0 0 0 1px rgba(145, 235, 255, 0.06), 0 0 18px rgba(45, 168, 236, 0.08);
+}
+
+.ticket-row.active {
+    border-color: rgba(104, 224, 255, 0.92);
+    background: linear-gradient(180deg, rgba(8, 32, 52, 0.98), rgba(4, 16, 28, 0.96));
+    box-shadow: inset 0 0 0 1px rgba(177, 242, 255, 0.14), 0 0 22px rgba(52, 188, 255, 0.16);
+}
+
+/* Dialog danger remains readable but in the same shape language. */
+.dialog-button-danger {
+    border-color: rgba(255, 121, 136, 0.74);
+    background: linear-gradient(180deg, rgba(52, 11, 20, 0.94), rgba(28, 6, 13, 0.92));
+    color: #ffeef1;
+    box-shadow: 0 0 0 1px rgba(255, 121, 136, 0.09), 0 10px 22px rgba(0, 0, 0, 0.28), inset 0 0 0 1px rgba(255, 204, 214, 0.08), inset 0 0 20px rgba(177, 28, 47, 0.18);
+}
+
+.dialog-button-danger:hover {
+    border-color: rgba(255, 146, 159, 0.92);
+    box-shadow: 0 0 0 1px rgba(255, 121, 136, 0.12), 0 12px 24px rgba(0, 0, 0, 0.30), 0 0 22px rgba(255, 89, 111, 0.14), inset 0 0 0 1px rgba(255, 215, 223, 0.10), inset 0 0 24px rgba(193, 33, 54, 0.22);
+}
+
+/* Secondary utility buttons a bit quieter. */
+#registration-back-button,
+.age-selector button,
+#tickets-create-cancel,
+.tickets-modal-card > div button:first-child,
+.tickets-quick-replies button,
+#admin-panel .admin-tabs button,
+#admin-panel .admin-quick button {
+    border-color: rgba(83, 172, 221, 0.56);
+    box-shadow: 0 0 0 1px rgba(62, 165, 223, 0.08), 0 10px 20px rgba(0, 0, 0, 0.24), inset 0 0 0 1px rgba(149, 226, 255, 0.06), inset 0 0 14px rgba(18, 102, 145, 0.14);
+}
+
+/* Compact devices */
+@media (max-width: 900px), (orientation: landscape) and (max-height: 620px) {
+    :root {
+        --neo-btn-radius: 10px;
+    }
+
+    #authorization-button,
+    #registration-next-button,
+    #registration-button,
+    #registration-back-button,
+    #spawn-button,
+    .dialog-button,
+    #error-close-button,
+    #statistics-close-button,
+    .tickets-tabs button,
+    #tickets-create,
+    #tickets-send,
+    #tickets-finish,
+    #tickets-create-submit,
+    #tickets-create-cancel,
+    .tickets-modal-card > div button,
+    .tickets-quick-replies button,
+    #admin-panel button:not(#admin-close) {
+        box-shadow: 0 0 0 1px rgba(72, 182, 236, 0.10), 0 10px 20px rgba(0, 0, 0, 0.26), inset 0 0 0 1px rgba(149, 230, 255, 0.08), inset 0 0 14px rgba(19, 113, 159, 0.16);
+    }
+}

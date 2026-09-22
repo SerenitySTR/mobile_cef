@@ -191,8 +191,10 @@ rgba(4,
 }
 
 .tickets-status.closed {
-    background:#293845;
-    color:#b3c2cc
+    background:#4b1218;
+    color:#ff9aa8;
+    border:1px solid rgba(255,91,111,.28);
+    box-shadow: inset 0 0 0 1px rgba(255,180,192,.04), 0 0 12px rgba(255,89,111,.08)
 }
 
 .tickets-content {
