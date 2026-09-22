@@ -24,3 +24,12 @@ body *::-webkit-scrollbar {
     height: 0 !important;
     display: none !important;
 }
+
+/* Keyboard focus target for interfaces: receives key events without visual outline. */
+#dialog-screen:focus,
+#tickets:focus,
+#inventory:focus,
+#statistics:focus,
+#main-menu:focus {
+    outline: none;
+}

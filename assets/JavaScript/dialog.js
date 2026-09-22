@@ -53,6 +53,9 @@ var Dialog = {
 
         void this.screen.offsetWidth;
         this.screen.classList.add("opened");
+
+        if (typeof UiKeyboard !== "undefined")
+            UiKeyboard.Focus(this.screen);
     },
 
     Hide: function(callback) {

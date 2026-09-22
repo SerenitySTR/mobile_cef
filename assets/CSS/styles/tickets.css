@@ -793,3 +793,19 @@ rgba(4,
         bottom:35px;
     }
 }
+
+.tickets-icon {
+    transition: border-color .18s ease, background .18s ease, color .18s ease, box-shadow .18s ease, transform .18s ease;
+}
+
+.tickets-icon:hover,
+.tickets-icon:focus-visible {
+    border-color: rgba(82, 211, 255, .90);
+    background: rgba(9, 83, 126, .34);
+    color: #ffffff;
+    box-shadow: 0 0 18px rgba(62, 198, 255, .18), inset 0 0 14px rgba(55, 188, 244, .10);
+}
+
+.tickets-icon:active {
+    transform: scale(.96);
+}

@@ -81,6 +81,9 @@ var MainMenu = {
         void this.screen.offsetWidth;
         this.screen.classList.add("opened");
 
+        if (typeof UiKeyboard !== "undefined")
+            UiKeyboard.Focus(this.screen);
+
         if (typeof Loading !== "undefined" && Loading.Hide)
             Loading.Hide();
     },

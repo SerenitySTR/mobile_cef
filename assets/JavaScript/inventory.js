@@ -153,6 +153,9 @@ var Inventory={
 
         this.screen.classList.add("active");
 
+        if(typeof UiKeyboard!=="undefined")
+            UiKeyboard.Focus(this.screen);
+
         if(typeof Loading!=="undefined"&&Loading.Hide)
             Loading.Hide();
     },

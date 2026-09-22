@@ -1979,3 +1979,18 @@
         font-size:6px !important;
     }
 }
+
+.inventory-close {
+    transition: border-color .18s ease, background .18s ease, box-shadow .18s ease, transform .18s ease;
+}
+
+.inventory-close:hover,
+.inventory-close:focus-visible {
+    border-color: rgba(82, 211, 255, .90);
+    background: rgba(9, 83, 126, .34);
+    box-shadow: 0 0 18px rgba(62, 198, 255, .18), inset 0 0 14px rgba(55, 188, 244, .10);
+}
+
+.inventory-close:active {
+    transform: scale(.96);
+}

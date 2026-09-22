@@ -108,6 +108,9 @@ const Tickets = {
         this.root.setAttribute("aria-hidden", "false");
 
         this.Render();
+
+        if (typeof UiKeyboard !== "undefined")
+            UiKeyboard.Focus(this.root);
     },
 
     Hide() {

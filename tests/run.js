@@ -476,6 +476,26 @@ test('code style: all JavaScript files follow repository whitespace rules', () =
     }
 });
 
+test('keyboard focus: Dialog, Tickets, Inventory, Statistics and Main Menu receive focus on show', () => {
+    const template = read('src/index.template.html');
+    const helperIndex = template.indexOf('ui-keyboard.js');
+    ok(helperIndex !== -1, 'ui-keyboard.js is not linked');
+
+    for (const file of ['dialog.js', 'tickets.js', 'inventory.js', 'statistics.js', 'main-menu.js']) {
+        const source = read(`assets/JavaScript/${file}`);
+        ok(source.includes('UiKeyboard.Focus('), `${file}: UI is not focused when shown`);
+    }
+
+    const helper = read('assets/JavaScript/ui-keyboard.js');
+    hasAll(helper, ['window.focus()', 'element.focus({ preventScroll: true })', 'setTimeout(applyFocus, 40)'], 'ui-keyboard.js');
+
+    const ticketsCss = read('assets/CSS/styles/tickets.css');
+    hasAll(ticketsCss, ['.tickets-icon:hover,', '.tickets-icon:focus-visible'], 'tickets.css');
+
+    const inventoryCss = read('assets/CSS/styles/inventory.css');
+    hasAll(inventoryCss, ['.inventory-close:hover,', '.inventory-close:focus-visible'], 'inventory.css');
+});
+
 // Non-fatal cleanup hints.
 const template = read('src/index.template.html');
 const sectionFiles = walk('src/sections', file => file.endsWith('.html'));
