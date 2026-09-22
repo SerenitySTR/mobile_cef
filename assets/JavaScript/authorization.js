@@ -22,12 +22,20 @@ function hideAuthorization() {
     authorization.classList.remove("active");
 }
 
-authorizationPasswordEye.addEventListener("click", () => {
+function preventPasswordEyeFocus(event) {
+    event.preventDefault();
+}
+
+authorizationPasswordEye.addEventListener("pointerdown", preventPasswordEyeFocus);
+authorizationPasswordEye.addEventListener("mousedown", preventPasswordEyeFocus);
+authorizationPasswordEye.addEventListener("touchstart", preventPasswordEyeFocus, { passive: false });
+
+authorizationPasswordEye.addEventListener("click", (event) => {
+    event.preventDefault();
+
     authorizationPasswordInput.type = authorizationPasswordInput.type === "password"
         ? "text"
         : "password";
-
-    focusAuthorizationPassword();
 });
 
 authorizationButton.addEventListener("click", () => {

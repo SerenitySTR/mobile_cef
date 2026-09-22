@@ -147,29 +147,16 @@ class Notifications {
         };
     }
 
-    static #DisplayTime(data) {
-        if (data.Time)
-            return this.#Escape(data.Time);
-
-        if (Number.isFinite(data.Duration) && data.Duration > 0)
-            return `${Math.max(1, Math.round(data.Duration / 1000))} c`;
-
-        return "";
-    }
-
     static #CreateToast(data) {
         const element = this.#CreateBase(data, "notification-toast");
-        const displayTime = this.#DisplayTime(data);
 
         element.innerHTML = `
             ${this.#Icon(data.Type)}
             <div class="notification-body">
-                <button class="notification-close" type="button" aria-label="Закрити">×</button>
                 <div class="notification-header">
                     <div class="notification-title">${this.#Escape(data.Title || this.#DefaultTitle(data.Type))}</div>
                 </div>
                 ${data.Text ? `<p class="notification-text">${this.#Escape(data.Text)}</p>` : ""}
-                ${displayTime ? `<div class="notification-time">${displayTime}</div>` : ""}
             </div>
             ${data.Duration > 0 ? `<div class="notification-progress"><span></span></div>` : ""}
         `;
@@ -177,25 +164,18 @@ class Notifications {
         if (data.Duration > 0)
             element.style.setProperty("--notification-duration", `${data.Duration}ms`);
 
-        element.querySelector(".notification-close").addEventListener("click", () => {
-            this.#Remove(element);
-        });
-
         return element;
     }
 
     static #CreateBanner(data) {
         const element = this.#CreateBase(data, "notification-banner");
-        const displayTime = this.#DisplayTime(data);
 
         element.innerHTML = `
             ${this.#Icon(data.Type)}
             <div class="notification-body">
-                <button class="notification-close" type="button" aria-label="Закрити">×</button>
                 ${data.Label ? `<div class="notification-banner-label">${this.#Escape(data.Label)}</div>` : ""}
                 <div class="notification-header">
                     <div class="notification-title">${this.#Escape(data.Title || this.#DefaultTitle(data.Type))}</div>
-                    ${displayTime ? `<div class="notification-time">${displayTime}</div>` : ""}
                 </div>
                 ${data.Text ? `<p class="notification-text">${this.#Escape(data.Text)}</p>` : ""}
                 ${data.Subtext ? `
@@ -210,10 +190,6 @@ class Notifications {
 
         if (data.Duration > 0)
             element.style.setProperty("--notification-duration", `${data.Duration}ms`);
-
-        element.querySelector(".notification-close").addEventListener("click", () => {
-            this.#Remove(element);
-        });
 
         return element;
     }

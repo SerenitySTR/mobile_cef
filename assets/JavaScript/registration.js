@@ -81,8 +81,18 @@ function setAge(value) {
     ageInput.value = age;
 }
 
+function preventPasswordEyeFocus(event) {
+    event.preventDefault();
+}
+
 passwordEyeButtons.forEach((button) => {
-    button.addEventListener("click", () => {
+    button.addEventListener("pointerdown", preventPasswordEyeFocus);
+    button.addEventListener("mousedown", preventPasswordEyeFocus);
+    button.addEventListener("touchstart", preventPasswordEyeFocus, { passive: false });
+
+    button.addEventListener("click", (event) => {
+        event.preventDefault();
+
         const input = document.getElementById(button.dataset.target);
 
         if (!input)
@@ -91,8 +101,6 @@ passwordEyeButtons.forEach((button) => {
         input.type = input.type === "password"
             ? "text"
             : "password";
-
-        focusRegistrationInput(input);
     });
 });
 

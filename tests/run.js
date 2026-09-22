@@ -357,6 +357,35 @@ test('production: notification local test helpers are absent', () => {
     }
 });
 
+test('password eye: reveal buttons never refocus inputs or reopen mobile keyboard', () => {
+    const authorizationSource = read('assets/JavaScript/authorization.js');
+    const registrationSource = read('assets/JavaScript/registration.js');
+
+    hasAll(authorizationSource, [
+        'authorizationPasswordEye.addEventListener("pointerdown", preventPasswordEyeFocus)',
+        'authorizationPasswordEye.addEventListener("touchstart", preventPasswordEyeFocus, { passive: false })',
+        'authorizationPasswordEye.addEventListener("click", (event) =>'
+    ], 'authorization.js');
+
+    hasAll(registrationSource, [
+        'button.addEventListener("pointerdown", preventPasswordEyeFocus)',
+        'button.addEventListener("touchstart", preventPasswordEyeFocus, { passive: false })',
+        'button.addEventListener("click", (event) =>'
+    ], 'registration.js');
+
+    const authorizationEyeBlock = authorizationSource.slice(
+        authorizationSource.indexOf('authorizationPasswordEye.addEventListener("click"'),
+        authorizationSource.indexOf('authorizationButton.addEventListener("click"')
+    );
+    ok(!authorizationEyeBlock.includes('focusAuthorizationPassword()'), 'Authorization eye click refocuses password input');
+
+    const registrationEyeBlock = registrationSource.slice(
+        registrationSource.indexOf('passwordEyeButtons.forEach'),
+        registrationSource.indexOf('genderButtons.forEach')
+    );
+    ok(!registrationEyeBlock.includes('focusRegistrationInput(input)'), 'Registration eye click refocuses password input');
+});
+
 test('visual test: reusable UI selector is scrollable and available on PC/mobile', () => {
     const js = read('tests/visual-test.js');
     const css = read('tests/visual-test.css');
@@ -397,6 +426,50 @@ test('in-game visual test: lazy bridge and control events are wired into product
     ], 'tests/in-game.js');
 
     ok(source.includes('active && !isTestControlEvent(eventName)'), 'In-game test does not guard real outbound UI events');
+});
+
+test('notifications: close buttons and visible countdown text are absent', () => {
+    const source = read('assets/JavaScript/notifications.js');
+    ok(!source.includes('notification-close'), 'notifications.js still renders a close button');
+    ok(!source.includes('notification-time'), 'notifications.js still renders visible notification time');
+    ok(!source.includes('#DisplayTime'), 'notifications.js still contains visible time formatter');
+    hasAll(source, ['#AutoRemove(element, data.Duration)', 'notification-progress'], 'notifications.js');
+});
+
+test('visual test: Inventory, Statistics and Main Menu cases are registered', () => {
+    const source = read('tests/cases.js');
+    hasAll(source, [
+        'Tests.register("inventory", "Inventory"',
+        'Tests.register("statistics", "Statistics"',
+        'Tests.register("mainmenu", "Main Menu"',
+        'inventory:show',
+        'statistics:show',
+        'main-menu:show'
+    ], 'tests/cases.js');
+});
+
+test('tickets: waiting and working statuses are blue while closed stays red', () => {
+    const css = read('assets/CSS/styles/tickets.css');
+    const js = read('assets/JavaScript/tickets.js');
+
+    hasAll(css, ['.tickets-status.waiting,', '.tickets-status.working', '#0a4f7d', '.tickets-status.closed', '#4b1218'], 'tickets.css');
+    ok(js.includes('adminName ? " working" : " waiting"'), 'Ticket working/waiting classes are not assigned correctly');
+});
+
+test('code style: all JavaScript files follow repository whitespace rules', () => {
+    const files = [
+        'build.js',
+        ...walk('assets/JavaScript', file => file.endsWith('.js')),
+        ...walk('tests', file => file.endsWith('.js'))
+    ];
+
+    for (const file of files) {
+        const source = read(file);
+        ok(!source.includes('\t'), `${file}: tabs are not allowed`);
+        ok(!source.split('\n').some(line => /[ \t]+$/.test(line)), `${file}: trailing whitespace found`);
+        ok(source.endsWith('\n'), `${file}: missing final newline`);
+        ok(!source.includes('\n\n\n'), `${file}: more than one empty line between blocks`);
+    }
 });
 
 // Non-fatal cleanup hints.

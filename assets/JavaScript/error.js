@@ -20,7 +20,6 @@ errorCloseButton.addEventListener("click", () => {
     hideError();
 });
 
-
 document.addEventListener("keydown", (event) => {
     if (event.defaultPrevented || event.isComposing || event.keyCode === 229 || event.repeat)
         return;

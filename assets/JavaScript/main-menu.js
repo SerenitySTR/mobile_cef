@@ -332,7 +332,6 @@ if (mainMenuClose) {
     };
 }
 
-
 document.addEventListener("keydown", function(event) {
     if (event.defaultPrevented || event.isComposing || event.keyCode === 229 || event.repeat || event.key !== "Escape")
         return;

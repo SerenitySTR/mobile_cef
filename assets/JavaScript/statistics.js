@@ -305,7 +305,6 @@ var Statistics={
         if(id==="hunger")
             return "#ffb229";
 
-
         return "#f5f9fc";
     },
 
@@ -374,7 +373,6 @@ if(statisticsCloseButton){
     });
 }
 
-
 document.addEventListener("keydown",function(event){
     if(event.defaultPrevented||event.isComposing||event.keyCode===229||event.repeat||event.key!=="Escape")
         return;
@@ -396,7 +394,6 @@ document.addEventListener("keydown",function(event){
 GameCef.on("statistics:show",function(data){
     Statistics.Show(data);
 });
-
 
 GameCef.on("statistics:profile",function(data){
     Statistics.SetProfile(data);

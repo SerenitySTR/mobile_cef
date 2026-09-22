@@ -58,7 +58,6 @@ const hud = document.getElementById("hud");
 const HUD_REFERENCE_WIDTH = 1280;
 const HUD_REFERENCE_HEIGHT = 720;
 
-
 function updateHudMobileScale() {
     const width = Math.max(1, window.innerWidth || document.documentElement.clientWidth);
     const height = Math.max(1, window.innerHeight || document.documentElement.clientHeight);
@@ -568,7 +567,6 @@ window.addEventListener("focus", () => {
     }
 });
 
-
 (function enableHudBrowserPreview() {
     try {
         const params = new URLSearchParams(window.location.search);
@@ -583,7 +581,3 @@ window.addEventListener("focus", () => {
         updateHudServerIdentity({ nickname: "Nastya Petrova", id: 15, time: "22:31", date: "14.09.2025" });
     } catch (_) {}
 })();
-
-
-
-

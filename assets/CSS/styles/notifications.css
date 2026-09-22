@@ -182,7 +182,7 @@
 }
 
 .notification-toast .notification-body {
-    padding-right: 22px;
+    padding-right: 0;
     padding-bottom: 12px;
 }
 
@@ -471,7 +471,7 @@
     }
 
     .notification-toast .notification-body {
-        padding-right: 18px;
+        padding-right: 0;
         padding-bottom: 11px;
     }
 
@@ -614,7 +614,7 @@
     }
 
     .notification-toast .notification-body {
-        padding-right: 14px;
+        padding-right: 0;
         padding-bottom: 8px;
     }
 
@@ -748,7 +748,7 @@
     }
 
     .notification-toast .notification-body {
-        padding-right: 13px;
+        padding-right: 0;
         padding-bottom: 7px;
     }
 
@@ -888,7 +888,7 @@
     }
 
     .notification-toast .notification-body {
-        padding-right: 11px;
+        padding-right: 0;
         padding-bottom: 6px;
     }
 
@@ -1224,7 +1224,7 @@
     }
 
     .notification-banner .notification-body {
-        padding-right: 12px;
+        padding-right: 0;
     }
 
     .notification-banner .notification-icon {

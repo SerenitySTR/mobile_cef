@@ -103,6 +103,8 @@
 
 .statistics-profile,
 .statistics-panel{
+    box-sizing:border-box;
+
     min-width:0;
 
     border:1px solid rgba(70,167,224,.36);
@@ -1073,6 +1075,7 @@
 
 .statistics-skills{
     width:100%;
+    box-sizing:border-box;
 }
 
 .statistics-skills-list{
@@ -1480,20 +1483,20 @@
 .statistics-main-panel .statistics-grid{
     flex:none !important;
 
-    height:calc(66px * 3 + 8px * 2) !important;
-    max-height:calc(66px * 3 + 8px * 2) !important;
+    height:calc(60px * 3 + 6px * 2) !important;
+    max-height:calc(60px * 3 + 6px * 2) !important;
 
     grid-template-columns:repeat(2,minmax(0,1fr)) !important;
-    grid-auto-rows:66px !important;
-    gap:8px !important;
+    grid-auto-rows:60px !important;
+    gap:6px !important;
 
     align-content:start !important;
 }
 
 .statistics-main-panel .statistics-card{
-    min-height:66px !important;
-    height:66px !important;
-    max-height:66px !important;
+    min-height:60px !important;
+    height:60px !important;
+    max-height:60px !important;
 }
 
 .statistics-profile,
@@ -1522,17 +1525,17 @@
     }
 
     .statistics-main-panel .statistics-grid{
-        height:calc(43px * 3 + 5px * 2) !important;
-        max-height:calc(43px * 3 + 5px * 2) !important;
+        height:calc(40px * 3 + 4px * 2) !important;
+        max-height:calc(40px * 3 + 4px * 2) !important;
 
-        grid-auto-rows:43px !important;
-        gap:5px !important;
+        grid-auto-rows:40px !important;
+        gap:4px !important;
     }
 
     .statistics-main-panel .statistics-card{
-        min-height:43px !important;
-        height:43px !important;
-        max-height:43px !important;
+        min-height:40px !important;
+        height:40px !important;
+        max-height:40px !important;
     }
 }
 
@@ -1552,17 +1555,17 @@
     }
 
     .statistics-main-panel .statistics-grid{
-        height:calc(38px * 3 + 4px * 2) !important;
-        max-height:calc(38px * 3 + 4px * 2) !important;
+        height:calc(35px * 3 + 3px * 2) !important;
+        max-height:calc(35px * 3 + 3px * 2) !important;
 
-        grid-auto-rows:38px !important;
-        gap:4px !important;
+        grid-auto-rows:35px !important;
+        gap:3px !important;
     }
 
     .statistics-main-panel .statistics-card{
-        min-height:38px !important;
-        height:38px !important;
-        max-height:38px !important;
+        min-height:35px !important;
+        height:35px !important;
+        max-height:35px !important;
     }
 }
 
@@ -1947,5 +1950,125 @@
         width:min(290px,82vw) !important;
         height:50px !important;
         font-size:13px !important;
+    }
+}
+
+/* ==========================================================================\n   FINAL CENTER GRID LAYOUT\n   4 character-state cards (2x2) + 6 main-stat cards (2x3) without scrolling.\n   ========================================================================== */
+.statistics-center {
+    min-height: 0 !important;
+    display: grid !important;
+    grid-template-rows: minmax(0, 0.85fr) minmax(0, 1.15fr) !important;
+    gap: 10px !important;
+}
+
+.statistics-status-panel,
+.statistics-main-panel {
+    min-height: 0 !important;
+    height: auto !important;
+    display: flex !important;
+    flex-direction: column !important;
+    overflow: hidden !important;
+}
+
+.statistics-status-panel .statistics-section-title,
+.statistics-main-panel .statistics-section-title {
+    flex: none !important;
+}
+
+.statistics-status-grid {
+    flex: 1 1 auto !important;
+    min-height: 0 !important;
+    height: auto !important;
+    max-height: none !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    grid-template-rows: repeat(2, minmax(0, 1fr)) !important;
+    grid-auto-rows: 0 !important;
+    gap: 8px !important;
+    padding-right: 0 !important;
+    overflow: hidden !important;
+}
+
+.statistics-status-item {
+    min-height: 0 !important;
+    height: auto !important;
+    max-height: none !important;
+}
+
+.statistics-main-panel .statistics-grid {
+    flex: 1 1 auto !important;
+    min-height: 0 !important;
+    height: auto !important;
+    max-height: none !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    grid-template-rows: repeat(3, minmax(0, 1fr)) !important;
+    grid-auto-rows: 0 !important;
+    gap: 8px !important;
+    padding-right: 0 !important;
+    padding-bottom: 0 !important;
+    overflow: hidden !important;
+}
+
+.statistics-main-panel .statistics-card {
+    min-height: 0 !important;
+    height: auto !important;
+    max-height: none !important;
+}
+
+.statistics-status-grid::-webkit-scrollbar,
+.statistics-main-panel .statistics-grid::-webkit-scrollbar {
+    display: none !important;
+    width: 0 !important;
+    height: 0 !important;
+}
+
+@media (max-height: 800px) and (orientation: landscape) {
+    .statistics-center {
+        grid-template-rows: minmax(0, 0.88fr) minmax(0, 1.12fr) !important;
+        gap: 7px !important;
+    }
+
+    .statistics-status-grid,
+    .statistics-main-panel .statistics-grid {
+        gap: 5px !important;
+    }
+}
+
+@media (max-height: 620px) and (orientation: landscape) {
+    .statistics-center {
+        grid-template-rows: minmax(0, 0.90fr) minmax(0, 1.10fr) !important;
+        gap: 5px !important;
+    }
+
+    .statistics-status-grid,
+    .statistics-main-panel .statistics-grid {
+        gap: 4px !important;
+    }
+
+    .statistics-status-item,
+    .statistics-main-panel .statistics-card {
+        padding-top: 5px !important;
+        padding-bottom: 5px !important;
+    }
+}
+
+@media (max-width: 760px) and (orientation: portrait) {
+    .statistics-center {
+        display: flex !important;
+        height: auto !important;
+        max-height: none !important;
+    }
+
+    .statistics-status-grid {
+        height: auto !important;
+        grid-template-columns: 1fr !important;
+        grid-template-rows: repeat(4, minmax(58px, auto)) !important;
+        grid-auto-rows: auto !important;
+    }
+
+    .statistics-main-panel .statistics-grid {
+        height: auto !important;
+        grid-template-columns: 1fr !important;
+        grid-template-rows: repeat(6, minmax(62px, auto)) !important;
+        grid-auto-rows: auto !important;
     }
 }

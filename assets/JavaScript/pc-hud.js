@@ -42,7 +42,6 @@
   // All CEF/game-data subscriptions live in hud.js.
   // PC HUD is render-only so GameCef.on() callbacks are never overwritten.
 
-
   function updateScale(){
     const root=$('pc-hud');
     if(!root)return;

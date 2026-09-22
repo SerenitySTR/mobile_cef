@@ -628,4 +628,3 @@ GameCef.on("inventory:equipment",function(data){
 GameCef.on("inventory:quick",function(data){
     Inventory.SetQuick(data);
 });
-

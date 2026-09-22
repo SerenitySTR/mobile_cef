@@ -63,6 +63,9 @@ spawn
 dialog
 tickets
 admin
+inventory
+statistics
+mainmenu
 notifications
 reward
 achievement

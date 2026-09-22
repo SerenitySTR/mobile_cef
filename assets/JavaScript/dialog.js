@@ -458,7 +458,6 @@ GameCef.on("dialog:hide", function() {
     Dialog.Hide();
 });
 
-
 window.addEventListener("resize", function() {
     Dialog.Init();
 });

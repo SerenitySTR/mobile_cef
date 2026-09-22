@@ -164,6 +164,133 @@
         }
     });
 
+    Tests.register("inventory", "Inventory", function () {
+        var burger = {
+            Id: 1,
+            Title: "Бургер",
+            Category: "food",
+            Icon: "food",
+            Count: 3,
+            Weight: 0.4,
+            Description: "Ситний бургер. Відновлює голод персонажа.",
+            Effects: [
+                { Title: "Голод", Value: "+25" }
+            ],
+            CanUse: true
+        };
+
+        var water = {
+            Id: 2,
+            Title: "Вода",
+            Category: "drink",
+            Icon: "drink",
+            Count: 5,
+            Weight: 0.5,
+            Description: "Пляшка чистої води.",
+            Effects: [
+                { Title: "Спрага", Value: "+30" }
+            ],
+            CanUse: true
+        };
+
+        var medkit = {
+            Id: 3,
+            Title: "Аптечка",
+            Category: "medicine",
+            Icon: "medicine",
+            Count: 2,
+            Weight: 0.8,
+            Description: "Медичний набір для відновлення здоров'я.",
+            Effects: [
+                { Title: "Здоров'я", Value: "+50" }
+            ],
+            CanUse: true
+        };
+
+        var phone = {
+            Id: 4,
+            Title: "Телефон",
+            Category: "other",
+            Icon: "phone",
+            Count: 1,
+            Weight: 0.2,
+            Description: "Особистий мобільний телефон.",
+            CanUse: true
+        };
+
+        var materials = {
+            Id: 5,
+            Title: "Матеріали",
+            Category: "materials",
+            Icon: "tool",
+            Count: 24,
+            Weight: 2.4,
+            Description: "Набір матеріалів для робіт та крафту.",
+            CanUse: false
+        };
+
+        Tests.receive("inventory:show", {
+            Items: [burger, water, medkit, phone, materials],
+            Equipment: {
+                backpack: { Title: "Міський рюкзак", Icon: "backpack" },
+                body: { Title: "Одяг", Icon: "clothes" },
+                feet: { Title: "Кросівки", Icon: "shoes" }
+            },
+            QuickSlots: [burger, water, medkit, null, phone],
+            Weight: 12.7,
+            MaxWeight: 50
+        });
+
+        setTimeout(function () {
+            if (typeof Inventory !== "undefined") Inventory.SelectItem(1);
+        }, 20);
+    });
+
+    Tests.register("statistics", "Statistics", function () {
+        Tests.receive("statistics:show", {
+            Profile: {
+                Name: "Serenity_Walker",
+                Id: 10482,
+                Level: 17,
+                Online: true,
+                Items: [
+                    { Icon: "family", Title: "Сім'я", Value: "ANTARES" },
+                    { Icon: "faction", Title: "Організація", Value: "LSPD" },
+                    { Icon: "job", Title: "Робота", Value: "Механік" }
+                ]
+            },
+            Status: [
+                { Id: "health", Title: "Здоров'я", Value: 92, Max: 100 },
+                { Id: "armor", Title: "Броня", Value: 54, Max: 100 },
+                { Id: "hunger", Title: "Голод", Value: 68, Max: 100 },
+                { Id: "stamina", Title: "Витривалість", Value: 76, Max: 100 }
+            ],
+            Statistics: [
+                { Icon: "clock", Title: "Час у грі", Value: "148 год." },
+                { Icon: "money", Title: "Готівка", Value: "$128 450" },
+                { Icon: "reputation", Title: "Репутація", Value: "356" },
+                { Icon: "wanted", Title: "Розшук", Value: "0" },
+                { Icon: "vip", Title: "VIP", Value: "Gold" },
+                { Icon: "phone", Title: "Телефон", Value: "555-0198" }
+            ],
+            Skills: [
+                { Icon: "skill", Title: "Водіння", Value: 82, Max: 100 },
+                { Icon: "skill", Title: "Стрільба", Value: 61, Max: 100 },
+                { Icon: "skill", Title: "Витривалість", Value: 74, Max: 100 }
+            ]
+        });
+    });
+
+    Tests.register("mainmenu", "Main Menu", function () {
+        Tests.receive("main-menu:show", {
+            Profile: {
+                Name: "Serenity_Walker",
+                Id: 12,
+                Level: 17
+            }
+        });
+    });
+
     Tests.register("notifications", "Notify", function () {
         if (typeof Notifications === "undefined") return;
         Notifications.Toast({ Id: "test-success", Type: "Success", Title: "Успіх", Text: "Дію успішно виконано.", Duration: 15000 });

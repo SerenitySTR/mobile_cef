@@ -281,7 +281,8 @@ const Tickets = {
         }
 
         if (statusElement) {
-            statusElement.className = `tickets-status${closed ? " closed" : ""}`;
+            const statusClass = closed ? " closed" : adminName ? " working" : " waiting";
+            statusElement.className = `tickets-status${statusClass}`;
             statusElement.textContent = closed ? "Закрито" : adminName ? "В роботі" : "Очікує відповіді";
         }
 
@@ -452,4 +453,3 @@ GameCef.on(TicketEvents.Hide, () => Tickets.Hide());
 GameCef.on(TicketEvents.Update, data => Tickets.Update(data));
 
 window.addEventListener("DOMContentLoaded", () => Tickets.Init());
-

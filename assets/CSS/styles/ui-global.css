@@ -1,0 +1,26 @@
+/* Global CEF viewport/scroll behavior.
+   The page itself never scrolls. Scrollable UI lists keep wheel/touch scrolling,
+   but native scrollbar tracks are hidden everywhere. */
+html,
+body {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    overflow: hidden !important;
+    overscroll-behavior: none;
+}
+
+html,
+body,
+body * {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+html::-webkit-scrollbar,
+body::-webkit-scrollbar,
+body *::-webkit-scrollbar {
+    width: 0 !important;
+    height: 0 !important;
+    display: none !important;
+}
