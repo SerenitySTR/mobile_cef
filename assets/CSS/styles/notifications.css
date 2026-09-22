@@ -1,85 +1,94 @@
 #notifications {
     position: fixed;
     inset: 0;
-    z-index: 90000;
-
+    z-index: 12000;
     pointer-events: none;
-
-    font-family: Arial, Helvetica, sans-serif;
+    font-family: Inter, Arial, sans-serif;
 }
 
-#notification-banner-container {
-    position: absolute;
-    top: max(22px, env(safe-area-inset-top));
-    left: 50%;
-
-    width: min(550px, 48vw);
-
-    transform: translateX(-50%);
+#notification-banner-container,
+#notification-toast-container,
+#notification-bottom-container {
+    position: fixed;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    pointer-events: none;
 }
 
 #notification-toast-container {
-    position: absolute;
     top: 50%;
-    left: max(22px, env(safe-area-inset-left));
-    right: auto;
-
-    width: min(435px, 36vw);
-
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-
+    left: clamp(18px, 2.2vw, 42px);
+    width: min(380px, 24vw);
     transform: translateY(-50%);
+    align-items: stretch;
+    gap: 10px;
+}
+
+#notification-banner-container {
+    top: 34px;
+    left: 50%;
+    width: min(820px, 64vw);
+    transform: translateX(-50%);
+    align-items: stretch;
 }
 
 #notification-bottom-container {
-    position: absolute;
-    left: 50%;
-    bottom: max(24px, env(safe-area-inset-bottom));
-
-    width: min(480px, 44vw);
-
-    transform: translateX(-50%);
+    right: 34px;
+    bottom: 34px;
+    width: min(360px, 25vw);
+    align-items: stretch;
 }
 
 .notification {
+    --notification-color: #48beff;
     position: relative;
-
     overflow: hidden;
-
-    border: 1px solid rgba(72, 190, 255, 0.32);
-    border-radius: 10px;
-
-    background:
-        linear-gradient(
-            135deg,
-            rgba(4, 19, 34, 0.97),
-            rgba(3, 13, 24, 0.96)
-        );
-
-    box-shadow:
-        0 14px 34px rgba(0, 0, 0, 0.30),
-        inset 0 1px 0 rgba(255, 255, 255, 0.025);
-
-    color: #eef8ff;
-
     pointer-events: auto;
+    border-radius: 26px;
+    border: 1px solid rgba(85, 196, 255, 0.78);
+    background:
+        radial-gradient(circle at 92% 16%, rgba(73, 183, 255, 0.16), transparent 18%),
+        radial-gradient(circle at 8% 92%, rgba(28, 124, 214, 0.10), transparent 22%),
+        linear-gradient(180deg, rgba(4, 17, 31, 0.96), rgba(3, 12, 24, 0.92));
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.05),
+        0 0 0 1px rgba(113, 217, 255, 0.09),
+        0 18px 36px rgba(0, 0, 0, 0.34),
+        0 0 22px rgba(64, 184, 255, 0.14);
+    backdrop-filter: blur(12px);
 }
 
 .notification::before {
     content: "";
-
     position: absolute;
-    left: 0;
-    top: 0;
-    bottom: 0;
+    inset: 0;
+    border-radius: inherit;
+    border: 1px solid rgba(171, 233, 255, 0.08);
+    pointer-events: none;
+}
 
-    width: 3px;
-
-    background: var(--notification-color, #48beff);
-
-    box-shadow: 0 0 14px var(--notification-color, #48beff);
+.notification::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background:
+        radial-gradient(circle at 110% -10%, rgba(89, 204, 255, 0.10), transparent 26%),
+        linear-gradient(140deg,
+            transparent 0%,
+            transparent 54%,
+            rgba(73, 165, 255, 0.08) 58%,
+            transparent 62%,
+            transparent 100%),
+        linear-gradient(0deg,
+            transparent 0%,
+            transparent 62%,
+            rgba(63, 155, 255, 0.06) 66%,
+            transparent 70%,
+            transparent 100%);
+    opacity: 0.85;
+    pointer-events: none;
 }
 
 .notification-info {
@@ -87,407 +96,531 @@
 }
 
 .notification-success {
-    --notification-color: #22dfb3;
+    --notification-color: #43ef9a;
 }
 
 .notification-warning {
-    --notification-color: #ffb22e;
+    --notification-color: #ffbe32;
 }
 
 .notification-error {
-    --notification-color: #ff4d56;
+    --notification-color: #ff5b65;
 }
 
 .notification-toast {
     min-height: 88px;
-    padding: 15px 17px 15px 18px;
-
+    padding: 13px 16px 13px 14px;
     display: grid;
-    grid-template-columns: 46px minmax(0, 1fr);
-    gap: 14px;
-
-    animation: notificationToastEnter 0.42s cubic-bezier(0.22, 1, 0.36, 1) both;
+    grid-template-columns: 50px minmax(0, 1fr);
+    align-items: center;
+    gap: 12px;
+    animation: notificationToastEnter 0.36s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
 .notification-toast.removing {
-    animation: notificationToastLeave 0.28s ease both;
+    animation: notificationToastLeave 0.24s ease both;
+}
+
+.notification-banner {
+    min-height: 114px;
+    padding: 18px 24px 18px 22px;
+    display: grid;
+    grid-template-columns: 64px minmax(0, 1fr);
+    gap: 16px;
+    align-items: center;
+    animation: notificationBannerEnter 0.40s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.notification-banner.removing {
+    animation: notificationBannerLeave 0.26s ease both;
+}
+
+.notification-bottom {
+    min-height: 110px;
+    padding: 18px 20px 18px 18px;
+    display: grid;
+    grid-template-columns: 54px minmax(0, 1fr);
+    gap: 14px;
+    align-items: start;
+    animation: notificationBottomEnter 0.34s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.notification-bottom.removing {
+    animation: notificationBottomLeave 0.24s ease both;
 }
 
 .notification-icon {
-    width: 46px;
-    height: 46px;
-
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    border: 2px solid color-mix(in srgb, var(--notification-color) 82%, white 18%);
+    background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.10), rgba(4, 15, 28, 0.15) 58%, rgba(4, 12, 24, 0.35));
+    box-shadow:
+        inset 0 0 18px rgba(255, 255, 255, 0.04),
+        0 0 24px color-mix(in srgb, var(--notification-color) 34%, transparent);
     display: flex;
     align-items: center;
     justify-content: center;
-
-    border: 2px solid var(--notification-color, #48beff);
-    border-radius: 50%;
-
-    color: var(--notification-color, #48beff);
+    color: var(--notification-color);
+    z-index: 1;
 }
 
 .notification-icon svg {
-    width: 27px;
-    height: 27px;
-
+    width: 24px;
+    height: 24px;
     fill: none;
     stroke: currentColor;
-    stroke-width: 2;
+    stroke-width: 2.2;
     stroke-linecap: round;
     stroke-linejoin: round;
 }
 
 .notification-body {
+    position: relative;
+    z-index: 1;
     min-width: 0;
+}
+
+.notification-toast .notification-body {
+    padding-right: 22px;
+    padding-bottom: 12px;
 }
 
 .notification-header {
     display: flex;
     align-items: flex-start;
-    gap: 10px;
+    justify-content: space-between;
+    gap: 12px;
 }
 
 .notification-title {
-    min-width: 0;
-    flex: 1;
-
-    margin: 1px 0 4px;
-
-    overflow: hidden;
-
-    color: #f3f8fc;
-
-    font-size: 18px;
-    font-weight: 700;
-    line-height: 1.2;
-
-    text-overflow: ellipsis;
-    white-space: nowrap;
-}
-
-.notification-time {
-    flex: none;
-
-    color: rgba(185, 207, 223, 0.52);
-
-    font-size: 13px;
+    margin: 0;
+    color: #f6fbff;
+    font-size: 17px;
+    font-weight: 800;
+    line-height: 1.06;
+    letter-spacing: -0.02em;
 }
 
 .notification-text {
-    margin: 0;
-
-    color: rgba(197, 218, 233, 0.74);
-
-    font-size: 15px;
-    line-height: 1.35;
+    margin: 5px 0 0;
+    color: rgba(238, 247, 255, 0.88);
+    font-size: 13px;
+    font-weight: 500;
+    line-height: 1.32;
 }
 
 .notification-text strong {
-    color: var(--notification-color, #48beff);
-
-    font-weight: 700;
+    color: #ffffff;
 }
 
-.notification-progress {
+.notification-time {
     position: absolute;
-    left: 3px;
     right: 0;
     bottom: 0;
-
-    height: 2px;
-
-    background: rgba(255, 255, 255, 0.035);
-}
-
-.notification-progress span {
-    display: block;
-
-    width: 100%;
-    height: 100%;
-
-    background: var(--notification-color, #48beff);
-
-    transform-origin: left center;
-
-    animation: notificationProgress var(--notification-duration, 5000ms) linear forwards;
-}
-
-.notification-banner {
-    min-height: 97px;
-    padding: 14px 50px 14px 16px;
-
-    display: grid;
-    grid-template-columns: 38px minmax(0, 1fr);
-    gap: 13px;
-
-    border-color: rgba(72, 190, 255, 0.70);
-
-    box-shadow:
-        0 14px 40px rgba(0, 0, 0, 0.30),
-        0 0 22px rgba(72, 190, 255, 0.08);
-
-    animation: notificationBannerEnter 0.52s cubic-bezier(0.22, 1, 0.36, 1) both;
-}
-
-.notification-banner.removing {
-    animation: notificationBannerLeave 0.30s ease both;
-}
-
-.notification-banner .notification-icon {
-    width: 37px;
-    height: 37px;
-}
-
-.notification-banner-label {
-    margin-bottom: 5px;
-
-    color: var(--notification-color, #48beff);
-
-    font-size: 12px;
-    font-weight: 700;
-    letter-spacing: 0.9px;
-    text-transform: uppercase;
-}
-
-.notification-banner .notification-title {
-    margin: 0 0 5px;
-
-    font-size: 16px;
-    letter-spacing: 0.2px;
-    white-space: normal;
-}
-
-.notification-banner .notification-text {
-    font-size: 12px;
-    line-height: 1.42;
-}
-
-.notification-subtext {
-    margin-top: 6px;
-
-    display: flex;
-    align-items: center;
-    gap: 6px;
-
-    color: rgba(160, 196, 219, 0.70);
-
+    margin: 0;
+    color: rgba(219, 238, 255, 0.82);
     font-size: 11px;
-}
-
-.notification-subtext svg {
-    width: 14px;
-    height: 14px;
-
-    fill: currentColor;
+    font-weight: 500;
+    line-height: 1;
+    white-space: nowrap;
 }
 
 .notification-close {
     position: absolute;
-    top: 12px;
-    right: 13px;
-
-    width: 28px;
-    height: 28px;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    padding: 0;
-
+    top: -2px;
+    right: 0;
+    width: 24px;
+    height: 24px;
     border: 0;
-    outline: 0;
-
+    padding: 0;
+    border-radius: 50%;
     background: transparent;
-
-    color: rgba(72, 190, 255, 0.82);
-
-    font-size: 24px;
-    font-weight: 200;
+    color: rgba(250, 253, 255, 0.90);
+    font-size: 15px;
     line-height: 1;
-
     cursor: pointer;
+    pointer-events: auto;
+    transition: background 0.18s ease, color 0.18s ease, transform 0.18s ease;
+    z-index: 2;
 }
 
-.notification-bottom {
-    min-height: 80px;
-    padding: 12px 14px;
-
-    display: grid;
-    grid-template-columns: 42px minmax(0, 1fr) auto;
-    align-items: center;
-    gap: 12px;
-
-    border-color: rgba(72, 190, 255, 0.62);
-
-    animation: notificationBottomEnter 0.48s cubic-bezier(0.22, 1, 0.36, 1) both;
+.notification-close:hover {
+    background: rgba(255, 255, 255, 0.08);
+    color: #ffffff;
 }
 
-.notification-bottom.removing {
-    animation: notificationBottomLeave 0.28s ease both;
+.notification-close:active {
+    transform: scale(0.96);
 }
 
-.notification-bottom .notification-icon {
-    width: 38px;
-    height: 38px;
-
-    background: rgba(72, 190, 255, 0.06);
+.notification-progress {
+    position: absolute;
+    left: 14px;
+    right: 14px;
+    bottom: 7px;
+    height: 3px;
+    border-radius: 999px;
+    background: rgba(176, 220, 255, 0.18);
+    overflow: hidden;
+    z-index: 1;
 }
 
+.notification-progress span {
+    display: block;
+    width: 100%;
+    height: 100%;
+    border-radius: inherit;
+    background: linear-gradient(90deg,
+        color-mix(in srgb, var(--notification-color) 92%, white 8%),
+        color-mix(in srgb, var(--notification-color) 68%, #79d3ff 32%));
+    box-shadow: 0 0 14px color-mix(in srgb, var(--notification-color) 42%, transparent);
+    transform-origin: left center;
+    animation: notificationProgress var(--notification-duration, 5000ms) linear forwards;
+}
+
+.notification-banner-label,
 .notification-bottom-label {
-    margin-bottom: 3px;
-
-    color: var(--notification-color, #48beff);
-
-    font-size: 10px;
-    font-weight: 700;
-    letter-spacing: 0.9px;
+    margin-bottom: 6px;
+    color: color-mix(in srgb, var(--notification-color) 82%, white 18%);
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 0.18em;
     text-transform: uppercase;
 }
 
-.notification-bottom .notification-title {
-    margin: 0 0 2px;
+.notification-banner .notification-title {
+    font-size: 26px;
+}
 
-    font-size: 16px;
-    white-space: normal;
+.notification-banner .notification-text {
+    max-width: 92%;
+}
+
+.notification-subtext {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 10px;
+    color: rgba(203, 229, 250, 0.82);
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.notification-subtext svg {
+    width: 16px;
+    height: 16px;
+    fill: currentColor;
+}
+
+.notification-bottom .notification-icon {
+    width: 46px;
+    height: 46px;
+}
+
+.notification-bottom .notification-icon svg {
+    width: 25px;
+    height: 25px;
+}
+
+.notification-bottom .notification-title {
+    font-size: 15px;
 }
 
 .notification-bottom .notification-text {
-    font-size: 10px;
+    margin-top: 6px;
+    font-size: 14px;
 }
 
 .notification-brand {
-    min-width: 74px;
-    padding-left: 13px;
-
-    border-left: 1px solid rgba(72, 190, 255, 0.30);
-
-    color: rgba(210, 229, 242, 0.58);
-
-    font-family: Georgia, serif;
-    font-size: 10px;
-    letter-spacing: 1.9px;
-    text-align: center;
+    margin-top: 12px;
+    color: rgba(236, 246, 255, 0.94);
+    font-size: 13px;
+    font-weight: 800;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
 }
 
 .notification-brand span {
     display: block;
-
-    margin-top: 2px;
-
-    font-family: Arial, Helvetica, sans-serif;
-    font-size: 6px;
-    letter-spacing: 3px;
+    margin-top: 4px;
+    color: rgba(147, 213, 255, 0.86);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.28em;
 }
 
 @keyframes notificationToastEnter {
-    from {
-        opacity: 0;
-        transform: translateX(28px) scale(0.985);
-    }
-
-    to {
-        opacity: 1;
-        transform: translateX(0) scale(1);
-    }
+    from { opacity: 0; transform: translate3d(-22px, 0, 0) scale(0.985); }
+    to { opacity: 1; transform: translate3d(0, 0, 0) scale(1); }
 }
 
 @keyframes notificationToastLeave {
-    to {
-        opacity: 0;
-        transform: translateX(24px) scale(0.985);
-    }
+    from { opacity: 1; transform: translate3d(0, 0, 0) scale(1); }
+    to { opacity: 0; transform: translate3d(-20px, 0, 0) scale(0.985); }
 }
 
 @keyframes notificationBannerEnter {
-    from {
-        opacity: 0;
-        transform: translateY(-20px) scale(0.985);
-    }
-
-    to {
-        opacity: 1;
-        transform: translateY(0) scale(1);
-    }
+    from { opacity: 0; transform: translate3d(0, -14px, 0) scale(0.985); }
+    to { opacity: 1; transform: translate3d(0, 0, 0) scale(1); }
 }
 
 @keyframes notificationBannerLeave {
-    to {
-        opacity: 0;
-        transform: translateY(-16px) scale(0.99);
-    }
+    from { opacity: 1; transform: translate3d(0, 0, 0) scale(1); }
+    to { opacity: 0; transform: translate3d(0, -12px, 0) scale(0.985); }
 }
 
 @keyframes notificationBottomEnter {
-    from {
-        opacity: 0;
-        transform: translateY(22px) scale(0.985);
-    }
-
-    to {
-        opacity: 1;
-        transform: translateY(0) scale(1);
-    }
+    from { opacity: 0; transform: translate3d(0, 16px, 0) scale(0.985); }
+    to { opacity: 1; transform: translate3d(0, 0, 0) scale(1); }
 }
 
 @keyframes notificationBottomLeave {
-    to {
-        opacity: 0;
-        transform: translateY(18px) scale(0.99);
-    }
+    from { opacity: 1; transform: translate3d(0, 0, 0) scale(1); }
+    to { opacity: 0; transform: translate3d(0, 12px, 0) scale(0.985); }
 }
 
 @keyframes notificationProgress {
-    from {
-        transform: scaleX(1);
-    }
-
-    to {
-        transform: scaleX(0);
-    }
+    from { transform: scaleX(1); }
+    to { transform: scaleX(0); }
 }
 
-/* SA:MP Mobile - landscape */
-@media (max-height: 650px) and (orientation: landscape) {
-    #notification-banner-container {
-        top: max(10px, env(safe-area-inset-top));
-
-        width: min(465px, 46.5vw);
-    }
-
+/* Laptop */
+@media (max-width: 1440px) {
     #notification-toast-container {
-        top: 50%;
-        left: max(10px, env(safe-area-inset-left));
-        right: auto;
-
-        width: min(295px, 28.5vw);
-
-        gap: 6px;
-
-        transform: translateY(-50%);
-        transform-origin: left center;
+        left: clamp(16px, 2vw, 30px);
+        width: min(340px, 25vw);
+        gap: 9px;
     }
 
     #notification-bottom-container {
-        bottom: max(10px, env(safe-area-inset-bottom));
-
-        width: min(415px, 42vw);
+        right: 24px;
+        bottom: 24px;
+        width: min(310px, 23vw);
     }
 
     .notification-toast {
-        min-height: 61px;
-        padding: 8px 9px 8px 11px;
+        min-height: 82px;
+        padding: 11px 14px 11px 12px;
+        grid-template-columns: 46px minmax(0, 1fr);
+        gap: 10px;
+    }
 
-        grid-template-columns: 29px minmax(0, 1fr);
+    .notification-title {
+        font-size: 16px;
+    }
+
+    .notification-text {
+        font-size: 12px;
+    }
+}
+
+/* Tablet and smaller desktops */
+@media (max-width: 1100px) {
+    #notification-toast-container {
+        left: 18px;
+        width: min(310px, 31vw);
+    }
+
+    #notification-banner-container {
+        width: min(660px, 68vw);
+    }
+
+    .notification-toast,
+    .notification-banner {
+        border-radius: 18px;
+    }
+
+    .notification-banner {
+        min-height: 96px;
+    }
+
+    .notification-banner .notification-title {
+        font-size: 20px;
+    }
+}
+
+/* Mobile landscape is the primary game scenario. */
+@media (orientation: landscape) and (max-height: 650px) {
+    #notification-toast-container {
+        top: 50%;
+        left: max(12px, env(safe-area-inset-left));
+        right: auto;
+        width: clamp(290px, 30vw, 360px);
+        transform: translateY(-50%);
         gap: 8px;
     }
 
-    .notification-toast .notification-icon {
-        width: 29px;
-        height: 29px;
+    #notification-banner-container {
+        top: 12px;
+        width: min(610px, 68vw);
+    }
 
+    #notification-bottom-container {
+        right: max(12px, env(safe-area-inset-right));
+        bottom: max(12px, env(safe-area-inset-bottom));
+        width: min(270px, 28vw);
+    }
+
+    .notification-toast {
+        min-height: 70px;
+        padding: 9px 11px 9px 9px;
+        grid-template-columns: 40px minmax(0, 1fr);
+        gap: 10px;
+        border-radius: 15px;
+    }
+
+    .notification-toast .notification-body {
+        padding-right: 18px;
+        padding-bottom: 11px;
+    }
+
+    .notification-toast .notification-icon {
+        width: 36px;
+        height: 36px;
         border-width: 1.5px;
+    }
+
+    .notification-toast .notification-icon svg {
+        width: 20px;
+        height: 20px;
+        stroke-width: 2.15;
+    }
+
+    .notification-toast .notification-title {
+        font-size: 13px;
+        line-height: 1.08;
+    }
+
+    .notification-toast .notification-text {
+        margin-top: 4px;
+        display: -webkit-box;
+        overflow: hidden;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 2;
+        font-size: 10.5px;
+        line-height: 1.22;
+    }
+
+    .notification-toast .notification-time {
+        right: 0;
+        bottom: 0;
+        font-size: 8.5px;
+    }
+
+    .notification-toast .notification-close {
+        top: -2px;
+        right: -1px;
+        width: 18px;
+        height: 18px;
+        font-size: 12px;
+    }
+
+    .notification-toast .notification-progress {
+        left: 10px;
+        right: 10px;
+        bottom: 5px;
+        height: 2px;
+    }
+
+    .notification-banner {
+        min-height: 82px;
+        padding: 11px 14px 11px 12px;
+        grid-template-columns: 44px minmax(0, 1fr);
+        gap: 10px;
+        border-radius: 17px;
+    }
+
+    .notification-banner .notification-icon {
+        width: 40px;
+        height: 40px;
+    }
+
+    .notification-banner .notification-icon svg {
+        width: 22px;
+        height: 22px;
+    }
+
+    .notification-banner .notification-title {
+        font-size: 14px;
+    }
+
+    .notification-banner .notification-text,
+    .notification-banner .notification-time,
+    .notification-subtext {
+        font-size: 10px;
+    }
+
+    .notification-banner-label,
+    .notification-bottom-label {
+        margin-bottom: 2px;
+        font-size: 8px;
+        letter-spacing: 0.14em;
+    }
+
+    .notification-bottom {
+        min-height: 78px;
+        padding: 10px 12px 10px 10px;
+        grid-template-columns: 38px minmax(0, 1fr);
+        gap: 9px;
+        border-radius: 16px;
+    }
+
+    .notification-bottom .notification-icon {
+        width: 34px;
+        height: 34px;
+    }
+
+    .notification-bottom .notification-icon svg {
+        width: 19px;
+        height: 19px;
+    }
+
+    .notification-bottom .notification-title {
+        font-size: 12px;
+    }
+
+    .notification-bottom .notification-text {
+        margin-top: 3px;
+        font-size: 9px;
+        line-height: 1.2;
+    }
+
+    .notification-brand {
+        margin-top: 6px;
+        font-size: 9px;
+    }
+
+    .notification-brand span {
+        margin-top: 1px;
+        font-size: 6px;
+    }
+}
+
+/* Short phones such as 740x360 / 800x360 / 854x393. */
+@media (orientation: landscape) and (max-height: 430px) {
+    #notification-toast-container {
+        left: max(8px, env(safe-area-inset-left));
+        width: clamp(255px, 31vw, 300px);
+        gap: 5px;
+    }
+
+    .notification-toast {
+        min-height: 58px;
+        padding: 6px 8px 6px 7px;
+        grid-template-columns: 31px minmax(0, 1fr);
+        gap: 7px;
+        border-radius: 12px;
+    }
+
+    .notification-toast .notification-body {
+        padding-right: 14px;
+        padding-bottom: 8px;
+    }
+
+    .notification-toast .notification-icon {
+        width: 28px;
+        height: 28px;
     }
 
     .notification-toast .notification-icon svg {
@@ -495,843 +628,877 @@
         height: 16px;
     }
 
-    .notification-title {
-        font-size: 12px;
+    .notification-toast .notification-title {
+        font-size: 10.5px;
     }
 
-    .notification-text {
-        font-size: 9px;
-    }
-
-    .notification-time {
-        font-size: 9px;
-    }
-
-    .notification-banner {
-        min-height: 76px;
-        padding: 10px 35px 10px 11px;
-
-        grid-template-columns: 30px minmax(0, 1fr);
-        gap: 10px;
-    }
-
-    .notification-banner .notification-icon {
-        width: 30px;
-        height: 30px;
-    }
-
-    .notification-banner-label {
-        font-size: 9px;
-    }
-
-    .notification-banner .notification-title {
-        font-size: 12px;
-    }
-
-    .notification-banner .notification-text {
+    .notification-toast .notification-text {
+        margin-top: 2px;
         font-size: 8px;
+        line-height: 1.15;
+        -webkit-line-clamp: 2;
     }
 
-    .notification-subtext {
-        margin-top: 4px;
-
-        font-size: 8px;
-    }
-
-    .notification-close {
-        top: 7px;
-        right: 8px;
-
-        width: 24px;
-        height: 24px;
-
-        font-size: 20px;
-    }
-
-    .notification-bottom {
-        min-height: 56px;
-        padding: 8px 10px;
-
-        grid-template-columns: 32px minmax(0, 1fr) auto;
-        gap: 9px;
-    }
-
-    .notification-bottom .notification-icon {
-        width: 32px;
-        height: 32px;
-    }
-
-    .notification-bottom-label {
-        font-size: 8px;
-    }
-
-    .notification-bottom .notification-title {
-        font-size: 11px;
-    }
-
-    .notification-bottom .notification-text {
+    .notification-toast .notification-time {
         font-size: 7px;
     }
 
-    .notification-brand {
-        min-width: 74px;
-        padding-left: 11px;
+    .notification-toast .notification-close {
+        width: 15px;
+        height: 15px;
+        font-size: 10px;
+    }
 
-        font-size: 9px;
+    .notification-toast .notification-progress {
+        left: 7px;
+        right: 7px;
+        bottom: 3px;
+        height: 1.5px;
     }
 }
 
-/* Portrait */
-@media (max-width: 760px) and (orientation: portrait) {
-    #notification-banner-container {
-        top: max(12px, env(safe-area-inset-top));
-
-        width: calc(100vw - 24px);
-    }
-
+/* Ultra-low phone viewport fallback. */
+@media (orientation: landscape) and (max-height: 340px) {
     #notification-toast-container {
-        top: 50%;
-        left: max(10px, env(safe-area-inset-left));
-        right: auto;
-
-        width: min(350px, 90vw);
-
-        transform: translateY(-50%);
-    }
-
-    .notification-toast {
-        min-height: 72px;
-        padding: 11px 14px;
-
-        grid-template-columns: 34px minmax(0, 1fr);
-        gap: 10px;
-    }
-
-    .notification-toast .notification-icon {
-        width: 34px;
-        height: 34px;
-    }
-
-    .notification-toast .notification-icon svg {
-        width: 19px;
-        height: 19px;
-    }
-
-    .notification-toast .notification-title {
-        font-size: 15px;
-    }
-
-    .notification-toast .notification-text {
-        font-size: 11px;
-    }
-
-    .notification-toast .notification-time {
-        font-size: 10px;
-    }
-
-    #notification-bottom-container {
-        bottom: max(12px, env(safe-area-inset-bottom));
-
-        width: calc(100vw - 24px);
-    }
-
-    .notification-banner {
-        min-height: 96px;
-    }
-
-    .notification-bottom {
-        min-height: 78px;
-    }
-
-    .notification-brand {
-        display: none;
-    }
-}
-
-/* PC-only notification scaling */
-
-@media (min-width: 1100px) and (min-height: 651px) {
-    /* Left toast notifications: +10% on PC */
-    #notification-toast-container {
-        width: min(478px, 39.6vw);
-    }
-
-    .notification-toast {
-        min-height: 97px;
-        padding: 17px 19px 17px 20px;
-
-        grid-template-columns: 51px minmax(0, 1fr);
-        gap: 15px;
-    }
-
-    .notification-toast .notification-icon {
-        width: 51px;
-        height: 51px;
-    }
-
-    .notification-toast .notification-icon svg {
-        width: 30px;
-        height: 30px;
-    }
-
-    .notification-toast .notification-title {
-        font-size: 20px;
-    }
-
-    .notification-toast .notification-text {
-        font-size: 17px;
-    }
-
-    .notification-toast .notification-time {
-        font-size: 14px;
-    }
-
-    /* Top banner/task: +20% on PC */
-    #notification-banner-container {
-        width: min(660px, 57.6vw);
-    }
-
-    .notification-banner {
-        min-height: 116px;
-        padding: 17px 60px 17px 19px;
-
-        grid-template-columns: 46px minmax(0, 1fr);
-        gap: 16px;
-    }
-
-    .notification-banner .notification-icon {
-        width: 44px;
-        height: 44px;
-    }
-
-    .notification-banner-label {
-        font-size: 12px;
-    }
-
-    .notification-banner .notification-title {
-        font-size: 19px;
-    }
-
-    .notification-banner .notification-text {
-        font-size: 13px;
-    }
-
-    .notification-subtext {
-        font-size: 11px;
-    }
-
-    /* Bottom reward / achievement / info: +20% on PC */
-    #notification-bottom-container {
-        width: min(576px, 52.8vw);
-    }
-
-    .notification-bottom {
-        min-height: 96px;
-        padding: 14px 17px;
-
-        grid-template-columns: 50px minmax(0, 1fr) auto;
-        gap: 14px;
-    }
-
-    .notification-bottom .notification-icon {
-        width: 46px;
-        height: 46px;
-    }
-
-    .notification-bottom-label {
-        font-size: 12px;
-    }
-
-    .notification-bottom .notification-title {
-        font-size: 19px;
-    }
-
-    .notification-bottom .notification-text {
-        font-size: 12px;
-    }
-
-    .notification-brand {
-        min-width: 89px;
-        padding-left: 16px;
-
-        font-size: 13px;
-    }
-}
-
-/* =========================================================
-   Responsive notifications: PC / laptop / mobile
-   Uses the platform classes set by hud.js on <body>.
-   ========================================================= */
-
-.notification-title,
-.notification-text,
-.notification-subtext,
-.notification-brand {
-    overflow-wrap: anywhere;
-    word-break: normal;
-}
-
-#notification-toast-container,
-#notification-banner-container,
-#notification-bottom-container {
-    box-sizing: border-box;
-}
-
-/* Laptop / compact PC: prevent the desktop +10/+20% rules from becoming oversized. */
-body.hud-platform-pc #notification-toast-container,
-body.hud-platform-pc #notification-banner-container,
-body.hud-platform-pc #notification-bottom-container {
-    transition: width 0.15s ease;
-}
-
-@media (min-width: 1100px) and (max-width: 1600px) and (min-height: 651px) {
-    body.hud-platform-pc #notification-toast-container {
-        left: max(18px, env(safe-area-inset-left));
-        width: clamp(360px, 29vw, 420px);
-        gap: 8px;
-    }
-
-    body.hud-platform-pc .notification-toast {
-        min-height: 78px;
-        padding: 12px 14px 12px 15px;
-        grid-template-columns: 40px minmax(0, 1fr);
-        gap: 11px;
-    }
-
-    body.hud-platform-pc .notification-toast .notification-icon {
-        width: 40px;
-        height: 40px;
-    }
-
-    body.hud-platform-pc .notification-toast .notification-icon svg {
-        width: 23px;
-        height: 23px;
-    }
-
-    body.hud-platform-pc .notification-toast .notification-title {
-        font-size: clamp(15px, 1.15vw, 18px);
-    }
-
-    body.hud-platform-pc .notification-toast .notification-text {
-        font-size: clamp(12px, 0.95vw, 15px);
-    }
-
-    body.hud-platform-pc .notification-toast .notification-time {
-        font-size: clamp(10px, 0.8vw, 12px);
-    }
-
-    body.hud-platform-pc #notification-banner-container {
-        top: max(16px, env(safe-area-inset-top));
-        width: clamp(460px, 40vw, 560px);
-    }
-
-    body.hud-platform-pc .notification-banner {
-        min-height: 88px;
-        padding: 12px 43px 12px 14px;
-        grid-template-columns: 34px minmax(0, 1fr);
-        gap: 11px;
-    }
-
-    body.hud-platform-pc .notification-banner .notification-icon {
-        width: 34px;
-        height: 34px;
-    }
-
-    body.hud-platform-pc .notification-banner-label {
-        font-size: 10px;
-    }
-
-    body.hud-platform-pc .notification-banner .notification-title {
-        font-size: clamp(14px, 1.1vw, 17px);
-    }
-
-    body.hud-platform-pc .notification-banner .notification-text {
-        font-size: clamp(10px, 0.82vw, 12px);
-    }
-
-    body.hud-platform-pc .notification-subtext {
-        font-size: 10px;
-    }
-
-    body.hud-platform-pc #notification-bottom-container {
-        bottom: max(18px, env(safe-area-inset-bottom));
-        width: clamp(420px, 36vw, 510px);
-    }
-
-    body.hud-platform-pc .notification-bottom {
-        min-height: 76px;
-        padding: 10px 13px;
-        grid-template-columns: 38px minmax(0, 1fr) auto;
-        gap: 10px;
-    }
-
-    body.hud-platform-pc .notification-bottom .notification-icon {
-        width: 36px;
-        height: 36px;
-    }
-
-    body.hud-platform-pc .notification-bottom-label {
-        font-size: 9px;
-    }
-
-    body.hud-platform-pc .notification-bottom .notification-title {
-        font-size: clamp(14px, 1.05vw, 16px);
-    }
-
-    body.hud-platform-pc .notification-bottom .notification-text {
-        font-size: clamp(9px, 0.75vw, 11px);
-    }
-
-    body.hud-platform-pc .notification-brand {
-        min-width: 72px;
-        padding-left: 11px;
-        font-size: 10px;
-    }
-}
-
-/* Low-height laptops / 1280x720-like PC windows. */
-@media (min-width: 1000px) and (max-height: 760px) {
-    body.hud-platform-pc #notification-toast-container {
-        width: clamp(330px, 28vw, 390px);
-        gap: 6px;
-    }
-
-    body.hud-platform-pc .notification-toast {
-        min-height: 68px;
-        padding: 9px 11px 9px 12px;
-        grid-template-columns: 34px minmax(0, 1fr);
-        gap: 9px;
-    }
-
-    body.hud-platform-pc .notification-toast .notification-icon {
-        width: 34px;
-        height: 34px;
-    }
-
-    body.hud-platform-pc .notification-toast .notification-icon svg {
-        width: 19px;
-        height: 19px;
-    }
-
-    body.hud-platform-pc .notification-toast .notification-title {
-        font-size: 15px;
-    }
-
-    body.hud-platform-pc .notification-toast .notification-text {
-        font-size: 12px;
-    }
-
-    body.hud-platform-pc .notification-toast .notification-time {
-        font-size: 10px;
-    }
-
-    body.hud-platform-pc #notification-banner-container {
-        top: max(10px, env(safe-area-inset-top));
-        width: clamp(420px, 39vw, 520px);
-    }
-
-    body.hud-platform-pc .notification-banner {
-        min-height: 76px;
-        padding: 9px 38px 9px 11px;
-        grid-template-columns: 30px minmax(0, 1fr);
-        gap: 9px;
-    }
-
-    body.hud-platform-pc .notification-banner .notification-icon {
-        width: 30px;
-        height: 30px;
-    }
-
-    body.hud-platform-pc .notification-banner-label {
-        margin-bottom: 3px;
-        font-size: 9px;
-    }
-
-    body.hud-platform-pc .notification-banner .notification-title {
-        margin-bottom: 3px;
-        font-size: 14px;
-    }
-
-    body.hud-platform-pc .notification-banner .notification-text,
-    body.hud-platform-pc .notification-subtext {
-        font-size: 9px;
-    }
-
-    body.hud-platform-pc #notification-bottom-container {
-        bottom: max(10px, env(safe-area-inset-bottom));
-        width: clamp(390px, 35vw, 470px);
-    }
-
-    body.hud-platform-pc .notification-bottom {
-        min-height: 64px;
-        padding: 8px 10px;
-        grid-template-columns: 32px minmax(0, 1fr) auto;
-        gap: 8px;
-    }
-
-    body.hud-platform-pc .notification-bottom .notification-icon {
-        width: 32px;
-        height: 32px;
-    }
-
-    body.hud-platform-pc .notification-bottom-label {
-        font-size: 8px;
-    }
-
-    body.hud-platform-pc .notification-bottom .notification-title {
-        font-size: 13px;
-    }
-
-    body.hud-platform-pc .notification-bottom .notification-text {
-        font-size: 9px;
-    }
-
-    body.hud-platform-pc .notification-brand {
-        min-width: 68px;
-        padding-left: 9px;
-        font-size: 9px;
-        letter-spacing: 1.3px;
-    }
-}
-
-/* Mobile is selected by platform, not by resolution: 1280x720 phones no longer receive PC sizing. */
-body.hud-platform-mobile #notification-banner-container {
-    top: max(10px, env(safe-area-inset-top));
-    width: min(460px, calc(100vw - 24px - env(safe-area-inset-left) - env(safe-area-inset-right)));
-}
-
-body.hud-platform-mobile #notification-toast-container {
-    top: 50%;
-    left: max(10px, env(safe-area-inset-left));
-    right: auto;
-    width: min(330px, 35vw);
-    max-height: calc(100vh - 24px - env(safe-area-inset-top) - env(safe-area-inset-bottom));
-    gap: 6px;
-    transform: translateY(-50%);
-}
-
-body.hud-platform-mobile #notification-bottom-container {
-    bottom: max(10px, env(safe-area-inset-bottom));
-    width: min(430px, calc(100vw - 24px - env(safe-area-inset-left) - env(safe-area-inset-right)));
-}
-
-body.hud-platform-mobile .notification {
-    border-radius: 8px;
-}
-
-body.hud-platform-mobile .notification-toast {
-    min-height: 62px;
-    padding: 8px 10px 8px 11px;
-    grid-template-columns: 30px minmax(0, 1fr);
-    gap: 8px;
-}
-
-body.hud-platform-mobile .notification-toast .notification-icon {
-    width: 30px;
-    height: 30px;
-    border-width: 1.5px;
-}
-
-body.hud-platform-mobile .notification-toast .notification-icon svg {
-    width: 17px;
-    height: 17px;
-}
-
-body.hud-platform-mobile .notification-title {
-    font-size: clamp(11px, 1.8vw, 13px);
-}
-
-body.hud-platform-mobile .notification-text {
-    font-size: clamp(8px, 1.35vw, 10px);
-    line-height: 1.3;
-}
-
-body.hud-platform-mobile .notification-time {
-    font-size: clamp(8px, 1.2vw, 9px);
-}
-
-body.hud-platform-mobile .notification-banner {
-    min-height: 70px;
-    padding: 9px 34px 9px 10px;
-    grid-template-columns: 29px minmax(0, 1fr);
-    gap: 9px;
-}
-
-body.hud-platform-mobile .notification-banner .notification-icon {
-    width: 29px;
-    height: 29px;
-}
-
-body.hud-platform-mobile .notification-banner-label {
-    margin-bottom: 3px;
-    font-size: 8px;
-}
-
-body.hud-platform-mobile .notification-banner .notification-title {
-    margin-bottom: 3px;
-    font-size: clamp(11px, 1.7vw, 13px);
-}
-
-body.hud-platform-mobile .notification-banner .notification-text,
-body.hud-platform-mobile .notification-subtext {
-    font-size: clamp(7px, 1.2vw, 9px);
-}
-
-body.hud-platform-mobile .notification-subtext {
-    margin-top: 3px;
-}
-
-body.hud-platform-mobile .notification-close {
-    top: 6px;
-    right: 7px;
-    width: 23px;
-    height: 23px;
-    font-size: 19px;
-}
-
-body.hud-platform-mobile .notification-bottom {
-    min-height: 56px;
-    padding: 7px 9px;
-    grid-template-columns: 30px minmax(0, 1fr) auto;
-    gap: 8px;
-}
-
-body.hud-platform-mobile .notification-bottom .notification-icon {
-    width: 30px;
-    height: 30px;
-}
-
-body.hud-platform-mobile .notification-bottom-label {
-    margin-bottom: 2px;
-    font-size: 7px;
-}
-
-body.hud-platform-mobile .notification-bottom .notification-title {
-    margin-bottom: 1px;
-    font-size: clamp(10px, 1.55vw, 12px);
-}
-
-body.hud-platform-mobile .notification-bottom .notification-text {
-    font-size: clamp(7px, 1.1vw, 9px);
-}
-
-body.hud-platform-mobile .notification-brand {
-    min-width: 62px;
-    padding-left: 8px;
-    font-size: 8px;
-    letter-spacing: 1px;
-}
-
-body.hud-platform-mobile .notification-brand span {
-    font-size: 5px;
-    letter-spacing: 1.8px;
-}
-
-/* Very low mobile screens (common SA:MP landscape CEF sizes). */
-@media (max-height: 480px) and (orientation: landscape) {
-    body.hud-platform-mobile #notification-banner-container {
-        top: max(6px, env(safe-area-inset-top));
-        width: min(400px, 48vw);
-    }
-
-    body.hud-platform-mobile #notification-toast-container {
-        left: max(6px, env(safe-area-inset-left));
-        width: min(285px, 34vw);
+        width: clamp(230px, 30vw, 270px);
         gap: 4px;
     }
 
-    body.hud-platform-mobile #notification-bottom-container {
-        bottom: max(6px, env(safe-area-inset-bottom));
-        width: min(390px, 46vw);
-    }
-
-    body.hud-platform-mobile .notification-toast {
+    .notification-toast {
         min-height: 50px;
-        padding: 6px 8px;
-        grid-template-columns: 25px minmax(0, 1fr);
+        grid-template-columns: 26px minmax(0, 1fr);
         gap: 6px;
+        padding: 5px 7px 5px 6px;
+        border-radius: 10px;
     }
 
-    body.hud-platform-mobile .notification-toast .notification-icon,
-    body.hud-platform-mobile .notification-banner .notification-icon {
-        width: 25px;
-        height: 25px;
+    .notification-toast .notification-icon {
+        width: 24px;
+        height: 24px;
     }
 
-    body.hud-platform-mobile .notification-toast .notification-icon svg {
+    .notification-toast .notification-icon svg {
         width: 14px;
         height: 14px;
     }
 
-    body.hud-platform-mobile .notification-title,
-    body.hud-platform-mobile .notification-banner .notification-title {
-        font-size: 10px;
+    .notification-toast .notification-title {
+        font-size: 9px;
     }
 
-    body.hud-platform-mobile .notification-text,
-    body.hud-platform-mobile .notification-banner .notification-text,
-    body.hud-platform-mobile .notification-time,
-    body.hud-platform-mobile .notification-subtext {
-        font-size: 7px;
-    }
-
-    body.hud-platform-mobile .notification-banner {
-        min-height: 57px;
-        padding: 7px 30px 7px 8px;
-        grid-template-columns: 25px minmax(0, 1fr);
-        gap: 7px;
-    }
-
-    body.hud-platform-mobile .notification-banner-label,
-    body.hud-platform-mobile .notification-bottom-label {
-        font-size: 7px;
-    }
-
-    body.hud-platform-mobile .notification-bottom {
-        min-height: 48px;
-        padding: 6px 8px;
-        grid-template-columns: 26px minmax(0, 1fr) auto;
-        gap: 6px;
-    }
-
-    body.hud-platform-mobile .notification-bottom .notification-icon {
-        width: 26px;
-        height: 26px;
-    }
-
-    body.hud-platform-mobile .notification-bottom .notification-title {
-        font-size: 10px;
-    }
-
-    body.hud-platform-mobile .notification-bottom .notification-text {
-        font-size: 7px;
-    }
-
-    body.hud-platform-mobile .notification-brand {
-        min-width: 56px;
-        padding-left: 6px;
+    .notification-toast .notification-text {
         font-size: 7px;
     }
 }
 
-/* Mobile portrait / narrow embedded browser. */
-@media (max-width: 760px) and (orientation: portrait) {
-    body.hud-platform-mobile #notification-banner-container,
-    body.hud-platform-mobile #notification-bottom-container {
-        width: calc(100vw - 20px - env(safe-area-inset-left) - env(safe-area-inset-right));
-    }
-
-    body.hud-platform-mobile #notification-toast-container {
-        left: max(10px, env(safe-area-inset-left));
-        width: min(360px, calc(100vw - 20px - env(safe-area-inset-left) - env(safe-area-inset-right)));
-    }
-
-    body.hud-platform-mobile .notification-brand {
-        display: none;
-    }
-}
-
-/* PC laptops only: slightly more compact than desktop notifications.
-   Mobile is excluded by the platform class, while larger desktop screens
-   keep the regular PC notification sizing above. */
-@media (min-width: 1100px) and (max-width: 1600px) and (min-height: 651px) and (max-height: 1000px) {
-    body.hud-platform-pc #notification-toast-container {
-        width: min(430px, 35.5vw);
+/* Portrait fallback. The game normally uses landscape, but keep notifications usable everywhere. */
+@media (orientation: portrait) and (max-width: 900px) {
+    #notification-toast-container {
+        top: 50%;
+        left: max(12px, env(safe-area-inset-left));
+        right: auto;
+        width: min(320px, 82vw);
+        transform: translateY(-50%);
         gap: 8px;
     }
 
-    body.hud-platform-pc .notification-toast {
-        min-height: 86px;
-        padding: 14px 16px 14px 17px;
-        grid-template-columns: 44px minmax(0, 1fr);
-        gap: 12px;
+    .notification-toast {
+        min-height: 72px;
+        padding: 9px 11px 9px 9px;
+        grid-template-columns: 40px minmax(0, 1fr);
+        gap: 9px;
+        border-radius: 15px;
     }
 
-    body.hud-platform-pc .notification-toast .notification-icon {
-        width: 44px;
-        height: 44px;
+    .notification-icon {
+        width: 36px;
+        height: 36px;
     }
 
-    body.hud-platform-pc .notification-toast .notification-icon svg {
+    .notification-icon svg {
+        width: 20px;
+        height: 20px;
+    }
+
+    .notification-title {
+        font-size: 14px;
+    }
+
+    .notification-text {
+        font-size: 11px;
+    }
+}
+
+
+/* Mobile landscape v3: intentionally small HUD-style notifications. */
+@media (orientation: landscape) and (max-height: 650px) {
+    #notification-toast-container {
+        left: max(8px, env(safe-area-inset-left));
+        width: clamp(210px, 22vw, 240px);
+        gap: 5px;
+    }
+
+    .notification-toast {
+        min-height: 52px;
+        padding: 6px 8px 6px 7px;
+        grid-template-columns: 28px minmax(0, 1fr);
+        gap: 7px;
+        border-radius: 11px;
+        border-width: 1px;
+    }
+
+    .notification-toast .notification-body {
+        padding-right: 13px;
+        padding-bottom: 7px;
+    }
+
+    .notification-toast .notification-icon {
+        width: 26px;
+        height: 26px;
+        border-width: 1px;
+        box-shadow:
+            inset 0 0 8px rgba(255, 255, 255, 0.03),
+            0 0 10px color-mix(in srgb, var(--notification-color) 25%, transparent);
+    }
+
+    .notification-toast .notification-icon svg {
+        width: 14px;
+        height: 14px;
+        stroke-width: 2;
+    }
+
+    .notification-toast .notification-title {
+        font-size: 10.5px;
+        line-height: 1.05;
+    }
+
+    .notification-toast .notification-text {
+        margin-top: 2px;
+        font-size: 8px;
+        line-height: 1.12;
+        -webkit-line-clamp: 2;
+    }
+
+    .notification-toast .notification-time {
+        right: 0;
+        bottom: 0;
+        font-size: 6.5px;
+    }
+
+    .notification-toast .notification-close {
+        top: -2px;
+        right: -2px;
+        width: 14px;
+        height: 14px;
+        font-size: 9px;
+    }
+
+    .notification-toast .notification-progress {
+        left: 7px;
+        right: 7px;
+        bottom: 3px;
+        height: 1px;
+    }
+
+    #notification-banner-container {
+        width: min(470px, 52vw);
+    }
+
+    .notification-banner {
+        min-height: 66px;
+        padding: 8px 11px 8px 9px;
+        grid-template-columns: 32px minmax(0, 1fr);
+        gap: 8px;
+        border-radius: 12px;
+    }
+
+    .notification-banner .notification-icon {
+        width: 28px;
+        height: 28px;
+    }
+
+    .notification-banner .notification-icon svg {
+        width: 16px;
+        height: 16px;
+    }
+
+    .notification-banner .notification-title {
+        font-size: 11px;
+    }
+
+    .notification-banner .notification-text,
+    .notification-banner .notification-time,
+    .notification-subtext {
+        font-size: 8px;
+    }
+
+    #notification-bottom-container {
+        width: min(210px, 24vw);
+    }
+
+    .notification-bottom {
+        min-height: 58px;
+        padding: 7px 9px 7px 8px;
+        grid-template-columns: 28px minmax(0, 1fr);
+        gap: 7px;
+        border-radius: 11px;
+    }
+
+    .notification-bottom .notification-icon {
         width: 25px;
         height: 25px;
     }
 
-    body.hud-platform-pc .notification-toast .notification-title {
-        font-size: 17px;
+    .notification-bottom .notification-icon svg {
+        width: 14px;
+        height: 14px;
     }
 
-    body.hud-platform-pc .notification-toast .notification-text {
-        font-size: 14px;
-    }
-
-    body.hud-platform-pc .notification-toast .notification-time {
-        font-size: 12px;
-    }
-
-    body.hud-platform-pc #notification-banner-container {
-        width: min(570px, 50vw);
-    }
-
-    body.hud-platform-pc .notification-banner {
-        min-height: 100px;
-        padding: 14px 48px 14px 16px;
-        grid-template-columns: 39px minmax(0, 1fr);
-        gap: 13px;
-    }
-
-    body.hud-platform-pc .notification-banner .notification-icon {
-        width: 39px;
-        height: 39px;
-    }
-
-    body.hud-platform-pc .notification-banner-label {
+    .notification-bottom .notification-title {
         font-size: 10px;
     }
 
-    body.hud-platform-pc .notification-banner .notification-title {
-        font-size: 16px;
+    .notification-bottom .notification-text {
+        margin-top: 2px;
+        font-size: 7.5px;
     }
 
-    body.hud-platform-pc .notification-banner .notification-text {
-        font-size: 11px;
+    .notification-brand {
+        margin-top: 4px;
+        font-size: 7px;
     }
 
-    body.hud-platform-pc .notification-subtext {
-        font-size: 10px;
+    .notification-brand span {
+        font-size: 5px;
+    }
+}
+
+@media (orientation: landscape) and (max-height: 430px) {
+    #notification-toast-container {
+        width: clamp(185px, 21vw, 215px);
+        gap: 4px;
     }
 
-    body.hud-platform-pc #notification-bottom-container {
-        width: min(500px, 46vw);
+    .notification-toast {
+        min-height: 45px;
+        padding: 5px 7px 5px 6px;
+        grid-template-columns: 23px minmax(0, 1fr);
+        gap: 6px;
+        border-radius: 9px;
     }
 
-    body.hud-platform-pc .notification-bottom {
-        min-height: 82px;
-        padding: 12px 14px;
-        grid-template-columns: 42px minmax(0, 1fr) auto;
+    .notification-toast .notification-body {
+        padding-right: 11px;
+        padding-bottom: 6px;
+    }
+
+    .notification-toast .notification-icon {
+        width: 22px;
+        height: 22px;
+    }
+
+    .notification-toast .notification-icon svg {
+        width: 12px;
+        height: 12px;
+    }
+
+    .notification-toast .notification-title {
+        font-size: 9px;
+    }
+
+    .notification-toast .notification-text {
+        margin-top: 1px;
+        font-size: 6.8px;
+        line-height: 1.08;
+    }
+
+    .notification-toast .notification-time {
+        font-size: 5.5px;
+    }
+
+    .notification-toast .notification-close {
+        width: 12px;
+        height: 12px;
+        font-size: 8px;
+    }
+}
+
+@media (orientation: landscape) and (max-height: 340px) {
+    #notification-toast-container {
+        width: clamp(170px, 20vw, 195px);
+    }
+
+    .notification-toast {
+        min-height: 40px;
+        grid-template-columns: 20px minmax(0, 1fr);
+        gap: 5px;
+        padding: 4px 6px 4px 5px;
+    }
+
+    .notification-toast .notification-icon {
+        width: 19px;
+        height: 19px;
+    }
+
+    .notification-toast .notification-icon svg {
+        width: 10px;
+        height: 10px;
+    }
+
+    .notification-toast .notification-title {
+        font-size: 8px;
+    }
+
+    .notification-toast .notification-text {
+        font-size: 6px;
+    }
+}
+
+
+/* Variant-specific neon accents */
+.notification-bottom-reward {
+    --notification-color: #ffc857;
+    border-color: rgba(255, 200, 87, 0.72);
+    background:
+        radial-gradient(circle at 12% 20%, rgba(255, 194, 73, 0.16), transparent 26%),
+        radial-gradient(circle at 92% 88%, rgba(255, 161, 45, 0.08), transparent 22%),
+        linear-gradient(180deg, rgba(24, 20, 13, 0.96), rgba(14, 13, 10, 0.94));
+    box-shadow:
+        inset 0 1px 0 rgba(255, 245, 210, 0.06),
+        0 0 0 1px rgba(255, 205, 102, 0.08),
+        0 14px 30px rgba(0, 0, 0, 0.31),
+        0 0 20px rgba(255, 183, 62, 0.10);
+}
+
+.notification-bottom-achievement {
+    --notification-color: #a987ff;
+    border-color: rgba(164, 132, 255, 0.72);
+    background:
+        radial-gradient(circle at 10% 22%, rgba(150, 112, 255, 0.17), transparent 27%),
+        radial-gradient(circle at 94% 80%, rgba(57, 169, 255, 0.10), transparent 24%),
+        linear-gradient(180deg, rgba(14, 14, 31, 0.96), rgba(8, 11, 24, 0.94));
+    box-shadow:
+        inset 0 1px 0 rgba(230, 222, 255, 0.05),
+        0 0 0 1px rgba(168, 137, 255, 0.08),
+        0 14px 30px rgba(0, 0, 0, 0.31),
+        0 0 20px rgba(134, 107, 255, 0.12);
+}
+
+.notification-bottom-info {
+    --notification-color: #48beff;
+}
+
+.notification-bottom-reward .notification-bottom-label,
+.notification-bottom-reward .notification-brand span {
+    color: #ffd982;
+}
+
+.notification-bottom-achievement .notification-bottom-label,
+.notification-bottom-achievement .notification-brand span {
+    color: #c8b5ff;
+}
+
+.notification-error .notification-progress span {
+    background: linear-gradient(90deg, #ff5b65, #ff8790);
+}
+
+.notification-warning .notification-progress span {
+    background: linear-gradient(90deg, #ffb62d, #ffd56c);
+}
+
+.notification-success .notification-progress span {
+    background: linear-gradient(90deg, #35dc91, #77ffc0);
+}
+
+.notification-info .notification-progress span {
+    background: linear-gradient(90deg, #2cbcff, #78dcff);
+}
+
+/* Make non-toast layouts compact on desktop as well. */
+@media (min-width: 901px) {
+    #notification-banner-container {
+        width: min(620px, 48vw);
+    }
+
+    .notification-banner {
+        min-height: 88px;
+        padding: 13px 18px 13px 14px;
+        grid-template-columns: 46px minmax(0, 1fr);
         gap: 12px;
+        border-radius: 18px;
     }
 
-    body.hud-platform-pc .notification-bottom .notification-icon {
+    .notification-banner .notification-icon {
         width: 40px;
         height: 40px;
     }
 
-    body.hud-platform-pc .notification-bottom-label {
-        font-size: 10px;
+    .notification-banner .notification-icon svg {
+        width: 22px;
+        height: 22px;
     }
 
-    body.hud-platform-pc .notification-bottom .notification-title {
-        font-size: 16px;
+    .notification-banner .notification-title {
+        font-size: 17px;
     }
 
-    body.hud-platform-pc .notification-bottom .notification-text {
-        font-size: 10px;
-    }
-
-    body.hud-platform-pc .notification-brand {
-        min-width: 78px;
-        padding-left: 13px;
+    .notification-banner .notification-text,
+    .notification-banner .notification-time,
+    .notification-subtext {
         font-size: 11px;
     }
+
+    #notification-bottom-container {
+        width: min(285px, 22vw);
+    }
+
+    .notification-bottom {
+        min-height: 82px;
+        padding: 12px 14px 11px 12px;
+        grid-template-columns: 38px minmax(0, 1fr);
+        gap: 10px;
+        border-radius: 16px;
+    }
+
+    .notification-bottom .notification-icon {
+        width: 34px;
+        height: 34px;
+    }
+
+    .notification-bottom .notification-icon svg {
+        width: 19px;
+        height: 19px;
+    }
+
+    .notification-bottom .notification-title {
+        font-size: 13px;
+    }
+
+    .notification-bottom .notification-text {
+        margin-top: 4px;
+        font-size: 10px;
+        line-height: 1.25;
+    }
+
+    .notification-bottom-label {
+        margin-bottom: 3px;
+        font-size: 8px;
+    }
+
+    .notification-brand {
+        margin-top: 6px;
+        font-size: 9px;
+    }
+
+    .notification-brand span {
+        margin-top: 2px;
+        font-size: 6px;
+    }
+}
+
+
+/* =========================================================
+   FINAL POSITIONING / RESPONSIVE OVERRIDES
+   Toast   -> left center
+   Banner  -> top center
+   Reward / Achievement / Bottom -> bottom center
+   ========================================================= */
+
+#notification-banner-container {
+    top: clamp(18px, 2.2vh, 34px);
+    left: 50%;
+    right: auto;
+    bottom: auto;
+    width: min(560px, 46vw);
+    transform: translateX(-50%);
+    align-items: stretch;
+}
+
+#notification-bottom-container {
+    left: 50%;
+    right: auto;
+    bottom: clamp(18px, 2.8vh, 34px);
+    width: min(285px, 22vw);
+    transform: translateX(-50%);
+    align-items: stretch;
+}
+
+/* Standard desktop / laptop sizing. */
+@media (min-width: 901px) {
+    #notification-banner-container {
+        width: min(540px, 44vw);
+    }
+
+    .notification-banner {
+        min-height: 82px;
+        padding: 12px 16px 12px 13px;
+        grid-template-columns: 42px minmax(0, 1fr);
+        gap: 11px;
+        border-radius: 16px;
+    }
+
+    .notification-banner .notification-icon {
+        width: 37px;
+        height: 37px;
+    }
+
+    .notification-banner .notification-icon svg {
+        width: 20px;
+        height: 20px;
+    }
+
+    .notification-banner .notification-title {
+        font-size: 15px;
+    }
+
+    .notification-banner .notification-text,
+    .notification-banner .notification-time,
+    .notification-subtext {
+        font-size: 10px;
+    }
+
+    #notification-bottom-container {
+        width: min(265px, 21vw);
+    }
+
+    .notification-bottom {
+        min-height: 76px;
+        padding: 10px 12px 10px 10px;
+        grid-template-columns: 34px minmax(0, 1fr);
+        gap: 9px;
+        border-radius: 14px;
+    }
+
+    .notification-bottom .notification-icon {
+        width: 31px;
+        height: 31px;
+    }
+
+    .notification-bottom .notification-icon svg {
+        width: 17px;
+        height: 17px;
+    }
+
+    .notification-bottom .notification-title {
+        font-size: 12px;
+    }
+
+    .notification-bottom .notification-text {
+        margin-top: 3px;
+        font-size: 9px;
+        line-height: 1.2;
+    }
+
+    .notification-bottom-label {
+        margin-bottom: 2px;
+        font-size: 7px;
+    }
+
+    .notification-brand {
+        margin-top: 5px;
+        font-size: 8px;
+    }
+
+    .notification-brand span {
+        margin-top: 1px;
+        font-size: 5px;
+    }
+}
+
+/* Main phone/tablet landscape layout. */
+@media (orientation: landscape) and (max-height: 650px) {
+    #notification-banner-container {
+        top: max(7px, env(safe-area-inset-top));
+        left: 50%;
+        right: auto;
+        width: min(390px, 48vw);
+        transform: translateX(-50%);
+    }
+
+    .notification-banner {
+        min-height: 54px;
+        padding: 6px 9px 6px 7px;
+        grid-template-columns: 27px minmax(0, 1fr);
+        gap: 7px;
+        border-radius: 11px;
+    }
+
+    .notification-banner .notification-body {
+        padding-right: 12px;
+    }
+
+    .notification-banner .notification-icon {
+        width: 24px;
+        height: 24px;
+        border-width: 1px;
+    }
+
+    .notification-banner .notification-icon svg {
+        width: 13px;
+        height: 13px;
+    }
+
+    .notification-banner .notification-title {
+        font-size: 9.5px;
+        line-height: 1.05;
+    }
+
+    .notification-banner .notification-text,
+    .notification-banner .notification-time,
+    .notification-subtext {
+        font-size: 7px;
+        line-height: 1.15;
+    }
+
+    .notification-banner .notification-text {
+        margin-top: 2px;
+        display: -webkit-box;
+        overflow: hidden;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 2;
+    }
+
+    .notification-banner-label {
+        margin-bottom: 1px;
+        font-size: 6px;
+        letter-spacing: 0.12em;
+    }
+
+    .notification-banner .notification-close {
+        top: 2px;
+        right: 3px;
+        width: 13px;
+        height: 13px;
+        font-size: 9px;
+    }
+
+    .notification-banner .notification-progress {
+        left: 8px;
+        right: 8px;
+        bottom: 3px;
+        height: 1px;
+    }
+
+    #notification-bottom-container {
+        left: 50%;
+        right: auto;
+        bottom: max(7px, env(safe-area-inset-bottom));
+        width: min(205px, 25vw);
+        transform: translateX(-50%);
+    }
+
+    .notification-bottom {
+        min-height: 52px;
+        padding: 6px 8px 6px 7px;
+        grid-template-columns: 25px minmax(0, 1fr);
+        gap: 6px;
+        border-radius: 10px;
+    }
+
+    .notification-bottom .notification-icon {
+        width: 23px;
+        height: 23px;
+        border-width: 1px;
+    }
+
+    .notification-bottom .notification-icon svg {
+        width: 13px;
+        height: 13px;
+    }
+
+    .notification-bottom .notification-title {
+        font-size: 9px;
+        line-height: 1.05;
+    }
+
+    .notification-bottom .notification-text {
+        margin-top: 2px;
+        display: -webkit-box;
+        overflow: hidden;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 2;
+        font-size: 6.8px;
+        line-height: 1.12;
+    }
+
+    .notification-bottom-label {
+        margin-bottom: 1px;
+        font-size: 5.5px;
+        letter-spacing: 0.10em;
+    }
+
+    .notification-brand {
+        margin-top: 3px;
+        font-size: 6px;
+        letter-spacing: 0.13em;
+    }
+
+    .notification-brand span {
+        margin-top: 1px;
+        font-size: 4.5px;
+        letter-spacing: 0.16em;
+    }
+
+    .notification-bottom .notification-progress {
+        left: 7px;
+        right: 7px;
+        bottom: 3px;
+        height: 1px;
+    }
+}
+
+/* Very short phones (e.g. 640x320 / 740x360). */
+@media (orientation: landscape) and (max-height: 430px) {
+    #notification-banner-container {
+        top: max(4px, env(safe-area-inset-top));
+        width: min(330px, 46vw);
+    }
+
+    .notification-banner {
+        min-height: 46px;
+        padding: 5px 7px 5px 6px;
+        grid-template-columns: 22px minmax(0, 1fr);
+        gap: 5px;
+        border-radius: 9px;
+    }
+
+    .notification-banner .notification-icon {
+        width: 20px;
+        height: 20px;
+    }
+
+    .notification-banner .notification-icon svg {
+        width: 11px;
+        height: 11px;
+    }
+
+    .notification-banner .notification-title {
+        font-size: 8px;
+    }
+
+    .notification-banner .notification-text,
+    .notification-banner .notification-time,
+    .notification-subtext {
+        font-size: 5.8px;
+    }
+
+    #notification-bottom-container {
+        bottom: max(4px, env(safe-area-inset-bottom));
+        width: min(175px, 24vw);
+    }
+
+    .notification-bottom {
+        min-height: 44px;
+        padding: 5px 6px;
+        grid-template-columns: 20px minmax(0, 1fr);
+        gap: 5px;
+        border-radius: 9px;
+    }
+
+    .notification-bottom .notification-icon {
+        width: 19px;
+        height: 19px;
+    }
+
+    .notification-bottom .notification-icon svg {
+        width: 10px;
+        height: 10px;
+    }
+
+    .notification-bottom .notification-title {
+        font-size: 7.5px;
+    }
+
+    .notification-bottom .notification-text {
+        font-size: 5.5px;
+    }
+
+    .notification-brand {
+        display: none;
+    }
+}
+
+/* Portrait fallback for browser testing / tablets. */
+@media (orientation: portrait) and (max-width: 900px) {
+    #notification-banner-container {
+        top: max(10px, env(safe-area-inset-top));
+        left: 50%;
+        right: auto;
+        width: min(420px, 86vw);
+        transform: translateX(-50%);
+    }
+
+    #notification-bottom-container {
+        left: 50%;
+        right: auto;
+        bottom: max(12px, env(safe-area-inset-bottom));
+        width: min(260px, 72vw);
+        transform: translateX(-50%);
+    }
+}
+
+/* PC only: make Reward, Achievement and Bottom/Info more prominent.
+   Important: do not rely on viewport width because landscape phones can report > 900 CSS px. */
+body.hud-platform-pc #notification-bottom-container {
+width: min(380px, 30vw);
+}
+
+body.hud-platform-pc .notification-bottom-reward,
+body.hud-platform-pc .notification-bottom-achievement,
+body.hud-platform-pc .notification-bottom-info {
+    width: 100%;
+    min-height: 104px;
+    padding: 15px 17px 14px 15px;
+    grid-template-columns: 46px minmax(0, 1fr);
+    gap: 12px;
+    border-radius: 18px;
+}
+
+body.hud-platform-pc .notification-bottom-reward .notification-icon,
+body.hud-platform-pc .notification-bottom-achievement .notification-icon,
+body.hud-platform-pc .notification-bottom-info .notification-icon {
+    width: 42px;
+    height: 42px;
+}
+
+body.hud-platform-pc .notification-bottom-reward .notification-icon svg,
+body.hud-platform-pc .notification-bottom-achievement .notification-icon svg,
+body.hud-platform-pc .notification-bottom-info .notification-icon svg {
+    width: 23px;
+    height: 23px;
+}
+
+body.hud-platform-pc .notification-bottom-reward .notification-title,
+body.hud-platform-pc .notification-bottom-achievement .notification-title,
+body.hud-platform-pc .notification-bottom-info .notification-title {
+    font-size: 16px;
+}
+
+body.hud-platform-pc .notification-bottom-reward .notification-text,
+body.hud-platform-pc .notification-bottom-achievement .notification-text,
+body.hud-platform-pc .notification-bottom-info .notification-text {
+    margin-top: 5px;
+    font-size: 12px;
+    line-height: 1.28;
+}
+
+body.hud-platform-pc .notification-bottom-reward .notification-bottom-label,
+body.hud-platform-pc .notification-bottom-achievement .notification-bottom-label,
+body.hud-platform-pc .notification-bottom-info .notification-bottom-label {
+    margin-bottom: 4px;
+    font-size: 9px;
+}
+
+body.hud-platform-pc .notification-bottom-reward .notification-brand,
+body.hud-platform-pc .notification-bottom-achievement .notification-brand,
+body.hud-platform-pc .notification-bottom-info .notification-brand {
+    margin-top: 8px;
+    font-size: 10px;
+}
+
+body.hud-platform-pc .notification-bottom-reward .notification-brand span,
+body.hud-platform-pc .notification-bottom-achievement .notification-brand span,
+body.hud-platform-pc .notification-bottom-info .notification-brand span {
+    margin-top: 2px;
+    font-size: 7px;
 }
