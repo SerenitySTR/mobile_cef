@@ -107,12 +107,25 @@ var AdminPanel = {
     Show: function(data) {
         this.Init();
         if(data)this.SetData(data);
+
+        this.tab="stats";
+        this.query="";
+        this.chatOpen=false;
+        this.ticketFocus=false;
+        this.quickOpen=false;
+        this.transferOpen=false;
+        this.transferAdminId=null;
+
         this.root.classList.add("active");
         this.root.setAttribute("aria-hidden","false");
         this.Render();
     },
     Hide: function() {
         this.Init();
+
+        var transferLayer=document.querySelector(".admin-transfer-mobile-layer");
+        if(transferLayer) transferLayer.remove();
+
         this.root.classList.remove("active");
         this.root.setAttribute("aria-hidden","true");
     },
@@ -140,7 +153,8 @@ var AdminPanel = {
             id: admin.id ?? admin.Id ?? admin.accountId ?? admin.AccountId ?? admin.playerId ?? admin.PlayerId ?? null,
             playerId: admin.playerId ?? admin.PlayerId ?? admin.id ?? admin.Id ?? null,
             accountId: admin.accountId ?? admin.AccountId ?? null,
-            name: admin.name ?? admin.Name ?? ""
+            name: admin.name ?? admin.Name ?? "",
+            level: admin.level ?? admin.Level ?? admin.adminLevel ?? admin.AdminLevel ?? 0
         };
     },
     NormalizeMessage: function(message) {
@@ -230,6 +244,17 @@ var AdminPanel = {
         var patch=payload.patch;
         if(!patch) return this.SetData(payload);
 
+        // Legacy snapshot protocol.
+        if(patch==="reset") {
+            this.state.tickets=[];
+            this.selectedTicket=null;
+            this.chatOpen=false;
+            this.pendingSync=null;
+            this.pendingMessages=null;
+            return true;
+        }
+
+        // New chunked snapshot protocol.
         if(patch==="sync-begin") {
             this.pendingSync={
                 id:String(payload.syncId),
@@ -240,35 +265,62 @@ var AdminPanel = {
         }
 
         if(patch==="admins") {
-            if(!this.pendingSync || String(this.pendingSync.id)!==String(payload.syncId)) return false;
-            var admins=Array.isArray(payload.admins)?payload.admins:[];
-            for(var i=0;i<admins.length;i++) {
-                this.pendingSync.admins.push(this.NormalizeAdmin(admins[i]));
+            var admins=Array.isArray(payload.admins)?payload.admins:(Array.isArray(payload.items)?payload.items:[]);
+
+            if(this.pendingSync && String(this.pendingSync.id)===String(payload.syncId)) {
+                for(var ai=0;ai<admins.length;ai++)
+                    this.pendingSync.admins.push(this.NormalizeAdmin(admins[ai]));
+                return true;
             }
+
+            this.state.admins=admins.map(this.NormalizeAdmin.bind(this));
+            if(this.root && this.root.classList.contains("active")) this.Render();
             return true;
         }
 
         if(patch==="tickets") {
-            if(!this.pendingSync || String(this.pendingSync.id)!==String(payload.syncId)) return false;
-            var tickets=Array.isArray(payload.tickets)?payload.tickets:[];
-            for(var i=0;i<tickets.length;i++) {
-                this.pendingSync.tickets.push(this.NormalizeTicket(tickets[i]));
+            var tickets=Array.isArray(payload.tickets)?payload.tickets:(Array.isArray(payload.items)?payload.items:[]);
+
+            if(this.pendingSync && String(this.pendingSync.id)===String(payload.syncId)) {
+                for(var si=0;si<tickets.length;si++)
+                    this.pendingSync.tickets.push(this.NormalizeTicket(tickets[si]));
+                return true;
             }
+
+            for(var i=0;i<tickets.length;i++) {
+                var ticket=this.NormalizeTicket(tickets[i]);
+                var index=this.state.tickets.findIndex(function(item){
+                    return String(item.id)===String(ticket.id);
+                });
+
+                if(index===-1) this.state.tickets.push(ticket);
+                else {
+                    ticket.messages=this.state.tickets[index].messages||ticket.messages||[];
+                    this.state.tickets[index]=ticket;
+                }
+            }
+
+            this.state.tickets.sort(function(a,b){ return Number(b.id)-Number(a.id); });
+            if(this.root && this.root.classList.contains("active")) this.Render();
             return true;
         }
 
-        if(patch==="sync-end") {
-            if(!this.pendingSync || String(this.pendingSync.id)!==String(payload.syncId)) return false;
-
-            this.state.admins=this.pendingSync.admins;
-            this.state.tickets=this.pendingSync.tickets;
-            this.pendingSync=null;
+        if(patch==="ready" || patch==="sync-end") {
+            if(patch==="sync-end") {
+                if(!this.pendingSync || String(this.pendingSync.id)!==String(payload.syncId)) return false;
+                this.state.admins=this.pendingSync.admins;
+                this.state.tickets=this.pendingSync.tickets;
+                this.pendingSync=null;
+            }
 
             this.state.tickets.sort(function(a,b){ return Number(b.id)-Number(a.id); });
 
             if(this.pendingClaimTicket!=null) {
                 var claimedId=this.pendingClaimTicket;
-                var claimed=this.state.tickets.find(function(ticket){return String(ticket.id)===String(claimedId);});
+                var claimed=this.state.tickets.find(function(ticket){
+                    return String(ticket.id)===String(claimedId);
+                });
+
                 if(claimed && String(claimed.adminId)===String(this.state.profile.id)) {
                     this.tab="tickets";
                     this.filter="mine";
@@ -283,24 +335,55 @@ var AdminPanel = {
         }
 
         if(patch==="ticket") {
-            var ticket=this.NormalizeTicket(payload.ticket);
-            if(ticket.id==null) return false;
+            var updatedTicket=this.NormalizeTicket(payload.ticket);
+            if(updatedTicket.id==null) return false;
 
             var ticketIndex=this.state.tickets.findIndex(function(item){
-                return String(item.id)===String(ticket.id);
+                return String(item.id)===String(updatedTicket.id);
             });
 
-            if(ticketIndex===-1) this.state.tickets.push(ticket);
-            else {
-                var oldMessages=this.state.tickets[ticketIndex].messages||[];
-                ticket.messages=oldMessages;
-                this.state.tickets[ticketIndex]=ticket;
+            if(ticketIndex===-1) {
+                this.state.tickets.push(updatedTicket);
+            } else {
+                updatedTicket.messages=this.state.tickets[ticketIndex].messages||updatedTicket.messages||[];
+                this.state.tickets[ticketIndex]=updatedTicket;
+            }
+
+            this.state.tickets.sort(function(a,b){ return Number(b.id)-Number(a.id); });
+
+            if(this.pendingClaimTicket!=null &&
+               String(this.pendingClaimTicket)===String(updatedTicket.id) &&
+               String(updatedTicket.adminId)===String(this.state.profile.id)) {
+                this.tab="tickets";
+                this.filter="mine";
+                this.selectedTicket=updatedTicket.id;
+                this.chatOpen=true;
+                this.pendingClaimTicket=null;
             }
 
             if(this.root && this.root.classList.contains("active")) this.Render();
             return true;
         }
 
+        // Legacy bulk message protocol.
+        if(patch==="messages") {
+            var legacyTicketId=String(payload.ticketId);
+            var legacyTicket=this.state.tickets.find(function(item){
+                return String(item.id)===legacyTicketId;
+            });
+
+            if(!legacyTicket) return false;
+
+            var messages=Array.isArray(payload.items)?payload.items:[];
+            legacyTicket.messages=messages.map(this.NormalizeMessage.bind(this));
+
+            if(this.root && this.root.classList.contains("active") && String(this.selectedTicket)===legacyTicketId)
+                this.Render();
+
+            return true;
+        }
+
+        // New chunked message protocol.
         if(patch==="messages-begin") {
             this.pendingMessages={
                 ticketId:String(payload.ticketId),
@@ -310,42 +393,43 @@ var AdminPanel = {
         }
 
         if(patch==="message") {
-            var ticketId=String(payload.ticketId);
+            var messageTicketId=String(payload.ticketId);
             var normalized=this.NormalizeMessage(payload.message);
 
-            if(this.pendingMessages && String(this.pendingMessages.ticketId)===ticketId) {
+            if(this.pendingMessages && String(this.pendingMessages.ticketId)===messageTicketId) {
                 this.pendingMessages.messages.push(normalized);
                 return true;
             }
 
-            var targetTicket=this.state.tickets.find(function(item){
-                return String(item.id)===ticketId;
+            var messageTicket=this.state.tickets.find(function(item){
+                return String(item.id)===messageTicketId;
             });
 
-            if(!targetTicket) return false;
-            targetTicket.messages=targetTicket.messages||[];
-            targetTicket.messages.push(normalized);
+            if(!messageTicket) return false;
 
-            if(this.root && this.root.classList.contains("active") && String(this.selectedTicket)===ticketId) {
+            messageTicket.messages=messageTicket.messages||[];
+            messageTicket.messages.push(normalized);
+
+            if(this.root && this.root.classList.contains("active") && String(this.selectedTicket)===messageTicketId)
                 this.Render();
-            }
+
             return true;
         }
 
         if(patch==="messages-end") {
             if(!this.pendingMessages || String(this.pendingMessages.ticketId)!==String(payload.ticketId)) return false;
 
-            var ticketId=String(payload.ticketId);
-            var targetTicket=this.state.tickets.find(function(item){
-                return String(item.id)===ticketId;
+            var endTicketId=String(payload.ticketId);
+            var endTicket=this.state.tickets.find(function(item){
+                return String(item.id)===endTicketId;
             });
 
-            if(targetTicket) targetTicket.messages=this.pendingMessages.messages;
+            if(endTicket) endTicket.messages=this.pendingMessages.messages;
             this.pendingMessages=null;
 
-            if(this.root && this.root.classList.contains("active") && String(this.selectedTicket)===ticketId) {
+            if(this.root && this.root.classList.contains("active") && String(this.selectedTicket)===endTicketId)
                 this.Render();
-            }
+
             return true;
         }
 
@@ -397,7 +481,7 @@ var AdminPanel = {
         var m=this.Q(".admin-messages");
         if(m)m.scrollTop=m.scrollHeight;
 
-        var oldTransferLayer=this.root.querySelector(".admin-transfer-mobile-layer");
+        var oldTransferLayer=document.querySelector(".admin-transfer-mobile-layer");
         if(oldTransferLayer)oldTransferLayer.remove();
 
         if(this.transferOpen) {
@@ -417,17 +501,64 @@ var AdminPanel = {
 
         var layer=document.createElement("div");
         layer.className="admin-transfer-mobile-layer";
-        layer.innerHTML='<button type="button" class="admin-transfer-mobile-backdrop" data-admin-transfer-close aria-label="Закрити"></button>'
-            +'<div class="admin-transfer-mobile-sheet" role="dialog" aria-modal="true" aria-label="Передати звернення">'
-            +'<div class="admin-transfer-mobile-head"><div><strong>Передати звернення</strong><small>Оберіть адміністратора</small></div><button type="button" class="admin-transfer-mobile-close" data-admin-transfer-close>×</button></div>'
-            +'<div class="admin-transfer-mobile-list">'
-            +(admins.length?admins.map(function(admin){
-                var active=String(self.transferAdminId)===String(admin.id)?" active":"";
-                return '<button type="button" class="admin-transfer-mobile-option'+active+'" data-admin-transfer-option="'+self.Escape(admin.id)+'"><span>'+self.Escape(admin.name)+'</span><small>ID: '+self.Escape(admin.id)+'</small></button>';
-            }).join(""):'<div class="admin-transfer-mobile-empty">Немає адміністраторів онлайн</div>')
-            +'</div>'
-            +'</div>';
-        this.root.appendChild(layer);
+        layer.style.cssText="position:fixed;left:0;top:0;width:100vw;height:100vh;z-index:2147483647;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.55);padding:16px;box-sizing:border-box;";
+
+        var sheet=document.createElement("div");
+        sheet.style.cssText="width:86vw;max-width:520px;max-height:76vh;display:flex;flex-direction:column;background:#071827;border:1px solid rgba(91,166,218,.35);border-radius:12px;box-shadow:0 18px 60px rgba(0,0,0,.55);overflow:hidden;color:#fff;font-family:Arial,sans-serif;";
+
+        var head=document.createElement("div");
+        head.style.cssText="display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 16px;border-bottom:1px solid rgba(255,255,255,.1);";
+
+        var title=document.createElement("div");
+        title.innerHTML='<strong style="display:block;font-size:18px;">Передати звернення</strong><small style="display:block;margin-top:3px;opacity:.65;font-size:13px;">Оберіть адміністратора</small>';
+
+        var close=document.createElement("button");
+        close.type="button";
+        close.setAttribute("data-admin-transfer-close","");
+        close.textContent="×";
+        close.style.cssText="width:42px;height:42px;flex:0 0 42px;border:0;border-radius:9px;background:#102b40;color:#fff;font-size:24px;line-height:42px;";
+
+        head.appendChild(title);
+        head.appendChild(close);
+
+        var list=document.createElement("div");
+        list.style.cssText="overflow-y:auto;padding:10px;display:flex;flex-direction:column;gap:8px;";
+
+        if(admins.length) {
+            admins.forEach(function(admin){
+                var option=document.createElement("button");
+                option.type="button";
+                option.setAttribute("data-admin-transfer-option",String(admin.id));
+                option.style.cssText="display:flex;align-items:center;justify-content:space-between;gap:12px;width:100%;padding:13px 14px;border:1px solid rgba(91,166,218,.25);border-radius:9px;background:#0b2234;color:#fff;text-align:left;font-size:16px;box-sizing:border-box;";
+                option.innerHTML='<span>'+self.Escape(admin.name)+'</span><small style="opacity:.65;white-space:nowrap;">ID: '+self.Escape(admin.id)+'</small>';
+
+                if(String(self.transferAdminId)===String(admin.id))
+                    option.style.outline="2px solid rgba(70,170,255,.8)";
+
+                list.appendChild(option);
+            });
+        } else {
+            var empty=document.createElement("div");
+            empty.textContent="Немає адміністраторів онлайн";
+            empty.style.cssText="padding:24px 12px;text-align:center;opacity:.65;font-size:15px;";
+            list.appendChild(empty);
+        }
+
+        sheet.appendChild(head);
+        sheet.appendChild(list);
+        layer.appendChild(sheet);
+
+        layer.addEventListener("click",function(e){
+            if(e.target===layer) {
+                self.transferOpen=false;
+                self.Render();
+                return;
+            }
+
+            self.Click(e);
+        });
+
+        document.body.appendChild(layer);
     },
     PositionTransferMenu: function() {
         var menu=this.Q(".admin-transfer-menu");
@@ -456,11 +587,11 @@ var AdminPanel = {
     },
     Stats: function() {
         var d=this.state.stats.days||[],t=d.reduce(function(a,x){a.online+=Number(x.onlineMinutes)||0;a.closed+=Number(x.closed)||0;return a;},{online:0,closed:0}),self=this;
-        return '<div class="admin-row admin-between"><div class="admin-row"><h2>'+this.Escape(this.state.profile.name||"Адміністратор")+'</h2><span class="admin-badge">'+this.Escape(this.state.profile.role)+"</span></div><small>"+this.Escape(this.state.stats.period||"Поточний тиждень")+'</small></div><div class="admin-cards">'+[["♧","Мої активні звернення",this.state.tickets.filter(function(r){return self.Mine(r);}).length],["◷","Онлайн за тиждень",this.Minutes(t.online)],["✓","Закрито звернень за тиждень",t.closed]].map(function(x){return '<div class="admin-card"><span class="admin-icon">'+x[0]+'</span><div><small>'+x[1]+'</small><div class="admin-value">'+x[2]+'</div></div></div>';}).join("")+'</div><div class="admin-stats"><div class="admin-box admin-scroll"><h2>Активність за днями</h2>'+this.Table(["День","Онлайн","Закрито звернень"],d.map(function(x){return "<tr><td>"+self.Escape(x.day)+"</td><td>"+self.Minutes(x.onlineMinutes)+"</td><td>"+self.Escape(x.closed)+"</td></tr>";}).join(""),"<tfoot><tr><td>Разом</td><td>"+this.Minutes(t.online)+"</td><td>"+t.closed+"</td></tr></tfoot>")+'</div><div class="admin-box admin-scroll"><h2>Адміни онлайн <span class="admin-badge">'+this.state.admins.length+'</span></h2>'+this.Table(["ID","Нікнейм"],this.state.admins.map(function(a){return "<tr><td>"+self.Escape(a.id)+"</td><td>"+self.Escape(a.name)+"</td></tr>";}).join(""))+'</div></div>';
+        return '<div class="admin-row admin-between"><div class="admin-row"><h2>'+this.Escape(this.state.profile.name||"Адміністратор")+'</h2><span class="admin-badge">'+this.Escape(this.state.profile.role)+"</span></div><small>"+this.Escape(this.state.stats.period||"Поточний тиждень")+'</small></div><div class="admin-cards">'+[["♧","Мої активні звернення",this.state.tickets.filter(function(r){return self.Mine(r);}).length],["◷","Онлайн за тиждень",this.Minutes(t.online)],["✓","Закрито звернень за тиждень",t.closed]].map(function(x){return '<div class="admin-card"><span class="admin-icon">'+x[0]+'</span><div><small>'+x[1]+'</small><div class="admin-value">'+x[2]+'</div></div></div>';}).join("")+'</div><div class="admin-stats"><div class="admin-box admin-scroll"><h2>Активність за днями</h2>'+this.Table(["День","Онлайн","Закрито звернень"],d.map(function(x){return "<tr><td>"+self.Escape(x.day)+"</td><td>"+self.Minutes(x.onlineMinutes)+"</td><td>"+self.Escape(x.closed)+"</td></tr>";}).join(""),"<tfoot><tr><td>Разом</td><td>"+this.Minutes(t.online)+"</td><td>"+t.closed+"</td></tr></tfoot>")+'</div><div class="admin-box admin-scroll"><h2>Адміни онлайн <span class="admin-badge">'+this.state.admins.length+'</span></h2>'+this.Table(["ID","Нікнейм","Рівень"],this.state.admins.map(function(a){return "<tr><td>"+self.Escape(a.id)+"</td><td>"+self.Escape(a.name)+"</td><td>"+self.Escape(a.level)+"</td></tr>";}).join(""))+'</div></div>';
     },
     FilteredTickets: function() {
         var self=this,q=this.query.toLowerCase();
-        return this.state.tickets.filter(function(r){var ok=self.filter==="closed"?r.status==="closed":self.filter==="free"?r.status!=="closed"&&r.adminId==null:self.Mine(r);return ok&&[r.id,r.playerName,r.playerId,r.subject].join(" ").toLowerCase().includes(q);});
+        return this.state.tickets.filter(function(r){var ok=self.filter==="closed"?r.status==="closed":self.filter==="free"?r.status!=="closed"&&r.adminId==null:self.filter==="busy"?r.status!=="closed"&&r.adminId!=null&&!self.Mine(r):self.Mine(r);return ok&&[r.id,r.playerName,r.playerId,r.subject].join(" ").toLowerCase().includes(q);});
     },
     Tickets: function() {
         var rows=this.FilteredTickets(),self=this;
@@ -468,9 +599,12 @@ var AdminPanel = {
             this.selectedTicket=rows[0]?rows[0].id:null;
         }
         var r=this.Ticket(),counts= {
-            free:this.state.tickets.filter(function(x){return x.status!=="closed"&&x.adminId==null;}).length,mine:this.state.tickets.filter(function(x){return self.Mine(x);}).length,closed:this.state.tickets.filter(function(x){return x.status==="closed";}).length
+            free:this.state.tickets.filter(function(x){return x.status!=="closed"&&x.adminId==null;}).length,
+            busy:this.state.tickets.filter(function(x){return x.status!=="closed"&&x.adminId!=null&&!self.Mine(x);}).length,
+            mine:this.state.tickets.filter(function(x){return self.Mine(x);}).length,
+            closed:this.state.tickets.filter(function(x){return x.status==="closed";}).length
         };
-        return '<div class="admin-tabs">'+[["free","Вільні"],["mine","Мої"],["closed","Закриті"]].map(function(x){return '<button type="button" data-admin-filter="'+x[0]+'" class="'+(self.filter===x[0]?"active":"")+'">'+x[1]+" · "+counts[x[0]]+"</button>";}).join("")+'</div><div class="admin-ticket-layout '+(this.chatOpen?"admin-chat-open ":"")+(this.ticketFocus?"admin-ticket-focus":"")+'"><div class="admin-tickets"><input class="admin-search" data-admin-search value="'+this.Escape(this.query)+'" placeholder="Пошук за назвою, ID або описом">'+(rows.map(function(x){return '<button type="button" class="admin-ticket '+(String(x.id)===String(self.selectedTicket)?"active":"")+'" data-admin-ticket="'+self.Escape(x.id)+'"><span>#'+self.Escape(x.id)+' · '+self.Escape(x.waitLabel||"")+'</span><strong>'+self.Escape(x.playerName)+' ['+self.Escape(x.playerId)+']</strong><small>'+self.Escape(x.subject)+'</small></button>';}).join("")||'<div class="admin-empty">Звернень немає</div>')+'</div><div class="admin-chat">'+(r?this.Chat(r):'<div class="admin-empty">Оберіть звернення</div>')+'</div></div>';
+        return '<div class="admin-tabs">'+[["free","Вільні"],["busy","Зайняті"],["mine","Мої"],["closed","Закриті"]].map(function(x){return '<button type="button" data-admin-filter="'+x[0]+'" class="'+(self.filter===x[0]?"active":"")+'">'+x[1]+" · "+counts[x[0]]+"</button>";}).join("")+'</div><div class="admin-ticket-layout '+(this.chatOpen?"admin-chat-open ":"")+(this.ticketFocus?"admin-ticket-focus":"")+'"><div class="admin-tickets"><input class="admin-search" data-admin-search value="'+this.Escape(this.query)+'" placeholder="Пошук за назвою, ID або описом">'+(rows.map(function(x){return '<button type="button" class="admin-ticket '+(String(x.id)===String(self.selectedTicket)?"active":"")+'" data-admin-ticket="'+self.Escape(x.id)+'"><span>#'+self.Escape(x.id)+' · '+self.Escape(x.waitLabel||"")+'</span><strong>'+self.Escape(x.playerName)+' ['+self.Escape(x.playerId)+']</strong><small>'+self.Escape(x.subject)+'</small></button>';}).join("")||'<div class="admin-empty">Звернень немає</div>')+'</div><div class="admin-chat">'+(r?this.Chat(r):'<div class="admin-empty">Оберіть звернення</div>')+'</div></div>';
     },
     Chat: function(r) {
         var owned=this.Mine(r),closed=r.status==="closed",self=this,admins=this.state.admins.filter(function(a){return String(a.id)!==String(self.state.profile.id);});
@@ -486,7 +620,7 @@ var AdminPanel = {
             +'<div class="admin-send-row"><textarea class="admin-textarea" data-admin-draft placeholder="Напишіть повідомлення…"></textarea><button type="button" class="admin-send admin-primary" data-admin-action="send">Надіслати</button></div>'
             +'<button type="button" class="admin-close-ticket" data-admin-action="resolve">Закрити тікет</button>'
             +'</div>';
-        }else if(!closed&&r.adminId==null) {
+        }else if(!closed) {
             controls='<div class="admin-composer"><button type="button" class="admin-primary admin-claim-ticket" data-admin-action="claim">Взяти звернення</button></div>';
         }else {
             controls='<div class="admin-composer admin-muted">Перегляд історії листування</div>';
@@ -534,6 +668,10 @@ var AdminPanel = {
             this.transferOpen=false;
             this.transferAdminId=null;
             this.Render();
+
+            if(this.tab==="tickets" && this.selectedTicket!=null)
+                this.Send("admin:ticket:open",{TicketId:Number(this.selectedTicket)});
+
             return;
         }
         if(b.dataset.adminFilter) {
@@ -544,6 +682,10 @@ var AdminPanel = {
             this.transferOpen=false;
             this.transferAdminId=null;
             this.Render();
+
+            if(this.selectedTicket!=null)
+                this.Send("admin:ticket:open",{TicketId:Number(this.selectedTicket)});
+
             return;
         }
         if(b.dataset.adminTicket) {
@@ -595,6 +737,10 @@ var AdminPanel = {
         }
         if(b.dataset.adminTransferToggle!==undefined) {
             this.transferOpen=!this.transferOpen;
+
+            if(this.transferOpen && this.selectedTicket!=null)
+                this.Send("admin:ticket:open",{TicketId:Number(this.selectedTicket)});
+
             this.Render();
             return;
         }
