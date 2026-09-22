@@ -481,7 +481,7 @@ test('keyboard focus: UI hotkeys use a hidden text-input sink without native cha
     const helperIndex = template.indexOf('ui-keyboard.js');
     ok(helperIndex !== -1, 'ui-keyboard.js is not linked');
 
-    for (const file of ['dialog.js', 'tickets.js', 'inventory.js', 'statistics.js', 'main-menu.js']) {
+    for (const file of ['dialog.js', 'tickets.js', 'inventory.js', 'statistics.js', 'main-menu.js', 'admin-panel.js']) {
         const source = read(`assets/JavaScript/${file}`);
         ok(source.includes('UiKeyboard.Focus('), `${file}: keyboard sink is not activated on show`);
         ok(source.includes('UiKeyboard.Release('), `${file}: keyboard sink is not released on hide`);

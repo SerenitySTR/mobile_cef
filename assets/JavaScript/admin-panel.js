@@ -119,6 +119,9 @@ var AdminPanel = {
         this.root.classList.add("active");
         this.root.setAttribute("aria-hidden","false");
         this.Render();
+
+        if (window.UiKeyboard)
+            UiKeyboard.Focus(this.root);
     },
     Hide: function() {
         this.Init();
@@ -128,6 +131,9 @@ var AdminPanel = {
 
         this.root.classList.remove("active");
         this.root.setAttribute("aria-hidden","true");
+
+        if (window.UiKeyboard)
+            UiKeyboard.Release(this.root);
     },
     Close: function() {
         this.Hide();
