@@ -400,6 +400,13 @@ var dialogInput = document.getElementById("dialog-input");
 
 if (dialogClose) {
     dialogClose.onclick = function() {
+        var buttons = document.querySelectorAll("#dialog-buttons .dialog-button");
+
+        if (buttons.length > 0) {
+            buttons[buttons.length - 1].click();
+            return;
+        }
+
         Dialog.Close();
     };
 }
@@ -420,27 +427,27 @@ document.addEventListener("keydown", function(event) {
     if (document.getElementById("error-screen")?.classList.contains("active"))
         return;
 
+    var buttons = document.querySelectorAll("#dialog-buttons .dialog-button");
+
     if (event.key === "Escape") {
+        if (buttons.length === 0 || buttons[buttons.length - 1].disabled)
+            return;
+
         event.preventDefault();
         event.stopImmediatePropagation();
-        Dialog.Close();
+        buttons[buttons.length - 1].click();
         return;
     }
 
     if (event.key !== "Enter" || event.shiftKey || event.ctrlKey || event.altKey || event.metaKey)
         return;
 
-    var target = event.target;
-    if (target && (target.tagName === "BUTTON" || target.tagName === "A"))
-        return;
-
-    var primary = document.querySelector("#dialog-buttons .dialog-button-primary");
-    if (!primary || primary.disabled)
+    if (buttons.length === 0 || buttons[0].disabled)
         return;
 
     event.preventDefault();
     event.stopImmediatePropagation();
-    primary.click();
+    buttons[0].click();
 });
 
 GameCef.on("dialog:show", function(data) {

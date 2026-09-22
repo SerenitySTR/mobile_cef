@@ -108,7 +108,7 @@ document.addEventListener("keydown",event=>{
     if(event.shiftKey||event.ctrlKey||event.altKey||event.metaKey)
         return;
 
-    if(event.target?.tagName==="BUTTON"||event.target?.tagName==="A")
+    if(!spawnButton||spawnButton.disabled)
         return;
 
     event.preventDefault();
