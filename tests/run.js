@@ -357,33 +357,37 @@ test('production: notification local test helpers are absent', () => {
     }
 });
 
-test('password eye: reveal buttons never refocus inputs or reopen mobile keyboard', () => {
+test('password eye: reveal buttons toggle on touch/mouse without refocusing inputs', () => {
     const authorizationSource = read('assets/JavaScript/authorization.js');
     const registrationSource = read('assets/JavaScript/registration.js');
 
     hasAll(authorizationSource, [
-        'authorizationPasswordEye.addEventListener("pointerdown", preventPasswordEyeFocus)',
-        'authorizationPasswordEye.addEventListener("touchstart", preventPasswordEyeFocus, { passive: false })',
-        'authorizationPasswordEye.addEventListener("click", (event) =>'
+        'function toggleAuthorizationPassword()',
+        'authorizationPasswordEye.addEventListener("touchstart", (event) =>',
+        'authorizationPasswordEye.addEventListener("mousedown", (event) =>',
+        'if (event.detail === 0)',
+        'toggleAuthorizationPassword()'
     ], 'authorization.js');
 
     hasAll(registrationSource, [
-        'button.addEventListener("pointerdown", preventPasswordEyeFocus)',
-        'button.addEventListener("touchstart", preventPasswordEyeFocus, { passive: false })',
-        'button.addEventListener("click", (event) =>'
+        'function togglePasswordInput(button)',
+        'button.addEventListener("touchstart", (event) =>',
+        'button.addEventListener("mousedown", (event) =>',
+        'if (event.detail === 0)',
+        'togglePasswordInput(button)'
     ], 'registration.js');
 
     const authorizationEyeBlock = authorizationSource.slice(
-        authorizationSource.indexOf('authorizationPasswordEye.addEventListener("click"'),
+        authorizationSource.indexOf('let authorizationPasswordEyeTouchAt'),
         authorizationSource.indexOf('authorizationButton.addEventListener("click"')
     );
-    ok(!authorizationEyeBlock.includes('focusAuthorizationPassword()'), 'Authorization eye click refocuses password input');
+    ok(!authorizationEyeBlock.includes('focusAuthorizationPassword()'), 'Authorization eye refocuses password input');
 
     const registrationEyeBlock = registrationSource.slice(
-        registrationSource.indexOf('passwordEyeButtons.forEach'),
+        registrationSource.indexOf('let passwordEyeTouchAt'),
         registrationSource.indexOf('genderButtons.forEach')
     );
-    ok(!registrationEyeBlock.includes('focusRegistrationInput(input)'), 'Registration eye click refocuses password input');
+    ok(!registrationEyeBlock.includes('focusRegistrationInput(input)'), 'Registration eye refocuses password input');
 });
 
 test('visual test: reusable UI selector is scrollable and available on PC/mobile', () => {

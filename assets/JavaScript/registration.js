@@ -81,26 +81,40 @@ function setAge(value) {
     ageInput.value = age;
 }
 
-function preventPasswordEyeFocus(event) {
-    event.preventDefault();
+let passwordEyeTouchAt = 0;
+
+function togglePasswordInput(button) {
+    const input = document.getElementById(button.dataset.target);
+
+    if (!input)
+        return;
+
+    input.type = input.type === "password"
+        ? "text"
+        : "password";
 }
 
 passwordEyeButtons.forEach((button) => {
-    button.addEventListener("pointerdown", preventPasswordEyeFocus);
-    button.addEventListener("mousedown", preventPasswordEyeFocus);
-    button.addEventListener("touchstart", preventPasswordEyeFocus, { passive: false });
+    button.addEventListener("touchstart", (event) => {
+        event.preventDefault();
+        passwordEyeTouchAt = Date.now();
+        togglePasswordInput(button);
+    }, { passive: false });
+
+    button.addEventListener("mousedown", (event) => {
+        event.preventDefault();
+
+        if (Date.now() - passwordEyeTouchAt < 700)
+            return;
+
+        togglePasswordInput(button);
+    });
 
     button.addEventListener("click", (event) => {
         event.preventDefault();
 
-        const input = document.getElementById(button.dataset.target);
-
-        if (!input)
-            return;
-
-        input.type = input.type === "password"
-            ? "text"
-            : "password";
+        if (event.detail === 0)
+            togglePasswordInput(button);
     });
 });
 

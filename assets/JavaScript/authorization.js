@@ -22,20 +22,34 @@ function hideAuthorization() {
     authorization.classList.remove("active");
 }
 
-function preventPasswordEyeFocus(event) {
-    event.preventDefault();
+let authorizationPasswordEyeTouchAt = 0;
+
+function toggleAuthorizationPassword() {
+    authorizationPasswordInput.type = authorizationPasswordInput.type === "password"
+        ? "text"
+        : "password";
 }
 
-authorizationPasswordEye.addEventListener("pointerdown", preventPasswordEyeFocus);
-authorizationPasswordEye.addEventListener("mousedown", preventPasswordEyeFocus);
-authorizationPasswordEye.addEventListener("touchstart", preventPasswordEyeFocus, { passive: false });
+authorizationPasswordEye.addEventListener("touchstart", (event) => {
+    event.preventDefault();
+    authorizationPasswordEyeTouchAt = Date.now();
+    toggleAuthorizationPassword();
+}, { passive: false });
+
+authorizationPasswordEye.addEventListener("mousedown", (event) => {
+    event.preventDefault();
+
+    if (Date.now() - authorizationPasswordEyeTouchAt < 700)
+        return;
+
+    toggleAuthorizationPassword();
+});
 
 authorizationPasswordEye.addEventListener("click", (event) => {
     event.preventDefault();
 
-    authorizationPasswordInput.type = authorizationPasswordInput.type === "password"
-        ? "text"
-        : "password";
+    if (event.detail === 0)
+        toggleAuthorizationPassword();
 });
 
 authorizationButton.addEventListener("click", () => {
