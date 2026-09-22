@@ -50,7 +50,7 @@
         var link = document.createElement("link");
         link.id = "cef-in-game-test-style";
         link.rel = "stylesheet";
-        link.href = "./tests/visual-test.css?v=20260922-ingame-menu2";
+        link.href = "./tests/visual-test.css?v=20260922-hudtest1";
         document.head.appendChild(link);
     }
 
@@ -85,9 +85,9 @@
         window.__CEF_IN_GAME_TEST_BOOTSTRAP__ = true;
         ensureStyle();
 
-        loadingPromise = loadScript("cef-in-game-test-framework", "./tests/visual-test.js?v=20260922-ingame-menu2")
+        loadingPromise = loadScript("cef-in-game-test-framework", "./tests/visual-test.js?v=20260922-hudtest1")
             .then(function () {
-                return loadScript("cef-in-game-test-cases", "./tests/cases.js?v=20260922-ingame-menu2");
+                return loadScript("cef-in-game-test-cases", "./tests/cases.js?v=20260922-hudtest1");
             })
             .then(function () {
                 if (!window.CefVisualTests)

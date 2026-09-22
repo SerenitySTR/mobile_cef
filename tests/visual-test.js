@@ -21,6 +21,9 @@
     }
 
     function hideEverything() {
+        if (window.CefVisualTestHud && typeof window.CefVisualTestHud.restore === "function")
+            window.CefVisualTestHud.restore();
+
         if (typeof Loading !== "undefined" && Loading.Hide) Loading.Hide();
         if (typeof Dialog !== "undefined" && Dialog.screen)
             Dialog.screen.classList.remove("active", "opened", "closing");

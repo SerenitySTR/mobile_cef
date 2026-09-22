@@ -41,6 +41,57 @@
         };
     }
 
+    var originalHudMobilePlatform = document.body.classList.contains("hud-platform-mobile") || !!window.hudMobilePlatform;
+
+    function hudTestData() {
+        return {
+            nickname: "Serenity_Walker",
+            id: 12,
+            time: "18:48",
+            date: "22.09.2026",
+            health: 92,
+            armour: 68,
+            hunger: 74,
+            money: 128450,
+            wanted: 2,
+            weaponId: 31,
+            ammoClip: 30,
+            ammoTotal: 180
+        };
+    }
+
+    function hideHudPreviews() {
+        var mobileHud = document.getElementById("hud");
+        var pcHud = document.getElementById("pc-hud");
+
+        if (mobileHud) mobileHud.classList.remove("active");
+        if (pcHud) {
+            pcHud.classList.remove("active");
+            pcHud.setAttribute("aria-hidden", "true");
+        }
+    }
+
+    function forceHudPlatform(mobile) {
+        document.body.classList.remove("hud-platform-pc", "hud-platform-mobile");
+        document.body.classList.add(mobile ? "hud-platform-mobile" : "hud-platform-pc");
+        window.hudMobilePlatform = !!mobile;
+        hideHudPreviews();
+    }
+
+    function restoreHudPlatform() {
+        hideHudPreviews();
+        document.body.classList.remove("hud-platform-pc", "hud-platform-mobile");
+        document.body.classList.add(originalHudMobilePlatform ? "hud-platform-mobile" : "hud-platform-pc");
+        window.hudMobilePlatform = originalHudMobilePlatform;
+
+        if (typeof updateHudMobileScale === "function")
+            updateHudMobileScale();
+    }
+
+    window.CefVisualTestHud = {
+        restore: restoreHudPlatform
+    };
+
     Tests.register("gallery", "Кнопки", function () {
         ensureGallery().classList.remove("hidden");
     });
@@ -289,6 +340,33 @@
                 Level: 17
             }
         });
+    });
+
+    Tests.register("hud-pc", "HUD PC", function () {
+        var data = hudTestData();
+        forceHudPlatform(false);
+
+        if (window.AntaresHUD) {
+            AntaresHUD.update(data);
+            AntaresHUD.show();
+        }
+    });
+
+    Tests.register("hud-mobile", "HUD Mobile", function () {
+        var data = hudTestData();
+        forceHudPlatform(true);
+
+        if (window.AntaresHUD)
+            AntaresHUD.hide();
+
+        if (typeof updateHud === "function")
+            updateHud(data);
+
+        var mobileHud = document.getElementById("hud");
+        if (mobileHud) mobileHud.classList.add("active");
+
+        if (typeof updateHudMobileScale === "function")
+            updateHudMobileScale();
     });
 
     Tests.register("notifications", "Notify", function () {

@@ -452,6 +452,23 @@ test('visual test: Inventory, Statistics and Main Menu cases are registered', ()
     ], 'tests/cases.js');
 });
 
+test('visual test: PC and Mobile HUD previews are registered and restore platform state', () => {
+    const cases = read('tests/cases.js');
+    hasAll(cases, [
+        'Tests.register("hud-pc", "HUD PC"',
+        'Tests.register("hud-mobile", "HUD Mobile"',
+        'forceHudPlatform(false)',
+        'forceHudPlatform(true)',
+        'AntaresHUD.update(data)',
+        'mobileHud.classList.add("active")',
+        'window.CefVisualTestHud',
+        'restoreHudPlatform'
+    ], 'tests/cases.js');
+
+    const framework = read('tests/visual-test.js');
+    ok(framework.includes('window.CefVisualTestHud.restore()'), 'visual-test.js does not restore HUD platform state between views');
+});
+
 test('tickets: waiting and working statuses are blue while closed stays red', () => {
     const css = read('assets/CSS/styles/tickets.css');
     const js = read('assets/JavaScript/tickets.js');
