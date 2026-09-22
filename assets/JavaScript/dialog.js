@@ -61,6 +61,9 @@ var Dialog = {
     Hide: function(callback) {
         this.Init();
 
+        if (typeof UiKeyboard !== "undefined")
+            UiKeyboard.Release(this.screen);
+
         if (!this.screen || !this.screen.classList.contains("active")) {
             if (callback)
                 callback();

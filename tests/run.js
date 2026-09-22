@@ -476,18 +476,26 @@ test('code style: all JavaScript files follow repository whitespace rules', () =
     }
 });
 
-test('keyboard focus: Dialog, Tickets, Inventory, Statistics and Main Menu receive focus on show', () => {
+test('keyboard focus: UI hotkeys use a hidden text-input sink without native changes', () => {
     const template = read('src/index.template.html');
     const helperIndex = template.indexOf('ui-keyboard.js');
     ok(helperIndex !== -1, 'ui-keyboard.js is not linked');
 
     for (const file of ['dialog.js', 'tickets.js', 'inventory.js', 'statistics.js', 'main-menu.js']) {
         const source = read(`assets/JavaScript/${file}`);
-        ok(source.includes('UiKeyboard.Focus('), `${file}: UI is not focused when shown`);
+        ok(source.includes('UiKeyboard.Focus('), `${file}: keyboard sink is not activated on show`);
+        ok(source.includes('UiKeyboard.Release('), `${file}: keyboard sink is not released on hide`);
     }
 
     const helper = read('assets/JavaScript/ui-keyboard.js');
-    hasAll(helper, ['window.focus()', 'element.focus({ preventScroll: true })', 'setTimeout(applyFocus, 40)'], 'ui-keyboard.js');
+    hasAll(helper, [
+        'sink.type = "text"',
+        'sink.setAttribute("inputmode", "none")',
+        'sink.setAttribute("virtualkeyboardpolicy", "manual")',
+        'self.sink.focus({ preventScroll: true })',
+        'RestoreAfterPointer',
+        'IsEditable'
+    ], 'ui-keyboard.js');
 
     const ticketsCss = read('assets/CSS/styles/tickets.css');
     hasAll(ticketsCss, ['.tickets-icon:hover,', '.tickets-icon:focus-visible'], 'tickets.css');

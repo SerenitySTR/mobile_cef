@@ -163,6 +163,9 @@ var Inventory={
     Hide:function(){
         this.Init();
 
+        if(typeof UiKeyboard!=="undefined")
+            UiKeyboard.Release(this.screen);
+
         if(this.screen)
             this.screen.classList.remove("active");
     },

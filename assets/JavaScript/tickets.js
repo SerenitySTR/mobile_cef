@@ -117,6 +117,9 @@ const Tickets = {
         this.Init();
         if (!this.root) return;
 
+        if (typeof UiKeyboard !== "undefined")
+            UiKeyboard.Release(this.root);
+
         this.root.classList.remove("active");
         this.root.setAttribute("aria-hidden", "true");
         this.CloseCreate();
