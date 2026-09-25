@@ -226,6 +226,14 @@
         }
     });
 
+    Tests.register("spectate", "Spectate", function () {
+        if (typeof SpectatePanel !== "undefined") {
+            SpectatePanel.Show({ Id: 24, Name: "Artem_Kovalenko" });
+        } else {
+            Tests.receive("admin:spectate:show", { Id: 24, Name: "Artem_Kovalenko" });
+        }
+    });
+
     Tests.register("inventory", "Inventory", function () {
         var burger = {
             Id: 1,
