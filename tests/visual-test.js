@@ -33,7 +33,7 @@
 
         [
             "authorization", "registration", "spawn-selection", "error-screen",
-            "statistics", "inventory", "main-menu", "tickets", "admin-panel"
+            "statistics", "inventory", "main-menu", "tickets", "admin-panel", "spectate-panel"
         ].forEach(function (id) { hideById(id); });
 
         document.querySelectorAll("[data-cef-test-surface]").forEach(function (element) {
