@@ -1,10 +1,10 @@
 #spectate-panel {
     position:fixed;
-    left:50%;
-    bottom:34px;
+    top:50%;
+    right:32px;
     z-index:1600;
     display:none;
-    transform:translateX(-50%);
+    transform:translateY(-50%);
     font-family:"Montserrat",Arial,sans-serif;
     color:#fff;
     pointer-events:none
@@ -225,35 +225,227 @@
 
 @media (max-width:900px) and (orientation:landscape) {
     #spectate-panel {
-        bottom:18px
+        right:10px
     }
 
     .spectate-shell {
-        width:300px;
-        padding:11px
+        width:250px;
+        padding:9px;
+        border-radius:10px
     }
 
     .spectate-header {
-        margin-bottom:8px
+        gap:8px;
+        margin-bottom:7px
+    }
+
+    .spectate-eye {
+        width:28px;
+        height:28px;
+        border-radius:7px
+    }
+
+    .spectate-eye svg {
+        width:16px;
+        height:16px
+    }
+
+    .spectate-title {
+        gap:7px
+    }
+
+    .spectate-title small {
+        font-size:7px;
+        letter-spacing:.8px
+    }
+
+    .spectate-title strong {
+        font-size:12px
+    }
+
+    .spectate-close {
+        width:28px;
+        height:28px;
+        font-size:21px!important
     }
 
     .spectate-target {
-        margin-bottom:7px;
-        padding:7px 9px
+        margin-bottom:6px;
+        padding:6px 8px
+    }
+
+    .spectate-target span {
+        font-size:7px
+    }
+
+    .spectate-target strong {
+        font-size:11px
+    }
+
+    .spectate-switcher {
+        gap:6px
     }
 
     .spectate-switcher>button,
     .spectate-id-box {
-        height:38px
+        height:34px
     }
 
     .spectate-switcher>button {
-        width:38px;
-        flex-basis:38px
+        width:34px;
+        flex-basis:34px;
+        font-size:22px
+    }
+
+    .spectate-id-box {
+        gap:5px;
+        padding:0 8px
+    }
+
+    .spectate-id-box span {
+        font-size:8px
+    }
+
+    .spectate-id-box input {
+        font-size:14px
     }
 
     .spectate-refresh {
-        margin-top:7px;
-        padding:8px 10px
+        margin-top:6px;
+        padding:7px 8px;
+        font-size:9px
+    }
+
+    .spectate-refresh-icon {
+        font-size:14px
+    }
+}
+
+@media (max-width:650px) and (orientation:landscape) {
+    #spectate-panel {
+        right:6px
+    }
+
+    .spectate-shell {
+        width:220px;
+        padding:8px
+    }
+
+    .spectate-title small {
+        display:none
+    }
+
+    .spectate-target {
+        padding:5px 7px
+    }
+
+    .spectate-refresh {
+        padding:6px 7px
+    }
+}
+
+/* Compact mobile landscape layout. pointer:coarse catches phones even when CEF uses a large viewport. */
+@media (pointer:coarse) and (orientation:landscape),
+       (max-height:650px) and (orientation:landscape) {
+    #spectate-panel {
+        right:6px
+    }
+
+    .spectate-shell {
+        width:184px;
+        padding:6px;
+        border-radius:8px
+    }
+
+    .spectate-header {
+        gap:5px;
+        margin-bottom:5px
+    }
+
+    .spectate-title {
+        gap:5px
+    }
+
+    .spectate-eye {
+        width:22px;
+        height:22px;
+        border-radius:6px
+    }
+
+    .spectate-eye svg {
+        width:13px;
+        height:13px
+    }
+
+    .spectate-title small {
+        display:none
+    }
+
+    .spectate-title strong {
+        font-size:10px
+    }
+
+    .spectate-close {
+        width:22px;
+        height:22px;
+        border-radius:6px;
+        font-size:17px!important
+    }
+
+    .spectate-target {
+        margin-bottom:5px;
+        padding:4px 6px;
+        border-radius:6px
+    }
+
+    .spectate-target span {
+        display:none
+    }
+
+    .spectate-target strong {
+        font-size:9px
+    }
+
+    .spectate-switcher {
+        gap:4px
+    }
+
+    .spectate-switcher>button,
+    .spectate-id-box {
+        height:28px
+    }
+
+    .spectate-switcher>button {
+        width:28px;
+        flex:0 0 28px;
+        border-radius:6px;
+        font-size:18px
+    }
+
+    .spectate-id-box {
+        gap:3px;
+        padding:0 5px;
+        border-radius:6px
+    }
+
+    .spectate-id-box span {
+        font-size:7px
+    }
+
+    .spectate-id-box input {
+        font-size:11px
+    }
+
+    .spectate-refresh {
+        gap:4px;
+        margin-top:5px;
+        padding:5px 6px;
+        border-radius:6px;
+        font-size:8px;
+        letter-spacing:0
+    }
+
+    .spectate-refresh-icon {
+        font-size:11px
     }
 }

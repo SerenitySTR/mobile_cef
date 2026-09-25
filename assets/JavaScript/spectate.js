@@ -68,16 +68,17 @@
             this.input.value = id;
             this.currentId = id;
             this.name.textContent = "ID " + id;
-            this.Track();
+            this.Track(step);
         },
 
-        Track: function () {
+        Track: function (direction) {
             var id = Math.max(0, Number(this.input.value) || 0);
             this.currentId = id;
             this.input.value = id;
 
             GameCef.sendJson("admin:spectate", {
-                TargetId: id
+                TargetId: id,
+                Direction: direction || 1
             });
         },
 
