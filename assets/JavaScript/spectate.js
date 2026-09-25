@@ -24,7 +24,9 @@
 
             document.getElementById("spectate-prev").addEventListener("click", this.Change.bind(this, -1));
             document.getElementById("spectate-next").addEventListener("click", this.Change.bind(this, 1));
-            document.getElementById("spectate-refresh").addEventListener("click", this.Track.bind(this));
+            document.getElementById("spectate-refresh").addEventListener("click", function () {
+                this.Track(1);
+            }.bind(this));
             document.getElementById("spectate-close").addEventListener("click", this.Stop.bind(this));
 
             this.input.addEventListener("keydown", function (event) {
@@ -78,7 +80,7 @@
 
             GameCef.sendJson("admin:spectate", {
                 TargetId: id,
-                Direction: direction || 1
+                Direction: direction === -1 ? -1 : 1
             });
         },
 
