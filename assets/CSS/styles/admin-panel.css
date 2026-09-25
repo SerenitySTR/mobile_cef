@@ -219,6 +219,42 @@
     overscroll-behavior:contain
 }
 
+
+.admin-days-box {
+    min-height:0;
+    overflow:hidden
+}
+
+.admin-days-scroll {
+    max-height:430px;
+    overflow-y:auto;
+    overflow-x:hidden;
+    padding-right:5px;
+    overscroll-behavior:contain;
+    scrollbar-width:thin;
+    scrollbar-color:#4b6d87 #0a1d2d
+}
+
+.admin-days-scroll::-webkit-scrollbar {
+    width:8px
+}
+
+.admin-days-scroll::-webkit-scrollbar-track {
+    background:#0a1d2d;
+    border-radius:10px
+}
+
+.admin-days-scroll::-webkit-scrollbar-thumb {
+    min-height:36px;
+    background:#4b6d87;
+    border:2px solid #0a1d2d;
+    border-radius:10px
+}
+
+.admin-days-scroll::-webkit-scrollbar-thumb:hover {
+    background:#668aa5
+}
+
 .admin-table {
     width:100%;
     border-collapse:collapse;
@@ -1122,6 +1158,11 @@
 #admin-panel.admin-mobile-landscape .admin-box h2 {
     margin: 0 0 9px;
     font-size: 15px;
+}
+
+
+#admin-panel.admin-mobile-landscape .admin-days-scroll {
+    max-height:235px
 }
 
 #admin-panel.admin-mobile-landscape .admin-table th,

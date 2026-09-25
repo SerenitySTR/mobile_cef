@@ -178,11 +178,22 @@
                 { Id: 1251, PlayerId: 66, PlayerName: "Maksim_White", Subject: "Баг з автомобілем", Status: "closed", AdminId: 101, AdminName: "serenity", WaitLabel: "18 хв", Messages: [] }
             ],
             Stats: {
-                Period: "Поточний тиждень",
+                Period: "Останні 14 днів",
                 Days: [
-                    { day: "Пн", onlineMinutes: 185, closed: 9 },
-                    { day: "Вт", onlineMinutes: 240, closed: 14 },
-                    { day: "Ср", onlineMinutes: 155, closed: 8 }
+                    { day: "25.09", onlineMinutes: 185, closed: 9 },
+                    { day: "24.09", onlineMinutes: 240, closed: 14 },
+                    { day: "23.09", onlineMinutes: 155, closed: 8 },
+                    { day: "22.09", onlineMinutes: 210, closed: 11 },
+                    { day: "21.09", onlineMinutes: 175, closed: 6 },
+                    { day: "20.09", onlineMinutes: 260, closed: 13 },
+                    { day: "19.09", onlineMinutes: 90, closed: 4 },
+                    { day: "18.09", onlineMinutes: 195, closed: 10 },
+                    { day: "17.09", onlineMinutes: 225, closed: 12 },
+                    { day: "16.09", onlineMinutes: 145, closed: 7 },
+                    { day: "15.09", onlineMinutes: 205, closed: 9 },
+                    { day: "14.09", onlineMinutes: 180, closed: 8 },
+                    { day: "13.09", onlineMinutes: 235, closed: 15 },
+                    { day: "12.09", onlineMinutes: 160, closed: 5 }
                 ]
             },
             Commands: [
