@@ -354,7 +354,7 @@ function updateHud(data) {
         setHudStat("health", data.health);
     }
 
-    const armour = data.armour ?? data.Armour ?? data.armor ?? data.Armor;
+    const armour = data.arm ?? data.Arm ?? data.armour ?? data.Armour ?? data.armor ?? data.Armor;
     if (armour !== undefined) {
         setHudStat("armour", armour);
     }
@@ -472,8 +472,8 @@ function initializeHudPcStats() {
 
         if (stats) {
             const health = stats.health ?? stats.Health ?? stats.hp ?? stats.HP;
-            const maxHealth = stats.maxHealth ?? stats.MaxHealth ?? stats.max_health ?? 100;
-            const armour = stats.armour ?? stats.Armour ?? stats.armor ?? stats.Armor;
+            const maxHealth = stats.maxHealth ?? stats.MaxHealth ?? stats.max_health ?? stats.max_hp ?? 100;
+            const armour = stats.arm ?? stats.Arm ?? stats.armour ?? stats.Armour ?? stats.armor ?? stats.Armor;
             const wanted = stats.wanted ?? stats.Wanted ?? stats.wantedLevel ?? stats.WantedLevel;
             const weapon = stats.weapon ?? stats.Weapon ?? stats.weaponId ?? stats.WeaponId;
             const ammo = stats.ammo ?? stats.Ammo ?? stats.ammoClip ?? stats.AmmoClip;

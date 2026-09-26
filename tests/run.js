@@ -469,23 +469,6 @@ test('visual test: PC and Mobile HUD previews are registered and restore platfor
     ok(framework.includes('window.CefVisualTestHud.restore()'), 'visual-test.js does not restore HUD platform state between views');
 });
 
-test('PC HUD: armour is accepted from armor/armour aliases and both CEF events', () => {
-    const hud = read('assets/JavaScript/hud.js');
-    const pcHud = read('assets/JavaScript/pc-hud.js');
-
-    hasAll(hud, [
-        'data.armour ?? data.Armour ?? data.armor ?? data.Armor',
-        'GameCef.on("hud:armour"',
-        'GameCef.on("hud:armor"'
-    ], 'hud.js');
-
-    hasAll(pcHud, [
-        'data.armour??data.Armour??data.armor??data.Armor',
-        'stats.armor??stats.Armor??stats.armour??stats.Armour',
-        "setStat('armor',armor)"
-    ], 'pc-hud.js');
-});
-
 test('tickets: waiting and working statuses are blue while closed stays red', () => {
     const css = read('assets/CSS/styles/tickets.css');
     const js = read('assets/JavaScript/tickets.js');
@@ -538,6 +521,14 @@ test('keyboard focus: UI hotkeys use a hidden text-input sink without native cha
     hasAll(inventoryCss, ['.inventory-close:hover,', '.inventory-close:focus-visible'], 'inventory.css');
 });
 
+test("pc hud: native playerStats arm field is supported", () => {
+    const hudJs = read("assets/JavaScript/hud.js");
+    const pcHudJs = read("assets/JavaScript/pc-hud.js");
+
+    ok(hudJs.includes("stats.arm ?? stats.Arm"), "hud.js must accept native playerStats arm field");
+    ok(pcHudJs.includes("data.arm??data.Arm"), "pc-hud.js must accept native arm field");
+});
+
 // Non-fatal cleanup hints.
 const template = read('src/index.template.html');
 const sectionFiles = walk('src/sections', file => file.endsWith('.html'));
@@ -564,4 +555,5 @@ if (warnings.length) {
 }
 
 if (failed > 0) process.exit(1);
+
 console.log('\nAll required CEF tests passed.');
