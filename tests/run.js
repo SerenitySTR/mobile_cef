@@ -469,6 +469,23 @@ test('visual test: PC and Mobile HUD previews are registered and restore platfor
     ok(framework.includes('window.CefVisualTestHud.restore()'), 'visual-test.js does not restore HUD platform state between views');
 });
 
+test('PC HUD: armour is accepted from armor/armour aliases and both CEF events', () => {
+    const hud = read('assets/JavaScript/hud.js');
+    const pcHud = read('assets/JavaScript/pc-hud.js');
+
+    hasAll(hud, [
+        'data.armour ?? data.Armour ?? data.armor ?? data.Armor',
+        'GameCef.on("hud:armour"',
+        'GameCef.on("hud:armor"'
+    ], 'hud.js');
+
+    hasAll(pcHud, [
+        'data.armour??data.Armour??data.armor??data.Armor',
+        'stats.armor??stats.Armor??stats.armour??stats.Armour',
+        "setStat('armor',armor)"
+    ], 'pc-hud.js');
+});
+
 test('tickets: waiting and working statuses are blue while closed stays red', () => {
     const css = read('assets/CSS/styles/tickets.css');
     const js = read('assets/JavaScript/tickets.js');

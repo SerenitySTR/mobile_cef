@@ -354,8 +354,9 @@ function updateHud(data) {
         setHudStat("health", data.health);
     }
 
-    if (data.armour !== undefined) {
-        setHudStat("armour", data.armour);
+    const armour = data.armour ?? data.Armour ?? data.armor ?? data.Armor;
+    if (armour !== undefined) {
+        setHudStat("armour", armour);
     }
 
     if (data.hunger !== undefined) {
@@ -409,6 +410,7 @@ if (window.GameCef) {
 
     GameCef.on("hud:health", data => setHudStat("health", data));
     GameCef.on("hud:armour", data => setHudStat("armour", data));
+    GameCef.on("hud:armor", data => setHudStat("armour", data));
     GameCef.on("hud:hunger", data => setHudStat("hunger", data));
     GameCef.on("hud:money", data => updateHud({ money: data }));
     GameCef.on("hud:id", data => updateHud({ id: data }));

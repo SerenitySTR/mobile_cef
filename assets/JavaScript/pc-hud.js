@@ -37,7 +37,7 @@
   function showHud(){ if (window.hudMobilePlatform) return; const root=$('pc-hud'); if(root){root.classList.add('active');root.setAttribute('aria-hidden','false');} }
   function hideHud(){ const root=$('pc-hud'); if(root){root.classList.remove('active');root.setAttribute('aria-hidden','true');} }
 
-  window.AntaresHUD={show:showHud,hide:hideHud,setPlayer,setTime,setStats({hp,armor,hunger}={}){if(hp!=null)setStat('hp',hp);if(armor!=null)setStat('armor',armor);if(hunger!=null)setStat('hunger',hunger);},setAmmo,setMoney,setWanted:renderWanted,setWeapon:updateWeapon,update:updateHud};
+  window.AntaresHUD={show:showHud,hide:hideHud,setPlayer,setTime,setStats(stats={}){const hp=stats.hp??stats.health??stats.Health;const armor=stats.armor??stats.Armor??stats.armour??stats.Armour;const hunger=stats.hunger??stats.Hunger;if(hp!=null)setStat('hp',hp);if(armor!=null)setStat('armor',armor);if(hunger!=null)setStat('hunger',hunger);},setAmmo,setMoney,setWanted:renderWanted,setWeapon:updateWeapon,update:updateHud};
 
   // All CEF/game-data subscriptions live in hud.js.
   // PC HUD is render-only so GameCef.on() callbacks are never overwritten.
