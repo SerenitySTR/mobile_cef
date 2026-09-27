@@ -17,7 +17,7 @@
     <link rel="stylesheet" href="./assets/CSS/styles/main-menu.css">
     <link rel="stylesheet" href="./assets/CSS/styles/dialog.css">
     <link rel="stylesheet" href="./assets/CSS/styles/pc-hud.css?v=20260927-speedo-separate1">
-    <link rel="stylesheet" href="./assets/CSS/styles/speedometer.css?v=20260927-speedo-grayicons-gearcenter2">
+    <link rel="stylesheet" href="./assets/CSS/styles/speedometer.css?v=20260927-speedo-oldvisual1">
     <link rel="stylesheet" href="./assets/CSS/styles/admin-panel.css?v=20260925-stats-scroll">
     <link rel="stylesheet" href="./assets/CSS/styles/tickets.css?v=20260922-status3">
     <link rel="stylesheet" href="./assets/CSS/styles/button-theme.css?v=20260922-neo1">
@@ -442,9 +442,14 @@
     <section id="speedometer" aria-hidden="true">
     <div class="speedometer-wrap">
         <div class="speedometer-main">
-            <div class="speedometer-speed">
-                <span id="speedometer-speed-value" class="speedometer-speed-value">97</span>
-                <span id="speedometer-speed-unit" class="speedometer-speed-unit">km/h</span>
+            <svg class="speedometer-shell" viewBox="0 0 373 74" preserveAspectRatio="none" aria-hidden="true">
+                <path class="speedometer-panel-fill" d="M8 68 L29 18 Q34 7 46 7 H360 L342 54 Q337 68 323 68 Z"></path>
+                <path class="speedometer-shell-line" d="M8 68 L29 18 Q34 7 46 7 H360 L342 54 Q337 68 323 68 H8 Z"></path>
+            </svg>
+
+            <div class="speedometer-speed-block">
+                <span id="speedometer-speed-value" class="speedometer-speed speedometer-speed-value">97</span>
+                <span id="speedometer-speed-unit" class="speedometer-unit speedometer-speed-unit">km/h</span>
             </div>
 
             <div class="speedometer-gear-block">
@@ -452,35 +457,42 @@
             </div>
 
             <div class="speedometer-fuel-block">
-                <div class="speedometer-fuel-top">
+                <div class="speedometer-fuel-text speedometer-fuel-top">
                     <svg class="speedometer-fuel-icon" viewBox="0 0 24 24" aria-hidden="true">
-                        <path d="M7 4.5A2.5 2.5 0 0 1 9.5 2h4A2.5 2.5 0 0 1 16 4.5V18a2 2 0 0 1-2 2H9a2 2 0 0 1-2-2V4.5Zm2-.5v6h5V4H9Zm9.2 2.1 2.3 2.3v7.6a2.8 2.8 0 1 1-5.6 0v-2.5h1.8V16a1 1 0 0 0 2 0V9.2l-1.8-1.8 1.3-1.3Z"></path>
+                        <path d="M5 21V4.5A1.5 1.5 0 0 1 6.5 3h7A1.5 1.5 0 0 1 15 4.5V21M4 21h12M7 6h6v5H7zM15 8h2l2 2v7.5a1.5 1.5 0 0 0 3 0V9l-2-2"></path>
                     </svg>
-                    <span><b id="speedometer-fuel-current">65</b> / <span id="speedometer-fuel-max">80</span> L</span>
+                    <span id="speedometer-fuel-current" class="speedometer-fuel-current">65</span>
+                    <span class="speedometer-fuel-separator">/</span>
+                    <span id="speedometer-fuel-max">80</span>
+                    <span class="speedometer-litre">L</span>
                 </div>
 
-                <div class="speedometer-fuel-bar">
+                <div class="speedometer-fuel-bar" aria-hidden="true">
                     <span id="speedometer-fuel-fill"></span>
                 </div>
             </div>
         </div>
 
-        <div class="speedometer-indicators" aria-label="Індикатори автомобіля">
-            <span id="speedometer-indicator-lights" class="speedometer-indicator">
-                <svg viewBox="0 0 24 24" aria-hidden="true">
-                    <path d="M9.5 7a4.5 4.5 0 1 0 0 9H12v-2H9.5a2.5 2.5 0 1 1 0-5H12V7H9.5Zm4.6 1.4.9 1.2 2-1.4-.9-1.2-2 1.4Zm-1.1 3.1H19V10h-5.1v1.5Zm1.8 4.1 2 1.4.9-1.2-2-1.4-.9 1.2Z"></path>
+        <div class="speedometer-statuses speedometer-indicators" aria-label="Індикатори автомобіля">
+            <span id="speedometer-indicator-lights" class="speedometer-status speedometer-indicator" aria-label="Фари">
+                <svg viewBox="0 0 32 32" aria-hidden="true">
+                    <path d="M15.5 8.5c-4.5.2-7.2 3-7.2 7.5s2.7 7.3 7.2 7.5V8.5Z"></path>
+                    <path d="M19 10.5h9M19 16h10M19 21.5h9"></path>
                 </svg>
             </span>
 
-            <span id="speedometer-indicator-doors" class="speedometer-indicator">
-                <svg viewBox="0 0 24 24" aria-hidden="true">
-                    <path d="M7 15.5A3.5 3.5 0 0 1 10.5 12h3A3.5 3.5 0 0 1 17 15.5V17h1.3a1.7 1.7 0 0 1 1.7 1.7V20h-2v-1h-2v1H8v-1H6v1H4v-1.3A1.7 1.7 0 0 1 5.7 17H7v-1.5Zm1.8 0V17h6.4v-1.5a1.7 1.7 0 0 0-1.7-1.7h-3a1.7 1.7 0 0 0-1.7 1.7ZM9 10l1.5-4h3L15 10H9Z"></path>
+            <span id="speedometer-indicator-doors" class="speedometer-status speedometer-indicator" aria-label="Двері">
+                <svg viewBox="0 0 32 32" aria-hidden="true">
+                    <path d="M6.5 19.5h19l-1.7-5.1a3 3 0 0 0-2.8-2H11a3 3 0 0 0-2.8 2l-1.7 5.1Z"></path>
+                    <path d="M5 19.5v5.8c0 1.2 1 2.2 2.2 2.2h1.3v-3h15v3h1.3c1.2 0 2.2-1 2.2-2.2v-5.8M8.5 20.5h3M20.5 20.5h3"></path>
+                    <path class="speedometer-lock-open" d="M13 10V8a3 3 0 0 1 5.8-1"></path>
+                    <path class="speedometer-lock-closed" d="M13 10V8a3 3 0 0 1 6 0v2"></path>
                 </svg>
             </span>
 
-            <span id="speedometer-indicator-engine" class="speedometer-indicator speedometer-indicator-engine">
-                <svg viewBox="0 0 24 24" aria-hidden="true">
-                    <path d="M7 7h6l2-2h2v2h1.5A2.5 2.5 0 0 1 21 9.5v5A2.5 2.5 0 0 1 18.5 17H17v2h-2v-2H7l-2 2H3v-4H2V9h1V5h2l2 2Zm0 2v6h11.5a.5.5 0 0 0 .5-.5v-5a.5.5 0 0 0-.5-.5H16.2l-2-2H7Z"></path>
+            <span id="speedometer-indicator-engine" class="speedometer-status speedometer-indicator speedometer-status-alert speedometer-indicator-engine" aria-label="Двигун">
+                <svg viewBox="0 0 32 32" aria-hidden="true">
+                    <path d="M8 12h15l3 3v8h-4l-2.5 3H11l-2-3H5v-8h3v-3ZM12 12V8h7v4M4 12v8M27 14h2v7h-2"></path>
                 </svg>
             </span>
         </div>

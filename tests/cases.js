@@ -387,9 +387,9 @@
                 gear: 3,
                 fuel: 65,
                 fuelMax: 80,
-                lights: false,
-                doors: false,
-                engine: true
+                lights: true,
+                doors: true,
+                engine: false
             });
         }
     });
