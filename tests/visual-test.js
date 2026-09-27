@@ -30,10 +30,11 @@
         if (typeof Tickets !== "undefined" && Tickets.Hide) Tickets.Hide();
         if (typeof AdminPanel !== "undefined" && AdminPanel.Hide) AdminPanel.Hide();
         if (typeof Notifications !== "undefined" && Notifications.Clear) Notifications.Clear();
+        if (typeof Speedometer !== "undefined" && Speedometer.Hide) Speedometer.Hide();
 
         [
             "authorization", "registration", "spawn-selection", "error-screen",
-            "statistics", "inventory", "main-menu", "tickets", "admin-panel"
+            "statistics", "inventory", "main-menu", "tickets", "admin-panel", "speedometer"
         ].forEach(function (id) { hideById(id); });
 
         document.querySelectorAll("[data-cef-test-surface]").forEach(function (element) {

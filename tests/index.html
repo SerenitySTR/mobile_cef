@@ -17,12 +17,13 @@
     <link rel="stylesheet" href="./assets/CSS/styles/inventory.css?v=20260922-focus1">
     <link rel="stylesheet" href="./assets/CSS/styles/main-menu.css">
     <link rel="stylesheet" href="./assets/CSS/styles/dialog.css">
-    <link rel="stylesheet" href="./assets/CSS/styles/pc-hud.css?v=20260920-laptop1">
+    <link rel="stylesheet" href="./assets/CSS/styles/pc-hud.css?v=20260927-speedo-separate1">
+    <link rel="stylesheet" href="./assets/CSS/styles/speedometer.css?v=20260927-speedo-pos3">
     <link rel="stylesheet" href="./assets/CSS/styles/admin-panel.css?v=20260925-stats-scroll">
     <link rel="stylesheet" href="./assets/CSS/styles/tickets.css?v=20260922-status3">
     <link rel="stylesheet" href="./assets/CSS/styles/button-theme.css?v=20260922-neo1">
     <link rel="stylesheet" href="./assets/CSS/styles/ui-global.css?v=20260922-focus1">
-    <link rel="stylesheet" href="./tests/visual-test.css?v=20260922-hudtest1">
+    <link rel="stylesheet" href="./tests/visual-test.css?v=20260927-speedo3">
 </head>
 
 <body>
@@ -439,6 +440,54 @@
       <div id="wanted" class="wanted" aria-label="wanted level"></div>
     </div>
   </section>
+
+    <section id="speedometer" aria-hidden="true">
+    <div class="speedometer-wrap">
+        <div class="speedometer-main">
+            <div class="speedometer-speed">
+                <span id="speedometer-speed-value" class="speedometer-speed-value">97</span>
+                <span id="speedometer-speed-unit" class="speedometer-speed-unit">km/h</span>
+            </div>
+
+            <div class="speedometer-gear-block">
+                <span id="speedometer-gear" class="speedometer-gear">3</span>
+            </div>
+
+            <div class="speedometer-fuel-block">
+                <div class="speedometer-fuel-top">
+                    <svg class="speedometer-fuel-icon" viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M7 4.5A2.5 2.5 0 0 1 9.5 2h4A2.5 2.5 0 0 1 16 4.5V18a2 2 0 0 1-2 2H9a2 2 0 0 1-2-2V4.5Zm2-.5v6h5V4H9Zm9.2 2.1 2.3 2.3v7.6a2.8 2.8 0 1 1-5.6 0v-2.5h1.8V16a1 1 0 0 0 2 0V9.2l-1.8-1.8 1.3-1.3Z"></path>
+                    </svg>
+                    <span><b id="speedometer-fuel-current">65</b> / <span id="speedometer-fuel-max">80</span> L</span>
+                </div>
+
+                <div class="speedometer-fuel-bar">
+                    <span id="speedometer-fuel-fill"></span>
+                </div>
+            </div>
+        </div>
+
+        <div class="speedometer-indicators" aria-label="Індикатори автомобіля">
+            <span id="speedometer-indicator-lights" class="speedometer-indicator">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M9.5 7a4.5 4.5 0 1 0 0 9H12v-2H9.5a2.5 2.5 0 1 1 0-5H12V7H9.5Zm4.6 1.4.9 1.2 2-1.4-.9-1.2-2 1.4Zm-1.1 3.1H19V10h-5.1v1.5Zm1.8 4.1 2 1.4.9-1.2-2-1.4-.9 1.2Z"></path>
+                </svg>
+            </span>
+
+            <span id="speedometer-indicator-doors" class="speedometer-indicator">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M7 15.5A3.5 3.5 0 0 1 10.5 12h3A3.5 3.5 0 0 1 17 15.5V17h1.3a1.7 1.7 0 0 1 1.7 1.7V20h-2v-1h-2v1H8v-1H6v1H4v-1.3A1.7 1.7 0 0 1 5.7 17H7v-1.5Zm1.8 0V17h6.4v-1.5a1.7 1.7 0 0 0-1.7-1.7h-3a1.7 1.7 0 0 0-1.7 1.7ZM9 10l1.5-4h3L15 10H9Z"></path>
+                </svg>
+            </span>
+
+            <span id="speedometer-indicator-engine" class="speedometer-indicator speedometer-indicator-danger">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M7 7h6l2-2h2v2h1.5A2.5 2.5 0 0 1 21 9.5v5A2.5 2.5 0 0 1 18.5 17H17v2h-2v-2H7l-2 2H3v-4H2V9h1V5h2l2 2Zm0 2v6h11.5a.5.5 0 0 0 .5-.5v-5a.5.5 0 0 0-.5-.5H16.2l-2-2H7Z"></path>
+                </svg>
+            </span>
+        </div>
+    </div>
+</section>
 
     <section id="notifications">
     <div id="notification-banner-container"></div>
@@ -862,18 +911,19 @@
     <script src="./assets/JavaScript/registration.js?v=20260922-eye-clickfix2"></script>
     <script src="./assets/JavaScript/authorization.js?v=20260922-eye-clickfix2"></script>
     <script src="./assets/JavaScript/spawn.js?v=20260922-spawn-hotkeys2"></script>
-    <script src="./assets/JavaScript/hud.js?v=20260921-pcshowfix1"></script>
+    <script src="./assets/JavaScript/hud.js?v=20260927-speedo-separate1"></script>
     <script src="./assets/JavaScript/error.js?v=20260920-hotkeys2"></script>
     <script src="./assets/JavaScript/notifications.js?v=20260922-clean-ui2"></script>
     <script src="./assets/JavaScript/statistics.js?v=20260922-focus1"></script>
     <script src="./assets/JavaScript/inventory.js?v=20260922-focus1"></script>
     <script src="./assets/JavaScript/main-menu.js?v=20260922-focus1"></script>
     <script src="./assets/JavaScript/dialog.js?v=20260922-focus1"></script>
-    <script src="./assets/JavaScript/pc-hud.js?v=20260921-pcshowfix1"></script>
+    <script src="./assets/JavaScript/pc-hud.js?v=20260927-speedo-separate1"></script>
+    <script src="./assets/JavaScript/speedometer.js?v=20260927-speedo-pos3"></script>
     <script src="./assets/JavaScript/admin-panel.js?v=20260925-adminpanel-2weeks-scroll"></script>
     <script src="./assets/JavaScript/tickets.js?v=20260922-focus1"></script>
-    <script src="./tests/in-game.js?v=20260922-hudtest1"></script>
-    <script src="./tests/visual-test.js?v=20260922-hudtest1"></script>
-    <script src="./tests/cases.js?v=20260922-hudtest1"></script>
+    <script src="./tests/in-game.js?v=20260927-speedo-separate1"></script>
+    <script src="./tests/visual-test.js?v=20260927-speedo3"></script>
+    <script src="./tests/cases.js?v=20260927-speedo3"></script>
 </body>
 </html>

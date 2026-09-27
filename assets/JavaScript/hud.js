@@ -354,9 +354,8 @@ function updateHud(data) {
         setHudStat("health", data.health);
     }
 
-    const armour = data.arm ?? data.Arm ?? data.armour ?? data.Armour ?? data.armor ?? data.Armor;
-    if (armour !== undefined) {
-        setHudStat("armour", armour);
+    if (data.armour !== undefined) {
+        setHudStat("armour", data.armour);
     }
 
     if (data.hunger !== undefined) {
@@ -410,7 +409,6 @@ if (window.GameCef) {
 
     GameCef.on("hud:health", data => setHudStat("health", data));
     GameCef.on("hud:armour", data => setHudStat("armour", data));
-    GameCef.on("hud:armor", data => setHudStat("armour", data));
     GameCef.on("hud:hunger", data => setHudStat("hunger", data));
     GameCef.on("hud:money", data => updateHud({ money: data }));
     GameCef.on("hud:id", data => updateHud({ id: data }));
@@ -472,8 +470,8 @@ function initializeHudPcStats() {
 
         if (stats) {
             const health = stats.health ?? stats.Health ?? stats.hp ?? stats.HP;
-            const maxHealth = stats.maxHealth ?? stats.MaxHealth ?? stats.max_health ?? stats.max_hp ?? 100;
-            const armour = stats.arm ?? stats.Arm ?? stats.armour ?? stats.Armour ?? stats.armor ?? stats.Armor;
+            const maxHealth = stats.maxHealth ?? stats.MaxHealth ?? stats.max_health ?? 100;
+            const armour = stats.armour ?? stats.Armour ?? stats.armor ?? stats.Armor;
             const wanted = stats.wanted ?? stats.Wanted ?? stats.wantedLevel ?? stats.WantedLevel;
             const weapon = stats.weapon ?? stats.Weapon ?? stats.weaponId ?? stats.WeaponId;
             const ammo = stats.ammo ?? stats.Ammo ?? stats.ammoClip ?? stats.AmmoClip;

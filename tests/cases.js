@@ -380,6 +380,20 @@
             updateHudMobileScale();
     });
 
+    Tests.register("speedometer", "Speedometer", function () {
+        if (window.Speedometer) {
+            Speedometer.Show({
+                speed: 97,
+                gear: 3,
+                fuel: 65,
+                fuelMax: 80,
+                lights: false,
+                doors: false,
+                engine: true
+            });
+        }
+    });
+
     Tests.register("notifications", "Notify", function () {
         if (typeof Notifications === "undefined") return;
         Notifications.Toast({ Id: "test-success", Type: "Success", Title: "Успіх", Text: "Дію успішно виконано.", Duration: 15000 });

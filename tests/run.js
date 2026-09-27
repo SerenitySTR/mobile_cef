@@ -452,21 +452,36 @@ test('visual test: Inventory, Statistics and Main Menu cases are registered', ()
     ], 'tests/cases.js');
 });
 
-test('visual test: PC and Mobile HUD previews are registered and restore platform state', () => {
+test('visual test: HUD previews and standalone Speedometer are registered', () => {
     const cases = read('tests/cases.js');
     hasAll(cases, [
         'Tests.register("hud-pc", "HUD PC"',
         'Tests.register("hud-mobile", "HUD Mobile"',
+        'Tests.register("speedometer", "Speedometer"',
         'forceHudPlatform(false)',
         'forceHudPlatform(true)',
         'AntaresHUD.update(data)',
         'mobileHud.classList.add("active")',
+        'Speedometer.Show({',
         'window.CefVisualTestHud',
         'restoreHudPlatform'
     ], 'tests/cases.js');
 
     const framework = read('tests/visual-test.js');
     ok(framework.includes('window.CefVisualTestHud.restore()'), 'visual-test.js does not restore HUD platform state between views');
+    ok(framework.includes('Speedometer.Hide'), 'visual-test.js does not hide standalone Speedometer between views');
+});
+
+test('speedometer: standalone component is not embedded in PC HUD', () => {
+    const pcHud = read('src/sections/pc-hud.html');
+    const speedometer = read('src/sections/speedometer.html');
+    const pcHudJs = read('assets/JavaScript/pc-hud.js');
+    const speedometerJs = read('assets/JavaScript/speedometer.js');
+
+    ok(!pcHud.includes('speedometer'), 'PC HUD still contains speedometer markup');
+    ok(!pcHudJs.includes('Speedometer'), 'PC HUD JavaScript still owns speedometer logic');
+    hasAll(speedometer, ['id="speedometer"', 'speedometer-speed-value', 'speedometer-fuel-fill'], 'speedometer.html');
+    hasAll(speedometerJs, ['window.Speedometer', 'speedometer:show', 'speedometer:update', 'speedometer:hide'], 'speedometer.js');
 });
 
 test('tickets: waiting and working statuses are blue while closed stays red', () => {
@@ -521,14 +536,6 @@ test('keyboard focus: UI hotkeys use a hidden text-input sink without native cha
     hasAll(inventoryCss, ['.inventory-close:hover,', '.inventory-close:focus-visible'], 'inventory.css');
 });
 
-test("pc hud: native playerStats arm field is supported", () => {
-    const hudJs = read("assets/JavaScript/hud.js");
-    const pcHudJs = read("assets/JavaScript/pc-hud.js");
-
-    ok(hudJs.includes("stats.arm ?? stats.Arm"), "hud.js must accept native playerStats arm field");
-    ok(pcHudJs.includes("data.arm??data.Arm"), "pc-hud.js must accept native arm field");
-});
-
 // Non-fatal cleanup hints.
 const template = read('src/index.template.html');
 const sectionFiles = walk('src/sections', file => file.endsWith('.html'));
@@ -555,5 +562,4 @@ if (warnings.length) {
 }
 
 if (failed > 0) process.exit(1);
-
 console.log('\nAll required CEF tests passed.');

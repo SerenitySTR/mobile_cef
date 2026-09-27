@@ -66,6 +66,9 @@ admin
 inventory
 statistics
 mainmenu
+hud-pc
+hud-mobile
+speedometer
 notifications
 reward
 achievement

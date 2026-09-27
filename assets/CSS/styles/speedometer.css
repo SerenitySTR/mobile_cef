@@ -1,0 +1,208 @@
+#speedometer {
+    --speedometer-scale: 1;
+    position: fixed;
+    inset: 0;
+    display: none;
+    pointer-events: none;
+    user-select: none;
+    z-index: 30;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+#speedometer.active {
+    display: block;
+}
+
+#speedometer * {
+    box-sizing: border-box;
+}
+
+.speedometer-wrap {
+    --speedometer-offset-x: 0px;
+    position: absolute;
+    bottom: 28px;
+    width: 382px;
+    transform: translateX(var(--speedometer-offset-x)) scale(var(--speedometer-scale));
+}
+
+#speedometer.speedometer-pc .speedometer-wrap {
+    left: auto;
+    right: 24px;
+    transform-origin: bottom right;
+}
+
+#speedometer.speedometer-mobile .speedometer-wrap {
+    left: 50%;
+    right: auto;
+    bottom: 24px;
+    --speedometer-offset-x: -50%;
+    transform-origin: bottom center;
+}
+
+.speedometer-main {
+    position: relative;
+    width: 382px;
+    height: 68px;
+    display: grid;
+    grid-template-columns: 148px 48px 1fr;
+    align-items: stretch;
+    gap: 10px;
+    padding: 10px 16px 10px 22px;
+    color: #f4f8fc;
+    background: linear-gradient(180deg, rgba(19, 36, 52, 0.97), rgba(31, 45, 59, 0.96));
+    border: 1px solid rgba(67, 101, 129, 0.38);
+    clip-path: polygon(8% 0, 100% 0, 95% 100%, 0 100%);
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.28);
+}
+
+.speedometer-main::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.04), transparent);
+    pointer-events: none;
+}
+
+.speedometer-speed,
+.speedometer-gear-block,
+.speedometer-fuel-block {
+    position: relative;
+    z-index: 1;
+}
+
+.speedometer-speed {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding-left: 4px;
+}
+
+.speedometer-speed-value {
+    font-size: 52px;
+    line-height: 0.9;
+    font-weight: 800;
+    letter-spacing: -0.04em;
+}
+
+.speedometer-speed-unit {
+    margin-top: 18px;
+    color: rgba(222, 234, 245, 0.72);
+    font-size: 16px;
+    font-weight: 600;
+    text-transform: lowercase;
+}
+
+.speedometer-gear-block {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(180deg, rgba(29, 49, 69, 0.95), rgba(38, 58, 79, 0.9));
+}
+
+.speedometer-gear {
+    color: #70c1ff;
+    font-size: 32px;
+    font-weight: 800;
+    text-shadow: 0 0 12px rgba(41, 153, 255, 0.28);
+}
+
+.speedometer-fuel-block {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 10px;
+    padding-right: 4px;
+}
+
+.speedometer-fuel-top {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: rgba(242, 247, 251, 0.92);
+    font-size: 15px;
+    font-weight: 600;
+}
+
+.speedometer-fuel-top b {
+    font-size: 18px;
+}
+
+.speedometer-fuel-icon {
+    width: 16px;
+    height: 16px;
+    fill: #eef6ff;
+    opacity: 0.94;
+}
+
+.speedometer-fuel-bar {
+    height: 6px;
+    overflow: hidden;
+    border-radius: 999px;
+    background: rgba(8, 15, 23, 0.72);
+}
+
+.speedometer-fuel-bar span {
+    display: block;
+    width: 0;
+    height: 100%;
+    border-radius: inherit;
+    background: linear-gradient(90deg, #19b9ff, #51d6ff);
+    box-shadow: 0 0 12px rgba(45, 176, 255, 0.55);
+    transition: width 0.18s ease;
+}
+
+.speedometer-indicators {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 42px;
+    width: 100%;
+    margin-top: 10px;
+    padding-inline: 28px;
+    filter: drop-shadow(0 6px 16px rgba(0, 0, 0, 0.26));
+}
+
+.speedometer-indicator {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    color: rgba(255, 255, 255, 0.72);
+    opacity: 0.55;
+}
+
+.speedometer-indicator svg {
+    width: 100%;
+    height: 100%;
+    fill: currentColor;
+}
+
+.speedometer-indicator.active {
+    color: #ffffff;
+    opacity: 1;
+    filter: drop-shadow(0 0 6px rgba(255, 255, 255, 0.42));
+}
+
+.speedometer-indicator-danger {
+    color: rgba(255, 80, 89, 0.45);
+}
+
+.speedometer-indicator-danger.active {
+    color: #ff5059;
+    opacity: 1;
+    filter: drop-shadow(0 0 7px rgba(255, 70, 82, 0.65));
+}
+
+@media (max-width: 1600px), (max-height: 900px) {
+    #speedometer.speedometer-pc .speedometer-wrap {
+        right: 18px;
+        bottom: 24px;
+    }
+}
+
+@media (max-width: 900px), (max-height: 520px) {
+    #speedometer.speedometer-mobile .speedometer-wrap {
+        bottom: 18px;
+    }
+}
