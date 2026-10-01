@@ -21,6 +21,55 @@
         </header>
 
         <div class="inventory-content">
+            <aside class="inventory-equipment">
+                <div class="inventory-section-head">
+                    <div>
+                        <span>ЕКІПІРУВАННЯ</span>
+                        <p>6 слотів персонажа.</p>
+                    </div>
+                </div>
+
+                <div class="equipment-stage">
+                    <img
+                        class="equipment-character"
+                        id="equipment-character"
+                        src="./assets/CSS/Images/Inventory/equipment-character-default-transparent.webp"
+                        alt=""
+                        draggable="false"
+                    >
+
+                    <button class="equipment-slot equipment-slot-head" type="button" data-equipment-slot="Head">
+                        <span class="equipment-slot-image"></span>
+                        <span class="equipment-slot-name">Голова</span>
+                    </button>
+
+                    <button class="equipment-slot equipment-slot-face" type="button" data-equipment-slot="Face">
+                        <span class="equipment-slot-image"></span>
+                        <span class="equipment-slot-name">Обличчя</span>
+                    </button>
+
+                    <button class="equipment-slot equipment-slot-hand" type="button" data-equipment-slot="Hand">
+                        <span class="equipment-slot-image"></span>
+                        <span class="equipment-slot-name">Рука</span>
+                    </button>
+
+                    <button class="equipment-slot equipment-slot-back" type="button" data-equipment-slot="Back">
+                        <span class="equipment-slot-image"></span>
+                        <span class="equipment-slot-name">Спина</span>
+                    </button>
+
+                    <button class="equipment-slot equipment-slot-body" type="button" data-equipment-slot="Body">
+                        <span class="equipment-slot-image"></span>
+                        <span class="equipment-slot-name">Тіло</span>
+                    </button>
+
+                    <button class="equipment-slot equipment-slot-shoulder" type="button" data-equipment-slot="ShoulderMount">
+                        <span class="equipment-slot-image"></span>
+                        <span class="equipment-slot-name">Плече</span>
+                    </button>
+                </div>
+            </aside>
+
             <main class="inventory-items">
                 <div class="inventory-section-head">
                     <div>
@@ -54,16 +103,18 @@
                 <div class="inventory-details-info">
                     <span class="inventory-details-label">ОБРАНИЙ ПРЕДМЕТ</span>
                     <h2 id="inventory-details-title">Оберіть предмет</h2>
-                    <p id="inventory-details-description">Оберіть предмет ліворуч, щоб побачити детальну інформацію.</p>
+                    <span class="inventory-details-type" id="inventory-details-type"></span>
+                    <p id="inventory-details-description">Оберіть предмет або слот екіпірування, щоб побачити детальну інформацію.</p>
                 </div>
 
+                <div class="inventory-params-title">ВЛАСТИВОСТІ</div>
                 <div class="inventory-params" id="inventory-params"></div>
 
                 <button class="inventory-use" id="inventory-use" type="button" disabled>
                     <svg viewBox="0 0 24 24" aria-hidden="true">
                         <path d="m9 6 9 6-9 6V6Z"></path>
                     </svg>
-                    Використати
+                    <span id="inventory-use-text">Використати</span>
                 </button>
             </aside>
         </div>

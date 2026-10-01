@@ -227,21 +227,180 @@
     });
 
     Tests.register("inventory", "Inventory", function () {
-        Tests.receive("inventory:show", {
+        var inventoryData = {
+            CharacterImage: "./assets/CSS/Images/Inventory/equipment-character-default-transparent.webp",
             Items: [
                 {
-                    Id: 1,
+                    Index: 0,
                     ItemId: 1,
                     Title: "Яблуко",
-                    Count: 3,
+                    Count: 5,
                     Image: "apple.webp",
-                    Description: "Свіже яблуко. Трохи відновлює голод персонажа.",
+                    Type: "Consumable",
+                    Description: "Свіже яблуко. Трохи втамовує голод.",
                     Params: [
-                        { Recovery: 2, Value: 10 }
+                        { Recovery: "Hunger", Value: 10 }
                     ]
+                },
+                {
+                    Index: 1,
+                    ItemId: 2,
+                    Title: "Поживне яблуко",
+                    Count: 2,
+                    Image: "apple.webp",
+                    Type: "Consumable",
+                    Description: "Поживніше яблуко з невеликим відновленням здоров'я.",
+                    Params: [
+                        { Recovery: "Hunger", Value: 25 },
+                        { Recovery: "Health", Value: 5 }
+                    ]
+                },
+                {
+                    Index: 2,
+                    ItemId: 30,
+                    Title: "Тактичні окуляри",
+                    Count: 1,
+                    Image: "./assets/CSS/Images/Hud/Weapons/nightvision.webp",
+                    Type: "Equipment",
+                    Slot: "Face",
+                    Description: "Приклад предмета, який можна одягнути на обличчя.",
+                    Params: [
+                        { Buff: "Stamina", Value: 2 }
+                    ]
+                },
+                {
+                    Index: 3,
+                    ItemId: 31,
+                    Title: "Похідний рюкзак",
+                    Count: 1,
+                    Image: "./assets/CSS/Images/Hud/Weapons/parachute.webp",
+                    Type: "Equipment",
+                    Slot: "Back",
+                    Description: "Приклад предмета для слота спини.",
+                    Params: [
+                        { Buff: "Stamina", Value: 5 }
+                    ]
+                },
+                {
+                    Index: 4,
+                    ItemId: 32,
+                    Title: "Бронежилет",
+                    Count: 1,
+                    Image: "./assets/CSS/Images/MainMenu/inventory.webp",
+                    Type: "Equipment",
+                    Slot: "Body",
+                    Description: "Захисний предмет для слота тіла.",
+                    Params: [
+                        { Recovery: "Armor", Value: 20 },
+                        { Buff: "Stamina", Value: 3 }
+                    ]
+                },
+                {
+                    Index: 5,
+                    ItemId: 40,
+                    Title: "Звичайний предмет",
+                    Count: 3,
+                    Image: "./assets/CSS/Images/MainMenu/question.webp",
+                    Type: "Misc",
+                    Description: "Предмет без активної дії.",
+                    Params: []
+                }
+            ],
+            Equipment: [
+                {
+                    Slot: "Head",
+                    Item: {
+                        ItemId: 101,
+                        Title: "Кепка Antares",
+                        Image: "./assets/CSS/Images/MainMenu/settings.webp",
+                        Type: "Equipment",
+                        Slot: "Head",
+                        Description: "Головний убір персонажа.",
+                        Params: [
+                            { Buff: "Stamina", Value: 1 }
+                        ]
+                    }
+                },
+                {
+                    Slot: "Face",
+                    Item: {
+                        ItemId: 102,
+                        Title: "Темні окуляри",
+                        Image: "./assets/CSS/Images/Hud/Weapons/nightvision.webp",
+                        Type: "Equipment",
+                        Slot: "Face",
+                        Description: "Аксесуар для обличчя.",
+                        Params: []
+                    }
+                },
+                {
+                    Slot: "Hand",
+                    Item: {
+                        ItemId: 103,
+                        Title: "Браслет",
+                        Image: "./assets/CSS/Images/Hud/Weapons/flowers.webp",
+                        Type: "Equipment",
+                        Slot: "Hand",
+                        Description: "Аксесуар для руки.",
+                        Params: [
+                            { Buff: "Stamina", Value: 2 }
+                        ]
+                    }
+                },
+                {
+                    Slot: "Back",
+                    Item: {
+                        ItemId: 104,
+                        Title: "Рюкзак",
+                        Image: "./assets/CSS/Images/Hud/Weapons/parachute.webp",
+                        Type: "Equipment",
+                        Slot: "Back",
+                        Description: "Предмет, закріплений на спині.",
+                        Params: [
+                            { Buff: "Stamina", Value: 5 }
+                        ]
+                    }
+                },
+                {
+                    Slot: "Body",
+                    Item: {
+                        ItemId: 105,
+                        Title: "Захисний жилет",
+                        Image: "./assets/CSS/Images/MainMenu/inventory.webp",
+                        Type: "Equipment",
+                        Slot: "Body",
+                        Description: "Екіпірування для тіла.",
+                        Params: [
+                            { Recovery: "Armor", Value: 25 }
+                        ]
+                    }
+                },
+                {
+                    Slot: "ShoulderMount",
+                    Item: {
+                        ItemId: 106,
+                        Title: "Камера на плечі",
+                        Image: "./assets/CSS/Images/Hud/Weapons/camera.webp",
+                        Type: "Equipment",
+                        Slot: "ShoulderMount",
+                        Description: "Маунт, закріплений на плечі персонажа.",
+                        Params: []
+                    }
                 }
             ]
-        });
+        };
+
+        Tests.receive("inventory:set", inventoryData);
+        Tests.receive("inventory:show", {});
+
+        // Local-test fallback: production still uses the normal CEF events above.
+        setTimeout(function () {
+            if (typeof Inventory === "undefined" || (Inventory.items && Inventory.items.length))
+                return;
+
+            Inventory.SetData(inventoryData);
+            Inventory.Show();
+        }, 0);
     });
 
     Tests.register("statistics", "Statistics", function () {
