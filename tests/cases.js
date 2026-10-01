@@ -227,85 +227,21 @@
     });
 
     Tests.register("inventory", "Inventory", function () {
-        var burger = {
-            Id: 1,
-            Title: "Бургер",
-            Category: "food",
-            Icon: "food",
-            Count: 3,
-            Weight: 0.4,
-            Description: "Ситний бургер. Відновлює голод персонажа.",
-            Effects: [
-                { Title: "Голод", Value: "+25" }
-            ],
-            CanUse: true
-        };
-
-        var water = {
-            Id: 2,
-            Title: "Вода",
-            Category: "drink",
-            Icon: "drink",
-            Count: 5,
-            Weight: 0.5,
-            Description: "Пляшка чистої води.",
-            Effects: [
-                { Title: "Спрага", Value: "+30" }
-            ],
-            CanUse: true
-        };
-
-        var medkit = {
-            Id: 3,
-            Title: "Аптечка",
-            Category: "medicine",
-            Icon: "medicine",
-            Count: 2,
-            Weight: 0.8,
-            Description: "Медичний набір для відновлення здоров'я.",
-            Effects: [
-                { Title: "Здоров'я", Value: "+50" }
-            ],
-            CanUse: true
-        };
-
-        var phone = {
-            Id: 4,
-            Title: "Телефон",
-            Category: "other",
-            Icon: "phone",
-            Count: 1,
-            Weight: 0.2,
-            Description: "Особистий мобільний телефон.",
-            CanUse: true
-        };
-
-        var materials = {
-            Id: 5,
-            Title: "Матеріали",
-            Category: "materials",
-            Icon: "tool",
-            Count: 24,
-            Weight: 2.4,
-            Description: "Набір матеріалів для робіт та крафту.",
-            CanUse: false
-        };
-
         Tests.receive("inventory:show", {
-            Items: [burger, water, medkit, phone, materials],
-            Equipment: {
-                backpack: { Title: "Міський рюкзак", Icon: "backpack" },
-                body: { Title: "Одяг", Icon: "clothes" },
-                feet: { Title: "Кросівки", Icon: "shoes" }
-            },
-            QuickSlots: [burger, water, medkit, null, phone],
-            Weight: 12.7,
-            MaxWeight: 50
+            Items: [
+                {
+                    Id: 1,
+                    ItemId: 1,
+                    Title: "Яблуко",
+                    Count: 3,
+                    Image: "apple.webp",
+                    Description: "Свіже яблуко. Трохи відновлює голод персонажа.",
+                    Params: [
+                        { Recovery: 2, Value: 10 }
+                    ]
+                }
+            ]
         });
-
-        setTimeout(function () {
-            if (typeof Inventory !== "undefined") Inventory.SelectItem(1);
-        }, 20);
     });
 
     Tests.register("statistics", "Statistics", function () {
