@@ -277,7 +277,7 @@ var Inventory={
 
         GameCef.sendJson("inventory:use",{
             Index:this.selectedIndex,
-            ItemId:itemId
+            ItemId:itemId,
         });
     },
 
