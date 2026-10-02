@@ -1220,9 +1220,3 @@
     max-width: 100%;
     overscroll-behavior: contain;
 }
-
-.admin-ticket-page-state {
-    flex-shrink: 0;
-    padding: 10px 6px;
-    font-size: 12px;
-}
