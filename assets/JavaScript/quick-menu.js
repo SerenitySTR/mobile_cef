@@ -242,14 +242,10 @@ var QuickMenu = {
     },
 
     Close: function (notifyServer) {
-        var menuId = this.state.menuId;
-        this.Hide();
-
-        if (notifyServer !== false && window.GameCef) {
-            GameCef.sendJson("quick-menu:close", {
-                MenuId: menuId
-            });
-        }
+        this.Hide(function () {
+            if (notifyServer !== false && window.GameCef)
+                GameCef.send("quick-menu:close", "");
+        });
     }
 };
 
@@ -258,7 +254,7 @@ GameCef.on("quick-menu:update", function (data) { QuickMenu.Apply(data); });
 GameCef.on("quick-menu:hide", function () { QuickMenu.Hide(); });
 
 document.addEventListener("keydown", function (event) {
-    if (event.key !== "Escape")
+    if (event.defaultPrevented || event.isComposing || event.keyCode === 229 || event.repeat || event.key !== "Escape")
         return;
 
     QuickMenu.Init();
@@ -266,5 +262,6 @@ document.addEventListener("keydown", function (event) {
         return;
 
     event.preventDefault();
+    event.stopImmediatePropagation();
     QuickMenu.Close(true);
-});
+}, true);
