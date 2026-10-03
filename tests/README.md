@@ -66,6 +66,8 @@ admin
 inventory
 statistics
 mainmenu
+quick-menu
+quick-menu-many
 hud-pc
 hud-mobile
 speedometer

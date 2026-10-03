@@ -31,10 +31,11 @@
         if (typeof AdminPanel !== "undefined" && AdminPanel.Hide) AdminPanel.Hide();
         if (typeof Notifications !== "undefined" && Notifications.Clear) Notifications.Clear();
         if (typeof Speedometer !== "undefined" && Speedometer.Hide) Speedometer.Hide();
+        if (typeof QuickMenu !== "undefined" && QuickMenu.Hide) QuickMenu.Hide();
 
         [
             "authorization", "registration", "spawn-selection", "error-screen",
-            "statistics", "inventory", "main-menu", "tickets", "admin-panel", "speedometer"
+            "statistics", "inventory", "main-menu", "quick-menu", "tickets", "admin-panel", "speedometer"
         ].forEach(function (id) { hideById(id); });
 
         document.querySelectorAll("[data-cef-test-surface]").forEach(function (element) {

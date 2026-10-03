@@ -122,6 +122,41 @@
         Tests.receive("spawn:show", { SelectedSpawn: 0 });
     });
 
+    Tests.register("quick-menu", "Quick Menu / Vehicle", function () {
+        Tests.receive("quick-menu:show", {
+            MenuId: "vehicle",
+            CloseOnSelect: false,
+            Items: [
+                { Id: 1, Text: "Двигун", Icon: "engine", Status: "Увімкнено", Active: true },
+                { Id: 2, Text: "Фари", Icon: "lights", Status: "Увімкнено", Active: true },
+                { Id: 3, Text: "Багажник", Icon: "trunk", Status: "Закрито", Active: false },
+                { Id: 4, Text: "Двері", Icon: "doors", Status: "Закрито", Active: false }
+            ]
+        });
+    });
+
+    Tests.register("quick-menu-many", "Quick Menu / Many", function () {
+        var items = [];
+        var icons = ["engine", "lights", "trunk", "doors", "lock", "key", "car", "repair", "fuel", "settings"];
+
+        for (var i = 1; i <= 20; i++) {
+            items.push({
+                Id: i,
+                Text: "Тестова дія " + i,
+                Icon: icons[(i - 1) % icons.length],
+                Status: i % 3 === 0 ? "Активно" : "",
+                Active: i % 3 === 0,
+                Visible: i <= 12
+            });
+        }
+
+        Tests.receive("quick-menu:show", {
+            MenuId: "test-many",
+            CloseOnSelect: false,
+            Items: items
+        });
+    });
+
     Tests.register("dialog", "Dialog", function () {
         Tests.receive("dialog:show", {
             DialogId: 9001,

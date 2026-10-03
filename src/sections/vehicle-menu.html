@@ -1,0 +1,63 @@
+<section id="vehicle-menu" aria-hidden="true" tabindex="-1">
+    <div class="vehicle-quick-menu" role="dialog" aria-label="Керування транспортом">
+        <button class="vehicle-quick-action quick-engine" type="button" data-vehicle-action="engine">
+            <span class="vehicle-quick-icon" aria-hidden="true">
+                <svg viewBox="0 0 32 32">
+                    <path d="M8 12h15l3 3v8h-4l-2.5 3H11l-2-3H5v-8h3v-3ZM12 12V8h7v4M4 12v8M27 14h2v7h-2"></path>
+                </svg>
+            </span>
+            <span class="vehicle-quick-copy">
+                <strong>Двигун</strong>
+                <small data-vehicle-state="engine">Вимкнено</small>
+            </span>
+        </button>
+
+        <button class="vehicle-quick-action quick-lights" type="button" data-vehicle-action="lights">
+            <span class="vehicle-quick-icon" aria-hidden="true">
+                <svg viewBox="0 0 32 32">
+                    <path d="M15 8.5c-4.5.2-7.2 3-7.2 7.5s2.7 7.3 7.2 7.5v-15Z"></path>
+                    <path d="M19 10.5h9M19 16h10M19 21.5h9"></path>
+                </svg>
+            </span>
+            <span class="vehicle-quick-copy">
+                <strong>Фари</strong>
+                <small data-vehicle-state="lights">Вимкнено</small>
+            </span>
+        </button>
+
+        <button class="vehicle-quick-action quick-trunk" type="button" data-vehicle-action="trunk">
+            <span class="vehicle-quick-icon" aria-hidden="true">
+                <svg viewBox="0 0 32 32">
+                    <path d="M6 15h20v9H6z"></path>
+                    <path d="M9 15v-4h14v4M6 19h20M10 13l2-4h8l2 4"></path>
+                </svg>
+            </span>
+            <span class="vehicle-quick-copy">
+                <strong>Багажник</strong>
+                <small data-vehicle-state="trunk">Закрито</small>
+            </span>
+        </button>
+
+        <button class="vehicle-quick-action quick-doors" type="button" data-vehicle-action="doors">
+            <span class="vehicle-quick-icon" aria-hidden="true">
+                <svg viewBox="0 0 32 32">
+                    <path d="M8.5 26V8.5c0-1.4 1-2.5 2.4-2.7L23.5 4v22H8.5Z"></path>
+                    <path d="M8.5 26h17M18.5 15.5h2"></path>
+                </svg>
+            </span>
+            <span class="vehicle-quick-copy">
+                <strong>Двері</strong>
+                <small data-vehicle-state="doors">Закрито</small>
+            </span>
+        </button>
+
+        <button class="vehicle-quick-close" id="vehicle-menu-close" type="button" aria-label="Закрити">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M5 5l14 14"></path>
+                <path d="M19 5 5 19"></path>
+            </svg>
+        </button>
+
+        <div class="vehicle-quick-hint">ESC — закрити</div>
+    </div>
+</section>

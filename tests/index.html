@@ -14,8 +14,9 @@
     <link rel="stylesheet" href="./assets/CSS/styles/hud-platform.css">
     <link rel="stylesheet" href="./assets/CSS/styles/notifications.css?v=20260922-clean-ui2">
     <link rel="stylesheet" href="./assets/CSS/styles/statistics.css?v=20260922-layoutfix1">
-    <link rel="stylesheet" href="./assets/CSS/styles/inventory.css?v=20261002-equipment1">
+    <link rel="stylesheet" href="./assets/CSS/styles/inventory.css?v=20261002-responsive1">
     <link rel="stylesheet" href="./assets/CSS/styles/main-menu.css">
+    <link rel="stylesheet" href="./assets/CSS/styles/quick-menu.css?v=20261003-quick1">
     <link rel="stylesheet" href="./assets/CSS/styles/dialog.css">
     <link rel="stylesheet" href="./assets/CSS/styles/pc-hud.css?v=20260927-speedo-separate1">
     <link rel="stylesheet" href="./assets/CSS/styles/speedometer.css?v=20260927-speedo-rajdhani-speed1">
@@ -743,6 +744,22 @@
     </div>
 </section>
 
+    <section id="quick-menu" aria-hidden="true" tabindex="-1">
+    <div class="quick-menu-shell" role="dialog" aria-label="Швидке меню">
+        <div class="quick-menu-list quick-menu-list-left" id="quick-menu-left"></div>
+
+        <button class="quick-menu-close" id="quick-menu-close" type="button" aria-label="Закрити">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M5 5l14 14"></path>
+                <path d="M19 5 5 19"></path>
+            </svg>
+        </button>
+
+        <div class="quick-menu-list quick-menu-list-right" id="quick-menu-right"></div>
+        <div class="quick-menu-hint">ESC — закрити</div>
+    </div>
+</section>
+
     <section id="dialog-screen">
     <div class="dialog-window" id="dialog-window">
         <header class="dialog-header">
@@ -863,6 +880,7 @@
     <script src="./assets/JavaScript/statistics.js?v=20260922-focus1"></script>
     <script src="./assets/JavaScript/inventory.js?v=20261002-equipment1"></script>
     <script src="./assets/JavaScript/main-menu.js?v=20260922-focus1"></script>
+    <script src="./assets/JavaScript/quick-menu.js?v=20261003-quick1"></script>
     <script src="./assets/JavaScript/dialog.js?v=20260922-focus1"></script>
     <script src="./assets/JavaScript/pc-hud.js?v=20260927-speedo-separate1"></script>
     <script src="./assets/JavaScript/speedometer.js?v=20260927-engine-aliases1"></script>

@@ -1,0 +1,285 @@
+#vehicle-menu {
+    position: fixed;
+    inset: 0;
+    z-index: 1450;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    font-family: "Montserrat", sans-serif;
+    opacity: 0;
+    background: rgba(5, 7, 12, 0.20);
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    transition: opacity 0.16s ease, background 0.16s ease;
+}
+
+#vehicle-menu.active { display: flex; }
+#vehicle-menu.opened { opacity: 1; }
+#vehicle-menu.closing { opacity: 0; }
+
+.vehicle-quick-menu {
+    position: relative;
+    width: 560px;
+    height: 330px;
+    opacity: 0;
+    transform: scale(0.94);
+    transition: opacity 0.18s ease, transform 0.22s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+#vehicle-menu.opened .vehicle-quick-menu {
+    opacity: 1;
+    transform: scale(1);
+}
+
+#vehicle-menu.closing .vehicle-quick-menu {
+    opacity: 0;
+    transform: scale(0.97);
+}
+
+.vehicle-quick-action {
+    position: absolute;
+    width: 220px;
+    height: 52px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 0 15px;
+    box-sizing: border-box;
+    border: 1px solid rgba(255,255,255,0.035);
+    border-radius: 28px;
+    outline: none;
+    background: rgba(18, 21, 28, 0.80);
+    box-shadow:
+        0 12px 28px rgba(0,0,0,0.28),
+        inset 0 1px 0 rgba(255,255,255,0.028);
+    color: rgba(245,247,251,0.96);
+    font-family: "Montserrat", sans-serif;
+    cursor: pointer;
+    transition: transform 0.13s ease, background 0.13s ease, border-color 0.13s ease, box-shadow 0.13s ease;
+}
+
+.vehicle-quick-action:hover {
+    transform: translateY(-1px) scale(1.015);
+    background: rgba(25, 29, 38, 0.90);
+    border-color: rgba(255,255,255,0.075);
+    box-shadow:
+        0 15px 34px rgba(0,0,0,0.34),
+        inset 0 1px 0 rgba(255,255,255,0.045);
+}
+
+.vehicle-quick-action:active {
+    transform: scale(0.985);
+}
+
+.quick-engine { left: 18px; top: 78px; }
+.quick-lights { right: 18px; top: 78px; }
+.quick-trunk { left: 18px; bottom: 78px; }
+.quick-doors { right: 18px; bottom: 78px; }
+
+.vehicle-quick-icon {
+    width: 27px;
+    height: 27px;
+    flex: 0 0 27px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.vehicle-quick-icon svg {
+    width: 22px;
+    height: 22px;
+    fill: none;
+    stroke: rgba(232,236,243,0.94);
+    stroke-width: 1.8;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    transition: stroke 0.13s ease, filter 0.13s ease;
+}
+
+.vehicle-quick-copy {
+    min-width: 0;
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.vehicle-quick-copy strong {
+    overflow: hidden;
+    color: rgba(242,244,248,0.96);
+    font-size: 15px;
+    font-weight: 600;
+    line-height: 1;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.vehicle-quick-copy small {
+    margin-left: auto;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    color: rgba(240,91,99,0.86);
+    font-size: 8px;
+    font-weight: 700;
+    line-height: 1;
+    white-space: nowrap;
+    opacity: 0.88;
+}
+
+.vehicle-quick-copy small::before {
+    content: "";
+    width: 6px;
+    height: 6px;
+    flex: 0 0 6px;
+    border-radius: 50%;
+    background: #f14c55;
+    box-shadow: 0 0 8px rgba(241,76,85,0.28);
+}
+
+.vehicle-quick-action.enabled .vehicle-quick-icon svg {
+    stroke: #78dfa0;
+    filter: drop-shadow(0 0 5px rgba(77,217,130,0.18));
+}
+
+.vehicle-quick-action.enabled .vehicle-quick-copy small {
+    color: #6fdc98;
+}
+
+.vehicle-quick-action.enabled .vehicle-quick-copy small::before {
+    background: #4ddd82;
+    box-shadow: 0 0 8px rgba(77,221,130,0.28);
+}
+
+.vehicle-quick-close {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 50px;
+    height: 50px;
+    transform: translate(-50%, -50%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    border: 1px solid rgba(255,255,255,0.05);
+    border-radius: 50%;
+    background: rgba(18, 21, 28, 0.78);
+    box-shadow:
+        0 11px 26px rgba(0,0,0,0.30),
+        inset 0 1px 0 rgba(255,255,255,0.035);
+    cursor: pointer;
+    transition: transform 0.13s ease, background 0.13s ease, border-color 0.13s ease;
+}
+
+.vehicle-quick-close:hover {
+    transform: translate(-50%, -50%) scale(1.06);
+    background: rgba(29, 33, 43, 0.92);
+    border-color: rgba(255,255,255,0.10);
+}
+
+.vehicle-quick-close:active {
+    transform: translate(-50%, -50%) scale(0.94);
+}
+
+.vehicle-quick-close svg {
+    width: 24px;
+    height: 24px;
+    fill: none;
+    stroke: rgba(235,238,244,0.90);
+    stroke-width: 1.6;
+    stroke-linecap: round;
+}
+
+.vehicle-quick-hint {
+    position: absolute;
+    left: 50%;
+    bottom: 10px;
+    transform: translateX(-50%);
+    color: rgba(226,231,239,0.34);
+    font-size: 8px;
+    font-weight: 500;
+    white-space: nowrap;
+    pointer-events: none;
+}
+
+@media (max-width: 900px), (max-height: 620px) {
+    #vehicle-menu {
+        backdrop-filter: blur(4px);
+        -webkit-backdrop-filter: blur(4px);
+    }
+
+    .vehicle-quick-menu {
+        width: 440px;
+        height: 250px;
+    }
+
+    .vehicle-quick-action {
+        width: 172px;
+        height: 42px;
+        gap: 9px;
+        padding: 0 12px;
+        border-radius: 23px;
+    }
+
+    .quick-engine { left: 14px; top: 58px; }
+    .quick-lights { right: 14px; top: 58px; }
+    .quick-trunk { left: 14px; bottom: 58px; }
+    .quick-doors { right: 14px; bottom: 58px; }
+
+    .vehicle-quick-icon {
+        width: 22px;
+        height: 22px;
+        flex-basis: 22px;
+    }
+
+    .vehicle-quick-icon svg {
+        width: 18px;
+        height: 18px;
+    }
+
+    .vehicle-quick-copy {
+        gap: 5px;
+    }
+
+    .vehicle-quick-copy strong {
+        font-size: 11px;
+    }
+
+    .vehicle-quick-copy small {
+        gap: 4px;
+        font-size: 6px;
+    }
+
+    .vehicle-quick-copy small::before {
+        width: 5px;
+        height: 5px;
+        flex-basis: 5px;
+    }
+
+    .vehicle-quick-close {
+        width: 42px;
+        height: 42px;
+    }
+
+    .vehicle-quick-close svg {
+        width: 20px;
+        height: 20px;
+    }
+
+    .vehicle-quick-hint {
+        bottom: 5px;
+        font-size: 6px;
+    }
+}
+
+@media (max-height: 430px) {
+    .vehicle-quick-menu { transform: scale(0.90); }
+    #vehicle-menu.opened .vehicle-quick-menu { transform: scale(0.92); }
+}
+
+.vehicle-menu-test-buttons,
+.vehicle-menu-test-button {
+    display: none !important;
+}

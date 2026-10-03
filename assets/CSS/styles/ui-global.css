@@ -30,6 +30,7 @@ body *::-webkit-scrollbar {
 #tickets:focus,
 #inventory:focus,
 #statistics:focus,
-#main-menu:focus {
+#main-menu:focus,
+#vehicle-menu:focus {
     outline: none;
 }

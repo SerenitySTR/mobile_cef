@@ -98,7 +98,14 @@ var AdminPanel = {
         return v>=60?Math.floor(v/60)+" год "+v%60+" хв":v+" хв";
     },
     Mine: function(r) {
-        return r.status!=="closed" && String(r.adminId)===String(this.state.profile.id) && this.state.profile.id!==null;
+        if(r.status==="closed" || r.adminId==null) return false;
+
+        var adminId=String(r.adminId);
+        var accountId=this.state.profile.id;
+        var playerId=this.state.profile.playerId;
+
+        return (accountId!==null && accountId!==undefined && adminId===String(accountId)) ||
+               (playerId!==null && playerId!==undefined && adminId===String(playerId));
     },
     Ticket: function() {
         var self=this;
