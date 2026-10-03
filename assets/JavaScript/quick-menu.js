@@ -8,6 +8,9 @@ var QuickMenu = {
         items: []
     },
 
+    hideTimer: null,
+    ignoreShowUntil: 0,
+
     icons: {
         engine: '<svg viewBox="0 0 32 32" aria-hidden="true"><path d="M8 12h15l3 3v8h-4l-2.5 3H11l-2-3H5v-8h3v-3ZM12 12V8h7v4M4 12v8M27 14h2v7h-2"></path></svg>',
         lights: '<svg viewBox="0 0 32 32" aria-hidden="true"><path d="M15 8.5c-4.5.2-7.2 3-7.2 7.5s2.7 7.3 7.2 7.5v-15Z"></path><path d="M19 10.5h9M19 16h10M19 21.5h9"></path></svg>',
@@ -204,6 +207,16 @@ var QuickMenu = {
         if (!this.screen)
             return;
 
+        // A native hotkey/server handler may echo quick-menu:show immediately
+        // after the player closes the menu. Ignore that short rebound window.
+        if (Date.now() < this.ignoreShowUntil)
+            return;
+
+        if (this.hideTimer) {
+            clearTimeout(this.hideTimer);
+            this.hideTimer = null;
+        }
+
         this.Apply(data);
         this.screen.classList.remove("closing");
         this.screen.classList.add("active");
@@ -230,7 +243,12 @@ var QuickMenu = {
         this.screen.classList.remove("opened");
         this.screen.classList.add("closing");
 
-        setTimeout(function () {
+        if (this.hideTimer)
+            clearTimeout(this.hideTimer);
+
+        this.hideTimer = setTimeout(function () {
+            QuickMenu.hideTimer = null;
+
             if (QuickMenu.screen) {
                 QuickMenu.screen.classList.remove("active", "closing");
                 QuickMenu.screen.setAttribute("aria-hidden", "true");
@@ -242,6 +260,10 @@ var QuickMenu = {
     },
 
     Close: function (notifyServer) {
+        // Prevent the same native input / immediate server echo from reopening
+        // the menu right after the local close.
+        this.ignoreShowUntil = Date.now() + 700;
+
         this.Hide(function () {
             if (notifyServer !== false && window.GameCef)
                 GameCef.send("quick-menu:close", "");
