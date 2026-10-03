@@ -111,7 +111,7 @@ cef-test:error
 
 While the in-game visual test is active, normal outbound UI actions are blocked inside the browser. Clicking test Login, Spawn, Dialog, Tickets or AdminPanel controls will therefore **not** send real `authorization:*`, `spawn:*`, `dialog:*`, `ticket:*`, `admin:*`, etc. actions to the server.
 
-Only `cef-test:*` / `test:*` control events are allowed through while the test is active.
+Only `cef-test:*` / `test:*` control events and the safe `quick-menu:close` focus-release event are allowed through while the test is active.
 
 ### Focus
 

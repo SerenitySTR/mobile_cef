@@ -196,13 +196,91 @@ test('events: core frontend/server event contracts still exist', () => {
         'dialog.js': ['dialog:show', 'dialog:hide', 'dialog:response'],
         'notifications.js': ['notification:show', 'notification:toast', 'notification:banner', 'notification:reward', 'notification:achievement', 'notification:bottom', 'notification:hide', 'notification:clear'],
         'tickets.js': ['ticket:show', 'ticket:hide', 'ticket:update', 'ticket:create', 'ticket:message', 'ticket:close', 'ticket:close-ui'],
-        'admin-panel.js': ['admin:show', 'admin:hide', 'admin:update', 'admin:ticket:open', 'admin:ticket:claim', 'admin:ticket:release', 'admin:ticket:close', 'admin:ticket:message', 'admin:ticket:transfer'],
-        'vehicle-menu.js': ['vehicle-menu:show', 'vehicle-menu:update', 'vehicle-menu:hide', 'vehicle-menu:toggle', 'vehicle-menu:close']
+        'admin-panel.js': ['admin:show', 'admin:hide', 'admin:update', 'admin:ticket:open', 'admin:ticket:claim', 'admin:ticket:release', 'admin:ticket:close', 'admin:ticket:message', 'admin:ticket:transfer']
     };
 
     for (const [file, events] of Object.entries(expected)) {
         hasAll(read(`assets/JavaScript/${file}`), events, file);
     }
+});
+
+test('quick-menu: close lifecycle emits exactly one close and server hide never echoes it', () => {
+    const emitted = [];
+    const received = {};
+    const documentListeners = {};
+    const classes = new Set(['active', 'opened']);
+    const screen = {
+        classList: {
+            add: (...names) => names.forEach(name => classes.add(name)),
+            remove: (...names) => names.forEach(name => classes.delete(name)),
+            contains: name => classes.has(name)
+        },
+        setAttribute: () => {}
+    };
+
+    const context = {
+        console,
+        window: {},
+        document: {
+            getElementById: () => null,
+            addEventListener: (type, callback, capture) => {
+                documentListeners[type] = { callback, capture };
+            }
+        },
+        GameCef: {
+            on: (eventName, callback) => { received[eventName] = callback; },
+            send: (eventName, data) => emitted.push({ eventName, data }),
+            sendJson: (eventName, data) => emitted.push({ eventName, data })
+        }
+    };
+    context.window.window = context.window;
+    context.window.GameCef = context.GameCef;
+    vm.createContext(context);
+    vm.runInContext(read('assets/JavaScript/quick-menu.js'), context, { filename: 'quick-menu.js' });
+
+    const QuickMenu = context.QuickMenu;
+    QuickMenu.screen = screen;
+    QuickMenu.Init = () => {};
+
+    QuickMenu.Close(true);
+    equal(emitted.length, 1, 'Close button path must emit exactly one event');
+    equal(emitted[0].eventName, 'quick-menu:close', 'Close button emitted the wrong event');
+    equal(emitted[0].data, '', 'quick-menu:close must have an empty payload');
+    ok(!classes.has('active'), 'Close did not hide the menu synchronously');
+
+    emitted.length = 0;
+    classes.add('active');
+    classes.add('opened');
+    received['quick-menu:hide']('');
+    equal(emitted.length, 0, 'Server quick-menu:hide echoed an outbound event');
+    ok(!classes.has('active'), 'Server quick-menu:hide did not hide the menu');
+
+    emitted.length = 0;
+    classes.add('active');
+    classes.add('opened');
+    QuickMenu.state.menuId = 'vehicle';
+    QuickMenu.Select({ id: 7, disabled: false, closeOnSelect: true });
+    equal(emitted.length, 2, 'CloseOnSelect must emit select and close events');
+    equal(emitted[0].eventName, 'quick-menu:select', 'CloseOnSelect did not emit select first');
+    equal(emitted[1].eventName, 'quick-menu:close', 'CloseOnSelect did not release focus through close event');
+    equal(emitted[1].data, '', 'CloseOnSelect close event must have an empty payload');
+
+    emitted.length = 0;
+    classes.add('active');
+    classes.add('opened');
+    const escapeEvent = {
+        key: 'Escape',
+        defaultPrevented: false,
+        isComposing: false,
+        keyCode: 27,
+        repeat: false,
+        preventDefault() { this.defaultPrevented = true; },
+        stopImmediatePropagation() {}
+    };
+    ok(documentListeners.keydown && documentListeners.keydown.capture === true, 'Quick Menu Escape handler must run in capture phase');
+    documentListeners.keydown.callback(escapeEvent);
+    equal(emitted.length, 1, 'Escape must emit exactly one close event');
+    equal(emitted[0].eventName, 'quick-menu:close', 'Escape emitted the wrong event');
 });
 
 test('admin-panel: legacy and chunked ticket sync protocols are both supported', () => {
@@ -427,7 +505,8 @@ test('in-game visual test: lazy bridge and control events are wired into product
         './tests/visual-test.css',
         './tests/visual-test.js',
         './tests/cases.js',
-        'blocked outgoing event'
+        'blocked outgoing event',
+        'name === "quick-menu:close"'
     ], 'tests/in-game.js');
 
     ok(source.includes('active && !isTestControlEvent(eventName)'), 'In-game test does not guard real outbound UI events');
