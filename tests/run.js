@@ -196,12 +196,133 @@ test('events: core frontend/server event contracts still exist', () => {
         'dialog.js': ['dialog:show', 'dialog:hide', 'dialog:response'],
         'notifications.js': ['notification:show', 'notification:toast', 'notification:banner', 'notification:reward', 'notification:achievement', 'notification:bottom', 'notification:hide', 'notification:clear'],
         'tickets.js': ['ticket:show', 'ticket:hide', 'ticket:update', 'ticket:create', 'ticket:message', 'ticket:close', 'ticket:close-ui'],
+        'hud.js': ['hud:show', 'hud:hide', 'hud:update'],
         'admin-panel.js': ['admin:show', 'admin:hide', 'admin:update', 'admin:ticket:open', 'admin:ticket:claim', 'admin:ticket:release', 'admin:ticket:close', 'admin:ticket:message', 'admin:ticket:transfer']
     };
 
     for (const [file, events] of Object.entries(expected)) {
         hasAll(read(`assets/JavaScript/${file}`), events, file);
     }
+});
+
+test('hud: show/hide controls both PC and mobile roots', () => {
+    const received = {};
+    const elements = new Map();
+
+    function makeClassList(initial = []) {
+        const values = new Set(initial);
+        return {
+            add: (...names) => names.forEach(name => values.add(name)),
+            remove: (...names) => names.forEach(name => values.delete(name)),
+            toggle: (name, force) => {
+                if (force === undefined) {
+                    if (values.has(name)) values.delete(name);
+                    else values.add(name);
+                    return values.has(name);
+                }
+                if (force) values.add(name);
+                else values.delete(name);
+                return force;
+            },
+            contains: name => values.has(name)
+        };
+    }
+
+    function makeStyle() {
+        const values = new Map();
+        return {
+            setProperty: (name, value) => values.set(name, String(value)),
+            removeProperty: name => values.delete(name),
+            getPropertyValue: name => values.get(name) || ''
+        };
+    }
+
+    function makeElement(id) {
+        if (elements.has(id)) return elements.get(id);
+        const element = {
+            id,
+            classList: makeClassList(),
+            style: makeStyle(),
+            attributes: {},
+            textContent: '',
+            innerHTML: '',
+            src: '',
+            setAttribute(name, value) { this.attributes[name] = String(value); },
+            getAttribute(name) { return this.attributes[name]; },
+            querySelectorAll: () => [],
+            appendChild: () => {},
+            closest: () => ({ style: makeStyle() })
+        };
+        elements.set(id, element);
+        return element;
+    }
+
+    const body = { classList: makeClassList() };
+    const document = {
+        body,
+        documentElement: { clientWidth: 1920, clientHeight: 1080 },
+        getElementById: id => makeElement(id),
+        createElementNS: () => ({
+            classList: makeClassList(),
+            setAttribute: () => {},
+            innerHTML: ''
+        })
+    };
+
+    const windowObject = {
+        innerWidth: 1920,
+        innerHeight: 1080,
+        devicePixelRatio: 1,
+        location: { search: '' },
+        addEventListener: () => {}
+    };
+
+    const context = {
+        console,
+        document,
+        window: windowObject,
+        navigator: { userAgent: 'Desktop', maxTouchPoints: 0, platform: 'Win32' },
+        screen: { width: 1920, height: 1080 },
+        location: windowObject.location,
+        URLSearchParams,
+        requestAnimationFrame: callback => callback(),
+        setInterval: () => 1,
+        clearInterval: () => {},
+        setTimeout: () => 1,
+        GameCef: { on: (name, callback) => { received[name] = callback; } },
+        Loading: { Transition: (root, callback) => callback() }
+    };
+    windowObject.window = windowObject;
+    windowObject.GameCef = context.GameCef;
+    vm.createContext(context);
+    vm.runInContext(read('assets/JavaScript/hud.js'), context, { filename: 'hud.js' });
+
+    const mobileHud = makeElement('hud');
+    const pcHud = makeElement('pc-hud');
+    const corner = makeElement('hud-corner-info');
+
+    windowObject.hudMobilePlatform = false;
+    received['hud:show']('');
+    ok(pcHud.classList.contains('active'), 'hud:show did not show PC HUD');
+    ok(!mobileHud.classList.contains('active'), 'hud:show showed mobile HUD in PC mode');
+
+    received['hud:hide']('');
+    ok(!pcHud.classList.contains('active'), 'hud:hide did not remove PC HUD active state');
+    ok(!mobileHud.classList.contains('active'), 'hud:hide did not remove mobile HUD active state');
+    equal(pcHud.style.getPropertyValue('display'), 'none', 'hud:hide did not hard-hide PC HUD');
+    equal(mobileHud.style.getPropertyValue('display'), 'none', 'hud:hide did not hard-hide mobile HUD');
+    equal(corner.style.getPropertyValue('display'), 'none', 'hud:hide did not hard-hide HUD corner info');
+    ok(body.classList.contains('hud-force-hidden'), 'hud:hide did not set the hard-hide body state');
+
+    windowObject.hudMobilePlatform = true;
+    received['hud:show']('');
+    ok(mobileHud.classList.contains('active'), 'hud:show did not show mobile HUD');
+    ok(!pcHud.classList.contains('active'), 'hud:show left PC HUD active in mobile mode');
+    equal(mobileHud.style.getPropertyValue('display'), '', 'hud:show did not clear mobile hard-hide style');
+
+    received['hud:hide']('');
+    ok(!mobileHud.classList.contains('active'), 'second hud:hide did not hide mobile HUD');
+    ok(context.window.AntaresHudVisibility.hidden, 'HUD visibility state did not stay hidden');
 });
 
 test('quick-menu: close lifecycle emits exactly one close and server hide never echoes it', () => {
@@ -540,8 +661,8 @@ test('visual test: HUD previews and standalone Speedometer are registered', () =
         'Tests.register("speedometer", "Speedometer"',
         'forceHudPlatform(false)',
         'forceHudPlatform(true)',
-        'AntaresHUD.update(data)',
-        'mobileHud.classList.add("active")',
+        'Tests.receive("hud:show", "")',
+        'Tests.receive("hud:update", hudTestData())',
         'Speedometer.Show({',
         'window.CefVisualTestHud',
         'restoreHudPlatform'

@@ -42,6 +42,23 @@
     }
 
     var originalHudMobilePlatform = document.body.classList.contains("hud-platform-mobile") || !!window.hudMobilePlatform;
+    var originalHudForceHidden = document.body.classList.contains("hud-force-hidden");
+
+    function clearHudHardHideForPreview() {
+        document.body.classList.remove("hud-force-hidden");
+
+        ["hud", "hud-corner-info", "pc-hud"].forEach(function (id) {
+            var root = document.getElementById(id);
+            if (!root || !root.style) return;
+            root.style.removeProperty("display");
+            root.style.removeProperty("visibility");
+            root.style.removeProperty("opacity");
+            root.style.removeProperty("pointer-events");
+        });
+
+        if (window.AntaresHudVisibility)
+            window.AntaresHudVisibility.hidden = false;
+    }
 
     function hudTestData() {
         return {
@@ -72,6 +89,7 @@
     }
 
     function forceHudPlatform(mobile) {
+        clearHudHardHideForPreview();
         document.body.classList.remove("hud-platform-pc", "hud-platform-mobile");
         document.body.classList.add(mobile ? "hud-platform-mobile" : "hud-platform-pc");
         window.hudMobilePlatform = !!mobile;
@@ -83,6 +101,13 @@
         document.body.classList.remove("hud-platform-pc", "hud-platform-mobile");
         document.body.classList.add(originalHudMobilePlatform ? "hud-platform-mobile" : "hud-platform-pc");
         window.hudMobilePlatform = originalHudMobilePlatform;
+
+        clearHudHardHideForPreview();
+        if (originalHudForceHidden) {
+            document.body.classList.add("hud-force-hidden");
+            if (window.AntaresHudVisibility)
+                window.AntaresHudVisibility.hidden = true;
+        }
 
         if (typeof updateHudMobileScale === "function")
             updateHudMobileScale();
@@ -374,27 +399,15 @@
     });
 
     Tests.register("hud-pc", "HUD PC", function () {
-        var data = hudTestData();
         forceHudPlatform(false);
-
-        if (window.AntaresHUD) {
-            AntaresHUD.update(data);
-            AntaresHUD.show();
-        }
+        Tests.receive("hud:update", hudTestData());
+        Tests.receive("hud:show", "");
     });
 
     Tests.register("hud-mobile", "HUD Mobile", function () {
-        var data = hudTestData();
         forceHudPlatform(true);
-
-        if (window.AntaresHUD)
-            AntaresHUD.hide();
-
-        if (typeof updateHud === "function")
-            updateHud(data);
-
-        var mobileHud = document.getElementById("hud");
-        if (mobileHud) mobileHud.classList.add("active");
+        Tests.receive("hud:update", hudTestData());
+        Tests.receive("hud:show", "");
 
         if (typeof updateHudMobileScale === "function")
             updateHudMobileScale();

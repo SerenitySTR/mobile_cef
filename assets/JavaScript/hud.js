@@ -12,14 +12,26 @@ function isMobileHudPlatform() {
         (viewportShortSide > 0 && viewportShortSide <= 720 && devicePixelRatio > 1);
 }
 
-const hudMobilePlatform = isMobileHudPlatform();
-window.hudMobilePlatform = hudMobilePlatform;
-document.body.classList.add(hudMobilePlatform ? "hud-platform-mobile" : "hud-platform-pc");
+const detectedHudMobilePlatform = isMobileHudPlatform();
+window.hudMobilePlatform = detectedHudMobilePlatform;
+document.body.classList.add(detectedHudMobilePlatform ? "hud-platform-mobile" : "hud-platform-pc");
+
+function isHudMobileMode() {
+    return typeof window.hudMobilePlatform === "boolean"
+        ? window.hudMobilePlatform
+        : detectedHudMobilePlatform;
+}
+
+const hudVisibilityState = {
+    hidden: false
+};
+
+window.AntaresHudVisibility = hudVisibilityState;
 
 const pcHudPendingCalls = [];
 
 function sendPcHud(action, data) {
-    if (hudMobilePlatform)
+    if (isHudMobileMode())
         return;
 
     const api = window.AntaresHUD;
@@ -44,7 +56,7 @@ function sendPcHud(action, data) {
 }
 
 window.flushPcHudPendingCalls = function () {
-    if (hudMobilePlatform || !window.AntaresHUD)
+    if (isHudMobileMode() || !window.AntaresHUD)
         return;
 
     while (pcHudPendingCalls.length > 0) {
@@ -248,14 +260,41 @@ function setHudRootState(root, visible) {
     root.setAttribute("aria-hidden", visible ? "false" : "true");
 }
 
+function setHudRootHardHidden(root, hidden) {
+    if (!root)
+        return;
+
+    if (hidden) {
+        root.style.setProperty("display", "none", "important");
+        root.style.setProperty("visibility", "hidden", "important");
+        root.style.setProperty("opacity", "0", "important");
+        root.style.setProperty("pointer-events", "none", "important");
+        return;
+    }
+
+    root.style.removeProperty("display");
+    root.style.removeProperty("visibility");
+    root.style.removeProperty("opacity");
+    root.style.removeProperty("pointer-events");
+}
+
+function applyHudHardHidden(hidden) {
+    const pcHud = document.getElementById("pc-hud");
+    const cornerInfo = document.getElementById("hud-corner-info");
+
+    document.body.classList.toggle("hud-force-hidden", hidden);
+    setHudRootHardHidden(hud, hidden);
+    setHudRootHardHidden(pcHud, hidden);
+    setHudRootHardHidden(cornerInfo, hidden);
+}
+
 function showHud() {
-    // hud:show always clears the hard hide first. Only the HUD that belongs
-    // to the current platform is then enabled.
-    document.body.classList.remove("hud-force-hidden");
+    hudVisibilityState.hidden = false;
+    applyHudHardHidden(false);
 
     const pcHud = document.getElementById("pc-hud");
 
-    if (!hudMobilePlatform) {
+    if (!isHudMobileMode()) {
         setHudRootState(hud, false);
         setHudRootState(pcHud, true);
         return;
@@ -263,22 +302,32 @@ function showHud() {
 
     setHudRootState(pcHud, false);
 
-    Loading.Transition(hud, () => {
+    if (typeof Loading !== "undefined" && Loading && typeof Loading.Transition === "function") {
+        Loading.Transition(hud, () => {
+            if (!hudVisibilityState.hidden)
+                setHudRootState(hud, true);
+        });
+        return;
+    }
+
+    if (!hudVisibilityState.hidden)
         setHudRootState(hud, true);
-    });
 }
 
 function hideHud() {
-    // Do not rely on platform detection here. A hide request means ALL HUD
-    // roots must disappear immediately, regardless of PC/mobile detection.
-    document.body.classList.add("hud-force-hidden");
+    hudVisibilityState.hidden = true;
 
+    // Hide both roots directly, not only the platform selected at startup.
     setHudRootState(hud, false);
     setHudRootState(document.getElementById("pc-hud"), false);
 
     const cornerInfo = document.getElementById("hud-corner-info");
     if (cornerInfo)
         cornerInfo.setAttribute("aria-hidden", "true");
+
+    // Inline !important is intentional here: the repository has many later
+    // HUD CSS overrides, so hud:hide must win regardless of stylesheet order.
+    applyHudHardHidden(true);
 }
 
 function setHudStat(name, value) {
