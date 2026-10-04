@@ -13,18 +13,16 @@ function isMobileHudPlatform() {
 }
 
 window.hudMobilePlatform = isMobileHudPlatform();
-window.__hudVisible = false;
+window.__hudVisible = window.__hudVisible ?? null;
 
-function getHudMobilePlatform() {
-    return typeof window.hudMobilePlatform === "boolean"
-        ? window.hudMobilePlatform
-        : isMobileHudPlatform();
+function isCurrentHudMobilePlatform() {
+    return window.hudMobilePlatform === true;
 }
 
 function syncHudPlatformClass() {
-    const mobile = getHudMobilePlatform();
-    document.body.classList.remove("hud-platform-pc", "hud-platform-mobile", "hud-force-hidden");
-    document.body.classList.add(mobile ? "hud-platform-mobile" : "hud-platform-pc");
+    const mobile = isCurrentHudMobilePlatform();
+    document.body.classList.toggle("hud-platform-mobile", mobile);
+    document.body.classList.toggle("hud-platform-pc", !mobile);
     return mobile;
 }
 
@@ -33,10 +31,7 @@ syncHudPlatformClass();
 const pcHudPendingCalls = [];
 
 function sendPcHud(action, data) {
-    if (getHudMobilePlatform())
-        return;
-
-    if (action === "show" && window.__hudVisible !== true)
+    if (isCurrentHudMobilePlatform())
         return;
 
     const api = window.AntaresHUD;
@@ -61,7 +56,7 @@ function sendPcHud(action, data) {
 }
 
 window.flushPcHudPendingCalls = function () {
-    if (getHudMobilePlatform() || !window.AntaresHUD)
+    if (isCurrentHudMobilePlatform() || !window.AntaresHUD)
         return;
 
     while (pcHudPendingCalls.length > 0) {
@@ -263,45 +258,99 @@ function setHudRootState(root, visible) {
 
     root.classList.toggle("active", visible);
     root.setAttribute("aria-hidden", visible ? "false" : "true");
+
+    if (visible) {
+        root.style.removeProperty("display");
+        root.style.removeProperty("opacity");
+        root.style.removeProperty("visibility");
+        root.style.removeProperty("pointer-events");
+        return;
+    }
+
+    root.style.setProperty("display", "none", "important");
+    root.style.setProperty("opacity", "0", "important");
+    root.style.setProperty("visibility", "hidden", "important");
+    root.style.setProperty("pointer-events", "none", "important");
+}
+
+function setHudCornerState(visible) {
+    const cornerInfo = document.getElementById("hud-corner-info");
+    if (!cornerInfo)
+        return;
+
+    cornerInfo.setAttribute("aria-hidden", visible ? "false" : "true");
+
+    if (visible) {
+        cornerInfo.style.removeProperty("display");
+        cornerInfo.style.removeProperty("opacity");
+        cornerInfo.style.removeProperty("visibility");
+        return;
+    }
+
+    cornerInfo.style.setProperty("display", "none", "important");
+    cornerInfo.style.setProperty("opacity", "0", "important");
+    cornerInfo.style.setProperty("visibility", "hidden", "important");
 }
 
 function showHud() {
     window.__hudVisible = true;
     const mobile = syncHudPlatformClass();
     const pcHud = document.getElementById("pc-hud");
-    const cornerInfo = document.getElementById("hud-corner-info");
 
-    if (mobile) {
-        setHudRootState(pcHud, false);
-        setHudRootState(hud, true);
-        if (cornerInfo)
-            cornerInfo.setAttribute("aria-hidden", "false");
+    document.body.classList.remove("hud-hidden");
+
+    if (!mobile) {
+        setHudRootState(hud, false);
+        setHudCornerState(false);
+        setHudRootState(pcHud, true);
         return;
     }
 
-    setHudRootState(hud, false);
-    if (cornerInfo)
-        cornerInfo.setAttribute("aria-hidden", "true");
-
-    setHudRootState(pcHud, true);
-    sendPcHud("show");
+    setHudRootState(pcHud, false);
+    setHudRootState(hud, true);
+    setHudCornerState(true);
+    updateHudMobileScale();
 }
 
 function hideHud() {
-    // hud:hide has one responsibility: both HUD implementations must be hidden.
-    // No platform checks, transitions, timers or outgoing CEF events.
     window.__hudVisible = false;
-    document.body.classList.remove("hud-force-hidden");
+    document.body.classList.add("hud-hidden");
 
+    // hud:hide always means every HUD implementation must disappear.
+    // Do not depend on platform detection or on the current active class.
     setHudRootState(hud, false);
     setHudRootState(document.getElementById("pc-hud"), false);
+    setHudCornerState(false);
+}
 
-    const cornerInfo = document.getElementById("hud-corner-info");
-    if (cornerInfo)
-        cornerInfo.setAttribute("aria-hidden", "true");
+// Bind visibility events both through the common wrapper and directly to the
+// native CEF bridge. The direct binding makes hud:show/hud:hide independent
+// from wrapper synchronization timing while keeping GameCef.receive usable in tests.
+let hudNativeBridge = null;
+function bindHudNativeVisibilityEvents() {
+    const bridge = window.cef;
+    if (!bridge || typeof bridge.on !== "function")
+        return false;
 
-    if (window.AntaresHUD && typeof window.AntaresHUD.hide === "function")
-        window.AntaresHUD.hide();
+    if (hudNativeBridge === bridge)
+        return true;
+
+    hudNativeBridge = bridge;
+    bridge.on("hud:show", showHud);
+    bridge.on("hud:hide", hideHud);
+    return true;
+}
+
+function startHudVisibilityBridgeBinding() {
+    if (bindHudNativeVisibilityEvents())
+        return;
+
+    const timer = setInterval(() => {
+        if (bindHudNativeVisibilityEvents())
+            clearInterval(timer);
+    }, 50);
+
+    setTimeout(() => clearInterval(timer), 15000);
 }
 
 function setHudStat(name, value) {
@@ -471,6 +520,8 @@ if (window.GameCef) {
         } catch {}
     });
 }
+
+startHudVisibilityBridgeBinding();
 
 let hudPcStatsInitialized = false;
 

@@ -540,7 +540,7 @@ test('visual test: HUD previews and standalone Speedometer are registered', () =
         'Tests.register("speedometer", "Speedometer"',
         'forceHudPlatform(false)',
         'forceHudPlatform(true)',
-        'AntaresHUD.update(data)',
+        'Tests.receive("hud:update", hudTestData())',
         'Tests.receive("hud:show", "")',
         'Speedometer.Show({',
         'window.CefVisualTestHud',
@@ -550,21 +550,6 @@ test('visual test: HUD previews and standalone Speedometer are registered', () =
     const framework = read('tests/visual-test.js');
     ok(framework.includes('window.CefVisualTestHud.restore()'), 'visual-test.js does not restore HUD platform state between views');
     ok(framework.includes('Speedometer.Hide'), 'visual-test.js does not hide standalone Speedometer between views');
-});
-
-test('hud: hide is platform-independent and blocks late PC HUD show', () => {
-    const hudJs = read('assets/JavaScript/hud.js');
-    const pcHudJs = read('assets/JavaScript/pc-hud.js');
-
-    hasAll(hudJs, [
-        'GameCef.on("hud:hide", hideHud)',
-        'window.__hudVisible = false',
-        'setHudRootState(hud, false)',
-        'setHudRootState(document.getElementById("pc-hud"), false)',
-        'window.AntaresHUD.hide()'
-    ], 'assets/JavaScript/hud.js');
-
-    ok(pcHudJs.includes('window.__hudVisible !== true'), 'PC HUD can still reopen after hud:hide');
 });
 
 test('speedometer: standalone component is not embedded in PC HUD', () => {

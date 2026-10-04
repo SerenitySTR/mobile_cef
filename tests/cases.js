@@ -61,20 +61,26 @@
     }
 
     function hideHudPreviews() {
-        if (window.GameCef && typeof GameCef.receive === "function")
-            GameCef.receive("hud:hide", "");
+        var mobileHud = document.getElementById("hud");
+        var pcHud = document.getElementById("pc-hud");
+
+        if (mobileHud) mobileHud.classList.remove("active");
+        if (pcHud) {
+            pcHud.classList.remove("active");
+            pcHud.setAttribute("aria-hidden", "true");
+        }
     }
 
     function forceHudPlatform(mobile) {
-        hideHudPreviews();
-        window.hudMobilePlatform = !!mobile;
-        document.body.classList.remove("hud-platform-pc", "hud-platform-mobile", "hud-force-hidden");
+        document.body.classList.remove("hud-platform-pc", "hud-platform-mobile");
         document.body.classList.add(mobile ? "hud-platform-mobile" : "hud-platform-pc");
+        window.hudMobilePlatform = !!mobile;
+        hideHudPreviews();
     }
 
     function restoreHudPlatform() {
         hideHudPreviews();
-        document.body.classList.remove("hud-platform-pc", "hud-platform-mobile", "hud-force-hidden");
+        document.body.classList.remove("hud-platform-pc", "hud-platform-mobile");
         document.body.classList.add(originalHudMobilePlatform ? "hud-platform-mobile" : "hud-platform-pc");
         window.hudMobilePlatform = originalHudMobilePlatform;
 
@@ -368,11 +374,8 @@
     });
 
     Tests.register("hud-pc", "HUD PC", function () {
-        var data = hudTestData();
         forceHudPlatform(false);
-        Tests.receive("hud:update", data);
-        if (window.AntaresHUD)
-            AntaresHUD.update(data);
+        Tests.receive("hud:update", hudTestData());
         Tests.receive("hud:show", "");
     });
 
@@ -380,9 +383,6 @@
         forceHudPlatform(true);
         Tests.receive("hud:update", hudTestData());
         Tests.receive("hud:show", "");
-
-        if (typeof updateHudMobileScale === "function")
-            updateHudMobileScale();
     });
 
     Tests.register("speedometer", "Speedometer", function () {
