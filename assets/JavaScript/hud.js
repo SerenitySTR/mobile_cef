@@ -242,22 +242,54 @@ function updateHudWeapon(data) {
 
 function showHud() {
     if (!hudMobilePlatform) {
+        // Keep the mobile HUD definitely hidden when the PC HUD is selected.
+        hud.classList.remove("active");
+        hud.setAttribute("aria-hidden", "true");
         sendPcHud("show");
         return;
     }
 
+    // Keep the PC HUD definitely hidden when the mobile HUD is selected.
+    const pcHud = document.getElementById("pc-hud");
+    if (window.AntaresHUD && typeof window.AntaresHUD.hide === "function")
+        window.AntaresHUD.hide();
+    else if (pcHud) {
+        pcHud.classList.remove("active");
+        pcHud.setAttribute("aria-hidden", "true");
+    }
+
     Loading.Transition(hud, () => {
         hud.classList.add("active");
+        hud.setAttribute("aria-hidden", "false");
     });
 }
 
 function hideHud() {
-    if (!hudMobilePlatform) {
-        sendPcHud("hide");
-        return;
+    // hud:hide is intentionally platform-independent. If platform detection is
+    // wrong or both HUD roots were made visible by another code path, hide both.
+    hud.classList.remove("active");
+    hud.setAttribute("aria-hidden", "true");
+
+    const pcHud = document.getElementById("pc-hud");
+
+    // Remove queued PC show/hide commands so an old queued show cannot make the
+    // HUD appear again after pc-hud.js finishes loading.
+    for (let i = pcHudPendingCalls.length - 1; i >= 0; i--) {
+        if (pcHudPendingCalls[i][0] === "show" || pcHudPendingCalls[i][0] === "hide")
+            pcHudPendingCalls.splice(i, 1);
     }
 
-    hud.classList.remove("active");
+    if (window.AntaresHUD && typeof window.AntaresHUD.hide === "function") {
+        window.AntaresHUD.hide();
+    } else {
+        if (pcHud) {
+            pcHud.classList.remove("active");
+            pcHud.setAttribute("aria-hidden", "true");
+        }
+
+        if (!hudMobilePlatform)
+            pcHudPendingCalls.push(["hide", undefined]);
+    }
 }
 
 function setHudStat(name, value) {
