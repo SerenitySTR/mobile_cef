@@ -169,16 +169,27 @@
     filter: drop-shadow(0 0 5px rgba(77,217,130,0.18));
 }
 
-.quick-menu-item.active .quick-menu-status {
+
+.quick-menu-item.no-status .quick-menu-status { display: none; }
+
+.quick-menu-item.status-positive .quick-menu-status {
     color: #6fdc98;
 }
 
-.quick-menu-item.active .quick-menu-status::before {
+.quick-menu-item.status-positive .quick-menu-status::before {
     background: #4ddd82;
     box-shadow: 0 0 8px rgba(77,221,130,0.30);
 }
 
-.quick-menu-item.no-status .quick-menu-status { display: none; }
+.quick-menu-item.status-negative .quick-menu-status {
+    color: rgba(241,94,103,0.88);
+}
+
+.quick-menu-item.status-negative .quick-menu-status::before {
+    background: #f14c55;
+    box-shadow: 0 0 8px rgba(241,76,85,0.30);
+}
+
 
 .quick-menu-close {
     position: absolute;

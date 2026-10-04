@@ -69,6 +69,49 @@ var QuickMenu = {
         return data[lower];
     },
 
+    AutoStatus: function (icon, active) {
+        switch (String(icon || "").toLowerCase()) {
+            case "engine":
+                return active ? "Заглушити двигун" : "Завести двигун";
+            case "lights":
+                return active ? "Вимкнути фари" : "Увімкнути фари";
+            case "doors":
+                return active ? "Закрити двері" : "Відкрити двері";
+            case "trunk":
+                return active ? "Закрити багажник" : "Відкрити багажник";
+            default:
+                return "";
+        }
+    },
+
+    DetectStatusTone: function (text) {
+        var value = String(text || "").trim().toLowerCase();
+        if (!value)
+            return "neutral";
+
+        var positive = [
+            "завести", "увімкнути", "включити", "відкрити", "відчинити",
+            "открыть", "включить", "завести двигатель", "разблокировать"
+        ];
+
+        var negative = [
+            "заглушити", "вимкнути", "выключить", "закрити", "закрыть",
+            "зачинити", "погасити", "заглушить"
+        ];
+
+        for (var i = 0; i < positive.length; i++) {
+            if (value.indexOf(positive[i]) !== -1)
+                return "positive";
+        }
+
+        for (var j = 0; j < negative.length; j++) {
+            if (value.indexOf(negative[j]) !== -1)
+                return "negative";
+        }
+
+        return "neutral";
+    },
+
     NormalizeItem: function (raw, index) {
         raw = raw || {};
 
@@ -81,12 +124,17 @@ var QuickMenu = {
         var visible = this.Get(raw, "Visible", "visible");
         var closeOnSelect = this.Get(raw, "CloseOnSelect", "closeOnSelect");
 
+        var normalizedIcon = icon !== undefined ? String(icon).toLowerCase() : "dots";
+        var isActive = active === true;
+        var normalizedStatus = status !== undefined && status !== null ? String(status) : this.AutoStatus(normalizedIcon, isActive);
+
         return {
             id: id !== undefined ? id : index,
             text: text !== undefined ? String(text) : "Дія " + (index + 1),
-            icon: icon !== undefined ? String(icon).toLowerCase() : "dots",
-            status: status !== undefined && status !== null ? String(status) : "",
-            active: active === true,
+            icon: normalizedIcon,
+            status: normalizedStatus,
+            statusTone: this.DetectStatusTone(normalizedStatus),
+            active: isActive,
             disabled: disabled === true,
             visible: visible !== false,
             closeOnSelect: closeOnSelect
@@ -156,6 +204,10 @@ var QuickMenu = {
             button.classList.add("disabled");
         if (!item.status)
             button.classList.add("no-status");
+        if (item.statusTone === "positive")
+            button.classList.add("status-positive");
+        else if (item.statusTone === "negative")
+            button.classList.add("status-negative");
 
         var icon = document.createElement("span");
         icon.className = "quick-menu-icon";
