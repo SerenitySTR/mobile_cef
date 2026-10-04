@@ -240,56 +240,45 @@ function updateHudWeapon(data) {
     hudAmmoTotal.textContent = "/" + ammoTotal;
 }
 
+function setHudRootState(root, visible) {
+    if (!root)
+        return;
+
+    root.classList.toggle("active", visible);
+    root.setAttribute("aria-hidden", visible ? "false" : "true");
+}
+
 function showHud() {
+    // hud:show always clears the hard hide first. Only the HUD that belongs
+    // to the current platform is then enabled.
+    document.body.classList.remove("hud-force-hidden");
+
+    const pcHud = document.getElementById("pc-hud");
+
     if (!hudMobilePlatform) {
-        // Keep the mobile HUD definitely hidden when the PC HUD is selected.
-        hud.classList.remove("active");
-        hud.setAttribute("aria-hidden", "true");
-        sendPcHud("show");
+        setHudRootState(hud, false);
+        setHudRootState(pcHud, true);
         return;
     }
 
-    // Keep the PC HUD definitely hidden when the mobile HUD is selected.
-    const pcHud = document.getElementById("pc-hud");
-    if (window.AntaresHUD && typeof window.AntaresHUD.hide === "function")
-        window.AntaresHUD.hide();
-    else if (pcHud) {
-        pcHud.classList.remove("active");
-        pcHud.setAttribute("aria-hidden", "true");
-    }
+    setHudRootState(pcHud, false);
 
     Loading.Transition(hud, () => {
-        hud.classList.add("active");
-        hud.setAttribute("aria-hidden", "false");
+        setHudRootState(hud, true);
     });
 }
 
 function hideHud() {
-    // hud:hide is intentionally platform-independent. If platform detection is
-    // wrong or both HUD roots were made visible by another code path, hide both.
-    hud.classList.remove("active");
-    hud.setAttribute("aria-hidden", "true");
+    // Do not rely on platform detection here. A hide request means ALL HUD
+    // roots must disappear immediately, regardless of PC/mobile detection.
+    document.body.classList.add("hud-force-hidden");
 
-    const pcHud = document.getElementById("pc-hud");
+    setHudRootState(hud, false);
+    setHudRootState(document.getElementById("pc-hud"), false);
 
-    // Remove queued PC show/hide commands so an old queued show cannot make the
-    // HUD appear again after pc-hud.js finishes loading.
-    for (let i = pcHudPendingCalls.length - 1; i >= 0; i--) {
-        if (pcHudPendingCalls[i][0] === "show" || pcHudPendingCalls[i][0] === "hide")
-            pcHudPendingCalls.splice(i, 1);
-    }
-
-    if (window.AntaresHUD && typeof window.AntaresHUD.hide === "function") {
-        window.AntaresHUD.hide();
-    } else {
-        if (pcHud) {
-            pcHud.classList.remove("active");
-            pcHud.setAttribute("aria-hidden", "true");
-        }
-
-        if (!hudMobilePlatform)
-            pcHudPendingCalls.push(["hide", undefined]);
-    }
+    const cornerInfo = document.getElementById("hud-corner-info");
+    if (cornerInfo)
+        cornerInfo.setAttribute("aria-hidden", "true");
 }
 
 function setHudStat(name, value) {

@@ -6,3 +6,14 @@ body.hud-platform-pc #hud-corner-info {
 body.hud-platform-mobile #pc-hud {
   display: none !important;
 }
+
+/* Hard HUD visibility switch used by hud:hide.
+   It intentionally overrides both platform-specific HUDs. */
+body.hud-force-hidden #hud,
+body.hud-force-hidden #hud-corner-info,
+body.hud-force-hidden #pc-hud {
+  display: none !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+}
