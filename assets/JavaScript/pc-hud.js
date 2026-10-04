@@ -34,13 +34,7 @@
     setAmmo(clip,total);
   }
   function updateHud(data){ if(!data)return; const hp=data.health??data.Health??data.hp??data.HP; const armor=data.armour??data.Armour??data.armor??data.Armor; const hunger=data.hunger??data.Hunger; const money=data.money??data.Money; const wanted=data.wanted??data.Wanted??data.wantedLevel??data.WantedLevel; const weapon=data.weapon??data.Weapon??data.weaponId??data.WeaponId; if(hp!==undefined)setStat('hp',hp); if(armor!==undefined)setStat('armor',armor); if(hunger!==undefined)setStat('hunger',hunger); if(money!==undefined)setMoney(money); if(wanted!==undefined)renderWanted(wanted); setPlayer(data.nickname??data.Nickname??data.name??data.Name, data.id??data.ID??data.playerId??data.PlayerId); setTime(data.time??data.Time,data.date??data.Date); if(weapon!==undefined || data.ammo!==undefined || data.ammoClip!==undefined || data.AmmoClip!==undefined || data.ammoTotal!==undefined || data.AmmoTotal!==undefined) updateWeapon(data); }
-  function showHud(){
-    if (window.hudMobilePlatform) return;
-    if (window.AntaresHudVisibility && window.AntaresHudVisibility.hidden) return;
-    if (document.body.classList.contains('hud-force-hidden')) return;
-    const root=$('pc-hud');
-    if(root){root.classList.add('active');root.setAttribute('aria-hidden','false');}
-  }
+  function showHud(){ if (window.__hudVisible !== true || window.hudMobilePlatform) return; const root=$('pc-hud'); if(root){root.classList.add('active');root.setAttribute('aria-hidden','false');} }
   function hideHud(){ const root=$('pc-hud'); if(root){root.classList.remove('active');root.setAttribute('aria-hidden','true');} }
 
   window.AntaresHUD={show:showHud,hide:hideHud,setPlayer,setTime,setStats({hp,armor,hunger}={}){if(hp!=null)setStat('hp',hp);if(armor!=null)setStat('armor',armor);if(hunger!=null)setStat('hunger',hunger);},setAmmo,setMoney,setWanted:renderWanted,setWeapon:updateWeapon,update:updateHud};

@@ -42,23 +42,6 @@
     }
 
     var originalHudMobilePlatform = document.body.classList.contains("hud-platform-mobile") || !!window.hudMobilePlatform;
-    var originalHudForceHidden = document.body.classList.contains("hud-force-hidden");
-
-    function clearHudHardHideForPreview() {
-        document.body.classList.remove("hud-force-hidden");
-
-        ["hud", "hud-corner-info", "pc-hud"].forEach(function (id) {
-            var root = document.getElementById(id);
-            if (!root || !root.style) return;
-            root.style.removeProperty("display");
-            root.style.removeProperty("visibility");
-            root.style.removeProperty("opacity");
-            root.style.removeProperty("pointer-events");
-        });
-
-        if (window.AntaresHudVisibility)
-            window.AntaresHudVisibility.hidden = false;
-    }
 
     function hudTestData() {
         return {
@@ -78,36 +61,22 @@
     }
 
     function hideHudPreviews() {
-        var mobileHud = document.getElementById("hud");
-        var pcHud = document.getElementById("pc-hud");
-
-        if (mobileHud) mobileHud.classList.remove("active");
-        if (pcHud) {
-            pcHud.classList.remove("active");
-            pcHud.setAttribute("aria-hidden", "true");
-        }
+        if (window.GameCef && typeof GameCef.receive === "function")
+            GameCef.receive("hud:hide", "");
     }
 
     function forceHudPlatform(mobile) {
-        clearHudHardHideForPreview();
-        document.body.classList.remove("hud-platform-pc", "hud-platform-mobile");
-        document.body.classList.add(mobile ? "hud-platform-mobile" : "hud-platform-pc");
-        window.hudMobilePlatform = !!mobile;
         hideHudPreviews();
+        window.hudMobilePlatform = !!mobile;
+        document.body.classList.remove("hud-platform-pc", "hud-platform-mobile", "hud-force-hidden");
+        document.body.classList.add(mobile ? "hud-platform-mobile" : "hud-platform-pc");
     }
 
     function restoreHudPlatform() {
         hideHudPreviews();
-        document.body.classList.remove("hud-platform-pc", "hud-platform-mobile");
+        document.body.classList.remove("hud-platform-pc", "hud-platform-mobile", "hud-force-hidden");
         document.body.classList.add(originalHudMobilePlatform ? "hud-platform-mobile" : "hud-platform-pc");
         window.hudMobilePlatform = originalHudMobilePlatform;
-
-        clearHudHardHideForPreview();
-        if (originalHudForceHidden) {
-            document.body.classList.add("hud-force-hidden");
-            if (window.AntaresHudVisibility)
-                window.AntaresHudVisibility.hidden = true;
-        }
 
         if (typeof updateHudMobileScale === "function")
             updateHudMobileScale();
@@ -399,8 +368,11 @@
     });
 
     Tests.register("hud-pc", "HUD PC", function () {
+        var data = hudTestData();
         forceHudPlatform(false);
-        Tests.receive("hud:update", hudTestData());
+        Tests.receive("hud:update", data);
+        if (window.AntaresHUD)
+            AntaresHUD.update(data);
         Tests.receive("hud:show", "");
     });
 

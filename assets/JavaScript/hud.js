@@ -12,26 +12,31 @@ function isMobileHudPlatform() {
         (viewportShortSide > 0 && viewportShortSide <= 720 && devicePixelRatio > 1);
 }
 
-const detectedHudMobilePlatform = isMobileHudPlatform();
-window.hudMobilePlatform = detectedHudMobilePlatform;
-document.body.classList.add(detectedHudMobilePlatform ? "hud-platform-mobile" : "hud-platform-pc");
+window.hudMobilePlatform = isMobileHudPlatform();
+window.__hudVisible = false;
 
-function isHudMobileMode() {
+function getHudMobilePlatform() {
     return typeof window.hudMobilePlatform === "boolean"
         ? window.hudMobilePlatform
-        : detectedHudMobilePlatform;
+        : isMobileHudPlatform();
 }
 
-const hudVisibilityState = {
-    hidden: false
-};
+function syncHudPlatformClass() {
+    const mobile = getHudMobilePlatform();
+    document.body.classList.remove("hud-platform-pc", "hud-platform-mobile", "hud-force-hidden");
+    document.body.classList.add(mobile ? "hud-platform-mobile" : "hud-platform-pc");
+    return mobile;
+}
 
-window.AntaresHudVisibility = hudVisibilityState;
+syncHudPlatformClass();
 
 const pcHudPendingCalls = [];
 
 function sendPcHud(action, data) {
-    if (isHudMobileMode())
+    if (getHudMobilePlatform())
+        return;
+
+    if (action === "show" && window.__hudVisible !== true)
         return;
 
     const api = window.AntaresHUD;
@@ -56,7 +61,7 @@ function sendPcHud(action, data) {
 }
 
 window.flushPcHudPendingCalls = function () {
-    if (isHudMobileMode() || !window.AntaresHUD)
+    if (getHudMobilePlatform() || !window.AntaresHUD)
         return;
 
     while (pcHudPendingCalls.length > 0) {
@@ -260,64 +265,34 @@ function setHudRootState(root, visible) {
     root.setAttribute("aria-hidden", visible ? "false" : "true");
 }
 
-function setHudRootHardHidden(root, hidden) {
-    if (!root)
-        return;
-
-    if (hidden) {
-        root.style.setProperty("display", "none", "important");
-        root.style.setProperty("visibility", "hidden", "important");
-        root.style.setProperty("opacity", "0", "important");
-        root.style.setProperty("pointer-events", "none", "important");
-        return;
-    }
-
-    root.style.removeProperty("display");
-    root.style.removeProperty("visibility");
-    root.style.removeProperty("opacity");
-    root.style.removeProperty("pointer-events");
-}
-
-function applyHudHardHidden(hidden) {
+function showHud() {
+    window.__hudVisible = true;
+    const mobile = syncHudPlatformClass();
     const pcHud = document.getElementById("pc-hud");
     const cornerInfo = document.getElementById("hud-corner-info");
 
-    document.body.classList.toggle("hud-force-hidden", hidden);
-    setHudRootHardHidden(hud, hidden);
-    setHudRootHardHidden(pcHud, hidden);
-    setHudRootHardHidden(cornerInfo, hidden);
-}
-
-function showHud() {
-    hudVisibilityState.hidden = false;
-    applyHudHardHidden(false);
-
-    const pcHud = document.getElementById("pc-hud");
-
-    if (!isHudMobileMode()) {
-        setHudRootState(hud, false);
-        setHudRootState(pcHud, true);
-        return;
-    }
-
-    setHudRootState(pcHud, false);
-
-    if (typeof Loading !== "undefined" && Loading && typeof Loading.Transition === "function") {
-        Loading.Transition(hud, () => {
-            if (!hudVisibilityState.hidden)
-                setHudRootState(hud, true);
-        });
-        return;
-    }
-
-    if (!hudVisibilityState.hidden)
+    if (mobile) {
+        setHudRootState(pcHud, false);
         setHudRootState(hud, true);
+        if (cornerInfo)
+            cornerInfo.setAttribute("aria-hidden", "false");
+        return;
+    }
+
+    setHudRootState(hud, false);
+    if (cornerInfo)
+        cornerInfo.setAttribute("aria-hidden", "true");
+
+    setHudRootState(pcHud, true);
+    sendPcHud("show");
 }
 
 function hideHud() {
-    hudVisibilityState.hidden = true;
+    // hud:hide has one responsibility: both HUD implementations must be hidden.
+    // No platform checks, transitions, timers or outgoing CEF events.
+    window.__hudVisible = false;
+    document.body.classList.remove("hud-force-hidden");
 
-    // Hide both roots directly, not only the platform selected at startup.
     setHudRootState(hud, false);
     setHudRootState(document.getElementById("pc-hud"), false);
 
@@ -325,9 +300,8 @@ function hideHud() {
     if (cornerInfo)
         cornerInfo.setAttribute("aria-hidden", "true");
 
-    // Inline !important is intentional here: the repository has many later
-    // HUD CSS overrides, so hud:hide must win regardless of stylesheet order.
-    applyHudHardHidden(true);
+    if (window.AntaresHUD && typeof window.AntaresHUD.hide === "function")
+        window.AntaresHUD.hide();
 }
 
 function setHudStat(name, value) {
@@ -641,7 +615,8 @@ window.addEventListener("focus", () => {
     try {
         const params = new URLSearchParams(window.location.search);
         if (params.get("hudtest") !== "1") return;
-        hud.classList.add("active");
+        window.hudMobilePlatform = true;
+        showHud();
         setHudStat("health", 83);
         setHudStat("armour", 61);
         setHudStat("hunger", 74);
