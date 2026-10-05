@@ -84,9 +84,9 @@
 }
 
 .main-menu-logo {
-    width: 38px;
-    height: 38px;
-    flex: 0 0 38px;
+    width: 44px;
+    height: 44px;
+    flex: 0 0 44px;
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 4px;
@@ -134,9 +134,9 @@
 }
 
 .main-menu-avatar {
-    width: 38px;
-    height: 38px;
-    flex: 0 0 38px;
+    width: 44px;
+    height: 44px;
+    flex: 0 0 44px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -425,9 +425,9 @@
     }
 
     .main-menu-logo {
-        width: 30px;
-        height: 30px;
-        flex-basis: 30px;
+        width: 34px;
+        height: 34px;
+        flex-basis: 34px;
         gap: 3px;
     }
 
@@ -448,9 +448,9 @@
     }
 
     .main-menu-avatar {
-        width: 30px;
-        height: 30px;
-        flex-basis: 30px;
+        width: 34px;
+        height: 34px;
+        flex-basis: 34px;
         border-radius: 8px;
         font-size: 10px;
     }
@@ -525,9 +525,9 @@
     }
 
     .main-menu-logo {
-        width: 27px;
-        height: 27px;
-        flex-basis: 27px;
+        width: 31px;
+        height: 31px;
+        flex-basis: 31px;
         gap: 2px;
     }
 
@@ -545,9 +545,9 @@
     }
 
     .main-menu-avatar {
-        width: 27px;
-        height: 27px;
-        flex-basis: 27px;
+        width: 31px;
+        height: 31px;
+        flex-basis: 31px;
         border-radius: 7px;
         font-size: 9px;
     }
@@ -561,9 +561,9 @@
     }
 
     .main-menu-close {
-        width: 26px;
-        height: 26px;
-        flex-basis: 26px;
+        width: 30px;
+        height: 30px;
+        flex-basis: 30px;
         border-radius: 7px;
     }
 
@@ -631,9 +631,9 @@
     }
 
     .main-menu-logo {
-        width: 31px;
-        height: 31px;
-        flex: 0 0 31px;
+        width: 35px;
+        height: 35px;
+        flex: 0 0 35px;
         gap: 3px;
     }
 
@@ -651,9 +651,9 @@
     }
 
     .main-menu-avatar {
-        width: 31px;
-        height: 31px;
-        flex: 0 0 31px;
+        width: 35px;
+        height: 35px;
+        flex: 0 0 35px;
         border-radius: 8px;
         font-size: 10px;
     }
@@ -775,9 +775,9 @@
     }
 
     .main-menu-logo {
-        width: 25px;
-        height: 25px;
-        flex-basis: 25px;
+        width: 29px;
+        height: 29px;
+        flex-basis: 29px;
     }
 
     .main-menu-title h1 {
@@ -789,9 +789,9 @@
     }
 
     .main-menu-avatar {
-        width: 25px;
-        height: 25px;
-        flex-basis: 25px;
+        width: 29px;
+        height: 29px;
+        flex-basis: 29px;
         font-size: 9px;
     }
 
@@ -893,21 +893,21 @@
     }
 
     .main-menu-logo {
-        width: 26px;
-        height: 26px;
-        flex-basis: 26px;
+        width: 30px;
+        height: 30px;
+        flex-basis: 30px;
     }
 
     .main-menu-avatar {
-        width: 26px;
-        height: 26px;
-        flex-basis: 26px;
+        width: 30px;
+        height: 30px;
+        flex-basis: 30px;
     }
 
     .main-menu-close {
-        width: 25px;
-        height: 25px;
-        flex-basis: 25px;
+        width: 29px;
+        height: 29px;
+        flex-basis: 29px;
     }
 
     .main-menu-grid {
@@ -1046,9 +1046,9 @@
     }
 
     .main-menu-logo {
-        width: 40px;
-        height: 40px;
-        flex-basis: 40px;
+        width: 46px;
+        height: 46px;
+        flex-basis: 46px;
         gap: 4px;
     }
 
@@ -1063,9 +1063,9 @@
     }
 
     .main-menu-avatar {
-        width: 40px;
-        height: 40px;
-        flex-basis: 40px;
+        width: 46px;
+        height: 46px;
+        flex-basis: 46px;
         border-radius: 10px;
         font-size: 13px;
     }
@@ -1294,9 +1294,9 @@
     }
 
     .main-menu-logo {
-        width: 23px;
-        height: 23px;
-        flex-basis: 23px;
+        width: 27px;
+        height: 27px;
+        flex-basis: 27px;
     }
 
     .main-menu-avatar {
@@ -1308,9 +1308,9 @@
     }
 
     .main-menu-close {
-        width: 23px;
-        height: 23px;
-        flex-basis: 23px;
+        width: 27px;
+        height: 27px;
+        flex-basis: 27px;
     }
 }
 
@@ -1477,9 +1477,70 @@
 
     .main-menu-avatar {
         display: flex;
-        width: 31px;
-        height: 31px;
-        flex: 0 0 31px;
+        width: 35px;
+        height: 35px;
+        flex: 0 0 35px;
         font-size: 11px;
     }
 }
+
+/* Main menu brand mark: make it more prominent without disturbing card layout. */
+.main-menu-logo {
+    width: 50px;
+    height: 50px;
+    flex: 0 0 50px;
+}
+
+.main-menu-logo-image {
+    transform: scale(1.30);
+    transform-origin: center;
+}
+
+@media (min-width: 1100px) and (min-height: 650px) {
+    .main-menu-logo {
+        width: 54px;
+        height: 54px;
+        flex-basis: 54px;
+    }
+
+    .main-menu-logo-image {
+        transform: scale(1.38);
+    }
+}
+
+@media (orientation: landscape) and (max-width: 1099px) {
+    .main-menu-logo {
+        width: 38px;
+        height: 38px;
+        flex-basis: 38px;
+    }
+
+    .main-menu-logo-image {
+        transform: scale(1.28);
+    }
+}
+
+@media (orientation: landscape) and (max-height: 420px) and (max-width: 1099px) {
+    .main-menu-logo {
+        width: 34px;
+        height: 34px;
+        flex-basis: 34px;
+    }
+
+    .main-menu-logo-image {
+        transform: scale(1.22);
+    }
+}
+
+@media (max-width: 560px) and (orientation: portrait) {
+    .main-menu-logo {
+        width: 36px;
+        height: 36px;
+        flex-basis: 36px;
+    }
+
+    .main-menu-logo-image {
+        transform: scale(1.22);
+    }
+}
+

@@ -22,8 +22,8 @@ var MainMenu = {
         },
         {
             Id: 4,
-            Title: "Поставити питання",
-            Description: "Отримайте відповідь на своє питання",
+            Title: "Безпека",
+            Description: "Захист акаунту та ігрового процесу",
             Image: "./assets/CSS/Images/MainMenu/question.webp"
         },
         {

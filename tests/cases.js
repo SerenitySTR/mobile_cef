@@ -4,31 +4,6 @@
     var Tests = window.CefVisualTests;
     if (!Tests) throw new Error("visual-test.js must be loaded before cases.js");
 
-    function ensureGallery() {
-        var section = document.getElementById("cef-visual-test-showcase");
-        if (section) return section;
-
-        section = document.createElement("section");
-        section.id = "cef-visual-test-showcase";
-        section.dataset.cefTestSurface = "gallery";
-        section.innerHTML = `
-            <div class="cef-test-card">
-                <div class="cef-test-kicker">CEF LOCAL TEST</div>
-                <h1>Новий стиль кнопок</h1>
-                <p>Тестова папка <b>tests/</b> використовує реальні production CSS/JS. Тут можна перевіряти нові екрани без сервера.</p>
-                <div class="cef-test-button-grid">
-                    <button class="dialog-button dialog-button-primary" type="button">ПОЧАТИ ГРАТИ  ›</button>
-                    <button class="dialog-button" type="button">ДІЗНАТИСЬ БІЛЬШЕ  ›</button>
-                    <button class="dialog-button dialog-button-danger" type="button">НЕБЕЗПЕЧНА ДІЯ</button>
-                    <button class="dialog-button" type="button">ТЕКСТОВА КНОПКА  ›</button>
-                    <button class="dialog-button dialog-button-primary cef-test-wide" type="button">ПІДТВЕРДИТИ  ›</button>
-                </div>
-                <div class="cef-test-note">Для мобільної адаптації вистав viewport 1280×576 або 854×393. Новий тест додається одним <code>CefVisualTests.register(...)</code> у tests/cases.js.</div>
-            </div>`;
-        document.body.appendChild(section);
-        return section;
-    }
-
     function ticket(id, title, author, status, admin, messages) {
         return {
             Id: id,
@@ -91,12 +66,7 @@
     window.CefVisualTestHud = {
         restore: restoreHudPlatform
     };
-
-    Tests.register("gallery", "Кнопки", function () {
-        ensureGallery().classList.remove("hidden");
-    });
-
-    Tests.register("authorization", "Login", function () {
+Tests.register("authorization", "Login", function () {
         Tests.receive("authorization:show", "Test_Player");
     });
 
