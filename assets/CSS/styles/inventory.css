@@ -484,6 +484,30 @@
     line-height:1.55;
 }
 
+.inventory-details-item-weight{
+    margin-top:12px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:12px;
+    padding:9px 11px;
+    border:1px solid rgba(47,132,177,.22);
+    border-radius:10px;
+    background:rgba(4,26,40,.64);
+}
+
+.inventory-details-item-weight span{
+    color:#8da9ba;
+    font-size:11px;
+    font-weight:700;
+}
+
+.inventory-details-item-weight strong{
+    color:#53cdff;
+    font-size:12px;
+    font-weight:900;
+}
+
 .inventory-params{
     min-height:0;
     flex:1;

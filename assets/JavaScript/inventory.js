@@ -263,7 +263,7 @@ var Inventory={
         var self=this;
         var title=this.Get(item,"Title","title")||this.Get(item,"Name","name")||"Предмет";
         var count=this.Get(item,"Count","count");
-        var weight=this.Get(item,"Weight","weight");
+        var weight=this.ItemWeight(item);
         var image=this.ImagePath(this.Get(item,"Image","image"));
 
         var button=document.createElement("button");
@@ -344,6 +344,7 @@ var Inventory={
         var image=document.getElementById("inventory-details-image");
         var params=document.getElementById("inventory-params");
         var countElement=document.getElementById("inventory-details-count");
+        var detailsWeight=document.getElementById("inventory-details-weight");
         var use=document.getElementById("inventory-use");
 
         if(!item){
@@ -366,6 +367,9 @@ var Inventory={
             if(countElement)
                 countElement.style.display="none";
 
+            if(detailsWeight)
+                detailsWeight.style.display="none";
+
             if(params)
                 params.innerHTML='<div class="inventory-param-empty">Немає додаткових властивостей</div>';
 
@@ -380,6 +384,7 @@ var Inventory={
         var title=this.Get(item,"Title","title")||this.Get(item,"Name","name")||"Предмет";
         var description=this.Get(item,"Description","description")||"Опис предмета відсутній.";
         var count=this.Get(item,"Count","count");
+        var itemWeight=this.ItemWeight(item);
         var imagePath=this.ImagePath(this.Get(item,"Image","image"));
 
         if(image){
@@ -397,6 +402,17 @@ var Inventory={
         this.SetText("inventory-details-type",this.ItemMetaText(item));
         this.SetText("inventory-details-description",description);
 
+        if(detailsWeight){
+            if(this.HasWeight(itemWeight)){
+                detailsWeight.innerHTML='<span>Вага предмета</span><strong>'+this.Escape(this.FormatWeight(itemWeight))+' кг</strong>';
+                detailsWeight.style.display="flex";
+            }
+            else{
+                detailsWeight.innerHTML="";
+                detailsWeight.style.display="none";
+            }
+        }
+
         if(countElement){
             countElement.textContent="x"+(count===undefined?1:count);
             countElement.style.display=this.selectedSource==="inventory"&&Number(count)>1?"block":"none";
@@ -412,25 +428,10 @@ var Inventory={
 
         target.innerHTML="";
 
-        var weight=this.Get(item,"Weight","weight");
-        var hasWeight=weight!==undefined&&weight!==null&&weight!==""&&!isNaN(Number(weight));
         var params=this.Get(item,"Params","params")||this.Get(item,"ItemParams","itemParams")||[];
 
-        if(hasWeight){
-            var weightRow=document.createElement("div");
-            weightRow.className="inventory-param inventory-param-weight";
-            weightRow.innerHTML=
-                '<span class="inventory-param-main">'+
-                    '<span class="inventory-param-icon inventory-param-icon-weight">'+this.ParamIcon("weight")+'</span>'+
-                    '<span class="inventory-param-name">Вага</span>'+
-                '</span>'+
-                '<strong>'+this.Escape(this.FormatWeight(weight))+" кг"+'</strong>';
-            target.appendChild(weightRow);
-        }
-
         if(!Array.isArray(params)||!params.length){
-            if(!hasWeight)
-                target.innerHTML='<div class="inventory-param-empty">Немає додаткових властивостей</div>';
+            target.innerHTML='<div class="inventory-param-empty">Немає додаткових властивостей</div>';
             return;
         }
 
@@ -729,6 +730,24 @@ var Inventory={
             return (number>0?"+":"")+number;
 
         return String(value);
+    },
+
+    ItemWeight:function(item){
+        var weight=this.Get(item,"Weight","weight");
+
+        if(weight!==undefined&&weight!==null&&weight!=="")
+            return weight;
+
+        var config=this.Get(item,"Config","config")||this.Get(item,"ItemData","itemData")||this.Get(item,"Data","data");
+
+        if(config)
+            weight=this.Get(config,"Weight","weight");
+
+        return weight;
+    },
+
+    HasWeight:function(value){
+        return value!==undefined&&value!==null&&value!==""&&!isNaN(Number(value));
     },
 
     FormatWeight:function(value){
