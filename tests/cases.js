@@ -240,6 +240,7 @@ Tests.register("authorization", "Login", function () {
             Type: "Equipment",
             Slot: "Body",
             Description: "Захисний бронежилет. Підвищує витривалість персонажа.",
+            Weight: 0.50,
             Params: [
                 { Buff: "Stamina", Value: 5 }
             ]
@@ -247,6 +248,8 @@ Tests.register("authorization", "Login", function () {
 
         return {
             CharacterImage: "./assets/CSS/Images/Inventory/equipment-character-default-transparent.webp",
+            CurrentWeight: 18.75,
+            MaxWeight: 30,
             Items: [
                 {
                     Index: 0,
@@ -256,6 +259,7 @@ Tests.register("authorization", "Login", function () {
                     Image: "apple.webp",
                     Type: "Consumable",
                     Description: "Свіже яблуко. Трохи втамовує голод.",
+                    Weight: 0.05,
                     Params: [
                         { Recovery: "Hunger", Value: 10 }
                     ]

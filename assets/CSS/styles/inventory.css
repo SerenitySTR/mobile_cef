@@ -88,6 +88,58 @@
     gap:12px;
 }
 
+.inventory-weight{
+    width:150px;
+    flex:0 0 auto;
+}
+
+.inventory-weight-info{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:10px;
+    margin-bottom:6px;
+}
+
+.inventory-weight-info span{
+    color:#728fa2;
+    font-size:9px;
+    font-weight:900;
+    letter-spacing:1px;
+}
+
+.inventory-weight-info strong{
+    color:#eaf7ff;
+    font-size:11px;
+    font-weight:800;
+    white-space:nowrap;
+}
+
+.inventory-weight-bar{
+    width:100%;
+    height:4px;
+    overflow:hidden;
+    border-radius:99px;
+    background:rgba(255,255,255,.08);
+}
+
+.inventory-weight-fill{
+    width:0;
+    height:100%;
+    border-radius:99px;
+    background:#2bbcff;
+    box-shadow:0 0 10px rgba(43,188,255,.34);
+    transition:width .2s ease,background .2s ease;
+}
+
+.inventory-weight-fill.warning{
+    background:#ffb347;
+}
+
+.inventory-weight-fill.full{
+    background:#ff5d6c;
+}
+
 .inventory-items-count{
     min-width:90px;
     color:#8aa8bb;
@@ -1722,6 +1774,26 @@
         gap:5px;
     }
 
+    .inventory-weight{
+        width:112px;
+    }
+
+    .inventory-weight-info{
+        margin-bottom:3px;
+    }
+
+    .inventory-weight-info span{
+        font-size:6px;
+    }
+
+    .inventory-weight-info strong{
+        font-size:7px;
+    }
+
+    .inventory-weight-bar{
+        height:3px;
+    }
+
     .inventory-items-count{
         min-width:auto;
         font-size:7px;
@@ -1988,6 +2060,18 @@
 
 /* Narrow landscape phones */
 @media (max-width:740px) and (orientation:landscape){
+    .inventory-weight{
+        width:96px;
+    }
+
+    .inventory-weight-info span{
+        display:none;
+    }
+
+    .inventory-weight-info{
+        justify-content:flex-end;
+    }
+
     .inventory-logo{
         display:none;
     }
@@ -2130,6 +2214,23 @@
 
 /* Portrait fallback */
 @media (max-width:800px) and (orientation:portrait){
+    .inventory-weight{
+        width:105px;
+    }
+
+    .inventory-weight-info span{
+        display:none;
+    }
+
+    .inventory-weight-info{
+        justify-content:flex-end;
+        margin-bottom:3px;
+    }
+
+    .inventory-weight-info strong{
+        font-size:8px;
+    }
+
     #inventory{
         padding:0;
     }

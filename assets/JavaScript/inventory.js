@@ -6,6 +6,8 @@ var Inventory={
     items:[],
     defaultCharacterImage:"./assets/CSS/Images/Inventory/equipment-character-default-transparent.webp",
     equipment:[],
+    currentWeight:0,
+    maxWeight:0,
     selectedSource:"inventory",
     selectedIndex:null,
     selectedSlot:null,
@@ -116,9 +118,13 @@ var Inventory={
         var items=this.Get(data,"Items","items");
         var equipment=this.Get(data,"Equipment","equipment");
         var characterImage=this.Get(data,"CharacterImage","characterImage");
+        var currentWeight=this.Get(data,"CurrentWeight","currentWeight");
+        var maxWeight=this.Get(data,"MaxWeight","maxWeight");
 
         this.items=Array.isArray(items)?items:[];
         this.equipment=this.NormalizeEquipment(equipment);
+        this.currentWeight=Number(currentWeight)||0;
+        this.maxWeight=Number(maxWeight)||0;
         this.SetCharacterImage(characterImage||this.defaultCharacterImage);
 
         if(this.items.length){
@@ -192,7 +198,25 @@ var Inventory={
         this.RenderEquipment();
         this.RenderItems();
         this.RenderDetails();
+        this.RenderWeight();
         this.SetText("inventory-items-count",this.ItemsCountText(this.items.length));
+    },
+
+    RenderWeight:function(){
+        var weight=document.getElementById("inventory-weight");
+        var fill=document.getElementById("inventory-weight-fill");
+        var percent=this.maxWeight>0?(this.currentWeight/this.maxWeight)*100:0;
+
+        percent=Math.max(0,Math.min(percent,100));
+
+        if(weight)
+            weight.textContent=this.FormatWeight(this.currentWeight)+" / "+this.FormatWeight(this.maxWeight)+" кг";
+
+        if(fill){
+            fill.style.width=percent+"%";
+            fill.classList.toggle("warning",percent>=80&&percent<100);
+            fill.classList.toggle("full",percent>=100);
+        }
     },
 
     RenderEquipment:function(){
@@ -684,6 +708,15 @@ var Inventory={
             return (number>0?"+":"")+number;
 
         return String(value);
+    },
+
+    FormatWeight:function(value){
+        var number=Number(value);
+
+        if(isNaN(number))
+            number=0;
+
+        return number.toFixed(2).replace(/\.00$/,"").replace(/(\.\d)0$/,"$1");
     },
 
     ItemsCountText:function(count){
