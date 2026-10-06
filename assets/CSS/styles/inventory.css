@@ -343,6 +343,23 @@
     text-align:center;
 }
 
+.inventory-item-weight{
+    position:absolute;
+    left:8px;
+    top:8px;
+    z-index:2;
+    box-sizing:border-box;
+    padding:3px 6px;
+    border:1px solid rgba(95,205,255,.2);
+    border-radius:8px;
+    background:rgba(3,19,30,.82);
+    color:#8fcfe9;
+    font-size:8px;
+    font-weight:800;
+    line-height:1;
+    white-space:nowrap;
+}
+
 .inventory-empty{
     position:absolute;
     inset:74px 18px 18px;
@@ -632,6 +649,10 @@
 
 .inventory-param-icon-stamina{
     color:#75e6b4;
+}
+
+.inventory-param-icon-weight{
+    color:#9bdcff;
 }
 
 .inventory-param-empty{
@@ -1663,6 +1684,13 @@
         font-size:7px;
     }
 
+    .inventory-item-weight{
+        left:4px;
+        top:4px;
+        padding:2px 4px;
+        font-size:6px;
+    }
+
     .inventory-preview{
         height:84px;
         flex-basis:84px;
@@ -1945,6 +1973,13 @@
         min-width:18px;
         padding:1px 3px;
         font-size:6px;
+    }
+
+    .inventory-item-weight{
+        left:3px;
+        top:3px;
+        padding:1px 3px;
+        font-size:5.5px;
     }
 
     .inventory-empty{

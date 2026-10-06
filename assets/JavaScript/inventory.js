@@ -263,6 +263,7 @@ var Inventory={
         var self=this;
         var title=this.Get(item,"Title","title")||this.Get(item,"Name","name")||"Предмет";
         var count=this.Get(item,"Count","count");
+        var weight=this.Get(item,"Weight","weight");
         var image=this.ImagePath(this.Get(item,"Image","image"));
 
         var button=document.createElement("button");
@@ -275,9 +276,13 @@ var Inventory={
         var countHtml=Number(count)>1
             ? '<span class="inventory-item-count">x'+this.Escape(count)+'</span>'
             : '';
+        var weightHtml=weight!==undefined&&weight!==null&&weight!==""
+            ? '<span class="inventory-item-weight">'+this.Escape(this.FormatWeight(weight))+' кг</span>'
+            : '';
 
         button.innerHTML=
             countHtml+
+            weightHtml+
             '<span class="inventory-item-image">'+this.ImageHtml(image)+'</span>'+
             '<strong class="inventory-item-name">'+this.Escape(title)+'</strong>';
 
@@ -407,10 +412,25 @@ var Inventory={
 
         target.innerHTML="";
 
+        var weight=this.Get(item,"Weight","weight");
+        var hasWeight=weight!==undefined&&weight!==null&&weight!==""&&!isNaN(Number(weight));
         var params=this.Get(item,"Params","params")||this.Get(item,"ItemParams","itemParams")||[];
 
+        if(hasWeight){
+            var weightRow=document.createElement("div");
+            weightRow.className="inventory-param inventory-param-weight";
+            weightRow.innerHTML=
+                '<span class="inventory-param-main">'+
+                    '<span class="inventory-param-icon inventory-param-icon-weight">'+this.ParamIcon("weight")+'</span>'+
+                    '<span class="inventory-param-name">Вага</span>'+
+                '</span>'+
+                '<strong>'+this.Escape(this.FormatWeight(weight))+" кг"+'</strong>';
+            target.appendChild(weightRow);
+        }
+
         if(!Array.isArray(params)||!params.length){
-            target.innerHTML='<div class="inventory-param-empty">Немає додаткових властивостей</div>';
+            if(!hasWeight)
+                target.innerHTML='<div class="inventory-param-empty">Немає додаткових властивостей</div>';
             return;
         }
 
@@ -608,6 +628,7 @@ var Inventory={
             armor:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 5 6v5c0 4.5 2.8 8.1 7 10 4.2-1.9 7-5.5 7-10V6l-7-3Z"></path></svg>',
             hunger:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3v7M4 3v4c0 2 1 3 3 3s3-1 3-3V3M7 10v11M16 3v18M16 3c3 2 4 5 4 8h-4"></path></svg>',
             stamina:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m13 2-7 12h6l-1 8 7-12h-6l1-8Z"></path></svg>',
+            weight:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 8h8l3 12H5L8 8Z"></path><path d="M9 8a3 3 0 0 1 6 0"></path></svg>',
             default:'<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8"></circle><path d="M12 8v4l3 2"></path></svg>'
         };
 
