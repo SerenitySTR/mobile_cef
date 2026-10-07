@@ -302,6 +302,41 @@ Tests.register("authorization", "Login", function () {
         }, 0);
     });
 
+    Tests.register("marketplace", "Marketplace", function () {
+        var data = {
+            Category: "item",
+            Listings: [
+                { Id: 1008, Category: "item", ItemId: 1, Title: "Яблуко", Image: "apple.webp", Count: 10, Price: 50, SellerName: "Serenity_Walker", CreatedAt: "2 хв тому" },
+                { Id: 1007, Category: "item", ItemId: 3, Title: "Бургер", Image: "burger.webp", Count: 8, Price: 400, SellerName: "Alex_Rivera", CreatedAt: "8 хв тому" },
+                { Id: 1006, Category: "item", ItemId: 2, Title: "Бронежилет", Image: "armor.webp", Count: 1, Price: 15000, SellerName: "Diana_Lopez", CreatedAt: "12 хв тому" },
+                { Id: 1005, Category: "item", ItemId: 4, Title: "Аптечка", Image: "", Count: 3, Price: 1200, SellerName: "Maksim_White", CreatedAt: "20 хв тому" },
+                { Id: 1004, Category: "item", ItemId: 5, Title: "Телефон", Image: "", Count: 1, Price: 5000, SellerName: "Johnny_Blake", CreatedAt: "37 хв тому" },
+                { Id: 1003, Category: "item", ItemId: 6, Title: "Бинт", Image: "", Count: 15, Price: 300, SellerName: "Artem_Kovalenko", CreatedAt: "40 хв тому" },
+                { Id: 1002, Category: "item", ItemId: 7, Title: "Ремкомплект", Image: "", Count: 2, Price: 2500, SellerName: "Mike_Ross", CreatedAt: "1 год тому" },
+                { Id: 1001, Category: "item", ItemId: 8, Title: "Каністра", Image: "", Count: 1, Price: 1000, SellerName: "Sanya_Petrov", CreatedAt: "3 год тому" }
+            ],
+            Inventory: [
+                { Index: 0, ItemId: 1, Title: "Яблуко", Image: "apple.webp", Count: 10, Weight: 0.05 },
+                { Index: 1, ItemId: 3, Title: "Бургер", Image: "burger.webp", Count: 4, Weight: 0.25 },
+                { Index: 2, ItemId: 2, Title: "Бронежилет", Image: "armor.webp", Count: 1, Weight: 0.50 }
+            ]
+        };
+
+        Tests.receive("marketplace:set", data);
+        Tests.receive("marketplace:show", {});
+
+        setTimeout(function () {
+            if (typeof Marketplace === "undefined") return;
+            Marketplace.SetData(data);
+            Marketplace.Show();
+            var price = document.getElementById("marketplace-sell-price");
+            if (price) {
+                price.value = "50";
+                Marketplace.RenderSellSummary();
+            }
+        }, 0);
+    });
+
     Tests.register("statistics", "Statistics", function () {
         Tests.receive("statistics:show", {
             Profile: {

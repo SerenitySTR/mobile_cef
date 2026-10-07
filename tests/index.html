@@ -15,6 +15,7 @@
     <link rel="stylesheet" href="./assets/CSS/styles/notifications.css?v=20260922-clean-ui2">
     <link rel="stylesheet" href="./assets/CSS/styles/statistics.css?v=20260922-layoutfix1">
     <link rel="stylesheet" href="./assets/CSS/styles/inventory.css?v=20261007-itemweight2">
+    <link rel="stylesheet" href="./assets/CSS/styles/marketplace.css?v=20261007-market1">
     <link rel="stylesheet" href="./assets/CSS/styles/main-menu.css">
     <link rel="stylesheet" href="./assets/CSS/styles/quick-menu.css?v=20261004-quick2">
     <link rel="stylesheet" href="./assets/CSS/styles/dialog.css">
@@ -716,6 +717,145 @@
     </div>
 </section>
 
+    <section id="marketplace" aria-hidden="true">
+    <div class="marketplace-panel">
+        <header class="marketplace-header">
+            <div class="marketplace-brand">
+                <img src="./assets/CSS/Images/brand-logo.png" alt="Antares RolePlay">
+                <div>
+                    <span>ТОРГОВИЙ МАЙДАНЧИК</span>
+                    <h1>Маркетплейс</h1>
+                    <p>Купуйте та продавайте майно між гравцями.</p>
+                </div>
+            </div>
+
+            <button class="marketplace-close" id="marketplace-close" type="button" aria-label="Закрити">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M6 6l12 12"></path>
+                    <path d="M18 6 6 18"></path>
+                </svg>
+            </button>
+        </header>
+
+        <div class="marketplace-content">
+            <aside class="marketplace-sidebar">
+                <button class="marketplace-category active" type="button" data-marketplace-category="item">
+                    <span class="marketplace-category-icon">
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 7.5 12 4l7 3.5v9L12 20l-7-3.5v-9Z"></path><path d="m5 7.5 7 3.5 7-3.5M12 11v9"></path></svg>
+                    </span>
+                    <span><strong>Речі</strong><small>Предмети з інвентаря</small></span>
+                </button>
+
+                <button class="marketplace-category marketplace-category-soon" type="button" data-marketplace-category="house">
+                    <span class="marketplace-category-icon">
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m3 11 9-7 9 7"></path><path d="M5 10v10h14V10M9 20v-6h6v6"></path></svg>
+                    </span>
+                    <span><strong>Дім</strong><small>База під майбутню систему</small></span>
+                    <b>Скоро</b>
+                </button>
+
+                <button class="marketplace-category marketplace-category-soon" type="button" data-marketplace-category="vehicle">
+                    <span class="marketplace-category-icon">
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 17h14M6 17l-1-4 2-5h10l2 5-1 4"></path><circle cx="7" cy="17" r="2"></circle><circle cx="17" cy="17" r="2"></circle><path d="M7 12h10"></path></svg>
+                    </span>
+                    <span><strong>Машина</strong><small>База під майбутню систему</small></span>
+                    <b>Скоро</b>
+                </button>
+
+                <div class="marketplace-sidebar-note">
+                    <span>ANTARES MARKET</span>
+                    <p>Оголошення від гравців сервера.</p>
+                </div>
+            </aside>
+
+            <main class="marketplace-main">
+                <div class="marketplace-toolbar">
+                    <label class="marketplace-search">
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6"></circle><path d="m16 16 4 4"></path></svg>
+                        <input id="marketplace-search" type="text" placeholder="Пошук предметів..." autocomplete="off">
+                    </label>
+
+                    <select id="marketplace-sort" class="marketplace-sort" aria-label="Сортування">
+                        <option value="newest">Спочатку нові</option>
+                        <option value="price-asc">Ціна: дешевші</option>
+                        <option value="price-desc">Ціна: дорожчі</option>
+                    </select>
+
+                    <button class="marketplace-refresh" id="marketplace-refresh" type="button" title="Оновити">
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 7v5h-5"></path><path d="M4 17v-5h5"></path><path d="M18 9a7 7 0 0 0-12-2L4 9M6 15a7 7 0 0 0 12 2l2-2"></path></svg>
+                    </button>
+                </div>
+
+                <div class="marketplace-section-head">
+                    <div>
+                        <span id="marketplace-section-kicker">РЕЧІ</span>
+                        <h2 id="marketplace-section-title">Оголошення</h2>
+                    </div>
+                    <strong id="marketplace-listings-count">0</strong>
+                </div>
+
+                <div class="marketplace-listings" id="marketplace-listings"></div>
+
+                <div class="marketplace-empty" id="marketplace-empty">
+                    <div class="marketplace-empty-icon">⌁</div>
+                    <strong>Оголошень немає</strong>
+                    <span>У цьому розділі поки нічого не продають.</span>
+                </div>
+            </main>
+
+            <aside class="marketplace-sell">
+                <div class="marketplace-sell-head">
+                    <span>ПРОДАЖ</span>
+                    <h2>Виставити предмет</h2>
+                    <p>Оберіть предмет з інвентаря та вкажіть ціну.</p>
+                </div>
+
+                <label class="marketplace-field-label" for="marketplace-sell-item">Предмет</label>
+                <select class="marketplace-field" id="marketplace-sell-item"></select>
+
+                <div class="marketplace-sell-preview" id="marketplace-sell-preview">
+                    <div class="marketplace-sell-image-wrap">
+                        <img id="marketplace-sell-image" alt="">
+                        <div class="marketplace-image-fallback" id="marketplace-sell-fallback">□</div>
+                    </div>
+                    <div>
+                        <strong id="marketplace-sell-title">Оберіть предмет</strong>
+                        <span id="marketplace-sell-weight"></span>
+                        <small id="marketplace-sell-available">Доступно: 0</small>
+                    </div>
+                </div>
+
+                <label class="marketplace-field-label" for="marketplace-sell-count">Кількість</label>
+                <div class="marketplace-count-control">
+                    <button id="marketplace-count-minus" type="button">−</button>
+                    <input id="marketplace-sell-count" type="number" min="1" value="1" inputmode="numeric">
+                    <button id="marketplace-count-plus" type="button">+</button>
+                </div>
+
+                <label class="marketplace-field-label" for="marketplace-sell-price">Ціна за одиницю</label>
+                <div class="marketplace-price-field">
+                    <span>$</span>
+                    <input id="marketplace-sell-price" type="number" min="1" placeholder="0" inputmode="numeric">
+                </div>
+
+                <div class="marketplace-sell-summary">
+                    <span>Разом</span>
+                    <strong id="marketplace-sell-total">$0</strong>
+                </div>
+
+                <button class="marketplace-create" id="marketplace-create" type="button" disabled>
+                    Виставити на продаж
+                </button>
+            </aside>
+        </div>
+
+        <footer class="marketplace-footer">
+            <span>ANTARES ROLEPLAY</span>
+            <span>ESC — закрити</span>
+        </footer>
+    </div>
+</section>
+
     <section id="main-menu">
     <div class="main-menu-panel">
         <header class="main-menu-header">
@@ -889,6 +1029,7 @@
     <script src="./assets/JavaScript/notifications.js?v=20260922-clean-ui2"></script>
     <script src="./assets/JavaScript/statistics.js?v=20260922-focus1"></script>
     <script src="./assets/JavaScript/inventory.js?v=20261007-itemweight2"></script>
+    <script src="./assets/JavaScript/marketplace.js?v=20261007-market1"></script>
     <script src="./assets/JavaScript/main-menu.js?v=20260922-focus1"></script>
     <script src="./assets/JavaScript/quick-menu.js?v=20261004-quick7"></script>
     <script src="./assets/JavaScript/dialog.js?v=20260922-focus1"></script>
