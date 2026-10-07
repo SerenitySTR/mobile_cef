@@ -336,6 +336,88 @@ Tests.register("authorization", "Login", function () {
         }, 0);
     });
 
+    Tests.register("mailbox", "Mailbox", function () {
+        var data = {
+            Messages: [
+                {
+                    Id: 501,
+                    Title: "Нагорода за квест",
+                    Preview: "Предмет було надіслано поштою",
+                    Text: "Ваш інвентар був переповнений, тому нагороду за квест було надіслано до пошти.\nВи можете забрати предмет пізніше, коли звільните місце.",
+                    Sender: "Система",
+                    CreatedAt: "щойно",
+                    Date: "Сьогодні, 17:48",
+                    Icon: "reward",
+                    IsRead: false,
+                    Attachments: [
+                        { ItemId: 2, Title: "Бронежилет", Image: "armor.webp", Count: 1, Weight: 0.50 },
+                        { ItemId: 1, Title: "Яблуко", Image: "apple.webp", Count: 5, Weight: 0.05 },
+                        { ItemId: 3, Title: "Бургер", Image: "burger.webp", Count: 2, Weight: 0.25 }
+                    ]
+                },
+                {
+                    Id: 500,
+                    Title: "Система",
+                    Preview: "Не вистачило місця в інвентарі",
+                    Text: "Частину предметів не вдалося додати до інвентарю. Вони залишаться у пошті, доки ви їх не заберете.",
+                    Sender: "Система",
+                    CreatedAt: "10 хв тому",
+                    Date: "Сьогодні, 17:38",
+                    Icon: "system",
+                    IsRead: false,
+                    Attachments: []
+                },
+                {
+                    Id: 499,
+                    Title: "Щоденна нагорода",
+                    Preview: "Заберіть свій бонус",
+                    Text: "Дякуємо, що повертаєтесь у гру. Ваш щоденний бонус уже доступний.",
+                    Sender: "Система",
+                    CreatedAt: "2 год тому",
+                    Date: "Сьогодні, 15:48",
+                    Icon: "daily",
+                    IsRead: false,
+                    Attachments: [
+                        { ItemId: 1, Title: "Яблуко", Image: "apple.webp", Count: 3, Weight: 0.05 }
+                    ]
+                },
+                {
+                    Id: 498,
+                    Title: "Подія сервера",
+                    Preview: "Подарунок за участь",
+                    Text: "Нагорода за участь у серверній події. Дякуємо за активність!",
+                    Sender: "Система",
+                    CreatedAt: "1 дн. тому",
+                    Date: "Вчора, 20:10",
+                    Icon: "event",
+                    IsRead: true,
+                    Attachments: []
+                },
+                {
+                    Id: 497,
+                    Title: "Адміністрація",
+                    Preview: "Інформаційне повідомлення",
+                    Text: "Це тестове інформаційне повідомлення від адміністрації сервера.",
+                    Sender: "Адміністрація",
+                    CreatedAt: "3 дн. тому",
+                    Date: "04.10.2026, 12:30",
+                    Icon: "admin",
+                    IsRead: true,
+                    Attachments: []
+                }
+            ]
+        };
+
+        Tests.receive("mailbox:set", data);
+        Tests.receive("mailbox:show", {});
+
+        setTimeout(function () {
+            if (typeof Mailbox === "undefined") return;
+            Mailbox.SetData(data);
+            Mailbox.Show();
+        }, 0);
+    });
+
     Tests.register("statistics", "Statistics", function () {
         Tests.receive("statistics:show", {
             Profile: {

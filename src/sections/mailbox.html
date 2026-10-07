@@ -1,0 +1,90 @@
+<section id="mailbox" aria-hidden="true">
+    <div class="mailbox-panel">
+        <header class="mailbox-header">
+            <div class="mailbox-brand">
+                <div class="mailbox-brand-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24"><path d="M4 6h16v12H4z"></path><path d="m4 7 8 6 8-6"></path><path d="m4 18 5-5"></path><path d="m20 18-5-5"></path></svg>
+                </div>
+                <div>
+                    <div class="mailbox-title-row">
+                        <h1>Пошта</h1>
+                        <span class="mailbox-unread" id="mailbox-unread">0 непрочитаних</span>
+                    </div>
+                    <p>Повідомлення, нагороди та предмети</p>
+                </div>
+            </div>
+
+            <div class="mailbox-header-actions">
+                <button class="mailbox-claim-all" id="mailbox-claim-all" type="button">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12"></path><path d="m7 10 5 5 5-5"></path><path d="M5 18v3h14v-3"></path></svg>
+                    <span>Забрати все</span>
+                </button>
+                <button class="mailbox-close" id="mailbox-close" type="button" aria-label="Закрити">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"></path></svg>
+                </button>
+            </div>
+        </header>
+
+        <div class="mailbox-content">
+            <aside class="mailbox-list-wrap">
+                <div class="mailbox-list" id="mailbox-list"></div>
+                <div class="mailbox-list-empty" id="mailbox-list-empty">
+                    <div class="mailbox-empty-icon">✉</div>
+                    <strong>Пошта порожня</strong>
+                    <span>Нові повідомлення з'являться тут</span>
+                </div>
+            </aside>
+
+            <main class="mailbox-details" id="mailbox-details">
+                <div class="mailbox-details-empty" id="mailbox-details-empty">
+                    <div class="mailbox-empty-icon">✉</div>
+                    <strong>Оберіть повідомлення</strong>
+                    <span>Тут буде показано текст та вкладення</span>
+                </div>
+
+                <div class="mailbox-details-body" id="mailbox-details-body">
+                    <div class="mailbox-message-head">
+                        <div class="mailbox-message-icon" id="mailbox-message-icon"></div>
+                        <div class="mailbox-message-title">
+                            <h2 id="mailbox-message-title">Повідомлення</h2>
+                            <div class="mailbox-message-meta">
+                                <span>Від: <strong id="mailbox-message-sender">Система</strong></span>
+                                <i></i>
+                                <span id="mailbox-message-date"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mailbox-message-text" id="mailbox-message-text"></div>
+
+                    <div class="mailbox-attachments-section" id="mailbox-attachments-section">
+                        <div class="mailbox-attachments-head">
+                            <div>
+                                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 12.5 14.7 5.8a3.5 3.5 0 0 1 5 5L10.3 20a5 5 0 0 1-7.1-7.1L12 4.1"></path></svg>
+                                <strong>Вкладення <span id="mailbox-attachments-count">(0)</span></strong>
+                            </div>
+                            <span class="mailbox-total-weight" id="mailbox-total-weight"></span>
+                        </div>
+                        <div class="mailbox-attachments" id="mailbox-attachments"></div>
+                    </div>
+
+                    <div class="mailbox-actions">
+                        <button class="mailbox-claim" id="mailbox-claim" type="button">
+                            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12"></path><path d="m7 10 5 5 5-5"></path><path d="M5 18v3h14v-3"></path></svg>
+                            <span>Забрати</span>
+                        </button>
+                        <button class="mailbox-delete" id="mailbox-delete" type="button">
+                            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16"></path><path d="M9 7V4h6v3"></path><path d="m7 7 1 13h8l1-13"></path></svg>
+                            <span>Видалити</span>
+                        </button>
+                    </div>
+                </div>
+            </main>
+        </div>
+
+        <footer class="mailbox-footer">
+            <span>ANTARES ROLEPLAY</span>
+            <span>ПОШТОВА СКРИНЬКА</span>
+        </footer>
+    </div>
+</section>
