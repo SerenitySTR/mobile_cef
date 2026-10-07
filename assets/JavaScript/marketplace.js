@@ -2,7 +2,6 @@ var Marketplace={
     screen:null,
     listings:[],
     inventory:[],
-    category:"item",
 
     Init:function(){
         this.screen=document.getElementById("marketplace");
@@ -27,7 +26,7 @@ var Marketplace={
         var create=document.getElementById("marketplace-create");
 
         if(close) close.onclick=function(){self.Hide();GameCef.sendJson("marketplace:close",{});};
-        if(refresh) refresh.onclick=function(){GameCef.sendJson("marketplace:refresh",{Category:self.category});};
+        if(refresh) refresh.onclick=function(){GameCef.sendJson("marketplace:refresh",{});};
         if(search) search.oninput=function(){self.RenderListings();};
         if(sort) sort.onchange=function(){self.RenderListings();};
         if(itemSelect) itemSelect.onchange=function(){self.RenderSell();};
@@ -38,12 +37,6 @@ var Marketplace={
         if(create) create.onclick=function(){self.CreateListing();};
 
         this.screen.addEventListener("click",function(event){
-            var category=event.target.closest("[data-marketplace-category]");
-            if(category){
-                self.SetCategory(category.getAttribute("data-marketplace-category"));
-                return;
-            }
-
             var buy=event.target.closest("[data-marketplace-buy]");
             if(buy){
                 GameCef.sendJson("marketplace:buy",{ListingId:Number(buy.getAttribute("data-marketplace-buy"))||buy.getAttribute("data-marketplace-buy")});
@@ -85,12 +78,8 @@ var Marketplace={
 
         var listings=this.Get(data,"Listings","listings");
         var inventory=this.Get(data,"Inventory","inventory");
-        var category=this.Get(data,"Category","category");
-
         if(Array.isArray(listings)) this.listings=listings;
         if(Array.isArray(inventory)) this.inventory=inventory;
-        if(category) this.category=String(category).toLowerCase();
-
         this.Render();
     },
 
@@ -110,29 +99,9 @@ var Marketplace={
     },
 
     Render:function(){
-        this.RenderCategories();
         this.RenderListings();
         this.RenderInventoryOptions();
         this.RenderSell();
-    },
-
-    SetCategory:function(category){
-        category=String(category||"item").toLowerCase();
-        this.category=category;
-        this.RenderCategories();
-        this.RenderListings();
-        GameCef.sendJson("marketplace:category",{Category:category});
-    },
-
-    RenderCategories:function(){
-        var self=this;
-        var names={item:["РЕЧІ","Оголошення"],house:["ДІМ","Будинки"],vehicle:["МАШИНА","Автомобілі"]};
-        this.screen&&this.screen.querySelectorAll("[data-marketplace-category]").forEach(function(button){
-            button.classList.toggle("active",button.getAttribute("data-marketplace-category")===self.category);
-        });
-        var label=names[this.category]||names.item;
-        this.SetText("marketplace-section-kicker",label[0]);
-        this.SetText("marketplace-section-title",label[1]);
     },
 
     RenderListings:function(){
@@ -147,9 +116,8 @@ var Marketplace={
         var self=this;
 
         var visible=this.listings.filter(function(item){
-            var category=String(self.Get(item,"Category","category")||"item").toLowerCase();
             var title=String(self.Get(item,"Title","title")||"").toLowerCase();
-            return category===self.category&&(!query||title.indexOf(query)!==-1);
+            return !query||title.indexOf(query)!==-1;
         });
 
         visible.sort(function(a,b){
@@ -166,8 +134,6 @@ var Marketplace={
         if(empty) empty.classList.toggle("active",!visible.length);
         this.SetText("marketplace-listings-count",String(visible.length));
 
-        var sell=document.querySelector(".marketplace-sell");
-        if(sell) sell.style.display=this.category==="item"?"flex":"none";
     },
 
     CreateCard:function(item){

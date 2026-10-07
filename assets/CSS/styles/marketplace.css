@@ -68,34 +68,17 @@
     min-height:0;
     flex:1;
     display:grid;
-    grid-template-columns:245px minmax(0,1fr) 330px;
+    grid-template-columns:minmax(0,1fr) 330px;
     gap:14px;
     padding:14px;
 }
 
-.marketplace-sidebar,.marketplace-main,.marketplace-sell{
+.marketplace-main,.marketplace-sell{
     min-height:0;
     border:1px solid rgba(56,130,178,.2);
     border-radius:18px;
     background:linear-gradient(160deg,rgba(7,22,36,.8),rgba(3,14,24,.72));
 }
-
-.marketplace-sidebar{display:flex;flex-direction:column;gap:10px;padding:14px}
-.marketplace-category{
-    position:relative;width:100%;min-height:84px;display:grid;grid-template-columns:48px minmax(0,1fr);align-items:center;gap:12px;
-    padding:12px;text-align:left;border:1px solid rgba(61,133,179,.24);border-radius:14px;
-    background:rgba(7,24,39,.8);color:#d8ecf8;cursor:pointer;transition:.16s ease;
-}
-.marketplace-category:hover,.marketplace-category.active{border-color:rgba(69,176,255,.72);background:linear-gradient(145deg,rgba(18,76,125,.86),rgba(8,39,68,.9));box-shadow:inset 0 0 25px rgba(54,161,255,.08)}
-.marketplace-category-icon{width:42px;height:42px;display:flex;align-items:center;justify-content:center;border-radius:12px;background:rgba(48,126,255,.14);color:#65bfff}
-.marketplace-category-icon svg{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
-.marketplace-category strong{display:block;font-size:14px}
-.marketplace-category small{display:block;margin-top:5px;color:#718da2;font-size:9px;line-height:1.25}
-.marketplace-category>b{position:absolute;right:10px;top:8px;color:#6f8798;font-size:8px;text-transform:uppercase;letter-spacing:.8px}
-.marketplace-category-soon{opacity:.68}
-.marketplace-sidebar-note{margin-top:auto;padding:14px;border-top:1px solid rgba(71,145,191,.14)}
-.marketplace-sidebar-note span{color:#4fbfff;font-size:8px;font-weight:900;letter-spacing:1.4px}
-.marketplace-sidebar-note p{margin:7px 0 0;color:#607d91;font-size:9px;line-height:1.45}
 
 .marketplace-main{position:relative;display:flex;flex-direction:column;padding:14px;overflow:hidden}
 .marketplace-toolbar{display:grid;grid-template-columns:minmax(180px,1fr) 170px 42px;gap:10px;flex:0 0 auto}
@@ -166,12 +149,12 @@
 .marketplace-footer{min-height:38px;flex:0 0 auto;display:flex;align-items:center;justify-content:space-between;padding:0 20px;border-top:1px solid rgba(87,153,196,.12);color:#4d697c;font-size:8px;font-weight:800;letter-spacing:1px}
 
 @media(max-width:1180px){
-    .marketplace-content{grid-template-columns:190px minmax(0,1fr) 285px}.marketplace-listings{grid-template-columns:repeat(2,minmax(0,1fr))}.marketplace-brand img{width:120px}.marketplace-brand p{display:none}
+    .marketplace-content{grid-template-columns:minmax(0,1fr) 285px}.marketplace-listings{grid-template-columns:repeat(2,minmax(0,1fr))}.marketplace-brand img{width:120px}.marketplace-brand p{display:none}
 }
 
 @media(max-width:860px){
     #marketplace{padding:8px}.marketplace-panel{width:100%;height:100%;min-height:0;border-radius:16px}.marketplace-header{min-height:68px;padding:10px 12px}.marketplace-brand img{width:92px}.marketplace-brand>div{padding-left:10px}.marketplace-brand span,.marketplace-brand p{display:none}.marketplace-brand h1{font-size:19px}.marketplace-close{width:40px;height:40px}
-    .marketplace-content{display:flex;flex-direction:column;gap:8px;padding:8px;overflow-y:auto}.marketplace-sidebar{min-height:auto;display:grid;grid-template-columns:repeat(3,1fr);padding:8px}.marketplace-category{min-height:60px;grid-template-columns:34px 1fr;padding:8px}.marketplace-category-icon{width:32px;height:32px}.marketplace-category-icon svg{width:19px;height:19px}.marketplace-category small,.marketplace-category>b,.marketplace-sidebar-note{display:none}.marketplace-category strong{font-size:11px}
+    .marketplace-content{display:flex;flex-direction:column;gap:8px;padding:8px;overflow-y:auto}
     .marketplace-main{min-height:440px;overflow:visible}.marketplace-listings{min-height:300px;max-height:46vh;grid-template-columns:repeat(2,minmax(0,1fr))}.marketplace-sell{min-height:auto;overflow:visible}.marketplace-sell-head p{margin-bottom:10px}.marketplace-footer{display:none}
 }
 
