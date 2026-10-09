@@ -16,12 +16,10 @@ var Mailbox={
         var self=this;
         var close=document.getElementById("mailbox-close");
         var claim=document.getElementById("mailbox-claim");
-        var claimAll=document.getElementById("mailbox-claim-all");
         var remove=document.getElementById("mailbox-delete");
 
         if(close) close.onclick=function(){self.Hide();GameCef.sendJson("mailbox:close",{});};
         if(claim) claim.onclick=function(){self.Claim();};
-        if(claimAll) claimAll.onclick=function(){GameCef.sendJson("mailbox:claim-all",{});};
         if(remove) remove.onclick=function(){self.Delete();};
 
         this.screen.addEventListener("click",function(event){
@@ -81,15 +79,10 @@ var Mailbox={
 
     RenderUnread:function(){
         var unread=0;
-        var hasAttachments=false;
         for(var i=0;i<this.messages.length;i++){
             if(!this.Get(this.messages[i],"IsRead","isRead")) unread++;
-            var attachments=this.Get(this.messages[i],"Attachments","attachments")||[];
-            if(attachments.length) hasAttachments=true;
         }
         this.SetText("mailbox-unread",unread+" "+this.Plural(unread,"непрочитане","непрочитаних"));
-        var claimAll=document.getElementById("mailbox-claim-all");
-        if(claimAll) claimAll.disabled=!hasAttachments;
     },
 
     RenderList:function(){
@@ -236,9 +229,14 @@ var Mailbox={
     Plural:function(value,one,many){return Number(value)===1?one:many;}
 };
 
+var mailboxBuffer="";
+
 GameCef.on("mailbox:show",function(data){Mailbox.Show(data);});
 GameCef.on("mailbox:hide",function(){Mailbox.Hide();});
 GameCef.on("mailbox:set",function(data){Mailbox.SetData(data);});
+GameCef.on("mailbox:set-begin",function(){mailboxBuffer="";});
+GameCef.on("mailbox:set-chunk",function(data){mailboxBuffer+=data||"";});
+GameCef.on("mailbox:set-end",function(){Mailbox.SetData(mailboxBuffer);mailboxBuffer="";});
 GameCef.on("mailbox:messages",function(data){Mailbox.SetMessages(data);});
 
 Mailbox.Init();
