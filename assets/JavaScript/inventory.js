@@ -631,12 +631,29 @@ var Inventory = {
         }
     }
 };
+var inventoryBuffer = "";
+
 GameCef.on("inventory:show", function (data) {
     Inventory.Show(data);
 });
+
 GameCef.on("inventory:set", function (data) {
     Inventory.SetData(data);
 });
+
+GameCef.on("inventory:set-begin", function () {
+    inventoryBuffer = "";
+});
+
+GameCef.on("inventory:set-chunk", function (data) {
+    inventoryBuffer += data || "";
+});
+
+GameCef.on("inventory:set-end", function () {
+    Inventory.SetData(inventoryBuffer);
+    inventoryBuffer = "";
+});
+
 GameCef.on("inventory:hide", function () {
     Inventory.Hide();
 });
