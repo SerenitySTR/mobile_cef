@@ -44,6 +44,10 @@ var Mailbox = {
             return;
         if (data !== undefined && data !== null && data !== "")
             this.SetData(data);
+
+        this.selectedId = null;
+        this.Render();
+
         this.screen.classList.add("active");
         this.screen.setAttribute("aria-hidden", "false");
         if (typeof Loading !== "undefined" && Loading.Hide)
