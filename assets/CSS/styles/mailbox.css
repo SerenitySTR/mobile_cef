@@ -170,13 +170,35 @@
     padding-right: 3px;
 }
 
-.mailbox-list::-webkit-scrollbar,.mailbox-details::-webkit-scrollbar {
-    width: 4px;
+.mailbox-list,
+.mailbox-details {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(72, 163, 220, .68) rgba(13, 36, 53, .42);
 }
 
-.mailbox-list::-webkit-scrollbar-thumb,.mailbox-details::-webkit-scrollbar-thumb {
+.mailbox-list::-webkit-scrollbar,
+.mailbox-details::-webkit-scrollbar {
+    width: 8px;
+}
+
+.mailbox-list::-webkit-scrollbar-track,
+.mailbox-details::-webkit-scrollbar-track {
     border-radius: 99px;
-    background: rgba(72,163,220,.32);
+    background: rgba(13, 36, 53, .42);
+}
+
+.mailbox-list::-webkit-scrollbar-thumb,
+.mailbox-details::-webkit-scrollbar-thumb {
+    border: 2px solid transparent;
+    border-radius: 99px;
+    background: rgba(72, 163, 220, .68);
+    background-clip: padding-box;
+}
+
+.mailbox-list::-webkit-scrollbar-thumb:hover,
+.mailbox-details::-webkit-scrollbar-thumb:hover {
+    background: rgba(82, 190, 255, .9);
+    background-clip: padding-box;
 }
 
 .mailbox-entry {
