@@ -6,98 +6,74 @@ function isMobileHudPlatform() {
     const screenShortSide = Math.min(screen.width || window.innerWidth, screen.height || window.innerHeight);
     const devicePixelRatio = Number(window.devicePixelRatio) || 1;
     const mobilePlatform = /Android|iPhone|iPad|iPod|Linux arm|aarch64/i.test(navigator.platform || "");
-
     return mobileUserAgent || mobilePlatform ||
         (touchDevice && screenShortSide <= 900) ||
         (viewportShortSide > 0 && viewportShortSide <= 720 && devicePixelRatio > 1);
 }
-
 window.hudMobilePlatform = isMobileHudPlatform();
 window.__hudVisible = window.__hudVisible ?? null;
-
 function isCurrentHudMobilePlatform() {
     return window.hudMobilePlatform === true;
 }
-
 function syncHudPlatformClass() {
     const mobile = isCurrentHudMobilePlatform();
     document.body.classList.toggle("hud-platform-mobile", mobile);
     document.body.classList.toggle("hud-platform-pc", !mobile);
     return mobile;
 }
-
 syncHudPlatformClass();
-
 const pcHudPendingCalls = [];
-
 function sendPcHud(action, data) {
     if (isCurrentHudMobilePlatform())
         return;
-
     const api = window.AntaresHUD;
-
     if (!api) {
         pcHudPendingCalls.push([action, data]);
         return;
     }
-
     if (action === "show") {
         api.show?.();
         return;
     }
-
     if (action === "hide") {
         api.hide?.();
         return;
     }
-
     if (action === "update")
         api.update?.(data);
 }
-
 window.flushPcHudPendingCalls = function () {
     if (isCurrentHudMobilePlatform() || !window.AntaresHUD)
         return;
-
     while (pcHudPendingCalls.length > 0) {
         const [action, data] = pcHudPendingCalls.shift();
         sendPcHud(action, data);
     }
 };
-
 const hud = document.getElementById("hud");
-
 const HUD_REFERENCE_WIDTH = 1280;
 const HUD_REFERENCE_HEIGHT = 720;
-
 function updateHudMobileScale() {
     const width = Math.max(1, window.innerWidth || document.documentElement.clientWidth);
     const height = Math.max(1, window.innerHeight || document.documentElement.clientHeight);
     const shortSide = Math.min(width, height);
     const isPhone = width <= 1400 || height <= 800 || shortSide <= 720;
-
     const fit = Math.min(width / HUD_REFERENCE_WIDTH, height / HUD_REFERENCE_HEIGHT);
     let scale = fit * (isPhone ? 0.56 : 0.82) * 1.05;
     scale = Math.max(isPhone ? 0.38 : 0.62, Math.min(isPhone ? 0.58 : 0.90, scale));
-
     hud.style.setProperty("--hud-scale", scale.toFixed(4), "important");
-
     const corner = document.getElementById("hud-corner-info");
     if (corner) {
         const cornerScale = Math.max(0.399, Math.min(0.567, scale * 0.90));
         corner.style.setProperty("transform", `scale(${cornerScale.toFixed(4)})`, "important");
         corner.style.setProperty("transform-origin", "bottom left", "important");
     }
-
     hud.classList.toggle("hud-compact", isPhone);
 }
-
 updateHudMobileScale();
 window.addEventListener("resize", updateHudMobileScale, { passive: true });
 window.addEventListener("orientationchange", () => setTimeout(updateHudMobileScale, 120));
-
 const HUD_RING_LENGTH = 2 * Math.PI * 49;
-
 const hudStats = {
     health: {
         ring: document.getElementById("hud-health-ring-perimeter") || document.getElementById("hud-health-ring"),
@@ -112,7 +88,6 @@ const hudStats = {
         value: document.getElementById("hud-hunger-value")
     }
 };
-
 const hudMoneyValue = document.getElementById("hud-money-value");
 const hudIdValue = document.getElementById("hud-id-value");
 const hudPlayerName = document.getElementById("hud-player-name");
@@ -122,7 +97,6 @@ const hudAmmoClip = document.getElementById("hud-ammo-clip");
 const hudAmmoTotal = document.getElementById("hud-ammo-total");
 const hudWeaponImage = document.getElementById("hud-weapon-image");
 const hudWanted = document.getElementById("hud-wanted");
-
 const HUD_WEAPON_IMAGES = {
     0: "fist.webp",
     1: "brassknuckle.webp",
@@ -169,18 +143,14 @@ const HUD_WEAPON_IMAGES = {
     45: "infrared.webp",
     46: "parachute.webp"
 };
-
 function clamp(value, min, max) {
     return Math.max(min, Math.min(max, value));
 }
-
 function createWantedStars() {
     if (!hudWanted) {
         return;
     }
-
     hudWanted.innerHTML = "";
-
     for (let i = 0; i < 6; i++) {
         const star = document.createElementNS("http://www.w3.org/2000/svg", "svg");
         star.setAttribute("viewBox", "0 0 24 24");
@@ -189,76 +159,63 @@ function createWantedStars() {
         hudWanted.appendChild(star);
     }
 }
-
 function parseHudWanted(value) {
     if (value && typeof value === "object") {
         value = value.wanted ?? value.Wanted ?? value.wantedLevel ?? value.WantedLevel ?? value.level ?? value.Level;
-    } else if (typeof value === "string") {
+    }
+    else if (typeof value === "string") {
         const trimmed = value.trim();
         if (trimmed.startsWith("{") || trimmed.startsWith("[")) {
             try {
                 return parseHudWanted(JSON.parse(trimmed));
-            } catch {}
+            }
+            catch { }
         }
     }
-
     const numeric = Number(value);
     return Number.isFinite(numeric) ? clamp(Math.trunc(numeric), 0, 6) : null;
 }
-
 function updateHudWanted(value) {
     sendPcHud("update", { wanted: value });
     if (!hudWanted) {
         return;
     }
-
     const wanted = parseHudWanted(value);
     if (wanted === null) {
         return;
     }
-
     const stars = hudWanted.querySelectorAll(".hud-wanted-star");
-
     stars.forEach((star, index) => {
         star.classList.toggle("active", index < wanted);
     });
 }
-
 createWantedStars();
-
 function updateHudWeapon(data) {
-    if (data) sendPcHud("update", data);
+    if (data)
+        sendPcHud("update", data);
     if (!data) {
         return;
     }
-
     const weaponId = Math.max(0, Math.trunc(Number(data.WeaponId !== undefined ? data.WeaponId : data.weaponId) || 0));
     const ammoClip = Math.max(0, Math.trunc(Number(data.AmmoClip !== undefined ? data.AmmoClip : data.ammoClip) || 0));
     const ammoTotalValue = data.AmmoTotal ?? data.ammoTotal ?? data.maxAmmo ?? data.MaxAmmo ?? data.max_ammo ?? data.totalAmmo ?? data.TotalAmmo ?? data.ammo_total;
     const ammoTotal = Math.max(0, Math.trunc(Number(ammoTotalValue) || 0));
     const weaponFile = HUD_WEAPON_IMAGES[weaponId] || HUD_WEAPON_IMAGES[0];
-
     if (hudWeaponImage) {
         hudWeaponImage.src = "./assets/CSS/Images/Hud/Weapons/" + weaponFile;
     }
-
     const hudAmmo = hudAmmoClip?.closest(".hud-ammo");
-
     if (hudAmmo) {
         hudAmmo.style.display = weaponId === 0 ? "none" : "";
     }
-
     hudAmmoClip.textContent = ammoClip;
     hudAmmoTotal.textContent = "/" + ammoTotal;
 }
-
 function setHudRootState(root, visible) {
     if (!root)
         return;
-
     root.classList.toggle("active", visible);
     root.setAttribute("aria-hidden", visible ? "false" : "true");
-
     if (visible) {
         root.style.removeProperty("display");
         root.style.removeProperty("opacity");
@@ -266,63 +223,51 @@ function setHudRootState(root, visible) {
         root.style.removeProperty("pointer-events");
         return;
     }
-
     root.style.setProperty("display", "none", "important");
     root.style.setProperty("opacity", "0", "important");
     root.style.setProperty("visibility", "hidden", "important");
     root.style.setProperty("pointer-events", "none", "important");
 }
-
 function setHudCornerState(visible) {
     const cornerInfo = document.getElementById("hud-corner-info");
     if (!cornerInfo)
         return;
-
     cornerInfo.setAttribute("aria-hidden", visible ? "false" : "true");
-
     if (visible) {
         cornerInfo.style.removeProperty("display");
         cornerInfo.style.removeProperty("opacity");
         cornerInfo.style.removeProperty("visibility");
         return;
     }
-
     cornerInfo.style.setProperty("display", "none", "important");
     cornerInfo.style.setProperty("opacity", "0", "important");
     cornerInfo.style.setProperty("visibility", "hidden", "important");
 }
-
 function showHud() {
     window.__hudVisible = true;
     const mobile = syncHudPlatformClass();
     const pcHud = document.getElementById("pc-hud");
-
     document.body.classList.remove("hud-hidden");
-
     if (!mobile) {
         setHudRootState(hud, false);
         setHudCornerState(false);
         setHudRootState(pcHud, true);
         return;
     }
-
     setHudRootState(pcHud, false);
     setHudRootState(hud, true);
     setHudCornerState(true);
     updateHudMobileScale();
 }
-
 function hideHud() {
     window.__hudVisible = false;
     document.body.classList.add("hud-hidden");
-
     // hud:hide always means every HUD implementation must disappear.
     // Do not depend on platform detection or on the current active class.
     setHudRootState(hud, false);
     setHudRootState(document.getElementById("pc-hud"), false);
     setHudCornerState(false);
 }
-
 // Bind visibility events both through the common wrapper and directly to the
 // native CEF bridge. The direct binding makes hud:show/hud:hide independent
 // from wrapper synchronization timing while keeping GameCef.receive usable in tests.
@@ -331,149 +276,131 @@ function bindHudNativeVisibilityEvents() {
     const bridge = window.cef;
     if (!bridge || typeof bridge.on !== "function")
         return false;
-
     if (hudNativeBridge === bridge)
         return true;
-
     hudNativeBridge = bridge;
     bridge.on("hud:show", showHud);
     bridge.on("hud:hide", hideHud);
     return true;
 }
-
 function startHudVisibilityBridgeBinding() {
     if (bindHudNativeVisibilityEvents())
         return;
-
     const timer = setInterval(() => {
         if (bindHudNativeVisibilityEvents())
             clearInterval(timer);
     }, 50);
-
     setTimeout(() => clearInterval(timer), 15000);
 }
-
 function setHudStat(name, value) {
-    if (name === "health") sendPcHud("update", { health: value });
-    if (name === "armour") sendPcHud("update", { armour: value });
-    if (name === "hunger") sendPcHud("update", { hunger: value });
+    if (name === "health")
+        sendPcHud("update", { health: value });
+    if (name === "armour")
+        sendPcHud("update", { armour: value });
+    if (name === "hunger")
+        sendPcHud("update", { hunger: value });
     const stat = hudStats[name];
-
     if (!stat) {
         return;
     }
-
     value = clamp(Number(value) || 0, 0, 100);
-
     stat.ring.style.strokeDasharray = "100 100";
     stat.ring.style.strokeDashoffset = String(100 - value);
     stat.ring.closest(".hud-stat")?.style.setProperty("--progress", value);
     stat.value.textContent = Math.round(value);
 }
-
 function updateHudHealth(health, maxHealth) {
     sendPcHud("update", { health, maxHealth });
     const stat = hudStats.health;
-
     if (!stat) {
         return;
     }
-
     health = Math.max(0, Number(health) || 0);
     maxHealth = Math.max(1, Number(maxHealth) || 100);
-
     const percent = clamp(health / maxHealth * 100, 0, 100);
-
     stat.ring.style.strokeDasharray = "100 100";
     stat.ring.style.strokeDashoffset = String(100 - percent);
     stat.ring.closest(".hud-stat")?.style.setProperty("--progress", percent);
     stat.value.textContent = Math.round(health);
 }
-
 function updateHudArmour(armour) {
     sendPcHud("update", { armour });
     const stat = hudStats.armour;
-
     if (!stat) {
         return;
     }
-
     armour = clamp(Number(armour) || 0, 0, 100);
-
     stat.ring.style.strokeDasharray = "100 100";
     stat.ring.style.strokeDashoffset = String(100 - armour);
     stat.ring.closest(".hud-stat")?.style.setProperty("--progress", armour);
     stat.value.textContent = Math.round(armour);
 }
-
 function formatHudMoney(value) {
     value = Math.trunc(Number(value) || 0);
     return value.toLocaleString("ru-RU").replace(/\u00A0/g, " ");
 }
-
 function setHudText(element, value) {
-    if (!element || value === undefined || value === null) return;
+    if (!element || value === undefined || value === null)
+        return;
     element.textContent = String(value);
 }
-
 function updateHudServerIdentity(data) {
-    if (!data || typeof data !== "object") return;
+    if (!data || typeof data !== "object")
+        return;
     sendPcHud("update", data);
-
     const nickname = data.nickname ?? data.nick ?? data.name ?? data.playerName ?? data.PlayerName ?? data.Nickname;
     const id = data.id ?? data.playerId ?? data.PlayerId ?? data.ID;
     const time = data.time ?? data.serverTime ?? data.ServerTime;
     const date = data.date ?? data.serverDate ?? data.ServerDate;
-
-    if (nickname !== undefined) setHudText(hudPlayerName, nickname);
-    if (id !== undefined) setHudText(hudIdValue, Math.max(0, Math.trunc(Number(id) || 0)));
-    if (time !== undefined) setHudText(hudTimeValue, time);
-    if (date !== undefined) setHudText(hudDateValue, date);
+    if (nickname !== undefined)
+        setHudText(hudPlayerName, nickname);
+    if (id !== undefined)
+        setHudText(hudIdValue, Math.max(0, Math.trunc(Number(id) || 0)));
+    if (time !== undefined)
+        setHudText(hudTimeValue, time);
+    if (date !== undefined)
+        setHudText(hudDateValue, date);
 }
-
 function parseHudPayload(data) {
-    if (data && typeof data === "object") return data;
+    if (data && typeof data === "object")
+        return data;
     if (typeof data === "string") {
-        try { return JSON.parse(data); } catch {}
+        try {
+            return JSON.parse(data);
+        }
+        catch { }
     }
     return null;
 }
-
 function updateHud(data) {
-    if (!data || typeof data !== "object") return;
+    if (!data || typeof data !== "object")
+        return;
     sendPcHud("update", data);
     updateHudServerIdentity(data);
     if (data.health !== undefined) {
         setHudStat("health", data.health);
     }
-
     if (data.armour !== undefined) {
         setHudStat("armour", data.armour);
     }
-
     if (data.hunger !== undefined) {
         setHudStat("hunger", data.hunger);
     }
-
     if (data.money !== undefined) {
         hudMoneyValue.textContent = formatHudMoney(data.money);
     }
-
     if (data.id !== undefined) {
         hudIdValue.textContent = Math.max(0, Math.trunc(Number(data.id) || 0));
     }
-
     if (data.ammoClip !== undefined) {
         hudAmmoClip.textContent = Math.max(0, Math.trunc(Number(data.ammoClip) || 0));
     }
-
     if (data.ammoTotal !== undefined) {
         hudAmmoTotal.textContent = `/${Math.max(0, Math.trunc(Number(data.ammoTotal) || 0))}`;
     }
-
     const wanted = data.wanted ?? data.wantedLevel ?? data.Wanted ?? data.WantedLevel;
-    if (wanted !== undefined) updateHudWanted(wanted);
-
+    if (wanted !== undefined)
+        updateHudWanted(wanted);
     const weaponId = data.weaponId ?? data.WeaponId ?? data.weapon ?? data.Weapon;
     if (weaponId !== undefined) {
         updateHudWeapon({
@@ -483,23 +410,22 @@ function updateHud(data) {
         });
     }
 }
-
 if (window.GameCef) {
     GameCef.on("hud:show", showHud);
     GameCef.on("hud:hide", hideHud);
-
     GameCef.on("hud:update", data => {
         const payload = parseHudPayload(data);
-        if (payload) updateHud(payload);
+        if (payload)
+            updateHud(payload);
     });
     GameCef.on("hud:player", data => {
         const payload = parseHudPayload(data);
-        if (payload) updateHudServerIdentity(payload);
+        if (payload)
+            updateHudServerIdentity(payload);
     });
     GameCef.on("hud:nickname", data => { setHudText(hudPlayerName, data); sendPcHud("update", { nickname: data }); });
     GameCef.on("hud:time", data => { setHudText(hudTimeValue, data); sendPcHud("update", { time: data }); });
     GameCef.on("hud:date", data => { setHudText(hudDateValue, data); sendPcHud("update", { date: data }); });
-
     GameCef.on("hud:health", data => setHudStat("health", data));
     GameCef.on("hud:armour", data => setHudStat("armour", data));
     GameCef.on("hud:hunger", data => setHudStat("hunger", data));
@@ -507,62 +433,56 @@ if (window.GameCef) {
     GameCef.on("hud:id", data => updateHud({ id: data }));
     GameCef.on("hud:wanted", data => updateHudWanted(data));
     GameCef.on("hud:wantedLevel", data => updateHudWanted(data));
-
     GameCef.on("hud:weapon", data => {
         try {
             updateHudWeapon(typeof data === "string" ? JSON.parse(data) : data);
-        } catch {}
+        }
+        catch { }
     });
-
     GameCef.on("hud:ammo", data => {
         try {
             updateHud(JSON.parse(data));
-        } catch {}
+        }
+        catch { }
     });
 }
-
 startHudVisibilityBridgeBinding();
-
 let hudPcStatsInitialized = false;
-
 function initializeHudPcStats() {
     if (hudPcStatsInitialized) {
         return true;
     }
-
     if (!window.cef || typeof window.cef.on !== "function" || typeof window.cef.emit !== "function") {
         return false;
     }
-
     window.cef.on("game:data:wantedLevel", value => updateHudWanted(value));
     window.cef.on("game:data:hud", value => {
         const payload = parseHudPayload(value);
-        if (payload) updateHud(payload);
+        if (payload)
+            updateHud(payload);
     });
     window.cef.on("game:data:playerInfo", value => {
         const payload = parseHudPayload(value);
-        if (payload) updateHudServerIdentity(payload);
+        if (payload)
+            updateHudServerIdentity(payload);
     });
-
     window.cef.on("game:data:playerStats", (...args) => {
         let stats = null;
-
         if (args.length === 1) {
             const value = args[0];
-
             if (value && typeof value === "object") {
                 stats = value;
-            } else if (typeof value === "string") {
+            }
+            else if (typeof value === "string") {
                 try {
                     const parsed = JSON.parse(value);
-
                     if (parsed && typeof parsed === "object") {
                         stats = parsed;
                     }
-                } catch {}
+                }
+                catch { }
             }
         }
-
         if (stats) {
             const health = stats.health ?? stats.Health ?? stats.hp ?? stats.HP;
             const maxHealth = stats.maxHealth ?? stats.MaxHealth ?? stats.max_health ?? 100;
@@ -573,24 +493,20 @@ function initializeHudPcStats() {
             const maxAmmo = stats.maxAmmo ?? stats.MaxAmmo ?? stats.max_ammo ?? stats.ammoTotal ?? stats.AmmoTotal ?? stats.totalAmmo ?? stats.TotalAmmo ?? stats.ammo_total;
             const hunger = stats.hunger ?? stats.Hunger;
             const money = stats.money ?? stats.Money;
-
             updateHudServerIdentity(stats);
-
-            if (hunger !== undefined) setHudStat("hunger", hunger);
-            if (money !== undefined && hudMoneyValue) hudMoneyValue.textContent = formatHudMoney(money);
-
+            if (hunger !== undefined)
+                setHudStat("hunger", hunger);
+            if (money !== undefined && hudMoneyValue)
+                hudMoneyValue.textContent = formatHudMoney(money);
             if (health !== undefined) {
                 updateHudHealth(health, maxHealth);
             }
-
             if (armour !== undefined) {
                 updateHudArmour(armour);
             }
-
             if (wanted !== undefined) {
                 updateHudWanted(wanted);
             }
-
             if (weapon !== undefined || ammo !== undefined || maxAmmo !== undefined) {
                 updateHudWeapon({
                     WeaponId: weapon ?? 0,
@@ -598,24 +514,18 @@ function initializeHudPcStats() {
                     AmmoTotal: maxAmmo ?? 0
                 });
             }
-
             return;
         }
-
         const [health, maxHealth, armour, breath, wanted, weapon, ammo, maxAmmo] = args;
-
         if (health !== undefined) {
             updateHudHealth(health, maxHealth);
         }
-
         if (armour !== undefined) {
             updateHudArmour(armour);
         }
-
         if (wanted !== undefined) {
             updateHudWanted(wanted);
         }
-
         if (weapon !== undefined || ammo !== undefined || maxAmmo !== undefined) {
             updateHudWeapon({
                 WeaponId: weapon ?? 0,
@@ -624,48 +534,40 @@ function initializeHudPcStats() {
             });
         }
     });
-
     window.cef.emit("game:data:pollPlayerStats", true, 50);
     hudPcStatsInitialized = true;
     return true;
 }
-
 function startHudPcStats() {
     if (initializeHudPcStats()) {
         return;
     }
-
     const timer = setInterval(() => {
         if (initializeHudPcStats()) {
             clearInterval(timer);
         }
     }, 250);
-
     setTimeout(() => {
         clearInterval(timer);
     }, 15000);
 }
-
 startHudPcStats();
-
 window.addEventListener("load", () => {
     startHudPcStats();
-
     if (hudPcStatsInitialized && window.cef && typeof window.cef.emit === "function") {
         window.cef.emit("game:data:pollPlayerStats", true, 50);
     }
 });
-
 window.addEventListener("focus", () => {
     if (initializeHudPcStats() && window.cef && typeof window.cef.emit === "function") {
         window.cef.emit("game:data:pollPlayerStats", true, 50);
     }
 });
-
 (function enableHudBrowserPreview() {
     try {
         const params = new URLSearchParams(window.location.search);
-        if (params.get("hudtest") !== "1") return;
+        if (params.get("hudtest") !== "1")
+            return;
         window.hudMobilePlatform = true;
         showHud();
         setHudStat("health", 83);
@@ -675,5 +577,6 @@ window.addEventListener("focus", () => {
         hudMoneyValue.textContent = formatHudMoney(125430);
         updateHudWanted(2);
         updateHudServerIdentity({ nickname: "Nastya Petrova", id: 15, time: "22:31", date: "14.09.2025" });
-    } catch (_) {}
+    }
+    catch (_) { }
 })();

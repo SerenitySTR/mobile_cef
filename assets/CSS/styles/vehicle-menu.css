@@ -14,9 +14,17 @@
     transition: opacity 0.16s ease, background 0.16s ease;
 }
 
-#vehicle-menu.active { display: flex; }
-#vehicle-menu.opened { opacity: 1; }
-#vehicle-menu.closing { opacity: 0; }
+#vehicle-menu.active {
+    display: flex;
+}
+
+#vehicle-menu.opened {
+    opacity: 1;
+}
+
+#vehicle-menu.closing {
+    opacity: 0;
+}
 
 .vehicle-quick-menu {
     position: relative;
@@ -50,8 +58,7 @@
     border-radius: 28px;
     outline: none;
     background: rgba(18, 21, 28, 0.80);
-    box-shadow:
-        0 12px 28px rgba(0,0,0,0.28),
+    box-shadow: 0 12px 28px rgba(0,0,0,0.28),
         inset 0 1px 0 rgba(255,255,255,0.028);
     color: rgba(245,247,251,0.96);
     font-family: "Montserrat", sans-serif;
@@ -63,8 +70,7 @@
     transform: translateY(-1px) scale(1.015);
     background: rgba(25, 29, 38, 0.90);
     border-color: rgba(255,255,255,0.075);
-    box-shadow:
-        0 15px 34px rgba(0,0,0,0.34),
+    box-shadow: 0 15px 34px rgba(0,0,0,0.34),
         inset 0 1px 0 rgba(255,255,255,0.045);
 }
 
@@ -72,10 +78,25 @@
     transform: scale(0.985);
 }
 
-.quick-engine { left: 18px; top: 78px; }
-.quick-lights { right: 18px; top: 78px; }
-.quick-trunk { left: 18px; bottom: 78px; }
-.quick-doors { right: 18px; bottom: 78px; }
+.quick-engine {
+    left: 18px;
+    top: 78px;
+}
+
+.quick-lights {
+    right: 18px;
+    top: 78px;
+}
+
+.quick-trunk {
+    left: 18px;
+    bottom: 78px;
+}
+
+.quick-doors {
+    right: 18px;
+    bottom: 78px;
+}
 
 .vehicle-quick-icon {
     width: 27px;
@@ -166,8 +187,7 @@
     border: 1px solid rgba(255,255,255,0.05);
     border-radius: 50%;
     background: rgba(18, 21, 28, 0.78);
-    box-shadow:
-        0 11px 26px rgba(0,0,0,0.30),
+    box-shadow: 0 11px 26px rgba(0,0,0,0.30),
         inset 0 1px 0 rgba(255,255,255,0.035);
     cursor: pointer;
     transition: transform 0.13s ease, background 0.13s ease, border-color 0.13s ease;
@@ -209,12 +229,10 @@
         backdrop-filter: blur(4px);
         -webkit-backdrop-filter: blur(4px);
     }
-
     .vehicle-quick-menu {
         width: 440px;
         height: 250px;
     }
-
     .vehicle-quick-action {
         width: 172px;
         height: 42px;
@@ -222,52 +240,54 @@
         padding: 0 12px;
         border-radius: 23px;
     }
-
-    .quick-engine { left: 14px; top: 58px; }
-    .quick-lights { right: 14px; top: 58px; }
-    .quick-trunk { left: 14px; bottom: 58px; }
-    .quick-doors { right: 14px; bottom: 58px; }
-
+    .quick-engine {
+        left: 14px;
+        top: 58px;
+    }
+    .quick-lights {
+        right: 14px;
+        top: 58px;
+    }
+    .quick-trunk {
+        left: 14px;
+        bottom: 58px;
+    }
+    .quick-doors {
+        right: 14px;
+        bottom: 58px;
+    }
     .vehicle-quick-icon {
         width: 22px;
         height: 22px;
         flex-basis: 22px;
     }
-
     .vehicle-quick-icon svg {
         width: 18px;
         height: 18px;
     }
-
     .vehicle-quick-copy {
         gap: 5px;
     }
-
     .vehicle-quick-copy strong {
         font-size: 11px;
     }
-
     .vehicle-quick-copy small {
         gap: 4px;
         font-size: 6px;
     }
-
     .vehicle-quick-copy small::before {
         width: 5px;
         height: 5px;
         flex-basis: 5px;
     }
-
     .vehicle-quick-close {
         width: 42px;
         height: 42px;
     }
-
     .vehicle-quick-close svg {
         width: 20px;
         height: 20px;
     }
-
     .vehicle-quick-hint {
         bottom: 5px;
         font-size: 6px;
@@ -275,11 +295,14 @@
 }
 
 @media (max-height: 430px) {
-    .vehicle-quick-menu { transform: scale(0.90); }
-    #vehicle-menu.opened .vehicle-quick-menu { transform: scale(0.92); }
+    .vehicle-quick-menu {
+        transform: scale(0.90);
+    }
+    #vehicle-menu.opened .vehicle-quick-menu {
+        transform: scale(0.92);
+    }
 }
 
-.vehicle-menu-test-buttons,
-.vehicle-menu-test-button {
+.vehicle-menu-test-buttons, .vehicle-menu-test-button {
     display: none !important;
 }

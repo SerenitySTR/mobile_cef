@@ -14,9 +14,17 @@
     transition: opacity 0.16s ease, background 0.16s ease;
 }
 
-#quick-menu.active { display: flex; }
-#quick-menu.opened { opacity: 1; }
-#quick-menu.closing { opacity: 0; }
+#quick-menu.active {
+    display: flex;
+}
+
+#quick-menu.opened {
+    opacity: 1;
+}
+
+#quick-menu.closing {
+    opacity: 0;
+}
 
 .quick-menu-shell {
     position: relative;
@@ -57,7 +65,10 @@
     scrollbar-width: none;
 }
 
-.quick-menu-list::-webkit-scrollbar { width: 0; height: 0; }
+.quick-menu-list::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+}
 
 .quick-menu-item {
     width: 100%;
@@ -72,8 +83,7 @@
     border-radius: 29px;
     outline: none;
     background: rgba(18, 21, 28, 0.82);
-    box-shadow:
-        0 12px 28px rgba(0,0,0,0.29),
+    box-shadow: 0 12px 28px rgba(0,0,0,0.29),
         inset 0 1px 0 rgba(255,255,255,0.03);
     color: rgba(245,247,251,0.97);
     font-family: "Montserrat", sans-serif;
@@ -85,12 +95,13 @@
     transform: translateY(-1px) scale(1.012);
     background: rgba(26, 30, 39, 0.92);
     border-color: rgba(255,255,255,0.08);
-    box-shadow:
-        0 15px 34px rgba(0,0,0,0.35),
+    box-shadow: 0 15px 34px rgba(0,0,0,0.35),
         inset 0 1px 0 rgba(255,255,255,0.05);
 }
 
-.quick-menu-item:active { transform: scale(0.985); }
+.quick-menu-item:active {
+    transform: scale(0.985);
+}
 
 .quick-menu-item.disabled {
     opacity: 0.38;
@@ -169,8 +180,9 @@
     filter: drop-shadow(0 0 5px rgba(77,217,130,0.18));
 }
 
-
-.quick-menu-item.no-status .quick-menu-status { display: none; }
+.quick-menu-item.no-status .quick-menu-status {
+    display: none;
+}
 
 .quick-menu-item.status-positive .quick-menu-status {
     color: #6fdc98;
@@ -190,7 +202,6 @@
     box-shadow: 0 0 8px rgba(241,76,85,0.30);
 }
 
-
 .quick-menu-close {
     position: absolute;
     left: 50%;
@@ -206,8 +217,7 @@
     border: 1px solid rgba(255,255,255,0.055);
     border-radius: 50%;
     background: rgba(18, 21, 28, 0.82);
-    box-shadow:
-        0 11px 26px rgba(0,0,0,0.31),
+    box-shadow: 0 11px 26px rgba(0,0,0,0.31),
         inset 0 1px 0 rgba(255,255,255,0.04);
     cursor: pointer;
     transition: transform 0.13s ease, background 0.13s ease, border-color 0.13s ease;
@@ -219,7 +229,9 @@
     border-color: rgba(255,255,255,0.11);
 }
 
-.quick-menu-close:active { transform: translate(-50%, -50%) scale(0.94); }
+.quick-menu-close:active {
+    transform: translate(-50%, -50%) scale(0.94);
+}
 
 .quick-menu-close svg {
     width: 24px;
@@ -247,20 +259,17 @@
         backdrop-filter: blur(4px);
         -webkit-backdrop-filter: blur(4px);
     }
-
     .quick-menu-shell {
         gap: 68px;
         min-width: 470px;
         max-height: 430px;
         padding: 22px 0 28px;
     }
-
     .quick-menu-list {
         width: 190px;
         max-height: 370px;
         gap: 10px;
     }
-
     .quick-menu-item {
         min-height: 44px;
         flex-basis: 44px;
@@ -268,33 +277,38 @@
         padding: 0 12px;
         border-radius: 23px;
     }
-
     .quick-menu-icon {
         width: 23px;
         height: 23px;
         flex-basis: 23px;
     }
-
     .quick-menu-icon svg {
         width: 18px;
         height: 18px;
     }
-
-    .quick-menu-copy { gap: 5px; }
-    .quick-menu-copy strong { font-size: 11px; }
-    .quick-menu-status { gap: 4px; font-size: 6px; }
-    .quick-menu-status::before { width: 5px; height: 5px; flex-basis: 5px; }
-
+    .quick-menu-copy {
+        gap: 5px;
+    }
+    .quick-menu-copy strong {
+        font-size: 11px;
+    }
+    .quick-menu-status {
+        gap: 4px;
+        font-size: 6px;
+    }
+    .quick-menu-status::before {
+        width: 5px;
+        height: 5px;
+        flex-basis: 5px;
+    }
     .quick-menu-close {
         width: 44px;
         height: 44px;
     }
-
     .quick-menu-close svg {
         width: 20px;
         height: 20px;
     }
-
     .quick-menu-hint {
         bottom: 4px;
         font-size: 6px;
@@ -302,6 +316,10 @@
 }
 
 @media (max-height: 430px) {
-    .quick-menu-shell { transform: scale(0.90); }
-    #quick-menu.opened .quick-menu-shell { transform: scale(0.92); }
+    .quick-menu-shell {
+        transform: scale(0.90);
+    }
+    #quick-menu.opened .quick-menu-shell {
+        transform: scale(0.92);
+    }
 }

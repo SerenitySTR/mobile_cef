@@ -1,5 +1,4 @@
-html,
-body {
+html, body {
     width: 100%;
     height: 100%;
     overflow: hidden;
@@ -11,8 +10,7 @@ body {
     inset: 0;
     align-items: center;
     justify-content: center;
-    padding:
-        max(26px, env(safe-area-inset-top))
+    padding: max(26px, env(safe-area-inset-top))
         max(18px, env(safe-area-inset-right))
         max(26px, env(safe-area-inset-bottom))
         max(18px, env(safe-area-inset-left));
@@ -27,8 +25,7 @@ body {
 .authorization-background {
     position: absolute;
     inset: 0;
-    background:
-        radial-gradient(circle at 50% 12%, rgba(73, 187, 255, 0.18), transparent 34%),
+    background: radial-gradient(circle at 50% 12%, rgba(73, 187, 255, 0.18), transparent 34%),
         radial-gradient(circle at 18% 82%, rgba(16, 91, 164, 0.28), transparent 28%),
         linear-gradient(180deg, rgba(4, 11, 24, 0.16), rgba(1, 6, 14, 0.56)),
         url("../Images/Registration/background-reference.png") center center / cover no-repeat;
@@ -36,8 +33,7 @@ body {
     transform: scale(1.02);
 }
 
-#authorization::before,
-#authorization::after {
+#authorization::before, #authorization::after {
     content: "";
     position: absolute;
     inset: 0;
@@ -45,8 +41,7 @@ body {
 }
 
 #authorization::before {
-    background:
-        radial-gradient(circle at 50% 18%, rgba(87, 199, 255, 0.12), transparent 24%),
+    background: radial-gradient(circle at 50% 18%, rgba(87, 199, 255, 0.12), transparent 24%),
         radial-gradient(circle at 50% 100%, rgba(23, 123, 198, 0.16), transparent 34%);
     z-index: -1;
 }
@@ -74,8 +69,7 @@ body {
     border: 1px solid rgba(89, 195, 255, 0.68);
     border-radius: 28px;
     background: linear-gradient(180deg, rgba(4, 15, 30, 0.88), rgba(3, 10, 21, 0.78));
-    box-shadow:
-        inset 0 1px 0 rgba(255, 255, 255, 0.08),
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08),
         0 24px 60px rgba(0, 6, 16, 0.5),
         0 0 32px rgba(46, 161, 255, 0.12);
     backdrop-filter: blur(14px);
@@ -175,8 +169,7 @@ body {
     background: linear-gradient(90deg, rgba(5, 15, 26, 0.9), rgba(4, 11, 21, 0.74));
     color: #f6fbff;
     font-size: 16px;
-    transition:
-        border-color 0.25s ease,
+    transition: border-color 0.25s ease,
         box-shadow 0.25s ease,
         background 0.25s ease;
 }
@@ -188,8 +181,7 @@ body {
 .authorization-field input:focus {
     border-color: rgba(88, 201, 255, 0.92);
     background: linear-gradient(90deg, rgba(6, 21, 36, 0.96), rgba(5, 16, 28, 0.86));
-    box-shadow:
-        0 0 0 1px rgba(88, 201, 255, 0.12),
+    box-shadow: 0 0 0 1px rgba(88, 201, 255, 0.12),
         0 0 18px rgba(55, 179, 255, 0.12);
 }
 
@@ -241,8 +233,7 @@ body {
     font-size: 18px;
     font-weight: 700;
     letter-spacing: -0.01em;
-    box-shadow:
-        inset 0 1px 0 rgba(255, 255, 255, 0.16),
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.16),
         0 10px 26px rgba(11, 103, 189, 0.34);
     cursor: pointer;
     transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
@@ -250,8 +241,7 @@ body {
 
 #authorization-button:hover {
     filter: brightness(1.06);
-    box-shadow:
-        inset 0 1px 0 rgba(255, 255, 255, 0.18),
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.18),
         0 12px 28px rgba(11, 103, 189, 0.4);
 }
 
@@ -304,10 +294,7 @@ body {
     animation: authorizationLogoEnter 0.44s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
-#authorization.active .authorization-headline,
-#authorization.active .authorization-field,
-#authorization.active #authorization-button,
-#authorization.active .authorization-footer {
+#authorization.active .authorization-headline, #authorization.active .authorization-field, #authorization.active #authorization-button, #authorization.active .authorization-footer {
     animation: authorizationItemEnter 0.36s ease both;
 }
 
@@ -336,7 +323,6 @@ body {
         opacity: 0;
         transform: translateY(22px) scale(0.975);
     }
-
     to {
         opacity: 1;
         transform: translateY(0) scale(1);
@@ -348,7 +334,6 @@ body {
         opacity: 0;
         transform: translateY(-12px) scale(0.94);
     }
-
     to {
         opacity: 1;
         transform: translateY(0) scale(1);
@@ -360,7 +345,6 @@ body {
         opacity: 0;
         transform: translateY(10px);
     }
-
     to {
         opacity: 1;
         transform: translateY(0);
@@ -371,33 +355,26 @@ body {
     .authorization-container {
         max-width: 100%;
     }
-
     .authorization-panel {
         padding: 28px 22px 20px;
         border-radius: 24px;
     }
-
     .authorization-panel::before {
         border-radius: 22px;
     }
-
     .authorization-badge {
         top: 18px;
         right: 18px;
     }
-
     .authorization-logo {
         width: min(68vw, 255px);
     }
-
     .authorization-headline h1 {
         font-size: 29px;
     }
-
     .authorization-field {
         height: 58px;
     }
-
     #authorization-button {
         height: 56px;
         font-size: 17px;
@@ -409,33 +386,26 @@ body {
         padding-left: 14px;
         padding-right: 14px;
     }
-
     .authorization-panel {
         padding: 24px 18px 18px;
     }
-
     .authorization-headline {
         margin-bottom: 20px;
     }
-
     .authorization-headline h1 {
         font-size: 26px;
     }
-
     .authorization-headline p {
         font-size: 14px;
     }
-
     .authorization-field {
         height: 54px;
         margin-bottom: 12px;
     }
-
     .authorization-field input {
         padding-left: 52px;
         font-size: 15px;
     }
-
     #authorization-button {
         height: 54px;
         font-size: 16px;
@@ -447,16 +417,13 @@ body {
         width: min(55vw, 238px);
         margin-bottom: 6px;
     }
-
     .authorization-headline {
         margin-bottom: 18px;
     }
-
     .authorization-field {
         height: 56px;
         margin-bottom: 12px;
     }
-
     #authorization-button {
         height: 56px;
     }
@@ -466,48 +433,39 @@ body {
     #authorization {
         align-items: flex-start;
     }
-
     .authorization-panel {
         margin-top: 8px;
         padding-top: 24px;
     }
-
     .authorization-badge {
         top: 16px;
     }
-
     .authorization-logo {
         width: min(45vw, 187px);
         margin-bottom: 2px;
     }
-
     .authorization-headline h1 {
         font-size: 24px;
     }
-
     .authorization-headline p {
         font-size: 13px;
     }
-
     .authorization-field {
         height: 50px;
     }
-
     #authorization-button {
         height: 50px;
     }
-
     .authorization-footer {
         margin-top: 14px;
     }
 }
 
-
 /* =========================================================
    Full responsive authorization: desktop / laptop / tablet / mobile
    ========================================================= */
-#authorization,
-#authorization * {
+
+#authorization, #authorization * {
     box-sizing: border-box;
 }
 
@@ -532,13 +490,13 @@ body {
     padding: var(--auth-panel-padding-y) var(--auth-panel-padding-x) 22px;
 }
 
-.authorization-field,
-#authorization-button {
+.authorization-field, #authorization-button {
     height: var(--auth-field-height);
     border-radius: var(--auth-radius);
 }
 
 /* Large desktop */
+
 @media (min-width: 1601px) and (min-height: 900px) {
     #authorization {
         --auth-panel-width: 540px;
@@ -548,6 +506,7 @@ body {
 }
 
 /* Laptop / compact desktop */
+
 @media (max-width: 1600px), (max-height: 899px) {
     body.hud-platform-pc #authorization {
         --auth-panel-width: 485px;
@@ -559,46 +518,39 @@ body {
         padding-top: max(14px, env(safe-area-inset-top));
         padding-bottom: max(14px, env(safe-area-inset-bottom));
     }
-
     body.hud-platform-pc .authorization-logo {
         width: min(43vw, 217px);
         max-height: 104px;
         margin-bottom: 3px;
     }
-
     body.hud-platform-pc .authorization-headline {
         margin-bottom: 15px;
     }
-
     body.hud-platform-pc .authorization-headline h1 {
         margin-bottom: 5px;
         font-size: 27px;
     }
-
     body.hud-platform-pc .authorization-headline p {
         font-size: 13px;
         line-height: 1.34;
     }
-
     body.hud-platform-pc .authorization-field {
         margin-bottom: 10px;
     }
-
     body.hud-platform-pc .authorization-field input {
         font-size: 14px;
     }
-
     body.hud-platform-pc #authorization-button {
         margin-top: 3px;
         font-size: 16px;
     }
-
     body.hud-platform-pc .authorization-footer {
         margin-top: 13px;
     }
 }
 
 /* Extra-low laptop */
+
 @media (max-height: 700px) and (min-width: 900px) {
     body.hud-platform-pc #authorization {
         --auth-panel-width: 455px;
@@ -606,35 +558,30 @@ body {
         --auth-field-height: 46px;
         --auth-panel-padding-y: 15px;
     }
-
     body.hud-platform-pc .authorization-logo {
         width: 183px;
         max-height: 82px;
         margin-bottom: 0;
     }
-
     body.hud-platform-pc .authorization-headline {
         margin-bottom: 10px;
     }
-
     body.hud-platform-pc .authorization-headline h1 {
         font-size: 23px;
     }
-
     body.hud-platform-pc .authorization-headline p {
         font-size: 12px;
     }
-
     body.hud-platform-pc .authorization-field {
         margin-bottom: 8px;
     }
-
     body.hud-platform-pc .authorization-footer {
         margin-top: 9px;
     }
 }
 
 /* Mobile + tablet landscape: keep the same centered composition as desktop */
+
 @media (orientation: landscape) and (min-width: 600px) {
     body.hud-platform-mobile #authorization {
         --auth-panel-width: 520px;
@@ -645,13 +592,11 @@ body {
         --auth-radius: 12px;
         align-items: center;
         justify-content: center;
-        padding:
-            max(8px, env(safe-area-inset-top))
+        padding: max(8px, env(safe-area-inset-top))
             max(12px, env(safe-area-inset-right))
             max(8px, env(safe-area-inset-bottom))
             max(12px, env(safe-area-inset-left));
     }
-
     body.hud-platform-mobile .authorization-container {
         width: min(92vw, var(--auth-panel-width));
         max-width: var(--auth-panel-width);
@@ -659,7 +604,6 @@ body {
         display: flex;
         justify-content: center;
     }
-
     body.hud-platform-mobile .authorization-panel {
         width: 100%;
         display: flex;
@@ -669,96 +613,80 @@ body {
         padding: var(--auth-panel-padding-y) var(--auth-panel-padding-x) 16px;
         border-radius: 22px;
     }
-
     body.hud-platform-mobile .authorization-panel::before {
         border-radius: 20px;
     }
-
     body.hud-platform-mobile .authorization-badge {
         top: 13px;
         right: 15px;
         padding: 5px 9px;
         font-size: 10px;
     }
-
     body.hud-platform-mobile .authorization-logo {
         width: min(38vw, 205px);
         max-height: 104px;
         margin: 0 auto 2px;
         align-self: center;
     }
-
     body.hud-platform-mobile .authorization-headline {
         width: min(100%, var(--auth-form-width));
         margin: 0 auto 12px;
         padding: 0;
         text-align: center;
     }
-
     body.hud-platform-mobile .authorization-headline h1 {
         margin-bottom: 4px;
         font-size: clamp(20px, 4.5vh, 26px);
     }
-
     body.hud-platform-mobile .authorization-headline p {
         max-width: 390px;
         margin-inline: auto;
         font-size: clamp(10px, 2.15vh, 13px);
         line-height: 1.3;
     }
-
-    body.hud-platform-mobile .authorization-field,
-    body.hud-platform-mobile #authorization-button,
-    body.hud-platform-mobile .authorization-footer {
+    body.hud-platform-mobile .authorization-field, body.hud-platform-mobile #authorization-button, body.hud-platform-mobile .authorization-footer {
         width: min(100%, var(--auth-form-width));
         margin-left: auto;
         margin-right: auto;
     }
-
     body.hud-platform-mobile .authorization-field {
         height: clamp(40px, 8vh, var(--auth-field-height));
         margin-bottom: 8px;
     }
-
     body.hud-platform-mobile .authorization-field > img {
         left: 15px;
         width: 18px;
         height: 18px;
     }
-
     body.hud-platform-mobile .authorization-field input {
         padding-left: 46px;
         padding-right: 48px;
         font-size: clamp(12px, 2.2vh, 14px);
     }
-
     body.hud-platform-mobile .authorization-password-eye {
         right: 7px;
         width: 34px;
         height: 34px;
     }
-
     body.hud-platform-mobile #authorization-button {
         height: clamp(40px, 8vh, var(--auth-field-height));
         margin-top: 1px;
         font-size: clamp(13px, 2.2vh, 15px);
     }
-
     body.hud-platform-mobile .authorization-button-arrow {
         right: 16px;
         font-size: 18px;
     }
-
     body.hud-platform-mobile .authorization-footer {
         margin-top: 9px;
     }
-
     body.hud-platform-mobile .authorization-footer small {
         font-size: 9px;
     }
 }
 
 /* Larger landscape tablet: centered card, just a little roomier */
+
 @media (orientation: landscape) and (min-width: 900px) and (min-height: 600px) {
     body.hud-platform-mobile #authorization {
         --auth-panel-width: 560px;
@@ -767,26 +695,23 @@ body {
         --auth-panel-padding-x: 30px;
         --auth-panel-padding-y: 20px;
     }
-
     body.hud-platform-mobile .authorization-logo {
         width: min(30vw, 225px);
         max-height: 116px;
     }
-
     body.hud-platform-mobile .authorization-headline {
         margin-bottom: 15px;
     }
-
     body.hud-platform-mobile .authorization-headline h1 {
         font-size: 27px;
     }
-
     body.hud-platform-mobile .authorization-headline p {
         font-size: 13px;
     }
 }
 
 /* Very low landscape phones: still centered, but compressed vertically */
+
 @media (orientation: landscape) and (max-height: 430px) and (min-width: 600px) {
     body.hud-platform-mobile #authorization {
         --auth-panel-width: 470px;
@@ -796,47 +721,40 @@ body {
         --auth-panel-padding-y: 9px;
         align-items: center;
     }
-
     body.hud-platform-mobile .authorization-panel {
         padding-bottom: 10px;
     }
-
     body.hud-platform-mobile .authorization-logo {
         width: min(28vw, 150px);
         max-height: 70px;
         margin-bottom: 0;
     }
-
     body.hud-platform-mobile .authorization-headline {
         margin-bottom: 7px;
     }
-
     body.hud-platform-mobile .authorization-headline h1 {
         margin-bottom: 2px;
         font-size: 18px;
     }
-
     body.hud-platform-mobile .authorization-headline p {
         max-width: 340px;
         font-size: 9.5px;
         line-height: 1.2;
     }
-
     body.hud-platform-mobile .authorization-field {
         height: 40px;
         margin-bottom: 6px;
     }
-
     body.hud-platform-mobile #authorization-button {
         height: 40px;
     }
-
     body.hud-platform-mobile .authorization-footer {
         display: none;
     }
 }
 
 /* Portrait phone / tablet */
+
 @media (orientation: portrait) and (max-width: 900px) {
     body.hud-platform-mobile #authorization {
         --auth-panel-width: 520px;
@@ -844,36 +762,29 @@ body {
         --auth-field-height: 56px;
         --auth-panel-padding-x: clamp(18px, 5vw, 26px);
         --auth-panel-padding-y: 24px;
-        padding:
-            max(16px, env(safe-area-inset-top))
+        padding: max(16px, env(safe-area-inset-top))
             max(14px, env(safe-area-inset-right))
             max(16px, env(safe-area-inset-bottom))
             max(14px, env(safe-area-inset-left));
     }
-
     body.hud-platform-mobile .authorization-panel {
         display: flex;
         border-radius: 24px;
     }
-
     body.hud-platform-mobile .authorization-logo {
         width: min(62vw, 255px);
         max-height: 128px;
         margin-bottom: 5px;
     }
-
     body.hud-platform-mobile .authorization-headline {
         margin-bottom: 18px;
     }
-
     body.hud-platform-mobile .authorization-headline h1 {
         font-size: clamp(25px, 6vw, 30px);
     }
-
     body.hud-platform-mobile .authorization-headline p {
         font-size: 13px;
     }
-
     body.hud-platform-mobile .authorization-field {
         margin-bottom: 11px;
     }
@@ -885,19 +796,15 @@ body {
         --auth-panel-padding-x: 18px;
         --auth-panel-padding-y: 20px;
     }
-
     body.hud-platform-mobile .authorization-logo {
         width: min(65vw, 230px);
     }
-
     body.hud-platform-mobile .authorization-headline {
         margin-bottom: 15px;
     }
-
     body.hud-platform-mobile .authorization-headline h1 {
         font-size: 25px;
     }
-
     body.hud-platform-mobile .authorization-field input {
         font-size: 14px;
     }
@@ -906,6 +813,7 @@ body {
 /* =========================================================
    Keep authorization logo exactly in sync with registration.
    ========================================================= */
+
 .authorization-logo {
     width: min(62vw, 275px);
     max-height: 138px;

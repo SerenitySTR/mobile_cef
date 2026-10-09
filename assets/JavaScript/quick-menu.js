@@ -7,7 +7,6 @@ var QuickMenu = {
         closeOnSelect: false,
         items: []
     },
-
     icons: {
         engine: '<svg viewBox="0 0 32 32" aria-hidden="true"><path d="M8 12h15l3 3v8h-4l-2.5 3H11l-2-3H5v-8h3v-3ZM12 12V8h7v4M4 12v8M27 14h2v7h-2"></path></svg>',
         lights: '<svg viewBox="0 0 32 32" aria-hidden="true"><path d="M15 8.5c-4.5.2-7.2 3-7.2 7.5s2.7 7.3 7.2 7.5v-15Z"></path><path d="M19 10.5h9M19 16h10M19 21.5h9"></path></svg>',
@@ -25,18 +24,14 @@ var QuickMenu = {
         star: '<svg viewBox="0 0 32 32" aria-hidden="true"><path d="m16 4 3.7 7.5 8.3 1.2-6 5.8 1.4 8.2L16 22.8 8.6 26.7l1.4-8.2-6-5.8 8.3-1.2L16 4Z"></path></svg>',
         dots: '<svg viewBox="0 0 32 32" aria-hidden="true"><circle cx="8" cy="16" r="1.7"></circle><circle cx="16" cy="16" r="1.7"></circle><circle cx="24" cy="16" r="1.7"></circle></svg>'
     },
-
     Init: function () {
         if (this.screen)
             return;
-
         this.screen = document.getElementById("quick-menu");
         if (!this.screen)
             return;
-
         this.left = document.getElementById("quick-menu-left");
         this.right = document.getElementById("quick-menu-right");
-
         var close = document.getElementById("quick-menu-close");
         if (close) {
             close.addEventListener("click", function (event) {
@@ -46,21 +41,18 @@ var QuickMenu = {
             });
         }
     },
-
     Parse: function (data) {
         if (!data)
             return {};
-
         if (typeof data === "object")
             return data;
-
         try {
             return JSON.parse(data);
-        } catch (_) {
+        }
+        catch (_) {
             return {};
         }
     },
-
     Get: function (data, upper, lower) {
         if (!data)
             return undefined;
@@ -68,7 +60,6 @@ var QuickMenu = {
             return data[upper];
         return data[lower];
     },
-
     AutoStatus: function (icon, active) {
         switch (String(icon || "").toLowerCase()) {
             case "engine":
@@ -83,38 +74,30 @@ var QuickMenu = {
                 return "";
         }
     },
-
     DetectStatusTone: function (text) {
         var value = String(text || "").trim().toLowerCase();
         if (!value)
             return "neutral";
-
         var positive = [
             "завести", "увімкнути", "включити", "відкрити", "відчинити",
             "открыть", "включить", "завести двигатель", "разблокировать"
         ];
-
         var negative = [
             "заглушити", "вимкнути", "выключить", "закрити", "закрыть",
             "зачинити", "погасити", "заглушить"
         ];
-
         for (var i = 0; i < positive.length; i++) {
             if (value.indexOf(positive[i]) !== -1)
                 return "positive";
         }
-
         for (var j = 0; j < negative.length; j++) {
             if (value.indexOf(negative[j]) !== -1)
                 return "negative";
         }
-
         return "neutral";
     },
-
     NormalizeItem: function (raw, index) {
         raw = raw || {};
-
         var id = this.Get(raw, "Id", "id");
         var text = this.Get(raw, "Text", "text");
         var icon = this.Get(raw, "Icon", "icon");
@@ -123,11 +106,9 @@ var QuickMenu = {
         var disabled = this.Get(raw, "Disabled", "disabled");
         var visible = this.Get(raw, "Visible", "visible");
         var closeOnSelect = this.Get(raw, "CloseOnSelect", "closeOnSelect");
-
         var normalizedIcon = icon !== undefined ? String(icon).toLowerCase() : "dots";
         var isActive = active === true;
         var normalizedStatus = status !== undefined && status !== null ? String(status) : this.AutoStatus(normalizedIcon, isActive);
-
         return {
             id: id !== undefined ? id : index,
             text: text !== undefined ? String(text) : "Дія " + (index + 1),
@@ -140,64 +121,49 @@ var QuickMenu = {
             closeOnSelect: closeOnSelect
         };
     },
-
     Apply: function (data) {
         data = this.Parse(data);
-
         var menuId = this.Get(data, "MenuId", "menuId");
         var closeOnSelect = this.Get(data, "CloseOnSelect", "closeOnSelect");
         var items = this.Get(data, "Items", "items");
-
         if (menuId !== undefined)
             this.state.menuId = String(menuId || "");
-
         if (closeOnSelect !== undefined)
             this.state.closeOnSelect = closeOnSelect === true;
-
         if (Array.isArray(items)) {
             this.state.items = [];
             for (var i = 0; i < items.length; i++)
                 this.state.items.push(this.NormalizeItem(items[i], i));
         }
-
         this.Render();
     },
-
     Render: function () {
         this.Init();
         if (!this.screen || !this.left || !this.right)
             return;
-
         this.left.innerHTML = "";
         this.right.innerHTML = "";
-
         var visibleIndex = 0;
-
         for (var i = 0; i < this.state.items.length; i++) {
             var item = this.state.items[i];
             var button = this.CreateItem(item);
-
             if (!item.visible) {
                 button.classList.add("hidden");
                 this.left.appendChild(button);
                 continue;
             }
-
             if (visibleIndex % 2 === 0)
                 this.left.appendChild(button);
             else
                 this.right.appendChild(button);
-
             visibleIndex++;
         }
     },
-
     CreateItem: function (item) {
         var button = document.createElement("button");
         button.type = "button";
         button.className = "quick-menu-item";
         button.setAttribute("data-quick-menu-id", String(item.id));
-
         if (item.active)
             button.classList.add("active");
         if (item.disabled)
@@ -208,101 +174,79 @@ var QuickMenu = {
             button.classList.add("status-positive");
         else if (item.statusTone === "negative")
             button.classList.add("status-negative");
-
         var icon = document.createElement("span");
         icon.className = "quick-menu-icon";
         icon.innerHTML = this.icons[item.icon] || this.icons.dots;
-
         var copy = document.createElement("span");
         copy.className = "quick-menu-copy";
-
         var title = document.createElement("strong");
         title.textContent = item.text;
-
         var status = document.createElement("small");
         status.className = "quick-menu-status";
         status.textContent = item.status;
-
         copy.appendChild(title);
         copy.appendChild(status);
         button.appendChild(icon);
         button.appendChild(copy);
-
         if (!item.disabled) {
             button.addEventListener("click", function () {
                 QuickMenu.Select(item);
             });
         }
-
         return button;
     },
-
     Select: function (item) {
         if (!item || item.disabled)
             return;
-
         if (window.GameCef) {
             GameCef.sendJson("quick-menu:select", {
                 MenuId: this.state.menuId,
                 Id: item.id
             });
         }
-
         var shouldClose = item.closeOnSelect !== undefined
             ? item.closeOnSelect === true
             : this.state.closeOnSelect;
-
         if (shouldClose)
             this.Close(true);
     },
-
     Show: function (data) {
         this.Init();
         if (!this.screen)
             return;
-
         this.Apply(data);
         this.screen.classList.remove("closing");
         this.screen.classList.add("active", "opened");
         this.screen.setAttribute("aria-hidden", "false");
     },
-
     Hide: function () {
         this.Init();
         if (!this.screen)
             return;
-
         // Server-driven hide is local only. It must never echo quick-menu:close.
         this.screen.classList.remove("active", "opened", "closing");
         this.screen.setAttribute("aria-hidden", "true");
     },
-
     Close: function (notifyServer) {
         this.Init();
         if (!this.screen || !this.screen.classList.contains("active"))
             return;
-
         // Notify native immediately. Native focus is controlled outside JS,
         // so delaying this event leaves the game stuck with browser focus.
         if (notifyServer !== false && window.GameCef)
             GameCef.send("quick-menu:close", "");
-
         this.Hide();
     }
 };
-
 GameCef.on("quick-menu:show", function (data) { QuickMenu.Show(data); });
 GameCef.on("quick-menu:update", function (data) { QuickMenu.Apply(data); });
 GameCef.on("quick-menu:hide", function () { QuickMenu.Hide(); });
-
 document.addEventListener("keydown", function (event) {
     if (event.defaultPrevented || event.isComposing || event.keyCode === 229 || event.repeat || event.key !== "Escape")
         return;
-
     QuickMenu.Init();
     if (!QuickMenu.screen || !QuickMenu.screen.classList.contains("active"))
         return;
-
     event.preventDefault();
     event.stopImmediatePropagation();
     QuickMenu.Close(true);

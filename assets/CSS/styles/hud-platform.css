@@ -1,18 +1,16 @@
-body.hud-platform-pc #hud,
-body.hud-platform-pc #hud-corner-info {
-  display: none !important;
+body.hud-platform-pc #hud, body.hud-platform-pc #hud-corner-info {
+    display: none !important;
 }
 
 body.hud-platform-mobile #pc-hud {
-  display: none !important;
+    display: none !important;
 }
 
 /* Authoritative HUD visibility switch used by hud:hide. */
-body.hud-hidden #hud,
-body.hud-hidden #hud-corner-info,
-body.hud-hidden #pc-hud {
-  display: none !important;
-  opacity: 0 !important;
-  visibility: hidden !important;
-  pointer-events: none !important;
+
+body.hud-hidden #hud, body.hud-hidden #hud-corner-info, body.hud-hidden #pc-hud {
+    display: none !important;
+    opacity: 0 !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
 }

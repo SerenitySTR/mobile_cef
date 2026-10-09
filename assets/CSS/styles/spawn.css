@@ -2,22 +2,17 @@
     position: fixed;
     inset: 0;
     z-index: 120;
-
     display: none;
     align-items: center;
     justify-content: center;
-
     width: 100vw;
     height: 100vh;
-    padding:
-        max(12px, env(safe-area-inset-top))
+    padding: max(12px, env(safe-area-inset-top))
         max(16px, env(safe-area-inset-right))
         max(12px, env(safe-area-inset-bottom))
         max(16px, env(safe-area-inset-left));
-
     overflow: hidden;
     isolation: isolate;
-
     color: #f7fbff;
 }
 
@@ -29,16 +24,12 @@
     position: absolute;
     inset: 0;
     z-index: -3;
-
-    background:
-        url("../Images/Registration/background-reference.png")
+    background: url("../Images/Registration/background-reference.png")
         center center / cover no-repeat;
-
     transform: scale(1.015);
 }
 
-#spawn-selection::before,
-#spawn-selection::after {
+#spawn-selection::before, #spawn-selection::after {
     content: "";
     position: absolute;
     inset: 0;
@@ -47,21 +38,18 @@
 
 #spawn-selection::before {
     z-index: -2;
-    background:
-        radial-gradient(circle at 50% 36%, rgba(27, 126, 201, 0.10), transparent 42%),
+    background: radial-gradient(circle at 50% 36%, rgba(27, 126, 201, 0.10), transparent 42%),
         linear-gradient(180deg, rgba(1, 7, 15, 0.20), rgba(1, 7, 15, 0.42) 58%, rgba(1, 7, 15, 0.68));
 }
 
 #spawn-selection::after {
     z-index: -1;
-    background:
-        linear-gradient(90deg, rgba(0, 5, 12, 0.20), transparent 17%, transparent 83%, rgba(0, 5, 12, 0.20));
+    background: linear-gradient(90deg, rgba(0, 5, 12, 0.20), transparent 17%, transparent 83%, rgba(0, 5, 12, 0.20));
 }
 
 .spawn-container {
     width: min(980px, 86vw);
     max-height: 96vh;
-
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -71,7 +59,6 @@
     width: min(220px, 31vw);
     max-height: 96px;
     margin-bottom: 0;
-
     object-fit: contain;
     filter: drop-shadow(0 8px 20px rgba(0, 0, 0, 0.42));
 }
@@ -104,23 +91,16 @@
     height: min(470px, 53vh);
     min-height: 350px;
     padding: 18px;
-
     display: grid;
     grid-template-columns: minmax(0, 0.84fr) minmax(0, 1.16fr);
     gap: 20px;
-
     border: 1px solid rgba(92, 195, 255, 0.70);
     border-radius: 24px;
-
-    background:
-        linear-gradient(180deg, rgba(5, 18, 34, 0.90), rgba(3, 12, 24, 0.86));
-
-    box-shadow:
-        0 28px 70px rgba(0, 0, 0, 0.35),
+    background: linear-gradient(180deg, rgba(5, 18, 34, 0.90), rgba(3, 12, 24, 0.86));
+    box-shadow: 0 28px 70px rgba(0, 0, 0, 0.35),
         0 0 0 1px rgba(20, 133, 211, 0.07),
         inset 0 1px 0 rgba(185, 227, 255, 0.05),
         inset 0 0 50px rgba(24, 113, 173, 0.035);
-
     backdrop-filter: blur(14px);
 }
 
@@ -144,27 +124,19 @@
     width: 100%;
     min-height: 0;
     flex: 1;
-
     display: grid;
     grid-template-columns: 92px 42px minmax(0, 1fr) 22px;
     align-items: center;
     gap: 12px;
-
     padding: 8px 13px 8px 8px;
-
     border: 1px solid rgba(114, 178, 220, 0.27);
     border-radius: 14px;
     outline: 0;
-
-    background:
-        linear-gradient(90deg, rgba(8, 28, 48, 0.87), rgba(4, 17, 31, 0.75));
-
+    background: linear-gradient(90deg, rgba(8, 28, 48, 0.87), rgba(4, 17, 31, 0.75));
     color: #fff;
     text-align: left;
     cursor: pointer;
-
-    transition:
-        border-color 0.2s ease,
+    transition: border-color 0.2s ease,
         background 0.2s ease,
         box-shadow 0.2s ease,
         transform 0.16s ease;
@@ -177,10 +149,8 @@
 
 .spawn-item.active {
     border-color: rgba(77, 198, 255, 0.98);
-    background:
-        linear-gradient(90deg, rgba(11, 101, 174, 0.84), rgba(5, 45, 81, 0.84));
-    box-shadow:
-        0 0 0 1px rgba(89, 211, 255, 0.10),
+    background: linear-gradient(90deg, rgba(11, 101, 174, 0.84), rgba(5, 45, 81, 0.84));
+    box-shadow: 0 0 0 1px rgba(89, 211, 255, 0.10),
         0 0 24px rgba(30, 160, 240, 0.18),
         inset 0 1px 0 rgba(185, 231, 255, 0.07);
 }
@@ -244,8 +214,7 @@
     gap: 4px;
 }
 
-.spawn-item-info strong,
-.spawn-item-info small {
+.spawn-item-info strong, .spawn-item-info small {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -304,8 +273,7 @@
     position: absolute;
     inset: 0;
     pointer-events: none;
-    background:
-        linear-gradient(180deg, rgba(2, 9, 18, 0.03), rgba(2, 9, 18, 0.12) 66%, rgba(2, 9, 18, 0.48));
+    background: linear-gradient(180deg, rgba(2, 9, 18, 0.03), rgba(2, 9, 18, 0.12) 66%, rgba(2, 9, 18, 0.48));
 }
 
 .spawn-preview-body {
@@ -313,8 +281,7 @@
     padding: 16px 18px 13px;
     display: flex;
     flex-direction: column;
-    background:
-        linear-gradient(180deg, rgba(5, 20, 37, 0.94), rgba(3, 14, 27, 0.97));
+    background: linear-gradient(180deg, rgba(5, 20, 37, 0.94), rgba(3, 14, 27, 0.97));
 }
 
 .spawn-preview-heading-row {
@@ -355,8 +322,6 @@
     white-space: nowrap;
 }
 
-
-
 .spawn-preview-body > p {
     margin: 11px 0 0;
     color: rgba(199, 220, 236, 0.79);
@@ -385,35 +350,26 @@
     width: 100%;
     height: 58px;
     padding: 0 62px;
-
     display: flex;
     align-items: center;
     justify-content: center;
-
     border: 1px solid rgba(98, 213, 255, 0.98);
     border-radius: 13px;
     outline: 0;
-
-    background:
-        linear-gradient(180deg, rgba(25, 151, 239, 0.99), rgba(9, 88, 181, 0.99));
-
-    box-shadow:
-        0 12px 28px rgba(0, 0, 0, 0.28),
+    background: linear-gradient(180deg, rgba(25, 151, 239, 0.99), rgba(9, 88, 181, 0.99));
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.28),
         0 0 24px rgba(25, 150, 238, 0.18),
         inset 0 1px 0 rgba(198, 239, 255, 0.26);
-
     color: #f8fcff;
     font-size: 16px;
     font-weight: 700;
     cursor: pointer;
-
     transition: filter 0.18s ease, transform 0.15s ease, box-shadow 0.18s ease;
 }
 
 #spawn-button:hover {
     filter: brightness(1.08);
-    box-shadow:
-        0 13px 30px rgba(0, 0, 0, 0.30),
+    box-shadow: 0 13px 30px rgba(0, 0, 0, 0.30),
         0 0 30px rgba(25, 159, 244, 0.25),
         inset 0 1px 0 rgba(220, 246, 255, 0.33);
 }
@@ -457,47 +413,41 @@
     }
 }
 
-
 /* Medium desktop / tablet landscape: keep the layout but make it less stretched. */
+
 @media (max-width: 1280px) and (min-width: 901px) {
     .spawn-container {
         width: min(920px, 84vw);
     }
-
     .spawn-panel {
         grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
         gap: 16px;
     }
-
     .spawn-buttons {
         width: min(420px, 44vw);
     }
 }
 
 /* Compact desktop / laptop */
+
 @media (max-height: 820px) and (min-width: 901px) {
     .spawn-container {
         width: min(900px, 85vw);
     }
-
     .spawn-logo {
         width: min(176px, 24vw);
         max-height: 72px;
     }
-
     .spawn-heading {
         margin-bottom: 8px;
     }
-
     .spawn-heading h1 {
         font-size: 23px;
     }
-
     .spawn-heading p {
         margin-top: 2px;
         font-size: 12px;
     }
-
     .spawn-panel {
         height: min(400px, 56vh);
         min-height: 320px;
@@ -505,105 +455,86 @@
         gap: 14px;
         border-radius: 20px;
     }
-
     .spawn-list {
         gap: 8px;
     }
-
     .spawn-item {
         grid-template-columns: 82px 36px minmax(0, 1fr) 20px;
         gap: 10px;
         padding: 7px 11px 7px 7px;
         border-radius: 12px;
     }
-
     .spawn-item-image {
         width: 82px;
         height: 56px;
     }
-
     .spawn-item-icon {
         width: 36px;
         height: 36px;
     }
-
     .spawn-item-icon img {
         width: 27px;
         height: 27px;
     }
-
     .spawn-item-info strong {
         font-size: 14px;
     }
-
     .spawn-item-info small {
         font-size: 10px;
     }
-
     .spawn-preview-body {
         padding: 13px 15px 11px;
     }
-
     .spawn-preview-heading h2 {
         font-size: 18px;
     }
-
     .spawn-preview-body > p {
         margin-top: 8px;
         font-size: 11px;
     }
-
     .spawn-buttons {
         margin-top: 11px;
     }
-
     #spawn-button {
         height: 50px;
         font-size: 14px;
     }
-
     .spawn-footer {
         margin-top: 6px;
     }
 }
 
 /* Mobile/tablet landscape. The game is used horizontally. */
+
 @media (orientation: landscape) and (max-height: 650px) {
     #spawn-selection {
-        padding:
-            max(6px, env(safe-area-inset-top))
+        padding: max(6px, env(safe-area-inset-top))
             max(10px, env(safe-area-inset-right))
             max(6px, env(safe-area-inset-bottom))
             max(10px, env(safe-area-inset-left));
     }
-
     .spawn-container {
         width: min(820px, 84vw);
         max-height: calc(100vh - 12px);
         transform: translateY(-2px);
     }
-
     .spawn-logo {
         width: clamp(112px, 14vw, 150px);
         max-height: 52px;
         flex: 0 0 auto;
     }
-
     .spawn-heading {
         margin-top: -4px;
         margin-bottom: 5px;
         flex: 0 0 auto;
     }
-
     .spawn-heading h1 {
         font-size: clamp(15px, 1.85vw, 18px);
     }
-
     .spawn-heading p {
         margin-top: 1px;
         font-size: clamp(8px, 1vw, 10px);
     }
-
     .spawn-panel {
         width: 100%;
         height: min(286px, 55vh);
@@ -614,19 +545,15 @@
         border-radius: 14px;
         flex: 0 0 auto;
     }
-
-    .spawn-list,
-    .spawn-preview {
+    .spawn-list, .spawn-preview {
         height: 100%;
         min-height: 0;
     }
-
     .spawn-list {
         display: grid;
         grid-template-rows: repeat(4, minmax(0, 1fr));
         gap: 5px;
     }
-
     .spawn-item {
         width: 100%;
         height: 100%;
@@ -638,79 +565,63 @@
         padding: 4px 7px 4px 4px;
         border-radius: 9px;
     }
-
     .spawn-item-image {
         width: clamp(56px, 7vw, 66px);
         height: clamp(36px, 4.7vw, 44px);
         max-height: 100%;
         border-radius: 7px;
     }
-
     .spawn-item-icon {
         width: 26px;
         height: 26px;
         font-size: 17px;
     }
-
     .spawn-item-icon img {
         width: 20px;
         height: 20px;
     }
-
     .spawn-item-icon-standard {
         font-size: 19px;
     }
-
     .spawn-item-icon-family img {
         width: 21px;
         height: 21px;
     }
-
     .spawn-item-info {
         gap: 1px;
     }
-
     .spawn-item-info strong {
         font-size: clamp(10px, 1.25vw, 12px);
     }
-
     .spawn-item-info small {
         font-size: clamp(7px, 0.9vw, 9px);
     }
-
     .spawn-item-arrow {
         font-size: 21px;
     }
-
     .spawn-preview {
         grid-template-rows: 56% 44%;
         border-radius: 10px;
     }
-
     .spawn-preview-body {
         min-height: 0;
         padding: 8px 10px 7px;
         overflow: hidden;
     }
-
     .spawn-preview-heading {
         gap: 6px;
     }
-
     .spawn-preview-heading-icon {
         width: 22px;
         height: 22px;
     }
-
     .spawn-preview-heading-icon img {
         width: 19px;
         height: 19px;
     }
-
     .spawn-preview-heading h2 {
         font-size: clamp(12px, 1.5vw, 15px);
     }
-
     .spawn-preview-body > p {
         margin-top: 5px;
         font-size: clamp(8px, 0.95vw, 10px);
@@ -720,13 +631,11 @@
         -webkit-box-orient: vertical;
         overflow: hidden;
     }
-
     .spawn-preview-story {
         padding-top: 5px;
         font-size: 5px;
         letter-spacing: 2.3px;
     }
-
     .spawn-buttons {
         position: relative;
         z-index: 3;
@@ -734,19 +643,16 @@
         margin-top: 10px;
         flex: 0 0 auto;
     }
-
     #spawn-button {
         height: 38px;
         padding: 0 43px;
         border-radius: 9px;
         font-size: 11px;
     }
-
     .spawn-button-arrow {
         right: 18px;
         font-size: 17px;
     }
-
     .spawn-footer {
         margin-top: 5px;
         font-size: 5px;
@@ -756,39 +662,35 @@
 }
 
 /* Narrow mobile landscape viewport. */
+
 @media (orientation: landscape) and (max-height: 650px) and (max-width: 900px) {
     .spawn-container {
         width: min(700px, 82vw);
     }
-
     .spawn-panel {
         grid-template-columns: minmax(0, 0.91fr) minmax(0, 1.09fr);
     }
-
     .spawn-buttons {
         width: min(280px, 39vw);
     }
 }
 
 /* Very small landscape phones. */
+
 @media (orientation: landscape) and (max-height: 390px) {
     .spawn-logo {
         width: clamp(90px, 13vw, 125px);
         max-height: 43px;
     }
-
     .spawn-heading {
         margin-bottom: 3px;
     }
-
     .spawn-heading h1 {
         font-size: 13px;
     }
-
     .spawn-heading p {
         display: none;
     }
-
     .spawn-panel {
         height: min(226px, 60vh);
         min-height: 176px;
@@ -796,55 +698,44 @@
         gap: 6px;
         border-radius: 11px;
     }
-
     .spawn-list {
         gap: 4px;
     }
-
     .spawn-item {
         grid-template-columns: 51px 22px minmax(0, 1fr) 13px;
         gap: 5px;
         padding: 3px 5px 3px 3px;
         border-radius: 7px;
     }
-
     .spawn-item-image {
         width: 51px;
         height: 34px;
         border-radius: 5px;
     }
-
     .spawn-item-icon {
         width: 22px;
         height: 22px;
         font-size: 15px;
     }
-
     .spawn-item-icon img {
         width: 17px;
         height: 17px;
     }
-
     .spawn-item-info strong {
         font-size: 9px;
     }
-
     .spawn-item-info small {
         font-size: 6px;
     }
-
     .spawn-item-arrow {
         font-size: 18px;
     }
-
     .spawn-preview-body {
         padding: 6px 8px 5px;
     }
-
     .spawn-preview-heading h2 {
         font-size: 11px;
     }
-
     .spawn-preview-body > p {
         margin-top: 3px;
         font-size: 7px;
@@ -854,92 +745,75 @@
         -webkit-box-orient: vertical;
         overflow: hidden;
     }
-
     .spawn-preview-story {
         display: none;
     }
-
     .spawn-buttons {
         margin-top: 6px;
     }
-
     #spawn-button {
         height: 31px;
         font-size: 9px;
     }
-
     .spawn-footer {
         display: none;
     }
 }
 
 /* Ultra-low landscape viewport fallback. */
+
 @media (orientation: landscape) and (max-height: 340px) {
     #spawn-selection {
         padding-top: 3px;
         padding-bottom: 3px;
     }
-
     .spawn-logo {
         width: 92px;
         max-height: 34px;
     }
-
     .spawn-heading h1 {
         font-size: 11px;
     }
-
     .spawn-panel {
         height: 57vh;
         min-height: 156px;
     }
-
     .spawn-item {
         grid-template-columns: 45px 19px minmax(0, 1fr) 11px;
         gap: 4px;
     }
-
     .spawn-item-image {
         width: 45px;
         height: 29px;
     }
-
     .spawn-item-icon {
         width: 19px;
         height: 19px;
     }
-
     .spawn-item-icon img {
         width: 14px;
         height: 14px;
     }
-
     .spawn-item-info strong {
         font-size: 8px;
     }
-
     .spawn-item-info small {
         font-size: 5px;
     }
-
     .spawn-preview-heading h2 {
         font-size: 9px;
     }
-
     .spawn-preview-body > p {
         font-size: 6px;
     }
-
     .spawn-buttons {
         margin-top: 3px;
     }
-
     #spawn-button {
         height: 27px;
         font-size: 8px;
     }
 }
-
 
 .spawn-item-icon-family img {
     width: 32px;

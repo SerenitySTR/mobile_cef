@@ -31,8 +31,7 @@
     overflow: hidden;
     border: 1px solid rgba(31, 177, 244, 0.72);
     border-radius: 16px;
-    background:
-        radial-gradient(circle at 85% 0%, rgba(24, 135, 199, 0.10), transparent 35%),
+    background: radial-gradient(circle at 85% 0%, rgba(24, 135, 199, 0.10), transparent 35%),
         linear-gradient(150deg, rgba(5, 19, 34, 0.985), rgba(3, 11, 22, 0.985));
     box-shadow: 0 24px 70px rgba(0, 0, 0, 0.48), inset 0 1px 0 rgba(255, 255, 255, 0.035);
     opacity: 0;
@@ -231,8 +230,7 @@
     transition: border-color 0.16s ease, background 0.16s ease;
 }
 
-.dialog-list-item:hover,
-.dialog-list-item.selected {
+.dialog-list-item:hover, .dialog-list-item.selected {
     border-color: rgba(45, 200, 255, 0.82);
     background: rgba(8, 66, 101, 0.42);
 }
@@ -289,8 +287,7 @@
     table-layout: fixed;
 }
 
-.dialog-table th,
-.dialog-table td {
+.dialog-table th, .dialog-table td {
     padding: 8px 9px;
     overflow: hidden;
     text-align: left;
@@ -315,8 +312,7 @@
     cursor: pointer;
 }
 
-.dialog-table tbody tr:hover,
-.dialog-table tbody tr.selected {
+.dialog-table tbody tr:hover, .dialog-table tbody tr.selected {
     background: rgba(7, 92, 139, 0.40);
 }
 
@@ -376,106 +372,85 @@
     #dialog-screen {
         padding: 6px;
     }
-
     .dialog-window {
         width: min(560px, 78vw);
         max-height: 94vh;
         border-radius: 12px;
     }
-
     .dialog-header {
         min-height: 38px;
         padding: 6px 8px 6px 10px;
     }
-
     .dialog-icon {
         width: 24px;
         height: 24px;
         flex-basis: 24px;
         font-size: 13px;
     }
-
     .dialog-header h2 {
         font-size: 11px;
     }
-
     .dialog-close {
         width: 24px;
         height: 24px;
         flex-basis: 24px;
         border-radius: 7px;
     }
-
     .dialog-body {
         max-height: 58vh;
         padding: 10px 12px 2px;
     }
-
     .dialog-text {
         font-size: 9px;
         line-height: 1.45;
     }
-
     .dialog-input-wrap {
         margin-top: 8px;
     }
-
     .dialog-input {
         height: 34px;
         padding: 0 10px;
         border-radius: 8px;
         font-size: 8.5px;
     }
-
     .dialog-list {
         gap: 4px;
         margin-top: 8px;
     }
-
     .dialog-list-item {
         min-height: 31px;
         padding: 4px 7px;
         border-radius: 7px;
     }
-
     .dialog-list-number {
         width: 19px;
         height: 19px;
         flex-basis: 19px;
         font-size: 7px;
     }
-
     .dialog-list-title {
         font-size: 8px;
     }
-
     .dialog-list-description {
         font-size: 6px;
     }
-
     .dialog-tablist {
         margin-top: 8px;
         border-radius: 7px;
     }
-
-    .dialog-table th,
-    .dialog-table td {
+    .dialog-table th, .dialog-table td {
         padding: 5px 6px;
     }
-
     .dialog-table th {
         font-size: 6px;
     }
-
     .dialog-table td {
         font-size: 7px;
     }
-
     .dialog-buttons {
         gap: 6px;
         padding: 9px 12px 11px;
     }
-
     .dialog-button {
         min-height: 32px;
         padding: 6px 9px;
@@ -483,7 +458,6 @@
         font-size: 8px;
     }
 }
-
 
 #dialog-screen.dialog-mobile-landscape {
     padding: 5px 8px;
@@ -588,8 +562,7 @@
     border-radius: 7px;
 }
 
-#dialog-screen.dialog-mobile-landscape .dialog-table th,
-#dialog-screen.dialog-mobile-landscape .dialog-table td {
+#dialog-screen.dialog-mobile-landscape .dialog-table th, #dialog-screen.dialog-mobile-landscape .dialog-table td {
     padding: 5px 6px;
 }
 
@@ -654,8 +627,7 @@
     font-size: 8px;
 }
 
-#dialog-screen.dialog-mobile-landscape.dialog-mobile-low .dialog-list,
-#dialog-screen.dialog-mobile-landscape.dialog-mobile-low .dialog-tablist {
+#dialog-screen.dialog-mobile-landscape.dialog-mobile-low .dialog-list, #dialog-screen.dialog-mobile-landscape.dialog-mobile-low .dialog-tablist {
     max-height: 38vh;
 }
 
@@ -686,67 +658,53 @@
     .dialog-window {
         width: min(640px, 52vw);
     }
-
     .dialog-header {
         min-height: 60px;
         padding: 11px 14px 11px 16px;
     }
-
     .dialog-icon {
         width: 35px;
         height: 35px;
         flex-basis: 35px;
         font-size: 18px;
     }
-
     .dialog-header h2 {
         font-size: 18px;
     }
-
     .dialog-body {
         max-height: 60vh;
         padding: 20px 22px 5px;
     }
-
     .dialog-text {
         font-size: 14px;
     }
-
     .dialog-input {
         height: 48px;
         font-size: 13px;
     }
-
     .dialog-list-item {
         min-height: 47px;
     }
-
     .dialog-list-title {
         font-size: 12px;
     }
-
     .dialog-list-description {
         font-size: 9px;
     }
-
     .dialog-table th {
         font-size: 9px;
     }
-
     .dialog-table td {
         font-size: 10px;
     }
-
     .dialog-buttons {
         padding: 16px 22px 20px;
     }
-
     .dialog-button {
         min-height: 46px;
         font-size: 12px;
     }
 }
-
 
 #dialog-screen.dialog-mobile-landscape {
     padding: 8px 14px;
@@ -758,8 +716,7 @@
     border-radius: 14px;
 }
 
-#dialog-screen.dialog-mobile-landscape.dialog-type-list .dialog-window,
-#dialog-screen.dialog-mobile-landscape.dialog-type-tablist .dialog-window {
+#dialog-screen.dialog-mobile-landscape.dialog-type-list .dialog-window, #dialog-screen.dialog-mobile-landscape.dialog-type-tablist .dialog-window {
     width: min(760px, 82vw);
 }
 
@@ -856,8 +813,7 @@
     border-radius: 8px;
 }
 
-#dialog-screen.dialog-mobile-landscape .dialog-table th,
-#dialog-screen.dialog-mobile-landscape .dialog-table td {
+#dialog-screen.dialog-mobile-landscape .dialog-table th, #dialog-screen.dialog-mobile-landscape .dialog-table td {
     padding: 6px 8px;
 }
 
@@ -898,8 +854,7 @@
     max-height: 92vh;
 }
 
-#dialog-screen.dialog-mobile-landscape.dialog-mobile-low.dialog-type-list .dialog-window,
-#dialog-screen.dialog-mobile-landscape.dialog-mobile-low.dialog-type-tablist .dialog-window {
+#dialog-screen.dialog-mobile-landscape.dialog-mobile-low.dialog-type-list .dialog-window, #dialog-screen.dialog-mobile-landscape.dialog-mobile-low.dialog-type-tablist .dialog-window {
     width: min(720px, 84vw);
 }
 
@@ -939,8 +894,7 @@
     font-size: 9.5px;
 }
 
-#dialog-screen.dialog-mobile-landscape.dialog-mobile-low .dialog-list,
-#dialog-screen.dialog-mobile-landscape.dialog-mobile-low .dialog-tablist {
+#dialog-screen.dialog-mobile-landscape.dialog-mobile-low .dialog-list, #dialog-screen.dialog-mobile-landscape.dialog-mobile-low .dialog-tablist {
     max-height: 41vh;
 }
 
@@ -973,7 +927,6 @@
     font-size: 8.5px;
 }
 
-
 #dialog-screen.dialog-mobile-landscape .dialog-window {
     width: min(500px, 56vw);
 }
@@ -997,35 +950,108 @@
 #dialog-screen.dialog-mobile-landscape.dialog-mobile-low.dialog-type-tablist .dialog-window {
     width: min(620px, 74vw);
 }
-\n\n/* Larger, more readable dialog typography */
-.dialog-header h2 { font-size: 19px; }
-.dialog-text { font-size: 16px; line-height: 1.6; }
-.dialog-input { font-size: 15px; }
-.dialog-list-title { font-size: 14px; }
-.dialog-list-description { font-size: 11px; }
-.dialog-list-number { font-size: 12px; }
-.dialog-table th { font-size: 11px; }
-.dialog-table td { font-size: 13px; }
-.dialog-button { font-size: 14px; }
 
-@media (orientation: landscape) and (max-height: 620px) {
-    .dialog-header h2 { font-size: 15px; }
-    .dialog-text { font-size: 12px; line-height: 1.5; }
-    .dialog-input { font-size: 11px; }
-    .dialog-list-title { font-size: 11px; }
-    .dialog-list-description { font-size: 9px; }
-    .dialog-list-number { font-size: 9px; }
-    .dialog-table th { font-size: 9px; }
-    .dialog-table td { font-size: 10px; }
-    .dialog-button { font-size: 11px; }
+\n\n .dialog-header h2 {
+    font-size: 19px;
 }
 
-#dialog-screen.dialog-mobile-landscape .dialog-header h2 { font-size: 15px; }
-#dialog-screen.dialog-mobile-landscape .dialog-text { font-size: 12px; line-height: 1.5; }
-#dialog-screen.dialog-mobile-landscape .dialog-input { font-size: 11px; }
-#dialog-screen.dialog-mobile-landscape .dialog-list-title { font-size: 11px; }
-#dialog-screen.dialog-mobile-landscape .dialog-list-description { font-size: 9px; }
-#dialog-screen.dialog-mobile-landscape .dialog-list-number { font-size: 9px; }
-#dialog-screen.dialog-mobile-landscape .dialog-table th { font-size: 9px; }
-#dialog-screen.dialog-mobile-landscape .dialog-table td { font-size: 10px; }
-#dialog-screen.dialog-mobile-landscape .dialog-button { font-size: 11px; }
+.dialog-text {
+    font-size: 16px;
+    line-height: 1.6;
+}
+
+.dialog-input {
+    font-size: 15px;
+}
+
+.dialog-list-title {
+    font-size: 14px;
+}
+
+.dialog-list-description {
+    font-size: 11px;
+}
+
+.dialog-list-number {
+    font-size: 12px;
+}
+
+.dialog-table th {
+    font-size: 11px;
+}
+
+.dialog-table td {
+    font-size: 13px;
+}
+
+.dialog-button {
+    font-size: 14px;
+}
+
+@media (orientation: landscape) and (max-height: 620px) {
+    .dialog-header h2 {
+        font-size: 15px;
+    }
+    .dialog-text {
+        font-size: 12px;
+        line-height: 1.5;
+    }
+    .dialog-input {
+        font-size: 11px;
+    }
+    .dialog-list-title {
+        font-size: 11px;
+    }
+    .dialog-list-description {
+        font-size: 9px;
+    }
+    .dialog-list-number {
+        font-size: 9px;
+    }
+    .dialog-table th {
+        font-size: 9px;
+    }
+    .dialog-table td {
+        font-size: 10px;
+    }
+    .dialog-button {
+        font-size: 11px;
+    }
+}
+
+#dialog-screen.dialog-mobile-landscape .dialog-header h2 {
+    font-size: 15px;
+}
+
+#dialog-screen.dialog-mobile-landscape .dialog-text {
+    font-size: 12px;
+    line-height: 1.5;
+}
+
+#dialog-screen.dialog-mobile-landscape .dialog-input {
+    font-size: 11px;
+}
+
+#dialog-screen.dialog-mobile-landscape .dialog-list-title {
+    font-size: 11px;
+}
+
+#dialog-screen.dialog-mobile-landscape .dialog-list-description {
+    font-size: 9px;
+}
+
+#dialog-screen.dialog-mobile-landscape .dialog-list-number {
+    font-size: 9px;
+}
+
+#dialog-screen.dialog-mobile-landscape .dialog-table th {
+    font-size: 9px;
+}
+
+#dialog-screen.dialog-mobile-landscape .dialog-table td {
+    font-size: 10px;
+}
+
+#dialog-screen.dialog-mobile-landscape .dialog-button {
+    font-size: 11px;
+}

@@ -1,9 +1,8 @@
 (function () {
     "use strict";
-
     var Tests = window.CefVisualTests;
-    if (!Tests) throw new Error("visual-test.js must be loaded before cases.js");
-
+    if (!Tests)
+        throw new Error("visual-test.js must be loaded before cases.js");
     function ticket(id, title, author, status, admin, messages) {
         return {
             Id: id,
@@ -15,9 +14,7 @@
             Messages: messages || []
         };
     }
-
     var originalHudMobilePlatform = document.body.classList.contains("hud-platform-mobile") || !!window.hudMobilePlatform;
-
     function hudTestData() {
         return {
             nickname: "Serenity_Walker",
@@ -34,64 +31,58 @@
             ammoTotal: 180
         };
     }
-
     function hideHudPreviews() {
         var mobileHud = document.getElementById("hud");
         var pcHud = document.getElementById("pc-hud");
-
-        if (mobileHud) mobileHud.classList.remove("active");
+        if (mobileHud)
+            mobileHud.classList.remove("active");
         if (pcHud) {
             pcHud.classList.remove("active");
             pcHud.setAttribute("aria-hidden", "true");
         }
     }
-
     function forceHudPlatform(mobile) {
         document.body.classList.remove("hud-platform-pc", "hud-platform-mobile");
         document.body.classList.add(mobile ? "hud-platform-mobile" : "hud-platform-pc");
         window.hudMobilePlatform = !!mobile;
         hideHudPreviews();
     }
-
     function restoreHudPlatform() {
         hideHudPreviews();
         document.body.classList.remove("hud-platform-pc", "hud-platform-mobile");
         document.body.classList.add(originalHudMobilePlatform ? "hud-platform-mobile" : "hud-platform-pc");
         window.hudMobilePlatform = originalHudMobilePlatform;
-
         if (typeof updateHudMobileScale === "function")
             updateHudMobileScale();
     }
-
     window.CefVisualTestHud = {
         restore: restoreHudPlatform
     };
-Tests.register("authorization", "Login", function () {
+    Tests.register("authorization", "Login", function () {
         Tests.receive("authorization:show", "Test_Player");
     });
-
     Tests.register("registration1", "Reg 1", function () {
         Tests.receive("registration:show", "Test_Player");
     });
-
     Tests.register("registration2", "Reg 2", function () {
         Tests.receive("registration:show", "Test_Player");
         setTimeout(function () {
             var email = document.getElementById("email");
             var password = document.getElementById("password");
             var repeat = document.getElementById("password-repeat");
-            if (email) email.value = "test@example.com";
-            if (password) password.value = "123456";
-            if (repeat) repeat.value = "123456";
+            if (email)
+                email.value = "test@example.com";
+            if (password)
+                password.value = "123456";
+            if (repeat)
+                repeat.value = "123456";
             if (typeof showRegistrationStep === "function" && typeof step2 !== "undefined")
                 showRegistrationStep(step2, false);
         }, 30);
     });
-
     Tests.register("spawn", "Spawn", function () {
         Tests.receive("spawn:show", { SelectedSpawn: 0 });
     });
-
     Tests.register("quick-menu", "Quick Menu / Vehicle", function () {
         Tests.receive("quick-menu:show", {
             MenuId: "vehicle",
@@ -104,11 +95,9 @@ Tests.register("authorization", "Login", function () {
             ]
         });
     });
-
     Tests.register("quick-menu-many", "Quick Menu / Many", function () {
         var items = [];
         var icons = ["engine", "lights", "trunk", "doors", "lock", "key", "car", "repair", "fuel", "settings"];
-
         for (var i = 1; i <= 20; i++) {
             items.push({
                 Id: i,
@@ -119,14 +108,12 @@ Tests.register("authorization", "Login", function () {
                 Visible: i <= 12
             });
         }
-
         Tests.receive("quick-menu:show", {
             MenuId: "test-many",
             CloseOnSelect: false,
             Items: items
         });
     });
-
     Tests.register("dialog", "Dialog", function () {
         Tests.receive("dialog:show", {
             DialogId: 9001,
@@ -140,7 +127,6 @@ Tests.register("authorization", "Login", function () {
             ]
         });
     });
-
     Tests.register("tickets", "Tickets", function () {
         var items = [
             ticket(1254, "Гравець застряг у текстурах", "Artem_Kovalenko", "open", "Admin_Name", [
@@ -151,7 +137,6 @@ Tests.register("authorization", "Login", function () {
             ticket(1252, "Питання щодо донату", "Diana_Lopez", "open", "", []),
             ticket(1251, "Баг з автомобілем", "Maksim_White", "closed", "Admin_Name", [])
         ];
-
         Tests.receive("ticket:show", { Tickets: items });
         setTimeout(function () {
             if (typeof Tickets !== "undefined") {
@@ -160,7 +145,6 @@ Tests.register("authorization", "Login", function () {
             }
         }, 20);
     });
-
     Tests.register("admin", "AdminPanel", function () {
         var data = {
             Profile: { Id: 101, PlayerId: 12, Name: "serenity", Role: "Адміністратор 4 рівня" },
@@ -216,7 +200,6 @@ Tests.register("authorization", "Login", function () {
             ],
             Items: { Weapons: [], Vehicles: [], Skins: [], Organizations: [] }
         };
-
         if (typeof AdminPanel !== "undefined") {
             AdminPanel.Show(data);
             setTimeout(function () {
@@ -226,11 +209,11 @@ Tests.register("authorization", "Login", function () {
                 AdminPanel.chatOpen = true;
                 AdminPanel.Render();
             }, 30);
-        } else {
+        }
+        else {
             Tests.receive("admin:show", data);
         }
     });
-
     function inventoryEquipmentTestData(equipped) {
         var armor = {
             ItemId: 2,
@@ -245,7 +228,6 @@ Tests.register("authorization", "Login", function () {
                 { Buff: "Stamina", Value: 5 }
             ]
         };
-
         return {
             CharacterImage: "./assets/CSS/Images/Inventory/equipment-character-default-transparent.webp",
             CurrentWeight: 18.75,
@@ -270,38 +252,29 @@ Tests.register("authorization", "Login", function () {
                 : []
         };
     }
-
     Tests.register("inventory", "Inventory", function () {
         var inventoryData = inventoryEquipmentTestData(false);
-
         Tests.receive("inventory:set", inventoryData);
         Tests.receive("inventory:show", {});
-
         setTimeout(function () {
             if (typeof Inventory === "undefined" || (Inventory.items && Inventory.items.length))
                 return;
-
             Inventory.SetData(inventoryData);
             Inventory.Show();
         }, 0);
     });
-
     Tests.register("inventory-equipped", "Inventory / Equipment", function () {
         var inventoryData = inventoryEquipmentTestData(true);
-
         Tests.receive("inventory:set", inventoryData);
         Tests.receive("inventory:show", {});
-
         setTimeout(function () {
             if (typeof Inventory === "undefined")
                 return;
-
             Inventory.SetData(inventoryData);
             Inventory.SelectEquipment("Body");
             Inventory.Show();
         }, 0);
     });
-
     Tests.register("marketplace", "Marketplace", function () {
         var data = {
             Listings: [
@@ -320,12 +293,11 @@ Tests.register("authorization", "Login", function () {
                 { Index: 2, ItemId: 2, Title: "Бронежилет", Image: "armor.webp", Count: 1, Weight: 0.50 }
             ]
         };
-
         Tests.receive("marketplace:set", data);
         Tests.receive("marketplace:show", {});
-
         setTimeout(function () {
-            if (typeof Marketplace === "undefined") return;
+            if (typeof Marketplace === "undefined")
+                return;
             Marketplace.SetData(data);
             Marketplace.Show();
             var price = document.getElementById("marketplace-sell-price");
@@ -335,7 +307,6 @@ Tests.register("authorization", "Login", function () {
             }
         }, 0);
     });
-
     Tests.register("mailbox", "Mailbox", function () {
         var data = {
             Messages: [
@@ -407,17 +378,15 @@ Tests.register("authorization", "Login", function () {
                 }
             ]
         };
-
         Tests.receive("mailbox:set", data);
         Tests.receive("mailbox:show", {});
-
         setTimeout(function () {
-            if (typeof Mailbox === "undefined") return;
+            if (typeof Mailbox === "undefined")
+                return;
             Mailbox.SetData(data);
             Mailbox.Show();
         }, 0);
     });
-
     Tests.register("statistics", "Statistics", function () {
         Tests.receive("statistics:show", {
             Profile: {
@@ -452,7 +421,6 @@ Tests.register("authorization", "Login", function () {
             ]
         });
     });
-
     Tests.register("mainmenu", "Main Menu", function () {
         Tests.receive("main-menu:show", {
             Profile: {
@@ -462,19 +430,16 @@ Tests.register("authorization", "Login", function () {
             }
         });
     });
-
     Tests.register("hud-pc", "HUD PC", function () {
         forceHudPlatform(false);
         Tests.receive("hud:update", hudTestData());
         Tests.receive("hud:show", "");
     });
-
     Tests.register("hud-mobile", "HUD Mobile", function () {
         forceHudPlatform(true);
         Tests.receive("hud:update", hudTestData());
         Tests.receive("hud:show", "");
     });
-
     Tests.register("speedometer", "Speedometer", function () {
         if (window.Speedometer) {
             Speedometer.Show({
@@ -488,26 +453,23 @@ Tests.register("authorization", "Login", function () {
             });
         }
     });
-
     Tests.register("notifications", "Notify", function () {
-        if (typeof Notifications === "undefined") return;
+        if (typeof Notifications === "undefined")
+            return;
         Notifications.Toast({ Id: "test-success", Type: "Success", Title: "Успіх", Text: "Дію успішно виконано.", Duration: 15000 });
         Notifications.Toast({ Id: "test-info", Type: "Info", Title: "Інформація", Text: "Перевірка інформаційного повідомлення.", Duration: 15000 });
         Notifications.Toast({ Id: "test-warning", Type: "Warning", Title: "Попередження", Text: "Зверніть увагу на цю дію.", Duration: 15000 });
         Notifications.Toast({ Id: "test-error", Type: "Error", Title: "Помилка", Text: "Приклад повідомлення про помилку.", Duration: 15000 });
         Notifications.Banner({ Id: "test-banner", Type: "Info", Title: "Серверне повідомлення", Text: "Banner знаходиться по центру зверху.", Duration: 15000 });
     });
-
     Tests.register("reward", "Reward", function () {
         if (typeof Notifications !== "undefined")
             Notifications.Reward({ Id: "test-reward", Title: "Нагорода отримана", Text: "$25 000 + 500 XP", Subtext: "Щоденна нагорода", Duration: 15000 });
     });
-
     Tests.register("achievement", "Achievement", function () {
         if (typeof Notifications !== "undefined")
             Notifications.Achievement({ Id: "test-achievement", Title: "Досягнення відкрито", Text: "Перші кроки", Subtext: "+250 XP", Duration: 15000 });
     });
-
     Tests.register("bottom", "Bottom", function () {
         if (typeof Notifications !== "undefined")
             Notifications.Bottom({ Id: "test-bottom", Title: "Інформація", Text: "Нижнє інформаційне повідомлення.", Subtext: "SYSTEM", Duration: 15000 });

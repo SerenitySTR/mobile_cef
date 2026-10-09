@@ -2,51 +2,48 @@ const fs = require('fs');
 const path = require('path');
 const vm = require('vm');
 const { spawnSync } = require('child_process');
-
 const root = path.resolve(__dirname, '..');
 let passed = 0;
 let failed = 0;
 const warnings = [];
-
 function ok(condition, message) {
-    if (!condition) throw new Error(message);
+    if (!condition)
+        throw new Error(message);
 }
-
 function equal(actual, expected, message) {
     if (actual !== expected) {
         throw new Error(`${message}\nExpected: ${JSON.stringify(expected)}\nActual:   ${JSON.stringify(actual)}`);
     }
 }
-
 function test(name, fn) {
     try {
         fn();
         passed++;
         console.log(`✓ ${name}`);
-    } catch (error) {
+    }
+    catch (error) {
         failed++;
         console.error(`✗ ${name}`);
         console.error(`  ${String(error && error.message ? error.message : error).replace(/\n/g, '\n  ')}`);
     }
 }
-
 function read(relativePath) {
     return fs.readFileSync(path.join(root, relativePath), 'utf8');
 }
-
 function walk(dir, predicate = () => true) {
     const result = [];
     const absolute = path.join(root, dir);
-    if (!fs.existsSync(absolute)) return result;
-
+    if (!fs.existsSync(absolute))
+        return result;
     for (const entry of fs.readdirSync(absolute, { withFileTypes: true })) {
         const rel = path.join(dir, entry.name);
-        if (entry.isDirectory()) result.push(...walk(rel, predicate));
-        else if (predicate(rel)) result.push(rel.replace(/\\/g, '/'));
+        if (entry.isDirectory())
+            result.push(...walk(rel, predicate));
+        else if (predicate(rel))
+            result.push(rel.replace(/\\/g, '/'));
     }
     return result;
 }
-
 function buildFromTemplate() {
     const template = read('src/index.template.html');
     return template.replace(/<!--\s*@include\s+(.+?)\s*-->/g, (match, filePath) => {
@@ -55,47 +52,42 @@ function buildFromTemplate() {
         return fs.readFileSync(includePath, 'utf8');
     });
 }
-
 function stripQueryHash(value) {
     return value.split('#')[0].split('?')[0];
 }
-
 function isExternal(value) {
     return /^(?:https?:|data:|blob:|javascript:|mailto:|tel:|#)/i.test(value) || value.startsWith('//');
 }
-
 function collectHtmlAssetRefs(html) {
     const refs = [];
     const re = /\b(?:src|href)\s*=\s*["']([^"']+)["']/gi;
     let match;
     while ((match = re.exec(html))) {
         const value = match[1].trim();
-        if (!value || isExternal(value)) continue;
+        if (!value || isExternal(value))
+            continue;
         refs.push(value);
     }
     return refs;
 }
-
 function collectCssUrls(css) {
     const refs = [];
     const re = /url\(\s*["']?([^"')]+)["']?\s*\)/gi;
     let match;
     while ((match = re.exec(css))) {
         const value = match[1].trim();
-        if (!value || isExternal(value) || value.startsWith('var(')) continue;
+        if (!value || isExternal(value) || value.startsWith('var('))
+            continue;
         refs.push(value);
     }
     return refs;
 }
-
 function hasAll(source, values, label) {
     for (const value of values) {
         ok(source.includes(value), `${label} is missing ${value}`);
     }
 }
-
 console.log('\nCEF test suite\n==============');
-
 test('build: all @include files exist', () => {
     const template = read('src/index.template.html');
     const includes = [...template.matchAll(/<!--\s*@include\s+(.+?)\s*-->/g)].map(match => match[1].trim());
@@ -105,36 +97,33 @@ test('build: all @include files exist', () => {
     }
     equal(new Set(includes).size, includes.length, 'Duplicate @include found in template');
 });
-
 test('build: index.html matches src/index.template.html exactly', () => {
     const expected = buildFromTemplate();
     const actual = read('index.html');
     equal(actual, expected, 'index.html is stale. Run: node build');
 });
-
 test('build: generated index contains no unresolved @include', () => {
     ok(!/@include\b/.test(read('index.html')), 'index.html still contains @include directives');
 });
-
 test('html: every id in generated index.html is unique', () => {
     const html = read('index.html');
     const ids = [...html.matchAll(/\bid\s*=\s*["']([^"']+)["']/gi)].map(match => match[1]);
     const duplicates = [...new Set(ids.filter((id, index) => ids.indexOf(id) !== index))];
     ok(duplicates.length === 0, `Duplicate id values: ${duplicates.join(', ')}`);
 });
-
 test('assets: every local HTML src/href exists', () => {
     const refs = collectHtmlAssetRefs(read('index.html'));
     const missing = [];
     for (const ref of refs) {
         const clean = stripQueryHash(ref).replace(/^\.\//, '');
-        if (!clean) continue;
+        if (!clean)
+            continue;
         const absolute = path.join(root, clean);
-        if (!fs.existsSync(absolute)) missing.push(ref);
+        if (!fs.existsSync(absolute))
+            missing.push(ref);
     }
     ok(missing.length === 0, `Missing HTML assets:\n${missing.join('\n')}`);
 });
-
 test('assets: every local CSS url(...) exists', () => {
     const cssFiles = walk('assets/CSS/styles', file => file.endsWith('.css'));
     const missing = [];
@@ -144,37 +133,37 @@ test('assets: every local CSS url(...) exists', () => {
         for (const ref of collectCssUrls(css)) {
             const clean = stripQueryHash(ref);
             const absolute = path.resolve(path.dirname(absoluteCss), clean);
-            if (!fs.existsSync(absolute)) missing.push(`${file} -> ${ref}`);
+            if (!fs.existsSync(absolute))
+                missing.push(`${file} -> ${ref}`);
         }
     }
     ok(missing.length === 0, `Missing CSS assets:\n${missing.join('\n')}`);
 });
-
 test('javascript: every production JS file passes node --check', () => {
     const jsFiles = walk('assets/JavaScript', file => file.endsWith('.js'));
     const bad = [];
     for (const file of jsFiles) {
         const result = spawnSync(process.execPath, ['--check', path.join(root, file)], { encoding: 'utf8' });
-        if (result.status !== 0) bad.push(`${file}: ${(result.stderr || result.stdout).trim()}`);
+        if (result.status !== 0)
+            bad.push(`${file}: ${(result.stderr || result.stdout).trim()}`);
     }
     ok(bad.length === 0, bad.join('\n'));
 });
-
 test('cef-wrapper: Unicode JSON transport is ASCII-safe and decodes back correctly', () => {
     const emitted = [];
     const listeners = {};
     const context = {
         console,
         setInterval: () => 1,
-        clearInterval: () => {},
+        clearInterval: () => { },
         requestAnimationFrame: callback => callback(),
         window: {
             cef: {
                 emit: (eventName, data) => emitted.push({ eventName, data }),
                 on: (eventName, callback) => { listeners[eventName] = callback; },
-                off: () => {}
+                off: () => { }
             },
-            addEventListener: () => {}
+            addEventListener: () => { }
         }
     };
     context.window.window = context.window;
@@ -187,7 +176,6 @@ test('cef-wrapper: Unicode JSON transport is ASCII-safe and decodes back correct
     ok(/^[\x00-\x7F]*$/.test(sent.data), 'Transport JSON contains non-ASCII characters');
     equal(JSON.parse(sent.data).Message, payload.Message, 'Unicode payload did not round-trip');
 });
-
 test('events: core frontend/server event contracts still exist', () => {
     const expected = {
         'authorization.js': ['authorization:show', 'authorization:hide', 'authorization:submit'],
@@ -198,12 +186,10 @@ test('events: core frontend/server event contracts still exist', () => {
         'tickets.js': ['ticket:show', 'ticket:hide', 'ticket:update', 'ticket:create', 'ticket:message', 'ticket:close', 'ticket:close-ui'],
         'admin-panel.js': ['admin:show', 'admin:hide', 'admin:update', 'admin:ticket:open', 'admin:ticket:claim', 'admin:ticket:release', 'admin:ticket:close', 'admin:ticket:message', 'admin:ticket:transfer']
     };
-
     for (const [file, events] of Object.entries(expected)) {
         hasAll(read(`assets/JavaScript/${file}`), events, file);
     }
 });
-
 test('quick-menu: close lifecycle emits exactly one close and server hide never echoes it', () => {
     const emitted = [];
     const received = {};
@@ -215,9 +201,8 @@ test('quick-menu: close lifecycle emits exactly one close and server hide never 
             remove: (...names) => names.forEach(name => classes.delete(name)),
             contains: name => classes.has(name)
         },
-        setAttribute: () => {}
+        setAttribute: () => { }
     };
-
     const context = {
         console,
         window: {},
@@ -237,24 +222,20 @@ test('quick-menu: close lifecycle emits exactly one close and server hide never 
     context.window.GameCef = context.GameCef;
     vm.createContext(context);
     vm.runInContext(read('assets/JavaScript/quick-menu.js'), context, { filename: 'quick-menu.js' });
-
     const QuickMenu = context.QuickMenu;
     QuickMenu.screen = screen;
-    QuickMenu.Init = () => {};
-
+    QuickMenu.Init = () => { };
     QuickMenu.Close(true);
     equal(emitted.length, 1, 'Close button path must emit exactly one event');
     equal(emitted[0].eventName, 'quick-menu:close', 'Close button emitted the wrong event');
     equal(emitted[0].data, '', 'quick-menu:close must have an empty payload');
     ok(!classes.has('active'), 'Close did not hide the menu synchronously');
-
     emitted.length = 0;
     classes.add('active');
     classes.add('opened');
     received['quick-menu:hide']('');
     equal(emitted.length, 0, 'Server quick-menu:hide echoed an outbound event');
     ok(!classes.has('active'), 'Server quick-menu:hide did not hide the menu');
-
     emitted.length = 0;
     classes.add('active');
     classes.add('opened');
@@ -264,7 +245,6 @@ test('quick-menu: close lifecycle emits exactly one close and server hide never 
     equal(emitted[0].eventName, 'quick-menu:select', 'CloseOnSelect did not emit select first');
     equal(emitted[1].eventName, 'quick-menu:close', 'CloseOnSelect did not release focus through close event');
     equal(emitted[1].data, '', 'CloseOnSelect close event must have an empty payload');
-
     emitted.length = 0;
     classes.add('active');
     classes.add('opened');
@@ -275,26 +255,24 @@ test('quick-menu: close lifecycle emits exactly one close and server hide never 
         keyCode: 27,
         repeat: false,
         preventDefault() { this.defaultPrevented = true; },
-        stopImmediatePropagation() {}
+        stopImmediatePropagation() { }
     };
     ok(documentListeners.keydown && documentListeners.keydown.capture === true, 'Quick Menu Escape handler must run in capture phase');
     documentListeners.keydown.callback(escapeEvent);
     equal(emitted.length, 1, 'Escape must emit exactly one close event');
     equal(emitted[0].eventName, 'quick-menu:close', 'Escape emitted the wrong event');
 });
-
 test('admin-panel: legacy and chunked ticket sync protocols are both supported', () => {
     const source = read('assets/JavaScript/admin-panel.js');
     hasAll(source, [
-        'patch==="reset"',
-        'patch==="sync-begin"',
-        'patch==="ready" || patch==="sync-end"',
-        'patch==="messages"',
-        'patch==="messages-begin"',
-        'patch==="messages-end"'
+        'patch === "reset"',
+        'patch === "sync-begin"',
+        'patch === "ready" || patch === "sync-end"',
+        'patch === "messages"',
+        'patch === "messages-begin"',
+        'patch === "messages-end"'
     ], 'admin-panel.js');
 });
-
 test('dialog hotkeys: Enter activates left button and Escape activates right button', () => {
     const documentListeners = {};
     let leftClicks = 0;
@@ -303,9 +281,8 @@ test('dialog hotkeys: Enter activates left button and Escape activates right but
         { disabled: false, click: () => leftClicks++ },
         { disabled: false, click: () => rightClicks++ }
     ];
-    const activeScreen = { classList: { contains: value => value === 'active', toggle: () => {} } };
+    const activeScreen = { classList: { contains: value => value === 'active', toggle: () => { } } };
     const inactiveScreen = { classList: { contains: () => false } };
-
     const document = {
         documentElement: { clientWidth: 1280, clientHeight: 720 },
         getElementById: id => id === 'error-screen' ? inactiveScreen : null,
@@ -317,14 +294,13 @@ test('dialog hotkeys: Enter activates left button and Escape activates right but
         console,
         document,
         navigator: { userAgent: '', maxTouchPoints: 0 },
-        window: { innerWidth: 1280, innerHeight: 720, addEventListener: () => {} },
-        GameCef: { on: () => {}, sendJson: () => {} },
+        window: { innerWidth: 1280, innerHeight: 720, addEventListener: () => { } },
+        GameCef: { on: () => { }, sendJson: () => { } },
         setTimeout: callback => callback()
     };
     vm.createContext(context);
     vm.runInContext(read('assets/JavaScript/dialog.js'), context, { filename: 'dialog.js' });
     context.Dialog.screen = activeScreen;
-
     const makeEvent = key => ({
         key,
         target: { tagName: 'BUTTON' },
@@ -337,28 +313,27 @@ test('dialog hotkeys: Enter activates left button and Escape activates right but
         altKey: false,
         metaKey: false,
         preventDefault() { this.defaultPrevented = true; },
-        stopImmediatePropagation() {}
+        stopImmediatePropagation() { }
     });
-
     documentListeners.keydown(makeEvent('Enter'));
     equal(leftClicks, 1, 'Enter did not click the first/left dialog button');
     equal(rightClicks, 0, 'Enter unexpectedly clicked the right dialog button');
-
     documentListeners.keydown(makeEvent('Escape'));
     equal(rightClicks, 1, 'Escape did not click the last/right dialog button');
 });
-
 test('spawn hotkey: Enter submits selected spawn even when a button has focus', () => {
     const documentListeners = {};
     const sent = [];
     let clickHandler = null;
-    const activeClassList = { contains: name => name === 'active', add: () => {}, remove: () => {}, toggle: () => {} };
+    const activeClassList = { contains: name => name === 'active', add: () => { }, remove: () => { }, toggle: () => { } };
     const inactiveClassList = { contains: () => false };
     const spawnSelection = { classList: activeClassList };
     const spawnButton = {
         disabled: false,
-        addEventListener(type, callback) { if (type === 'click') clickHandler = callback; },
-        click() { if (clickHandler) clickHandler(); }
+        addEventListener(type, callback) { if (type === 'click')
+            clickHandler = callback; },
+        click() { if (clickHandler)
+            clickHandler(); }
     };
     const previewImage = { style: {} };
     const textNode = { textContent: '' };
@@ -381,15 +356,14 @@ test('spawn hotkey: Enter submits selected spawn even when a button has focus', 
         document,
         GameCef: {
             sendJson: (eventName, data) => sent.push({ eventName, data }),
-            on: () => {}
+            on: () => { }
         },
-        Loading: { Transition: () => {}, Hide: () => {} },
-        Image: function() { this.onload = null; },
+        Loading: { Transition: () => { }, Hide: () => { } },
+        Image: function () { this.onload = null; },
         requestAnimationFrame: callback => callback()
     };
     vm.createContext(context);
     vm.runInContext(read('assets/JavaScript/spawn.js'), context, { filename: 'spawn.js' });
-
     const event = {
         key: 'Enter',
         target: { tagName: 'BUTTON' },
@@ -402,21 +376,19 @@ test('spawn hotkey: Enter submits selected spawn even when a button has focus', 
         altKey: false,
         metaKey: false,
         preventDefault() { this.defaultPrevented = true; },
-        stopImmediatePropagation() {}
+        stopImmediatePropagation() { }
     };
     documentListeners.keydown(event);
     equal(sent.length, 1, 'Enter did not submit spawn');
     equal(sent[0].eventName, 'spawn:submit', 'Wrong spawn event emitted');
     equal(sent[0].data.SpawnType, 0, 'Default selected spawn should be LastPosition (0)');
 });
-
 test('button theme: global neon rectangular style is linked after component CSS', () => {
     const template = read('src/index.template.html');
     const themeIndex = template.indexOf('button-theme.css');
     const ticketsIndex = template.indexOf('tickets.css');
     ok(themeIndex !== -1, 'button-theme.css is not linked');
     ok(themeIndex > ticketsIndex, 'button-theme.css must load after component styles');
-
     const css = read('assets/CSS/styles/button-theme.css');
     hasAll(css, [
         '--neo-btn-border',
@@ -428,18 +400,15 @@ test('button theme: global neon rectangular style is linked after component CSS'
         '#admin-panel button:not(#admin-close)'
     ], 'button-theme.css');
 });
-
 test('production: notification local test helpers are absent', () => {
     const source = read('assets/JavaScript/notifications.js');
     for (const marker of ['testShowNotifications', 'testNotificationBanner', 'testNotificationReward', 'testNotificationAchievement', 'testNotificationBottom', 'testShowAllNotifications']) {
         ok(!source.includes(marker), `Production notifications.js still contains ${marker}`);
     }
 });
-
 test('password eye: reveal buttons toggle on touch/mouse without refocusing inputs', () => {
     const authorizationSource = read('assets/JavaScript/authorization.js');
     const registrationSource = read('assets/JavaScript/registration.js');
-
     hasAll(authorizationSource, [
         'function toggleAuthorizationPassword()',
         'authorizationPasswordEye.addEventListener("touchstart", (event) =>',
@@ -447,7 +416,6 @@ test('password eye: reveal buttons toggle on touch/mouse without refocusing inpu
         'if (event.detail === 0)',
         'toggleAuthorizationPassword()'
     ], 'authorization.js');
-
     hasAll(registrationSource, [
         'function togglePasswordInput(button)',
         'button.addEventListener("touchstart", (event) =>',
@@ -455,27 +423,17 @@ test('password eye: reveal buttons toggle on touch/mouse without refocusing inpu
         'if (event.detail === 0)',
         'togglePasswordInput(button)'
     ], 'registration.js');
-
-    const authorizationEyeBlock = authorizationSource.slice(
-        authorizationSource.indexOf('let authorizationPasswordEyeTouchAt'),
-        authorizationSource.indexOf('authorizationButton.addEventListener("click"')
-    );
+    const authorizationEyeBlock = authorizationSource.slice(authorizationSource.indexOf('let authorizationPasswordEyeTouchAt'), authorizationSource.indexOf('authorizationButton.addEventListener("click"'));
     ok(!authorizationEyeBlock.includes('focusAuthorizationPassword()'), 'Authorization eye refocuses password input');
-
-    const registrationEyeBlock = registrationSource.slice(
-        registrationSource.indexOf('let passwordEyeTouchAt'),
-        registrationSource.indexOf('genderButtons.forEach')
-    );
+    const registrationEyeBlock = registrationSource.slice(registrationSource.indexOf('let passwordEyeTouchAt'), registrationSource.indexOf('genderButtons.forEach'));
     ok(!registrationEyeBlock.includes('focusRegistrationInput(input)'), 'Registration eye refocuses password input');
 });
-
 test('visual test: reusable UI selector is scrollable and available on PC/mobile', () => {
     const js = read('tests/visual-test.js');
     const css = read('tests/visual-test.css');
     hasAll(js, ['UI MENU', 'cef-visual-test-menu', 'setMenuOpen', 'cef-test-menu-item'], 'tests/visual-test.js');
     hasAll(css, ['#cef-visual-test-menu', 'overflow-y: auto', 'touch-action: pan-y', '-webkit-overflow-scrolling: touch'], 'tests/visual-test.css');
 });
-
 test('visual test: tests/index.html and reusable test assets are present', () => {
     ok(fs.existsSync(path.join(root, 'tests/index.html')), 'tests/index.html is missing. Run: node tests/build.js');
     const html = read('tests/index.html');
@@ -484,17 +442,14 @@ test('visual test: tests/index.html and reusable test assets are present', () =>
     ok(fs.existsSync(path.join(root, 'tests/visual-test.js')), 'tests/visual-test.js is missing');
     ok(fs.existsSync(path.join(root, 'tests/cases.js')), 'tests/cases.js is missing');
     ok(fs.existsSync(path.join(root, 'tests/in-game.js')), 'tests/in-game.js is missing');
-
     for (const file of ['visual-test.js', 'cases.js', 'in-game.js']) {
         const result = spawnSync(process.execPath, ['--check', path.join(root, 'tests', file)], { encoding: 'utf8' });
         ok(result.status === 0, (result.stderr || result.stdout || `${file} syntax error`).trim());
     }
 });
-
 test('in-game visual test: lazy bridge and control events are wired into production', () => {
     const template = read('src/index.template.html');
     ok(template.includes('./tests/in-game.js'), 'Production template does not load tests/in-game.js');
-
     const source = read('tests/in-game.js');
     hasAll(source, [
         'cef-test:show',
@@ -508,10 +463,8 @@ test('in-game visual test: lazy bridge and control events are wired into product
         'blocked outgoing event',
         'name === "quick-menu:close"'
     ], 'tests/in-game.js');
-
     ok(source.includes('active && !isTestControlEvent(eventName)'), 'In-game test does not guard real outbound UI events');
 });
-
 test('notifications: close buttons and visible countdown text are absent', () => {
     const source = read('assets/JavaScript/notifications.js');
     ok(!source.includes('notification-close'), 'notifications.js still renders a close button');
@@ -519,7 +472,6 @@ test('notifications: close buttons and visible countdown text are absent', () =>
     ok(!source.includes('#DisplayTime'), 'notifications.js still contains visible time formatter');
     hasAll(source, ['#AutoRemove(element, data.Duration)', 'notification-progress'], 'notifications.js');
 });
-
 test('visual test: Inventory, Statistics and Main Menu cases are registered', () => {
     const source = read('tests/cases.js');
     hasAll(source, [
@@ -531,7 +483,6 @@ test('visual test: Inventory, Statistics and Main Menu cases are registered', ()
         'main-menu:show'
     ], 'tests/cases.js');
 });
-
 test('visual test: HUD previews and standalone Speedometer are registered', () => {
     const cases = read('tests/cases.js');
     hasAll(cases, [
@@ -546,39 +497,32 @@ test('visual test: HUD previews and standalone Speedometer are registered', () =
         'window.CefVisualTestHud',
         'restoreHudPlatform'
     ], 'tests/cases.js');
-
     const framework = read('tests/visual-test.js');
     ok(framework.includes('window.CefVisualTestHud.restore()'), 'visual-test.js does not restore HUD platform state between views');
     ok(framework.includes('Speedometer.Hide'), 'visual-test.js does not hide standalone Speedometer between views');
 });
-
 test('speedometer: standalone component is not embedded in PC HUD', () => {
     const pcHud = read('src/sections/pc-hud.html');
     const speedometer = read('src/sections/speedometer.html');
     const pcHudJs = read('assets/JavaScript/pc-hud.js');
     const speedometerJs = read('assets/JavaScript/speedometer.js');
-
     ok(!pcHud.includes('speedometer'), 'PC HUD still contains speedometer markup');
     ok(!pcHudJs.includes('Speedometer'), 'PC HUD JavaScript still owns speedometer logic');
     hasAll(speedometer, ['id="speedometer"', 'speedometer-speed-value', 'speedometer-fuel-fill'], 'speedometer.html');
     hasAll(speedometerJs, ['window.Speedometer', 'speedometer:show', 'speedometer:update', 'speedometer:hide'], 'speedometer.js');
 });
-
 test('tickets: waiting and working statuses are blue while closed stays red', () => {
     const css = read('assets/CSS/styles/tickets.css');
     const js = read('assets/JavaScript/tickets.js');
-
     hasAll(css, ['.tickets-status.waiting,', '.tickets-status.working', '#0a4f7d', '.tickets-status.closed', '#4b1218'], 'tickets.css');
     ok(js.includes('adminName ? " working" : " waiting"'), 'Ticket working/waiting classes are not assigned correctly');
 });
-
 test('code style: all JavaScript files follow repository whitespace rules', () => {
     const files = [
         'build.js',
         ...walk('assets/JavaScript', file => file.endsWith('.js')),
         ...walk('tests', file => file.endsWith('.js'))
     ];
-
     for (const file of files) {
         const source = read(file);
         ok(!source.includes('\t'), `${file}: tabs are not allowed`);
@@ -587,18 +531,15 @@ test('code style: all JavaScript files follow repository whitespace rules', () =
         ok(!source.includes('\n\n\n'), `${file}: more than one empty line between blocks`);
     }
 });
-
 test('keyboard focus: UI hotkeys use a hidden text-input sink without native changes', () => {
     const template = read('src/index.template.html');
     const helperIndex = template.indexOf('ui-keyboard.js');
     ok(helperIndex !== -1, 'ui-keyboard.js is not linked');
-
     for (const file of ['dialog.js', 'tickets.js', 'inventory.js', 'statistics.js', 'main-menu.js', 'admin-panel.js']) {
         const source = read(`assets/JavaScript/${file}`);
         ok(source.includes('UiKeyboard.Focus('), `${file}: keyboard sink is not activated on show`);
         ok(source.includes('UiKeyboard.Release('), `${file}: keyboard sink is not released on hide`);
     }
-
     const helper = read('assets/JavaScript/ui-keyboard.js');
     hasAll(helper, [
         'sink.type = "text"',
@@ -608,38 +549,38 @@ test('keyboard focus: UI hotkeys use a hidden text-input sink without native cha
         'RestoreAfterPointer',
         'IsEditable'
     ], 'ui-keyboard.js');
-
     const ticketsCss = read('assets/CSS/styles/tickets.css');
     hasAll(ticketsCss, ['.tickets-icon:hover,', '.tickets-icon:focus-visible'], 'tickets.css');
-
     const inventoryCss = read('assets/CSS/styles/inventory.css');
     hasAll(inventoryCss, ['.inventory-close:hover,', '.inventory-close:focus-visible'], 'inventory.css');
 });
-
 // Non-fatal cleanup hints.
 const template = read('src/index.template.html');
 const sectionFiles = walk('src/sections', file => file.endsWith('.html'));
 for (const section of sectionFiles) {
     const short = section.replace(/^src\//, '');
-    if (!template.includes(`@include ${short}`)) warnings.push(`Unused section: ${section}`);
+    if (!template.includes(`@include ${short}`))
+        warnings.push(`Unused section: ${section}`);
 }
 const linkedJs = new Set();
 for (const htmlFile of ['index.html', 'tests/index.html']) {
-    if (!fs.existsSync(path.join(root, htmlFile))) continue;
+    if (!fs.existsSync(path.join(root, htmlFile)))
+        continue;
     for (const ref of collectHtmlAssetRefs(read(htmlFile)))
         linkedJs.add(stripQueryHash(ref).replace(/^\.\//, ''));
 }
 for (const file of walk('assets/JavaScript', file => file.endsWith('.js'))) {
-    if (!linkedJs.has(file)) warnings.push(`Unused JavaScript file: ${file}`);
+    if (!linkedJs.has(file))
+        warnings.push(`Unused JavaScript file: ${file}`);
 }
-
 console.log('\nSummary\n-------');
 console.log(`Passed: ${passed}`);
 console.log(`Failed: ${failed}`);
 if (warnings.length) {
     console.log(`Warnings: ${warnings.length}`);
-    for (const warning of warnings) console.log(`! ${warning}`);
+    for (const warning of warnings)
+        console.log(`! ${warning}`);
 }
-
-if (failed > 0) process.exit(1);
+if (failed > 0)
+    process.exit(1);
 console.log('\nAll required CEF tests passed.');

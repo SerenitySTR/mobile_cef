@@ -6,9 +6,7 @@
     font-family: Inter, Arial, sans-serif;
 }
 
-#notification-banner-container,
-#notification-toast-container,
-#notification-bottom-container {
+#notification-banner-container, #notification-toast-container, #notification-bottom-container {
     position: fixed;
     display: flex;
     flex-direction: column;
@@ -47,12 +45,10 @@
     pointer-events: auto;
     border-radius: 26px;
     border: 1px solid rgba(85, 196, 255, 0.78);
-    background:
-        radial-gradient(circle at 92% 16%, rgba(73, 183, 255, 0.16), transparent 18%),
+    background: radial-gradient(circle at 92% 16%, rgba(73, 183, 255, 0.16), transparent 18%),
         radial-gradient(circle at 8% 92%, rgba(28, 124, 214, 0.10), transparent 22%),
         linear-gradient(180deg, rgba(4, 17, 31, 0.96), rgba(3, 12, 24, 0.92));
-    box-shadow:
-        inset 0 1px 0 rgba(255, 255, 255, 0.05),
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05),
         0 0 0 1px rgba(113, 217, 255, 0.09),
         0 18px 36px rgba(0, 0, 0, 0.34),
         0 0 22px rgba(64, 184, 255, 0.14);
@@ -73,8 +69,7 @@
     position: absolute;
     inset: 0;
     border-radius: inherit;
-    background:
-        radial-gradient(circle at 110% -10%, rgba(89, 204, 255, 0.10), transparent 26%),
+    background: radial-gradient(circle at 110% -10%, rgba(89, 204, 255, 0.10), transparent 26%),
         linear-gradient(140deg,
             transparent 0%,
             transparent 54%,
@@ -155,8 +150,7 @@
     border-radius: 50%;
     border: 2px solid color-mix(in srgb, var(--notification-color) 82%, white 18%);
     background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.10), rgba(4, 15, 28, 0.15) 58%, rgba(4, 12, 24, 0.35));
-    box-shadow:
-        inset 0 0 18px rgba(255, 255, 255, 0.04),
+    box-shadow: inset 0 0 18px rgba(255, 255, 255, 0.04),
         0 0 24px color-mix(in srgb, var(--notification-color) 34%, transparent);
     display: flex;
     align-items: center;
@@ -279,8 +273,7 @@
     animation: notificationProgress var(--notification-duration, 5000ms) linear forwards;
 }
 
-.notification-banner-label,
-.notification-bottom-label {
+.notification-banner-label, .notification-bottom-label {
     margin-bottom: 6px;
     color: color-mix(in srgb, var(--notification-color) 82%, white 18%);
     font-size: 12px;
@@ -351,96 +344,130 @@
 }
 
 @keyframes notificationToastEnter {
-    from { opacity: 0; transform: translate3d(-22px, 0, 0) scale(0.985); }
-    to { opacity: 1; transform: translate3d(0, 0, 0) scale(1); }
+    from {
+        opacity: 0;
+        transform: translate3d(-22px, 0, 0) scale(0.985);
+    }
+    to {
+        opacity: 1;
+        transform: translate3d(0, 0, 0) scale(1);
+    }
 }
 
 @keyframes notificationToastLeave {
-    from { opacity: 1; transform: translate3d(0, 0, 0) scale(1); }
-    to { opacity: 0; transform: translate3d(-20px, 0, 0) scale(0.985); }
+    from {
+        opacity: 1;
+        transform: translate3d(0, 0, 0) scale(1);
+    }
+    to {
+        opacity: 0;
+        transform: translate3d(-20px, 0, 0) scale(0.985);
+    }
 }
 
 @keyframes notificationBannerEnter {
-    from { opacity: 0; transform: translate3d(0, -14px, 0) scale(0.985); }
-    to { opacity: 1; transform: translate3d(0, 0, 0) scale(1); }
+    from {
+        opacity: 0;
+        transform: translate3d(0, -14px, 0) scale(0.985);
+    }
+    to {
+        opacity: 1;
+        transform: translate3d(0, 0, 0) scale(1);
+    }
 }
 
 @keyframes notificationBannerLeave {
-    from { opacity: 1; transform: translate3d(0, 0, 0) scale(1); }
-    to { opacity: 0; transform: translate3d(0, -12px, 0) scale(0.985); }
+    from {
+        opacity: 1;
+        transform: translate3d(0, 0, 0) scale(1);
+    }
+    to {
+        opacity: 0;
+        transform: translate3d(0, -12px, 0) scale(0.985);
+    }
 }
 
 @keyframes notificationBottomEnter {
-    from { opacity: 0; transform: translate3d(0, 16px, 0) scale(0.985); }
-    to { opacity: 1; transform: translate3d(0, 0, 0) scale(1); }
+    from {
+        opacity: 0;
+        transform: translate3d(0, 16px, 0) scale(0.985);
+    }
+    to {
+        opacity: 1;
+        transform: translate3d(0, 0, 0) scale(1);
+    }
 }
 
 @keyframes notificationBottomLeave {
-    from { opacity: 1; transform: translate3d(0, 0, 0) scale(1); }
-    to { opacity: 0; transform: translate3d(0, 12px, 0) scale(0.985); }
+    from {
+        opacity: 1;
+        transform: translate3d(0, 0, 0) scale(1);
+    }
+    to {
+        opacity: 0;
+        transform: translate3d(0, 12px, 0) scale(0.985);
+    }
 }
 
 @keyframes notificationProgress {
-    from { transform: scaleX(1); }
-    to { transform: scaleX(0); }
+    from {
+        transform: scaleX(1);
+    }
+    to {
+        transform: scaleX(0);
+    }
 }
 
 /* Laptop */
+
 @media (max-width: 1440px) {
     #notification-toast-container {
         left: clamp(16px, 2vw, 30px);
         width: min(340px, 25vw);
         gap: 9px;
     }
-
     #notification-bottom-container {
         right: 24px;
         bottom: 24px;
         width: min(310px, 23vw);
     }
-
     .notification-toast {
         min-height: 82px;
         padding: 11px 14px 11px 12px;
         grid-template-columns: 46px minmax(0, 1fr);
         gap: 10px;
     }
-
     .notification-title {
         font-size: 16px;
     }
-
     .notification-text {
         font-size: 12px;
     }
 }
 
 /* Tablet and smaller desktops */
+
 @media (max-width: 1100px) {
     #notification-toast-container {
         left: 18px;
         width: min(310px, 31vw);
     }
-
     #notification-banner-container {
         width: min(660px, 68vw);
     }
-
-    .notification-toast,
-    .notification-banner {
+    .notification-toast, .notification-banner {
         border-radius: 18px;
     }
-
     .notification-banner {
         min-height: 96px;
     }
-
     .notification-banner .notification-title {
         font-size: 20px;
     }
 }
 
 /* Mobile landscape is the primary game scenario. */
+
 @media (orientation: landscape) and (max-height: 650px) {
     #notification-toast-container {
         top: 50%;
@@ -450,18 +477,15 @@
         transform: translateY(-50%);
         gap: 8px;
     }
-
     #notification-banner-container {
         top: 12px;
         width: min(610px, 68vw);
     }
-
     #notification-bottom-container {
         right: max(12px, env(safe-area-inset-right));
         bottom: max(12px, env(safe-area-inset-bottom));
         width: min(270px, 28vw);
     }
-
     .notification-toast {
         min-height: 70px;
         padding: 9px 11px 9px 9px;
@@ -469,29 +493,24 @@
         gap: 10px;
         border-radius: 15px;
     }
-
     .notification-toast .notification-body {
         padding-right: 0;
         padding-bottom: 11px;
     }
-
     .notification-toast .notification-icon {
         width: 36px;
         height: 36px;
         border-width: 1.5px;
     }
-
     .notification-toast .notification-icon svg {
         width: 20px;
         height: 20px;
         stroke-width: 2.15;
     }
-
     .notification-toast .notification-title {
         font-size: 13px;
         line-height: 1.08;
     }
-
     .notification-toast .notification-text {
         margin-top: 4px;
         display: -webkit-box;
@@ -501,13 +520,11 @@
         font-size: 10.5px;
         line-height: 1.22;
     }
-
     .notification-toast .notification-time {
         right: 0;
         bottom: 0;
         font-size: 8.5px;
     }
-
     .notification-toast .notification-close {
         top: -2px;
         right: -1px;
@@ -515,14 +532,12 @@
         height: 18px;
         font-size: 12px;
     }
-
     .notification-toast .notification-progress {
         left: 10px;
         right: 10px;
         bottom: 5px;
         height: 2px;
     }
-
     .notification-banner {
         min-height: 82px;
         padding: 11px 14px 11px 12px;
@@ -530,34 +545,25 @@
         gap: 10px;
         border-radius: 17px;
     }
-
     .notification-banner .notification-icon {
         width: 40px;
         height: 40px;
     }
-
     .notification-banner .notification-icon svg {
         width: 22px;
         height: 22px;
     }
-
     .notification-banner .notification-title {
         font-size: 14px;
     }
-
-    .notification-banner .notification-text,
-    .notification-banner .notification-time,
-    .notification-subtext {
+    .notification-banner .notification-text, .notification-banner .notification-time, .notification-subtext {
         font-size: 10px;
     }
-
-    .notification-banner-label,
-    .notification-bottom-label {
+    .notification-banner-label, .notification-bottom-label {
         margin-bottom: 2px;
         font-size: 8px;
         letter-spacing: 0.14em;
     }
-
     .notification-bottom {
         min-height: 78px;
         padding: 10px 12px 10px 10px;
@@ -565,32 +571,26 @@
         gap: 9px;
         border-radius: 16px;
     }
-
     .notification-bottom .notification-icon {
         width: 34px;
         height: 34px;
     }
-
     .notification-bottom .notification-icon svg {
         width: 19px;
         height: 19px;
     }
-
     .notification-bottom .notification-title {
         font-size: 12px;
     }
-
     .notification-bottom .notification-text {
         margin-top: 3px;
         font-size: 9px;
         line-height: 1.2;
     }
-
     .notification-brand {
         margin-top: 6px;
         font-size: 9px;
     }
-
     .notification-brand span {
         margin-top: 1px;
         font-size: 6px;
@@ -598,13 +598,13 @@
 }
 
 /* Short phones such as 740x360 / 800x360 / 854x393. */
+
 @media (orientation: landscape) and (max-height: 430px) {
     #notification-toast-container {
         left: max(8px, env(safe-area-inset-left));
         width: clamp(255px, 31vw, 300px);
         gap: 5px;
     }
-
     .notification-toast {
         min-height: 58px;
         padding: 6px 8px 6px 7px;
@@ -612,43 +612,35 @@
         gap: 7px;
         border-radius: 12px;
     }
-
     .notification-toast .notification-body {
         padding-right: 0;
         padding-bottom: 8px;
     }
-
     .notification-toast .notification-icon {
         width: 28px;
         height: 28px;
     }
-
     .notification-toast .notification-icon svg {
         width: 16px;
         height: 16px;
     }
-
     .notification-toast .notification-title {
         font-size: 10.5px;
     }
-
     .notification-toast .notification-text {
         margin-top: 2px;
         font-size: 8px;
         line-height: 1.15;
         -webkit-line-clamp: 2;
     }
-
     .notification-toast .notification-time {
         font-size: 7px;
     }
-
     .notification-toast .notification-close {
         width: 15px;
         height: 15px;
         font-size: 10px;
     }
-
     .notification-toast .notification-progress {
         left: 7px;
         right: 7px;
@@ -658,12 +650,12 @@
 }
 
 /* Ultra-low phone viewport fallback. */
+
 @media (orientation: landscape) and (max-height: 340px) {
     #notification-toast-container {
         width: clamp(230px, 30vw, 270px);
         gap: 4px;
     }
-
     .notification-toast {
         min-height: 50px;
         grid-template-columns: 26px minmax(0, 1fr);
@@ -671,27 +663,24 @@
         padding: 5px 7px 5px 6px;
         border-radius: 10px;
     }
-
     .notification-toast .notification-icon {
         width: 24px;
         height: 24px;
     }
-
     .notification-toast .notification-icon svg {
         width: 14px;
         height: 14px;
     }
-
     .notification-toast .notification-title {
         font-size: 9px;
     }
-
     .notification-toast .notification-text {
         font-size: 7px;
     }
 }
 
 /* Portrait fallback. The game normally uses landscape, but keep notifications usable everywhere. */
+
 @media (orientation: portrait) and (max-width: 900px) {
     #notification-toast-container {
         top: 50%;
@@ -701,7 +690,6 @@
         transform: translateY(-50%);
         gap: 8px;
     }
-
     .notification-toast {
         min-height: 72px;
         padding: 9px 11px 9px 9px;
@@ -709,35 +697,30 @@
         gap: 9px;
         border-radius: 15px;
     }
-
     .notification-icon {
         width: 36px;
         height: 36px;
     }
-
     .notification-icon svg {
         width: 20px;
         height: 20px;
     }
-
     .notification-title {
         font-size: 14px;
     }
-
     .notification-text {
         font-size: 11px;
     }
 }
 
-
 /* Mobile landscape v3: intentionally small HUD-style notifications. */
+
 @media (orientation: landscape) and (max-height: 650px) {
     #notification-toast-container {
         left: max(8px, env(safe-area-inset-left));
         width: clamp(210px, 22vw, 240px);
         gap: 5px;
     }
-
     .notification-toast {
         min-height: 52px;
         padding: 6px 8px 6px 7px;
@@ -746,45 +729,37 @@
         border-radius: 11px;
         border-width: 1px;
     }
-
     .notification-toast .notification-body {
         padding-right: 0;
         padding-bottom: 7px;
     }
-
     .notification-toast .notification-icon {
         width: 26px;
         height: 26px;
         border-width: 1px;
-        box-shadow:
-            inset 0 0 8px rgba(255, 255, 255, 0.03),
+        box-shadow: inset 0 0 8px rgba(255, 255, 255, 0.03),
             0 0 10px color-mix(in srgb, var(--notification-color) 25%, transparent);
     }
-
     .notification-toast .notification-icon svg {
         width: 14px;
         height: 14px;
         stroke-width: 2;
     }
-
     .notification-toast .notification-title {
         font-size: 10.5px;
         line-height: 1.05;
     }
-
     .notification-toast .notification-text {
         margin-top: 2px;
         font-size: 8px;
         line-height: 1.12;
         -webkit-line-clamp: 2;
     }
-
     .notification-toast .notification-time {
         right: 0;
         bottom: 0;
         font-size: 6.5px;
     }
-
     .notification-toast .notification-close {
         top: -2px;
         right: -2px;
@@ -792,18 +767,15 @@
         height: 14px;
         font-size: 9px;
     }
-
     .notification-toast .notification-progress {
         left: 7px;
         right: 7px;
         bottom: 3px;
         height: 1px;
     }
-
     #notification-banner-container {
         width: min(470px, 52vw);
     }
-
     .notification-banner {
         min-height: 66px;
         padding: 8px 11px 8px 9px;
@@ -811,31 +783,23 @@
         gap: 8px;
         border-radius: 12px;
     }
-
     .notification-banner .notification-icon {
         width: 28px;
         height: 28px;
     }
-
     .notification-banner .notification-icon svg {
         width: 16px;
         height: 16px;
     }
-
     .notification-banner .notification-title {
         font-size: 11px;
     }
-
-    .notification-banner .notification-text,
-    .notification-banner .notification-time,
-    .notification-subtext {
+    .notification-banner .notification-text, .notification-banner .notification-time, .notification-subtext {
         font-size: 8px;
     }
-
     #notification-bottom-container {
         width: min(210px, 24vw);
     }
-
     .notification-bottom {
         min-height: 58px;
         padding: 7px 9px 7px 8px;
@@ -843,31 +807,25 @@
         gap: 7px;
         border-radius: 11px;
     }
-
     .notification-bottom .notification-icon {
         width: 25px;
         height: 25px;
     }
-
     .notification-bottom .notification-icon svg {
         width: 14px;
         height: 14px;
     }
-
     .notification-bottom .notification-title {
         font-size: 10px;
     }
-
     .notification-bottom .notification-text {
         margin-top: 2px;
         font-size: 7.5px;
     }
-
     .notification-brand {
         margin-top: 4px;
         font-size: 7px;
     }
-
     .notification-brand span {
         font-size: 5px;
     }
@@ -878,7 +836,6 @@
         width: clamp(185px, 21vw, 215px);
         gap: 4px;
     }
-
     .notification-toast {
         min-height: 45px;
         padding: 5px 7px 5px 6px;
@@ -886,36 +843,29 @@
         gap: 6px;
         border-radius: 9px;
     }
-
     .notification-toast .notification-body {
         padding-right: 0;
         padding-bottom: 6px;
     }
-
     .notification-toast .notification-icon {
         width: 22px;
         height: 22px;
     }
-
     .notification-toast .notification-icon svg {
         width: 12px;
         height: 12px;
     }
-
     .notification-toast .notification-title {
         font-size: 9px;
     }
-
     .notification-toast .notification-text {
         margin-top: 1px;
         font-size: 6.8px;
         line-height: 1.08;
     }
-
     .notification-toast .notification-time {
         font-size: 5.5px;
     }
-
     .notification-toast .notification-close {
         width: 12px;
         height: 12px;
@@ -927,44 +877,37 @@
     #notification-toast-container {
         width: clamp(170px, 20vw, 195px);
     }
-
     .notification-toast {
         min-height: 40px;
         grid-template-columns: 20px minmax(0, 1fr);
         gap: 5px;
         padding: 4px 6px 4px 5px;
     }
-
     .notification-toast .notification-icon {
         width: 19px;
         height: 19px;
     }
-
     .notification-toast .notification-icon svg {
         width: 10px;
         height: 10px;
     }
-
     .notification-toast .notification-title {
         font-size: 8px;
     }
-
     .notification-toast .notification-text {
         font-size: 6px;
     }
 }
 
-
 /* Variant-specific neon accents */
+
 .notification-bottom-reward {
     --notification-color: #ffc857;
     border-color: rgba(255, 200, 87, 0.72);
-    background:
-        radial-gradient(circle at 12% 20%, rgba(255, 194, 73, 0.16), transparent 26%),
+    background: radial-gradient(circle at 12% 20%, rgba(255, 194, 73, 0.16), transparent 26%),
         radial-gradient(circle at 92% 88%, rgba(255, 161, 45, 0.08), transparent 22%),
         linear-gradient(180deg, rgba(24, 20, 13, 0.96), rgba(14, 13, 10, 0.94));
-    box-shadow:
-        inset 0 1px 0 rgba(255, 245, 210, 0.06),
+    box-shadow: inset 0 1px 0 rgba(255, 245, 210, 0.06),
         0 0 0 1px rgba(255, 205, 102, 0.08),
         0 14px 30px rgba(0, 0, 0, 0.31),
         0 0 20px rgba(255, 183, 62, 0.10);
@@ -973,12 +916,10 @@
 .notification-bottom-achievement {
     --notification-color: #a987ff;
     border-color: rgba(164, 132, 255, 0.72);
-    background:
-        radial-gradient(circle at 10% 22%, rgba(150, 112, 255, 0.17), transparent 27%),
+    background: radial-gradient(circle at 10% 22%, rgba(150, 112, 255, 0.17), transparent 27%),
         radial-gradient(circle at 94% 80%, rgba(57, 169, 255, 0.10), transparent 24%),
         linear-gradient(180deg, rgba(14, 14, 31, 0.96), rgba(8, 11, 24, 0.94));
-    box-shadow:
-        inset 0 1px 0 rgba(230, 222, 255, 0.05),
+    box-shadow: inset 0 1px 0 rgba(230, 222, 255, 0.05),
         0 0 0 1px rgba(168, 137, 255, 0.08),
         0 14px 30px rgba(0, 0, 0, 0.31),
         0 0 20px rgba(134, 107, 255, 0.12);
@@ -988,13 +929,11 @@
     --notification-color: #48beff;
 }
 
-.notification-bottom-reward .notification-bottom-label,
-.notification-bottom-reward .notification-brand span {
+.notification-bottom-reward .notification-bottom-label, .notification-bottom-reward .notification-brand span {
     color: #ffd982;
 }
 
-.notification-bottom-achievement .notification-bottom-label,
-.notification-bottom-achievement .notification-brand span {
+.notification-bottom-achievement .notification-bottom-label, .notification-bottom-achievement .notification-brand span {
     color: #c8b5ff;
 }
 
@@ -1015,11 +954,11 @@
 }
 
 /* Make non-toast layouts compact on desktop as well. */
+
 @media (min-width: 901px) {
     #notification-banner-container {
         width: min(620px, 48vw);
     }
-
     .notification-banner {
         min-height: 88px;
         padding: 13px 18px 13px 14px;
@@ -1027,31 +966,23 @@
         gap: 12px;
         border-radius: 18px;
     }
-
     .notification-banner .notification-icon {
         width: 40px;
         height: 40px;
     }
-
     .notification-banner .notification-icon svg {
         width: 22px;
         height: 22px;
     }
-
     .notification-banner .notification-title {
         font-size: 17px;
     }
-
-    .notification-banner .notification-text,
-    .notification-banner .notification-time,
-    .notification-subtext {
+    .notification-banner .notification-text, .notification-banner .notification-time, .notification-subtext {
         font-size: 11px;
     }
-
     #notification-bottom-container {
         width: min(285px, 22vw);
     }
-
     .notification-bottom {
         min-height: 82px;
         padding: 12px 14px 11px 12px;
@@ -1059,43 +990,35 @@
         gap: 10px;
         border-radius: 16px;
     }
-
     .notification-bottom .notification-icon {
         width: 34px;
         height: 34px;
     }
-
     .notification-bottom .notification-icon svg {
         width: 19px;
         height: 19px;
     }
-
     .notification-bottom .notification-title {
         font-size: 13px;
     }
-
     .notification-bottom .notification-text {
         margin-top: 4px;
         font-size: 10px;
         line-height: 1.25;
     }
-
     .notification-bottom-label {
         margin-bottom: 3px;
         font-size: 8px;
     }
-
     .notification-brand {
         margin-top: 6px;
         font-size: 9px;
     }
-
     .notification-brand span {
         margin-top: 2px;
         font-size: 6px;
     }
 }
-
 
 /* =========================================================
    FINAL POSITIONING / RESPONSIVE OVERRIDES
@@ -1124,11 +1047,11 @@
 }
 
 /* Standard desktop / laptop sizing. */
+
 @media (min-width: 901px) {
     #notification-banner-container {
         width: min(540px, 44vw);
     }
-
     .notification-banner {
         min-height: 82px;
         padding: 12px 16px 12px 13px;
@@ -1136,31 +1059,23 @@
         gap: 11px;
         border-radius: 16px;
     }
-
     .notification-banner .notification-icon {
         width: 37px;
         height: 37px;
     }
-
     .notification-banner .notification-icon svg {
         width: 20px;
         height: 20px;
     }
-
     .notification-banner .notification-title {
         font-size: 15px;
     }
-
-    .notification-banner .notification-text,
-    .notification-banner .notification-time,
-    .notification-subtext {
+    .notification-banner .notification-text, .notification-banner .notification-time, .notification-subtext {
         font-size: 10px;
     }
-
     #notification-bottom-container {
         width: min(265px, 21vw);
     }
-
     .notification-bottom {
         min-height: 76px;
         padding: 10px 12px 10px 10px;
@@ -1168,37 +1083,30 @@
         gap: 9px;
         border-radius: 14px;
     }
-
     .notification-bottom .notification-icon {
         width: 31px;
         height: 31px;
     }
-
     .notification-bottom .notification-icon svg {
         width: 17px;
         height: 17px;
     }
-
     .notification-bottom .notification-title {
         font-size: 12px;
     }
-
     .notification-bottom .notification-text {
         margin-top: 3px;
         font-size: 9px;
         line-height: 1.2;
     }
-
     .notification-bottom-label {
         margin-bottom: 2px;
         font-size: 7px;
     }
-
     .notification-brand {
         margin-top: 5px;
         font-size: 8px;
     }
-
     .notification-brand span {
         margin-top: 1px;
         font-size: 5px;
@@ -1206,6 +1114,7 @@
 }
 
 /* Main phone/tablet landscape layout. */
+
 @media (orientation: landscape) and (max-height: 650px) {
     #notification-banner-container {
         top: max(7px, env(safe-area-inset-top));
@@ -1214,7 +1123,6 @@
         width: min(390px, 48vw);
         transform: translateX(-50%);
     }
-
     .notification-banner {
         min-height: 54px;
         padding: 6px 9px 6px 7px;
@@ -1222,34 +1130,26 @@
         gap: 7px;
         border-radius: 11px;
     }
-
     .notification-banner .notification-body {
         padding-right: 0;
     }
-
     .notification-banner .notification-icon {
         width: 24px;
         height: 24px;
         border-width: 1px;
     }
-
     .notification-banner .notification-icon svg {
         width: 13px;
         height: 13px;
     }
-
     .notification-banner .notification-title {
         font-size: 9.5px;
         line-height: 1.05;
     }
-
-    .notification-banner .notification-text,
-    .notification-banner .notification-time,
-    .notification-subtext {
+    .notification-banner .notification-text, .notification-banner .notification-time, .notification-subtext {
         font-size: 7px;
         line-height: 1.15;
     }
-
     .notification-banner .notification-text {
         margin-top: 2px;
         display: -webkit-box;
@@ -1257,13 +1157,11 @@
         -webkit-box-orient: vertical;
         -webkit-line-clamp: 2;
     }
-
     .notification-banner-label {
         margin-bottom: 1px;
         font-size: 6px;
         letter-spacing: 0.12em;
     }
-
     .notification-banner .notification-close {
         top: 2px;
         right: 3px;
@@ -1271,14 +1169,12 @@
         height: 13px;
         font-size: 9px;
     }
-
     .notification-banner .notification-progress {
         left: 8px;
         right: 8px;
         bottom: 3px;
         height: 1px;
     }
-
     #notification-bottom-container {
         left: 50%;
         right: auto;
@@ -1286,7 +1182,6 @@
         width: min(205px, 25vw);
         transform: translateX(-50%);
     }
-
     .notification-bottom {
         min-height: 52px;
         padding: 6px 8px 6px 7px;
@@ -1294,23 +1189,19 @@
         gap: 6px;
         border-radius: 10px;
     }
-
     .notification-bottom .notification-icon {
         width: 23px;
         height: 23px;
         border-width: 1px;
     }
-
     .notification-bottom .notification-icon svg {
         width: 13px;
         height: 13px;
     }
-
     .notification-bottom .notification-title {
         font-size: 9px;
         line-height: 1.05;
     }
-
     .notification-bottom .notification-text {
         margin-top: 2px;
         display: -webkit-box;
@@ -1320,25 +1211,21 @@
         font-size: 6.8px;
         line-height: 1.12;
     }
-
     .notification-bottom-label {
         margin-bottom: 1px;
         font-size: 5.5px;
         letter-spacing: 0.10em;
     }
-
     .notification-brand {
         margin-top: 3px;
         font-size: 6px;
         letter-spacing: 0.13em;
     }
-
     .notification-brand span {
         margin-top: 1px;
         font-size: 4.5px;
         letter-spacing: 0.16em;
     }
-
     .notification-bottom .notification-progress {
         left: 7px;
         right: 7px;
@@ -1348,12 +1235,12 @@
 }
 
 /* Very short phones (e.g. 640x320 / 740x360). */
+
 @media (orientation: landscape) and (max-height: 430px) {
     #notification-banner-container {
         top: max(4px, env(safe-area-inset-top));
         width: min(330px, 46vw);
     }
-
     .notification-banner {
         min-height: 46px;
         padding: 5px 7px 5px 6px;
@@ -1361,32 +1248,24 @@
         gap: 5px;
         border-radius: 9px;
     }
-
     .notification-banner .notification-icon {
         width: 20px;
         height: 20px;
     }
-
     .notification-banner .notification-icon svg {
         width: 11px;
         height: 11px;
     }
-
     .notification-banner .notification-title {
         font-size: 8px;
     }
-
-    .notification-banner .notification-text,
-    .notification-banner .notification-time,
-    .notification-subtext {
+    .notification-banner .notification-text, .notification-banner .notification-time, .notification-subtext {
         font-size: 5.8px;
     }
-
     #notification-bottom-container {
         bottom: max(4px, env(safe-area-inset-bottom));
         width: min(175px, 24vw);
     }
-
     .notification-bottom {
         min-height: 44px;
         padding: 5px 6px;
@@ -1394,31 +1273,27 @@
         gap: 5px;
         border-radius: 9px;
     }
-
     .notification-bottom .notification-icon {
         width: 19px;
         height: 19px;
     }
-
     .notification-bottom .notification-icon svg {
         width: 10px;
         height: 10px;
     }
-
     .notification-bottom .notification-title {
         font-size: 7.5px;
     }
-
     .notification-bottom .notification-text {
         font-size: 5.5px;
     }
-
     .notification-brand {
         display: none;
     }
 }
 
 /* Portrait fallback for browser testing / tablets. */
+
 @media (orientation: portrait) and (max-width: 900px) {
     #notification-banner-container {
         top: max(10px, env(safe-area-inset-top));
@@ -1427,7 +1302,6 @@
         width: min(420px, 86vw);
         transform: translateX(-50%);
     }
-
     #notification-bottom-container {
         left: 50%;
         right: auto;
@@ -1439,13 +1313,12 @@
 
 /* PC only: make Reward, Achievement and Bottom/Info more prominent.
    Important: do not rely on viewport width because landscape phones can report > 900 CSS px. */
+
 body.hud-platform-pc #notification-bottom-container {
-width: min(380px, 30vw);
+    width: min(380px, 30vw);
 }
 
-body.hud-platform-pc .notification-bottom-reward,
-body.hud-platform-pc .notification-bottom-achievement,
-body.hud-platform-pc .notification-bottom-info {
+body.hud-platform-pc .notification-bottom-reward, body.hud-platform-pc .notification-bottom-achievement, body.hud-platform-pc .notification-bottom-info {
     width: 100%;
     min-height: 104px;
     padding: 15px 17px 14px 15px;
@@ -1454,51 +1327,37 @@ body.hud-platform-pc .notification-bottom-info {
     border-radius: 18px;
 }
 
-body.hud-platform-pc .notification-bottom-reward .notification-icon,
-body.hud-platform-pc .notification-bottom-achievement .notification-icon,
-body.hud-platform-pc .notification-bottom-info .notification-icon {
+body.hud-platform-pc .notification-bottom-reward .notification-icon, body.hud-platform-pc .notification-bottom-achievement .notification-icon, body.hud-platform-pc .notification-bottom-info .notification-icon {
     width: 42px;
     height: 42px;
 }
 
-body.hud-platform-pc .notification-bottom-reward .notification-icon svg,
-body.hud-platform-pc .notification-bottom-achievement .notification-icon svg,
-body.hud-platform-pc .notification-bottom-info .notification-icon svg {
+body.hud-platform-pc .notification-bottom-reward .notification-icon svg, body.hud-platform-pc .notification-bottom-achievement .notification-icon svg, body.hud-platform-pc .notification-bottom-info .notification-icon svg {
     width: 23px;
     height: 23px;
 }
 
-body.hud-platform-pc .notification-bottom-reward .notification-title,
-body.hud-platform-pc .notification-bottom-achievement .notification-title,
-body.hud-platform-pc .notification-bottom-info .notification-title {
+body.hud-platform-pc .notification-bottom-reward .notification-title, body.hud-platform-pc .notification-bottom-achievement .notification-title, body.hud-platform-pc .notification-bottom-info .notification-title {
     font-size: 16px;
 }
 
-body.hud-platform-pc .notification-bottom-reward .notification-text,
-body.hud-platform-pc .notification-bottom-achievement .notification-text,
-body.hud-platform-pc .notification-bottom-info .notification-text {
+body.hud-platform-pc .notification-bottom-reward .notification-text, body.hud-platform-pc .notification-bottom-achievement .notification-text, body.hud-platform-pc .notification-bottom-info .notification-text {
     margin-top: 5px;
     font-size: 12px;
     line-height: 1.28;
 }
 
-body.hud-platform-pc .notification-bottom-reward .notification-bottom-label,
-body.hud-platform-pc .notification-bottom-achievement .notification-bottom-label,
-body.hud-platform-pc .notification-bottom-info .notification-bottom-label {
+body.hud-platform-pc .notification-bottom-reward .notification-bottom-label, body.hud-platform-pc .notification-bottom-achievement .notification-bottom-label, body.hud-platform-pc .notification-bottom-info .notification-bottom-label {
     margin-bottom: 4px;
     font-size: 9px;
 }
 
-body.hud-platform-pc .notification-bottom-reward .notification-brand,
-body.hud-platform-pc .notification-bottom-achievement .notification-brand,
-body.hud-platform-pc .notification-bottom-info .notification-brand {
+body.hud-platform-pc .notification-bottom-reward .notification-brand, body.hud-platform-pc .notification-bottom-achievement .notification-brand, body.hud-platform-pc .notification-bottom-info .notification-brand {
     margin-top: 8px;
     font-size: 10px;
 }
 
-body.hud-platform-pc .notification-bottom-reward .notification-brand span,
-body.hud-platform-pc .notification-bottom-achievement .notification-brand span,
-body.hud-platform-pc .notification-bottom-info .notification-brand span {
+body.hud-platform-pc .notification-bottom-reward .notification-brand span, body.hud-platform-pc .notification-bottom-achievement .notification-brand span, body.hud-platform-pc .notification-bottom-info .notification-brand span {
     margin-top: 2px;
     font-size: 7px;
 }
