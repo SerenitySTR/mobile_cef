@@ -2195,9 +2195,70 @@
     flex: 1 1 auto;
 }
 
+
+.inventory-split {
+    height: 48px;
+    flex: 0 0 96px;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    box-sizing: border-box;
+    padding: 0 10px;
+    border: 1px solid rgba(43,188,255,.38);
+    border-radius: 12px;
+    background: rgba(9,54,75,.52);
+    color: #8edcff;
+    font-size: 10px;
+    font-weight: 900;
+    cursor: pointer;
+    transition: border-color .15s ease,background .15s ease,transform .15s ease,color .15s ease;
+}
+
+.inventory-split svg {
+    width: 17px;
+    height: 17px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.8;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.inventory-split:hover:not(:disabled),
+.inventory-split:focus-visible:not(:disabled) {
+    border-color: rgba(43,188,255,.82);
+    background: rgba(12,73,99,.7);
+    color: #c9efff;
+    outline: none;
+}
+
+.inventory-split:active:not(:disabled) {
+    transform: scale(.985);
+}
+
+.inventory-split:disabled {
+    cursor: default;
+    opacity: .55;
+}
+
+.inventory-split-card {
+    border-color: rgba(43,188,255,.28);
+}
+
+.inventory-split-kicker {
+    color: #2bbcff;
+}
+
+.inventory-split-confirm {
+    border: 1px solid rgba(43,188,255,.48);
+    background: linear-gradient(135deg,rgba(19,129,184,.92),rgba(10,82,126,.92));
+    color: #fff;
+}
+
 .inventory-delete {
     height: 48px;
-    flex: 0 0 116px;
+    flex: 0 0 96px;
     display: none;
     align-items: center;
     justify-content: center;
@@ -2393,18 +2454,66 @@
 .inventory-delete-cancel:hover,
 .inventory-delete-cancel:focus-visible,
 .inventory-delete-confirm:hover,
-.inventory-delete-confirm:focus-visible {
+.inventory-delete-confirm:focus-visible,
+.inventory-split-confirm:hover,
+.inventory-split-confirm:focus-visible {
     filter: brightness(1.1);
     outline: none;
 }
 
 @media (max-width:860px) {
+    .inventory-split,
     .inventory-delete {
         flex-basis: 48px;
         padding: 0;
     }
 
+    .inventory-split span,
     .inventory-delete span {
         display: none;
     }
+}
+
+/* Inventory action layout: primary action above, secondary actions below. */
+.inventory-actions {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 44px;
+    grid-template-areas:
+        "use use"
+        "split delete";
+    align-items: stretch;
+    gap: 8px;
+}
+
+.inventory-actions .inventory-use {
+    grid-area: use;
+    width: 100%;
+    min-width: 0;
+    flex: none;
+}
+
+.inventory-split {
+    grid-area: split;
+    width: 100%;
+    height: 42px;
+    min-width: 0;
+    flex: none;
+}
+
+.inventory-delete {
+    grid-area: delete;
+    width: 44px;
+    height: 42px;
+    min-width: 44px;
+    flex: none;
+    padding: 0;
+}
+
+.inventory-delete span {
+    display: none;
+}
+
+.inventory-delete svg {
+    width: 18px;
+    height: 18px;
 }

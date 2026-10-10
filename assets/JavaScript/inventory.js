@@ -28,6 +28,7 @@ var Inventory = {
         var self = this;
         var close = document.getElementById("inventory-close");
         var use = document.getElementById("inventory-use");
+        var split = document.getElementById("inventory-split");
         var remove = document.getElementById("inventory-delete");
         var equipment = document.querySelector(".inventory-equipment");
         if (close)
@@ -39,10 +40,43 @@ var Inventory = {
             use.onclick = function () {
                 self.UseSelected();
             };
+        if (split)
+            split.onclick = function () {
+                self.SplitSelected();
+            };
         if (remove)
             remove.onclick = function () {
                 self.DeleteSelected();
             };
+        var splitCancel = document.getElementById("inventory-split-cancel");
+        var splitConfirm = document.getElementById("inventory-split-confirm");
+        var splitMinus = document.getElementById("inventory-split-minus");
+        var splitPlus = document.getElementById("inventory-split-plus");
+        var splitAmount = document.getElementById("inventory-split-amount");
+        if (splitCancel)
+            splitCancel.onclick = function () {
+                self.CloseSplitDialog();
+            };
+        if (splitConfirm)
+            splitConfirm.onclick = function () {
+                self.ConfirmSplit();
+            };
+        if (splitMinus)
+            splitMinus.onclick = function () {
+                self.ChangeSplitAmount(-1);
+            };
+        if (splitPlus)
+            splitPlus.onclick = function () {
+                self.ChangeSplitAmount(1);
+            };
+        if (splitAmount) {
+            splitAmount.oninput = function () {
+                self.ClampSplitAmount();
+            };
+            splitAmount.onblur = function () {
+                self.ClampSplitAmount();
+            };
+        }
         var deleteCancel = document.getElementById("inventory-delete-cancel");
         var deleteConfirm = document.getElementById("inventory-delete-confirm");
         var deleteMinus = document.getElementById("inventory-delete-minus");
@@ -86,12 +120,22 @@ var Inventory = {
             if (event.key === "Escape") {
                 event.preventDefault();
                 event.stopImmediatePropagation();
+                if (self.SplitDialogOpen()) {
+                    self.CloseSplitDialog();
+                    return;
+                }
                 if (self.DeleteDialogOpen()) {
                     self.CloseDeleteDialog();
                     return;
                 }
                 if (close)
                     close.click();
+                return;
+            }
+            if (event.key === "Enter" && self.SplitDialogOpen()) {
+                event.preventDefault();
+                event.stopImmediatePropagation();
+                self.ConfirmSplit();
                 return;
             }
             if (event.key === "Enter" && self.DeleteDialogOpen()) {
@@ -339,6 +383,7 @@ var Inventory = {
                 use.disabled = true;
                 use.style.display = "none";
             }
+            this.RenderSplitAction(null);
             this.RenderDeleteAction(null);
             return;
         }
@@ -376,6 +421,7 @@ var Inventory = {
         }
         this.RenderParams(item, params);
         this.RenderAction(item, use);
+        this.RenderSplitAction(item);
         this.RenderDeleteAction(item);
     },
     RenderParams: function (item, target) {
@@ -555,6 +601,20 @@ var Inventory = {
             use.parentNode.insertBefore(actions, use);
             actions.appendChild(use);
 
+            var split = document.createElement("button");
+            split.type = "button";
+            split.className = "inventory-split";
+            split.id = "inventory-split";
+            split.innerHTML =
+                '<svg viewBox="0 0 24 24" aria-hidden="true">' +
+                    '<path d="M8 7h8"></path>' +
+                    '<path d="M8 17h8"></path>' +
+                    '<path d="m6 4-3 3 3 3"></path>' +
+                    '<path d="m18 14 3 3-3 3"></path>' +
+                '</svg>' +
+                '<span>Розділити</span>';
+            actions.appendChild(split);
+
             var remove = document.createElement("button");
             remove.type = "button";
             remove.className = "inventory-delete";
@@ -571,31 +631,137 @@ var Inventory = {
         }
 
         var panel = this.screen ? this.screen.querySelector(".inventory-panel") : null;
-        if (!panel || document.getElementById("inventory-delete-dialog"))
+        if (!panel)
             return;
 
-        var dialog = document.createElement("div");
-        dialog.className = "inventory-delete-dialog";
-        dialog.id = "inventory-delete-dialog";
-        dialog.innerHTML =
-            '<div class="inventory-delete-card">' +
-                '<span class="inventory-delete-kicker">ВИДАЛЕННЯ ПРЕДМЕТА</span>' +
-                '<h3 id="inventory-delete-title">Видалити предмет?</h3>' +
-                '<p id="inventory-delete-description">Предмет буде видалено з інвентарю.</p>' +
-                '<div class="inventory-delete-quantity" id="inventory-delete-quantity">' +
-                    '<span>Кількість</span>' +
-                    '<div class="inventory-delete-stepper">' +
-                        '<button type="button" id="inventory-delete-minus">−</button>' +
-                        '<input id="inventory-delete-amount" type="number" min="1" value="1" inputmode="numeric">' +
-                        '<button type="button" id="inventory-delete-plus">+</button>' +
+        if (!document.getElementById("inventory-split-dialog")) {
+            var splitDialog = document.createElement("div");
+            splitDialog.className = "inventory-delete-dialog inventory-split-dialog";
+            splitDialog.id = "inventory-split-dialog";
+            splitDialog.innerHTML =
+                '<div class="inventory-delete-card inventory-split-card">' +
+                    '<span class="inventory-delete-kicker inventory-split-kicker">РОЗДІЛЕННЯ СТАКУ</span>' +
+                    '<h3 id="inventory-split-title">Розділити предмети?</h3>' +
+                    '<p>Оберіть кількість предметів для нового стаку.</p>' +
+                    '<div class="inventory-delete-quantity">' +
+                        '<span>Кількість</span>' +
+                        '<div class="inventory-delete-stepper">' +
+                            '<button type="button" id="inventory-split-minus">−</button>' +
+                            '<input id="inventory-split-amount" type="number" min="1" value="1" inputmode="numeric">' +
+                            '<button type="button" id="inventory-split-plus">+</button>' +
+                        '</div>' +
                     '</div>' +
-                '</div>' +
-                '<div class="inventory-delete-dialog-actions">' +
-                    '<button type="button" class="inventory-delete-cancel" id="inventory-delete-cancel">Скасувати</button>' +
-                    '<button type="button" class="inventory-delete-confirm" id="inventory-delete-confirm">Видалити</button>' +
-                '</div>' +
-            '</div>';
-        panel.appendChild(dialog);
+                    '<div class="inventory-delete-dialog-actions">' +
+                        '<button type="button" class="inventory-delete-cancel" id="inventory-split-cancel">Скасувати</button>' +
+                        '<button type="button" class="inventory-split-confirm" id="inventory-split-confirm">Розділити</button>' +
+                    '</div>' +
+                '</div>';
+            panel.appendChild(splitDialog);
+        }
+
+        if (!document.getElementById("inventory-delete-dialog")) {
+            var dialog = document.createElement("div");
+            dialog.className = "inventory-delete-dialog";
+            dialog.id = "inventory-delete-dialog";
+            dialog.innerHTML =
+                '<div class="inventory-delete-card">' +
+                    '<span class="inventory-delete-kicker">ВИДАЛЕННЯ ПРЕДМЕТА</span>' +
+                    '<h3 id="inventory-delete-title">Видалити предмет?</h3>' +
+                    '<p id="inventory-delete-description">Предмет буде видалено з інвентарю.</p>' +
+                    '<div class="inventory-delete-quantity" id="inventory-delete-quantity">' +
+                        '<span>Кількість</span>' +
+                        '<div class="inventory-delete-stepper">' +
+                            '<button type="button" id="inventory-delete-minus">−</button>' +
+                            '<input id="inventory-delete-amount" type="number" min="1" value="1" inputmode="numeric">' +
+                            '<button type="button" id="inventory-delete-plus">+</button>' +
+                        '</div>' +
+                    '</div>' +
+                    '<div class="inventory-delete-dialog-actions">' +
+                        '<button type="button" class="inventory-delete-cancel" id="inventory-delete-cancel">Скасувати</button>' +
+                        '<button type="button" class="inventory-delete-confirm" id="inventory-delete-confirm">Видалити</button>' +
+                    '</div>' +
+                '</div>';
+            panel.appendChild(dialog);
+        }
+    },
+    RenderSplitAction: function (item) {
+        var split = document.getElementById("inventory-split");
+        if (!split)
+            return;
+        var count = Number(item ? this.Get(item, "Count", "count") : 0) || 0;
+        var visible = this.selectedSource === "inventory" && !!item && count > 1;
+        split.style.display = visible ? "flex" : "none";
+        split.disabled = !visible;
+    },
+    SplitSelected: function () {
+        var item = this.SelectedItem();
+        if (!item || this.selectedSource !== "inventory")
+            return;
+        if (this.selectedIndex === null || this.selectedIndex < 0 || this.selectedIndex >= this.items.length)
+            return;
+
+        var count = Number(this.Get(item, "Count", "count")) || 0;
+        if (count <= 1)
+            return;
+
+        var input = document.getElementById("inventory-split-amount");
+        var dialog = document.getElementById("inventory-split-dialog");
+        if (!dialog || !input)
+            return;
+
+        var title = this.Get(item, "Title", "title") || this.Get(item, "Name", "name") || "Предмет";
+        this.SetText("inventory-split-title", title);
+        input.min = "1";
+        input.max = String(count - 1);
+        input.value = "1";
+        dialog.classList.add("active");
+        input.focus();
+        input.select();
+    },
+    CloseSplitDialog: function () {
+        var dialog = document.getElementById("inventory-split-dialog");
+        if (dialog)
+            dialog.classList.remove("active");
+    },
+    SplitDialogOpen: function () {
+        var dialog = document.getElementById("inventory-split-dialog");
+        return !!(dialog && dialog.classList.contains("active"));
+    },
+    ChangeSplitAmount: function (delta) {
+        var input = document.getElementById("inventory-split-amount");
+        if (!input)
+            return;
+        var value = Number(input.value) || 1;
+        input.value = String(value + delta);
+        this.ClampSplitAmount();
+    },
+    ClampSplitAmount: function () {
+        var input = document.getElementById("inventory-split-amount");
+        if (!input)
+            return 1;
+        var min = Number(input.min) || 1;
+        var max = Number(input.max) || min;
+        var value = Math.floor(Number(input.value) || min);
+        value = Math.max(min, Math.min(max, value));
+        input.value = String(value);
+        return value;
+    },
+    ConfirmSplit: function () {
+        if (!this.SplitDialogOpen())
+            return;
+        this.SendSplit(this.ClampSplitAmount());
+    },
+    SendSplit: function (count) {
+        var item = this.SelectedItem();
+        if (!item || this.selectedSource !== "inventory")
+            return;
+
+        GameCef.sendJson("inventory:split", {
+            Index: this.selectedIndex,
+            Count: count
+        });
+
+        this.CloseSplitDialog();
     },
     RenderDeleteAction: function (item) {
         var remove = document.getElementById("inventory-delete");
