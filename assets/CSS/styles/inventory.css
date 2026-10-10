@@ -18,6 +18,7 @@
 }
 
 .inventory-panel {
+    position: relative;
     width: min(1240px,94vw);
     height: min(720px,90vh);
     display: flex;
@@ -2178,5 +2179,232 @@
         min-width: 18px;
         padding: 2px 4px;
         font-size: 6px;
+    }
+}
+
+
+.inventory-actions {
+    flex: 0 0 auto;
+    display: flex;
+    align-items: stretch;
+    gap: 8px;
+}
+
+.inventory-actions .inventory-use {
+    min-width: 0;
+    flex: 1 1 auto;
+}
+
+.inventory-delete {
+    height: 48px;
+    flex: 0 0 116px;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    box-sizing: border-box;
+    padding: 0 14px;
+    border: 1px solid rgba(255,93,108,.42);
+    border-radius: 12px;
+    background: rgba(73,22,31,.52);
+    color: #ff9aa4;
+    font-size: 11px;
+    font-weight: 900;
+    cursor: pointer;
+    transition: border-color .15s ease,background .15s ease,transform .15s ease,color .15s ease;
+}
+
+.inventory-delete svg {
+    width: 17px;
+    height: 17px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.8;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.inventory-delete:hover:not(:disabled),
+.inventory-delete:focus-visible:not(:disabled) {
+    border-color: rgba(255,93,108,.78);
+    background: rgba(104,29,41,.68);
+    color: #ffc0c6;
+    outline: none;
+}
+
+.inventory-delete:active:not(:disabled) {
+    transform: scale(.985);
+}
+
+.inventory-delete:disabled {
+    cursor: default;
+    opacity: .55;
+}
+
+.inventory-delete-dialog {
+    position: absolute;
+    inset: 0;
+    z-index: 30;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    box-sizing: border-box;
+    border-radius: inherit;
+    background: rgba(1,9,16,.76);
+    backdrop-filter: blur(8px);
+}
+
+.inventory-delete-dialog.active {
+    display: flex;
+}
+
+.inventory-delete-card {
+    width: min(390px,92%);
+    box-sizing: border-box;
+    padding: 24px;
+    border: 1px solid rgba(255,93,108,.28);
+    border-radius: 18px;
+    background: linear-gradient(155deg,rgba(10,31,44,.98),rgba(5,18,29,.98));
+    box-shadow: 0 24px 70px rgba(0,0,0,.48);
+}
+
+.inventory-delete-kicker {
+    display: block;
+    margin-bottom: 8px;
+    color: #ff7f8c;
+    font-size: 9px;
+    font-weight: 900;
+    letter-spacing: 1.4px;
+}
+
+.inventory-delete-card h3 {
+    margin: 0;
+    color: #f5fbff;
+    font-size: 21px;
+    font-weight: 850;
+}
+
+.inventory-delete-card p {
+    margin: 8px 0 0;
+    color: #819ead;
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 1.45;
+}
+
+.inventory-delete-quantity {
+    margin-top: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+    padding: 11px 12px;
+    border: 1px solid rgba(59,137,180,.2);
+    border-radius: 12px;
+    background: rgba(5,28,42,.62);
+}
+
+.inventory-delete-quantity>span {
+    color: #91aab8;
+    font-size: 11px;
+    font-weight: 800;
+}
+
+.inventory-delete-stepper {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.inventory-delete-stepper button {
+    width: 34px;
+    height: 34px;
+    box-sizing: border-box;
+    padding: 0;
+    border: 1px solid rgba(67,153,199,.3);
+    border-radius: 9px;
+    background: rgba(8,39,56,.78);
+    color: #cbefff;
+    font-size: 18px;
+    font-weight: 800;
+    cursor: pointer;
+}
+
+.inventory-delete-stepper button:hover,
+.inventory-delete-stepper button:focus-visible {
+    border-color: #2bbcff;
+    outline: none;
+}
+
+.inventory-delete-stepper input {
+    width: 62px;
+    height: 34px;
+    box-sizing: border-box;
+    padding: 0 6px;
+    border: 1px solid rgba(67,153,199,.26);
+    border-radius: 9px;
+    background: rgba(2,18,28,.88);
+    color: #f0f9fe;
+    font-size: 13px;
+    font-weight: 900;
+    text-align: center;
+    outline: none;
+    -moz-appearance: textfield;
+}
+
+.inventory-delete-stepper input::-webkit-outer-spin-button,
+.inventory-delete-stepper input::-webkit-inner-spin-button {
+    margin: 0;
+    -webkit-appearance: none;
+}
+
+.inventory-delete-stepper input:focus {
+    border-color: #2bbcff;
+}
+
+.inventory-delete-dialog-actions {
+    margin-top: 20px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+}
+
+.inventory-delete-dialog-actions button {
+    height: 42px;
+    border-radius: 10px;
+    font-size: 11px;
+    font-weight: 900;
+    cursor: pointer;
+}
+
+.inventory-delete-cancel {
+    border: 1px solid rgba(83,145,178,.26);
+    background: rgba(10,38,53,.68);
+    color: #a9c4d3;
+}
+
+.inventory-delete-confirm {
+    border: 1px solid rgba(255,93,108,.48);
+    background: linear-gradient(135deg,rgba(167,49,64,.9),rgba(117,29,43,.9));
+    color: #fff;
+}
+
+.inventory-delete-cancel:hover,
+.inventory-delete-cancel:focus-visible,
+.inventory-delete-confirm:hover,
+.inventory-delete-confirm:focus-visible {
+    filter: brightness(1.1);
+    outline: none;
+}
+
+@media (max-width:860px) {
+    .inventory-delete {
+        flex-basis: 48px;
+        padding: 0;
+    }
+
+    .inventory-delete span {
+        display: none;
     }
 }

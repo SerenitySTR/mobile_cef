@@ -18,6 +18,7 @@ var Inventory = {
         this.character = document.getElementById("equipment-character");
         if (!this.screen)
             return;
+        this.EnsureDeleteUi();
         this.Bind();
     },
     Bind: function () {
@@ -27,6 +28,7 @@ var Inventory = {
         var self = this;
         var close = document.getElementById("inventory-close");
         var use = document.getElementById("inventory-use");
+        var remove = document.getElementById("inventory-delete");
         var equipment = document.querySelector(".inventory-equipment");
         if (close)
             close.onclick = function () {
@@ -37,6 +39,39 @@ var Inventory = {
             use.onclick = function () {
                 self.UseSelected();
             };
+        if (remove)
+            remove.onclick = function () {
+                self.DeleteSelected();
+            };
+        var deleteCancel = document.getElementById("inventory-delete-cancel");
+        var deleteConfirm = document.getElementById("inventory-delete-confirm");
+        var deleteMinus = document.getElementById("inventory-delete-minus");
+        var deletePlus = document.getElementById("inventory-delete-plus");
+        var deleteAmount = document.getElementById("inventory-delete-amount");
+        if (deleteCancel)
+            deleteCancel.onclick = function () {
+                self.CloseDeleteDialog();
+            };
+        if (deleteConfirm)
+            deleteConfirm.onclick = function () {
+                self.ConfirmDelete();
+            };
+        if (deleteMinus)
+            deleteMinus.onclick = function () {
+                self.ChangeDeleteAmount(-1);
+            };
+        if (deletePlus)
+            deletePlus.onclick = function () {
+                self.ChangeDeleteAmount(1);
+            };
+        if (deleteAmount) {
+            deleteAmount.oninput = function () {
+                self.ClampDeleteAmount();
+            };
+            deleteAmount.onblur = function () {
+                self.ClampDeleteAmount();
+            };
+        }
         if (equipment)
             equipment.onclick = function (event) {
                 var button = event.target.closest("[data-equipment-slot]");
@@ -51,8 +86,18 @@ var Inventory = {
             if (event.key === "Escape") {
                 event.preventDefault();
                 event.stopImmediatePropagation();
+                if (self.DeleteDialogOpen()) {
+                    self.CloseDeleteDialog();
+                    return;
+                }
                 if (close)
                     close.click();
+                return;
+            }
+            if (event.key === "Enter" && self.DeleteDialogOpen()) {
+                event.preventDefault();
+                event.stopImmediatePropagation();
+                self.ConfirmDelete();
                 return;
             }
             if (event.key !== "Enter" || !self.SelectedItem())
@@ -294,6 +339,7 @@ var Inventory = {
                 use.disabled = true;
                 use.style.display = "none";
             }
+            this.RenderDeleteAction(null);
             return;
         }
         var title = this.Get(item, "Title", "title") || this.Get(item, "Name", "name") || "Предмет";
@@ -330,6 +376,7 @@ var Inventory = {
         }
         this.RenderParams(item, params);
         this.RenderAction(item, use);
+        this.RenderDeleteAction(item);
     },
     RenderParams: function (item, target) {
         if (!target)
@@ -498,6 +545,154 @@ var Inventory = {
     },
     EmptySlotIcon: function () {
         return '<svg class="equipment-slot-empty-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 7v10M7 12h10"></path></svg>';
+    },
+    EnsureDeleteUi: function () {
+        var details = document.getElementById("inventory-details");
+        var use = document.getElementById("inventory-use");
+        if (details && use && !document.getElementById("inventory-delete")) {
+            var actions = document.createElement("div");
+            actions.className = "inventory-actions";
+            use.parentNode.insertBefore(actions, use);
+            actions.appendChild(use);
+
+            var remove = document.createElement("button");
+            remove.type = "button";
+            remove.className = "inventory-delete";
+            remove.id = "inventory-delete";
+            remove.innerHTML =
+                '<svg viewBox="0 0 24 24" aria-hidden="true">' +
+                    '<path d="M4 7h16"></path>' +
+                    '<path d="M9 7V4h6v3"></path>' +
+                    '<path d="M7 7l1 13h8l1-13"></path>' +
+                    '<path d="M10 11v5M14 11v5"></path>' +
+                '</svg>' +
+                '<span>Видалити</span>';
+            actions.appendChild(remove);
+        }
+
+        var panel = this.screen ? this.screen.querySelector(".inventory-panel") : null;
+        if (!panel || document.getElementById("inventory-delete-dialog"))
+            return;
+
+        var dialog = document.createElement("div");
+        dialog.className = "inventory-delete-dialog";
+        dialog.id = "inventory-delete-dialog";
+        dialog.innerHTML =
+            '<div class="inventory-delete-card">' +
+                '<span class="inventory-delete-kicker">ВИДАЛЕННЯ ПРЕДМЕТА</span>' +
+                '<h3 id="inventory-delete-title">Видалити предмет?</h3>' +
+                '<p id="inventory-delete-description">Предмет буде видалено з інвентарю.</p>' +
+                '<div class="inventory-delete-quantity" id="inventory-delete-quantity">' +
+                    '<span>Кількість</span>' +
+                    '<div class="inventory-delete-stepper">' +
+                        '<button type="button" id="inventory-delete-minus">−</button>' +
+                        '<input id="inventory-delete-amount" type="number" min="1" value="1" inputmode="numeric">' +
+                        '<button type="button" id="inventory-delete-plus">+</button>' +
+                    '</div>' +
+                '</div>' +
+                '<div class="inventory-delete-dialog-actions">' +
+                    '<button type="button" class="inventory-delete-cancel" id="inventory-delete-cancel">Скасувати</button>' +
+                    '<button type="button" class="inventory-delete-confirm" id="inventory-delete-confirm">Видалити</button>' +
+                '</div>' +
+            '</div>';
+        panel.appendChild(dialog);
+    },
+    RenderDeleteAction: function (item) {
+        var remove = document.getElementById("inventory-delete");
+        if (!remove)
+            return;
+        var visible = this.selectedSource === "inventory" && !!item;
+        remove.style.display = visible ? "flex" : "none";
+        remove.disabled = !visible;
+    },
+    DeleteSelected: function () {
+        var item = this.SelectedItem();
+        if (!item || this.selectedSource !== "inventory")
+            return;
+        if (this.selectedIndex === null || this.selectedIndex < 0 || this.selectedIndex >= this.items.length)
+            return;
+
+        var count = Number(this.Get(item, "Count", "count"));
+        if (!count || count < 1)
+            count = 1;
+
+        this.OpenDeleteDialog(item, count);
+    },
+    OpenDeleteDialog: function (item, maxCount) {
+        var dialog = document.getElementById("inventory-delete-dialog");
+        var input = document.getElementById("inventory-delete-amount");
+        var quantity = document.getElementById("inventory-delete-quantity");
+        if (!dialog || !input)
+            return;
+
+        var title = this.Get(item, "Title", "title") || this.Get(item, "Name", "name") || "Предмет";
+        this.SetText("inventory-delete-title", title);
+        this.SetText(
+            "inventory-delete-description",
+            maxCount > 1
+                ? "Оберіть кількість, яку потрібно видалити."
+                : "Предмет буде видалено з інвентарю."
+        );
+
+        input.min = "1";
+        input.max = String(maxCount);
+        input.value = "1";
+        if (quantity)
+            quantity.style.display = maxCount > 1 ? "flex" : "none";
+
+        dialog.classList.add("active");
+        input.focus();
+        input.select();
+    },
+    CloseDeleteDialog: function () {
+        var dialog = document.getElementById("inventory-delete-dialog");
+        if (dialog)
+            dialog.classList.remove("active");
+    },
+    DeleteDialogOpen: function () {
+        var dialog = document.getElementById("inventory-delete-dialog");
+        return !!(dialog && dialog.classList.contains("active"));
+    },
+    ChangeDeleteAmount: function (delta) {
+        var input = document.getElementById("inventory-delete-amount");
+        if (!input)
+            return;
+        var value = Number(input.value) || 1;
+        input.value = String(value + delta);
+        this.ClampDeleteAmount();
+    },
+    ClampDeleteAmount: function () {
+        var input = document.getElementById("inventory-delete-amount");
+        if (!input)
+            return 1;
+        var min = Number(input.min) || 1;
+        var max = Number(input.max) || min;
+        var value = Math.floor(Number(input.value) || min);
+        value = Math.max(min, Math.min(max, value));
+        input.value = String(value);
+        return value;
+    },
+    ConfirmDelete: function () {
+        if (!this.DeleteDialogOpen())
+            return;
+        this.SendDelete(this.ClampDeleteAmount());
+    },
+    SendDelete: function (count) {
+        var item = this.SelectedItem();
+        if (!item || this.selectedSource !== "inventory")
+            return;
+
+        var itemId = this.Get(item, "ItemId", "itemId");
+        if (itemId === undefined)
+            itemId = this.Get(item, "Id", "id");
+
+        GameCef.sendJson("inventory:delete", {
+            Index: this.selectedIndex,
+            ItemId: itemId,
+            Count: count
+        });
+
+        this.CloseDeleteDialog();
     },
     UseSelected: function () {
         var item = this.SelectedItem();
