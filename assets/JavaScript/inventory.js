@@ -28,6 +28,7 @@ var Inventory = {
         var self = this;
         var close = document.getElementById("inventory-close");
         var use = document.getElementById("inventory-use");
+        var sell = document.getElementById("inventory-sell");
         var split = document.getElementById("inventory-split");
         var remove = document.getElementById("inventory-delete");
         var equipment = document.querySelector(".inventory-equipment");
@@ -40,6 +41,10 @@ var Inventory = {
             use.onclick = function () {
                 self.UseSelected();
             };
+        if (sell)
+            sell.onclick = function () {
+                self.SellSelected();
+            };
         if (split)
             split.onclick = function () {
                 self.SplitSelected();
@@ -48,6 +53,48 @@ var Inventory = {
             remove.onclick = function () {
                 self.DeleteSelected();
             };
+        var sellCancel = document.getElementById("inventory-sell-cancel");
+        var sellConfirm = document.getElementById("inventory-sell-confirm");
+        var sellMinus = document.getElementById("inventory-sell-minus");
+        var sellPlus = document.getElementById("inventory-sell-plus");
+        var sellAmount = document.getElementById("inventory-sell-amount");
+        var sellPlayer = document.getElementById("inventory-sell-player");
+        var sellPrice = document.getElementById("inventory-sell-price");
+        if (sellCancel)
+            sellCancel.onclick = function () {
+                self.CloseSellDialog();
+            };
+        if (sellConfirm)
+            sellConfirm.onclick = function () {
+                self.ConfirmSell();
+            };
+        if (sellMinus)
+            sellMinus.onclick = function () {
+                self.ChangeSellAmount(-1);
+            };
+        if (sellPlus)
+            sellPlus.onclick = function () {
+                self.ChangeSellAmount(1);
+            };
+        if (sellAmount) {
+            sellAmount.oninput = function () {
+                self.ClampSellAmount();
+            };
+            sellAmount.onblur = function () {
+                self.ClampSellAmount();
+            };
+        }
+        if (sellPlayer)
+            sellPlayer.oninput = function () {
+                if (Number(sellPlayer.value) < 0)
+                    sellPlayer.value = "0";
+            };
+        if (sellPrice)
+            sellPrice.oninput = function () {
+                if (Number(sellPrice.value) < 1)
+                    sellPrice.value = "1";
+            };
+
         var splitCancel = document.getElementById("inventory-split-cancel");
         var splitConfirm = document.getElementById("inventory-split-confirm");
         var splitMinus = document.getElementById("inventory-split-minus");
@@ -120,6 +167,10 @@ var Inventory = {
             if (event.key === "Escape") {
                 event.preventDefault();
                 event.stopImmediatePropagation();
+                if (self.SellDialogOpen()) {
+                    self.CloseSellDialog();
+                    return;
+                }
                 if (self.SplitDialogOpen()) {
                     self.CloseSplitDialog();
                     return;
@@ -130,6 +181,12 @@ var Inventory = {
                 }
                 if (close)
                     close.click();
+                return;
+            }
+            if (event.key === "Enter" && self.SellDialogOpen()) {
+                event.preventDefault();
+                event.stopImmediatePropagation();
+                self.ConfirmSell();
                 return;
             }
             if (event.key === "Enter" && self.SplitDialogOpen()) {
@@ -383,6 +440,7 @@ var Inventory = {
                 use.disabled = true;
                 use.style.display = "none";
             }
+            this.RenderSellAction(null);
             this.RenderSplitAction(null);
             this.RenderDeleteAction(null);
             return;
@@ -421,6 +479,7 @@ var Inventory = {
         }
         this.RenderParams(item, params);
         this.RenderAction(item, use);
+        this.RenderSellAction(item);
         this.RenderSplitAction(item);
         this.RenderDeleteAction(item);
     },
@@ -601,6 +660,20 @@ var Inventory = {
             use.parentNode.insertBefore(actions, use);
             actions.appendChild(use);
 
+            var sell = document.createElement("button");
+            sell.type = "button";
+            sell.className = "inventory-sell";
+            sell.id = "inventory-sell";
+            sell.innerHTML =
+                '<svg viewBox="0 0 24 24" aria-hidden="true">' +
+                    '<path d="M4 7h16"></path>' +
+                    '<path d="M7 12h10"></path>' +
+                    '<path d="M9 17h6"></path>' +
+                    '<path d="M12 4v16"></path>' +
+                '</svg>' +
+                '<span>Продати</span>';
+            actions.appendChild(sell);
+
             var split = document.createElement("button");
             split.type = "button";
             split.className = "inventory-split";
@@ -633,6 +706,41 @@ var Inventory = {
         var panel = this.screen ? this.screen.querySelector(".inventory-panel") : null;
         if (!panel)
             return;
+
+        if (!document.getElementById("inventory-sell-dialog")) {
+            var sellDialog = document.createElement("div");
+            sellDialog.className = "inventory-delete-dialog inventory-sell-dialog";
+            sellDialog.id = "inventory-sell-dialog";
+            sellDialog.innerHTML =
+                '<div class="inventory-delete-card inventory-sell-card">' +
+                    '<span class="inventory-delete-kicker inventory-sell-kicker">ПРОДАЖ ПРЕДМЕТА</span>' +
+                    '<h3 id="inventory-sell-title">Продати предмет?</h3>' +
+                    '<p>Вкажіть ID гравця, кількість та загальну ціну.</p>' +
+                    '<div class="inventory-sell-fields">' +
+                        '<label class="inventory-sell-field">' +
+                            '<span>ID гравця</span>' +
+                            '<input id="inventory-sell-player" type="number" min="0" value="0" inputmode="numeric">' +
+                        '</label>' +
+                        '<div class="inventory-delete-quantity" id="inventory-sell-quantity">' +
+                            '<span>Кількість</span>' +
+                            '<div class="inventory-delete-stepper">' +
+                                '<button type="button" id="inventory-sell-minus">−</button>' +
+                                '<input id="inventory-sell-amount" type="number" min="1" value="1" inputmode="numeric">' +
+                                '<button type="button" id="inventory-sell-plus">+</button>' +
+                            '</div>' +
+                        '</div>' +
+                        '<label class="inventory-sell-field">' +
+                            '<span>Ціна</span>' +
+                            '<input id="inventory-sell-price" type="number" min="1" value="1" inputmode="numeric">' +
+                        '</label>' +
+                    '</div>' +
+                    '<div class="inventory-delete-dialog-actions">' +
+                        '<button type="button" class="inventory-delete-cancel" id="inventory-sell-cancel">Скасувати</button>' +
+                        '<button type="button" class="inventory-sell-confirm" id="inventory-sell-confirm">Надіслати</button>' +
+                    '</div>' +
+                '</div>';
+            panel.appendChild(sellDialog);
+        }
 
         if (!document.getElementById("inventory-split-dialog")) {
             var splitDialog = document.createElement("div");
@@ -683,6 +791,112 @@ var Inventory = {
                 '</div>';
             panel.appendChild(dialog);
         }
+    },
+    RenderSellAction: function (item) {
+        var sell = document.getElementById("inventory-sell");
+        if (!sell)
+            return;
+        var visible = this.selectedSource === "inventory" && !!item;
+        sell.style.display = visible ? "flex" : "none";
+        sell.disabled = !visible;
+    },
+    SellSelected: function () {
+        var item = this.SelectedItem();
+        if (!item || this.selectedSource !== "inventory")
+            return;
+        if (this.selectedIndex === null || this.selectedIndex < 0 || this.selectedIndex >= this.items.length)
+            return;
+
+        var count = Number(this.Get(item, "Count", "count")) || 1;
+        var dialog = document.getElementById("inventory-sell-dialog");
+        var amount = document.getElementById("inventory-sell-amount");
+        var quantity = document.getElementById("inventory-sell-quantity");
+        var player = document.getElementById("inventory-sell-player");
+        var price = document.getElementById("inventory-sell-price");
+        if (!dialog || !amount || !player || !price)
+            return;
+
+        var title = this.Get(item, "Title", "title") || this.Get(item, "Name", "name") || "Предмет";
+        this.SetText("inventory-sell-title", title);
+        amount.min = "1";
+        amount.max = String(count);
+        amount.value = "1";
+        if (quantity)
+            quantity.style.display = count > 1 ? "flex" : "none";
+        player.value = "0";
+        price.value = "1";
+        dialog.classList.add("active");
+        player.focus();
+        player.select();
+    },
+    CloseSellDialog: function () {
+        var dialog = document.getElementById("inventory-sell-dialog");
+        if (dialog)
+            dialog.classList.remove("active");
+    },
+    SellDialogOpen: function () {
+        var dialog = document.getElementById("inventory-sell-dialog");
+        return !!(dialog && dialog.classList.contains("active"));
+    },
+    ChangeSellAmount: function (delta) {
+        var input = document.getElementById("inventory-sell-amount");
+        if (!input)
+            return;
+        var value = Number(input.value) || 1;
+        input.value = String(value + delta);
+        this.ClampSellAmount();
+    },
+    ClampSellAmount: function () {
+        var input = document.getElementById("inventory-sell-amount");
+        if (!input)
+            return 1;
+        var min = Number(input.min) || 1;
+        var max = Number(input.max) || min;
+        var value = Math.floor(Number(input.value) || min);
+        value = Math.max(min, Math.min(max, value));
+        input.value = String(value);
+        return value;
+    },
+    ConfirmSell: function () {
+        if (!this.SellDialogOpen())
+            return;
+
+        var playerInput = document.getElementById("inventory-sell-player");
+        var priceInput = document.getElementById("inventory-sell-price");
+        if (!playerInput || !priceInput)
+            return;
+
+        var playerId = Math.floor(Number(playerInput.value));
+        var price = Math.floor(Number(priceInput.value));
+        if (!Number.isFinite(playerId) || playerId < 0) {
+            playerInput.focus();
+            return;
+        }
+        if (!Number.isFinite(price) || price <= 0) {
+            priceInput.focus();
+            return;
+        }
+
+        this.SendSell(playerId, this.ClampSellAmount(), price);
+    },
+    SendSell: function (playerId, count, price) {
+        var item = this.SelectedItem();
+        if (!item || this.selectedSource !== "inventory")
+            return;
+
+        var itemId = this.Get(item, "ItemId", "itemId");
+        if (itemId === undefined)
+            itemId = this.Get(item, "Id", "id");
+
+        GameCef.sendJson("inventory:sell", {
+            Index: this.selectedIndex,
+            ItemId: itemId,
+            Count: count,
+            Price: price,
+            PlayerId: playerId
+        });
+
+        this.CloseSellDialog();
     },
     RenderSplitAction: function (item) {
         var split = document.getElementById("inventory-split");

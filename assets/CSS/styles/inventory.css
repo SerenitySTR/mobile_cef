@@ -2517,3 +2517,135 @@
     width: 18px;
     height: 18px;
 }
+
+/* Inventory sell action */
+.inventory-sell {
+    grid-area: sell;
+    width: 100%;
+    height: 42px;
+    min-width: 0;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    box-sizing: border-box;
+    padding: 0 12px;
+    border: 1px solid rgba(82, 210, 151, .36);
+    border-radius: 12px;
+    background: rgba(20, 78, 58, .48);
+    color: #9ce7c3;
+    font-size: 10px;
+    font-weight: 900;
+    cursor: pointer;
+    transition: border-color .15s ease, background .15s ease, transform .15s ease, color .15s ease;
+}
+
+.inventory-sell svg {
+    width: 17px;
+    height: 17px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.8;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.inventory-sell:hover:not(:disabled),
+.inventory-sell:focus-visible:not(:disabled) {
+    border-color: rgba(82, 210, 151, .8);
+    background: rgba(24, 104, 75, .66);
+    color: #d2f8e5;
+    outline: none;
+}
+
+.inventory-sell:active:not(:disabled) {
+    transform: scale(.985);
+}
+
+.inventory-sell:disabled {
+    cursor: default;
+    opacity: .55;
+}
+
+.inventory-actions {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) 44px;
+    grid-template-areas:
+        "use use use"
+        "sell split delete";
+}
+
+.inventory-sell-card {
+    border-color: rgba(82, 210, 151, .28);
+}
+
+.inventory-sell-kicker {
+    color: #62d9a1;
+}
+
+.inventory-sell-fields {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 18px;
+}
+
+.inventory-sell-field {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+    padding: 11px 12px;
+    border: 1px solid rgba(59, 137, 180, .2);
+    border-radius: 12px;
+    background: rgba(5, 28, 42, .62);
+}
+
+.inventory-sell-field span {
+    color: #91aab8;
+    font-size: 11px;
+    font-weight: 800;
+}
+
+.inventory-sell-field input {
+    width: 110px;
+    height: 34px;
+    box-sizing: border-box;
+    padding: 0 8px;
+    border: 1px solid rgba(67, 153, 199, .26);
+    border-radius: 9px;
+    background: rgba(2, 18, 28, .88);
+    color: #f0f9fe;
+    font-size: 13px;
+    font-weight: 900;
+    text-align: center;
+    outline: none;
+    -moz-appearance: textfield;
+}
+
+.inventory-sell-field input::-webkit-outer-spin-button,
+.inventory-sell-field input::-webkit-inner-spin-button {
+    margin: 0;
+    -webkit-appearance: none;
+}
+
+.inventory-sell-field input:focus {
+    border-color: #62d9a1;
+}
+
+.inventory-sell-confirm {
+    border: 1px solid rgba(82, 210, 151, .46);
+    background: linear-gradient(135deg, rgba(31, 143, 98, .94), rgba(20, 101, 74, .94));
+    color: #fff;
+}
+
+.inventory-sell-confirm:hover,
+.inventory-sell-confirm:focus-visible {
+    filter: brightness(1.1);
+    outline: none;
+}
+
+@media (max-width: 860px) {
+    .inventory-sell {
+        padding: 0 8px;
+    }
+}
