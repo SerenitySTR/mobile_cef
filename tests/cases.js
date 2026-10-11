@@ -305,38 +305,97 @@
             ]
         });
     });
-    Tests.register("marketplace", "Marketplace", function () {
-        var data = {
+    function marketplaceTestData() {
+        return {
+            Page: 1,
+            TotalPages: 4,
+            TotalCount: 38,
+            MaxListings: 10,
+            MyListingsCount: 3,
             Listings: [
-                { Id: 1008, ItemId: 1, Title: "Яблуко", Image: "apple.webp", Count: 10, Price: 50, SellerName: "Serenity_Walker", CreatedAt: "2 хв тому" },
-                { Id: 1007, ItemId: 3, Title: "Бургер", Image: "burger.webp", Count: 8, Price: 400, SellerName: "Alex_Rivera", CreatedAt: "8 хв тому" },
-                { Id: 1006, ItemId: 2, Title: "Бронежилет", Image: "armor.webp", Count: 1, Price: 15000, SellerName: "Diana_Lopez", CreatedAt: "12 хв тому" },
-                { Id: 1005, ItemId: 4, Title: "Аптечка", Image: "", Count: 3, Price: 1200, SellerName: "Maksim_White", CreatedAt: "20 хв тому" },
-                { Id: 1004, ItemId: 5, Title: "Телефон", Image: "", Count: 1, Price: 5000, SellerName: "Johnny_Blake", CreatedAt: "37 хв тому" },
-                { Id: 1003, ItemId: 6, Title: "Бинт", Image: "", Count: 15, Price: 300, SellerName: "Artem_Kovalenko", CreatedAt: "40 хв тому" },
-                { Id: 1002, ItemId: 7, Title: "Ремкомплект", Image: "", Count: 2, Price: 2500, SellerName: "Mike_Ross", CreatedAt: "1 год тому" },
-                { Id: 1001, ItemId: 8, Title: "Каністра", Image: "", Count: 1, Price: 1000, SellerName: "Sanya_Petrov", CreatedAt: "3 год тому" }
+                { Id: 1038, ItemId: 1, Title: "Яблуко", Image: "apple.webp", Count: 10, Price: 500, SellerId: 15, SellerName: "Serenity_Walker", CreatedAt: "11.10.2026", Params: [{ Recovery: "Hunger", Value: 10 }] },
+                { Id: 1037, ItemId: 3, Title: "Бургер", Image: "burger.webp", Count: 4, Price: 1600, SellerId: 41, SellerName: "Alex_Rivera", CreatedAt: "11.10.2026", Params: [{ Recovery: "Hunger", Value: 25 }, { Recovery: "Health", Value: 5 }] },
+                { Id: 1036, ItemId: 2, Title: "Бронежилет", Image: "armor.webp", Count: 1, Price: 15000, SellerId: 72, SellerName: "Diana_Lopez", CreatedAt: "11.10.2026", Params: [{ Recovery: "Armor", Value: 50 }] },
+                { Id: 1035, ItemId: 4, Title: "Аптечка", Image: "", Count: 2, Price: 2800, SellerId: 31, SellerName: "Maksim_White", CreatedAt: "11.10.2026", Params: [{ Recovery: "Health", Value: 35 }] },
+                { Id: 1034, ItemId: 5, Title: "Телефон", Image: "", Count: 1, Price: 5000, SellerId: 55, SellerName: "Johnny_Blake", CreatedAt: "11.10.2026", Params: [] },
+                { Id: 1033, ItemId: 6, Title: "Бинт", Image: "", Count: 8, Price: 1200, SellerId: 81, SellerName: "Artem_Kovalenko", CreatedAt: "11.10.2026", Params: [{ Recovery: "Health", Value: 8 }] },
+                { Id: 1032, ItemId: 7, Title: "Ремкомплект", Image: "", Count: 2, Price: 4500, SellerId: 19, SellerName: "Mike_Ross", CreatedAt: "10.10.2026", Params: [] },
+                { Id: 1031, ItemId: 8, Title: "Каністра", Image: "", Count: 1, Price: 2300, SellerId: 66, SellerName: "Sanya_Petrov", CreatedAt: "10.10.2026", Params: [] },
+                { Id: 1030, ItemId: 1, Title: "Яблуко", Image: "apple.webp", Count: 25, Price: 1000, SellerId: 92, SellerName: "Emily_Stone", CreatedAt: "10.10.2026", Params: [{ Recovery: "Hunger", Value: 10 }, { Recovery: "Health", Value: 15 }] },
+                { Id: 1029, ItemId: 3, Title: "Бургер", Image: "burger.webp", Count: 2, Price: 750, SellerId: 23, SellerName: "Nikita_Fox", CreatedAt: "10.10.2026", Params: [{ Recovery: "Hunger", Value: 25 }] },
+                { Id: 1028, ItemId: 2, Title: "Бронежилет", Image: "armor.webp", Count: 1, Price: 16500, SellerId: 48, SellerName: "Chris_Morgan", CreatedAt: "09.10.2026", Params: [{ Recovery: "Armor", Value: 65 }] },
+                { Id: 1027, ItemId: 4, Title: "Аптечка", Image: "", Count: 5, Price: 6000, SellerId: 11, SellerName: "Oleg_Smith", CreatedAt: "09.10.2026", Params: [{ Recovery: "Health", Value: 35 }] }
+            ],
+            MyListings: [
+                { Id: 1014, ItemId: 1, Title: "Яблуко", Image: "apple.webp", Count: 5, Price: 300, CreatedAt: "11.10.2026", Params: [{ Recovery: "Hunger", Value: 10 }, { Recovery: "Health", Value: 15 }] },
+                { Id: 1009, ItemId: 2, Title: "Бронежилет", Image: "armor.webp", Count: 1, Price: 14500, CreatedAt: "10.10.2026", Params: [{ Recovery: "Armor", Value: 50 }] },
+                { Id: 1004, ItemId: 3, Title: "Бургер", Image: "burger.webp", Count: 3, Price: 1100, CreatedAt: "09.10.2026", Params: [{ Recovery: "Hunger", Value: 25 }] }
             ],
             Inventory: [
-                { Index: 0, ItemId: 1, Title: "Яблуко", Image: "apple.webp", Count: 10, Weight: 0.05 },
-                { Index: 1, ItemId: 3, Title: "Бургер", Image: "burger.webp", Count: 4, Weight: 0.25 },
-                { Index: 2, ItemId: 2, Title: "Бронежилет", Image: "armor.webp", Count: 1, Weight: 0.50 }
+                { Index: 0, ItemId: 1, Title: "Яблуко", Image: "apple.webp", Count: 10, Weight: 0.05, Params: [{ Recovery: "Hunger", Value: 10 }, { Recovery: "Health", Value: 15 }] },
+                { Index: 1, ItemId: 3, Title: "Бургер", Image: "burger.webp", Count: 4, Weight: 0.25, Params: [{ Recovery: "Hunger", Value: 25 }] },
+                { Index: 2, ItemId: 2, Title: "Бронежилет", Image: "armor.webp", Count: 1, Weight: 0.50, Params: [{ Recovery: "Armor", Value: 50 }] }
             ]
         };
+    }
+
+    Tests.register("marketplace", "Marketplace", function () {
+        var data = marketplaceTestData();
         Tests.receive("marketplace:set", data);
         Tests.receive("marketplace:show", {});
+
         setTimeout(function () {
             if (typeof Marketplace === "undefined")
                 return;
+
+            Marketplace.SetData(data);
+            Marketplace.CloseManager();
+            Marketplace.Show();
+        }, 0);
+    });
+
+    Tests.register("marketplace-my", "Marketplace / My Listings", function () {
+        var data = marketplaceTestData();
+        Tests.receive("marketplace:set", data);
+        Tests.receive("marketplace:show", {});
+
+        setTimeout(function () {
+            if (typeof Marketplace === "undefined")
+                return;
+
             Marketplace.SetData(data);
             Marketplace.Show();
+            Marketplace.OpenManager(false);
+
             var price = document.getElementById("marketplace-sell-price");
             if (price) {
-                price.value = "50";
+                price.value = "850";
                 Marketplace.RenderSellSummary();
             }
         }, 0);
     });
+
+    Tests.register("marketplace-buy", "Marketplace / Buy", function () {
+        var data = marketplaceTestData();
+        Tests.receive("marketplace:set", data);
+        Tests.receive("marketplace:show", {});
+
+        setTimeout(function () {
+            if (typeof Marketplace === "undefined")
+                return;
+
+            Marketplace.SetData(data);
+            Marketplace.Show();
+            Marketplace.OpenBuy(1038);
+
+            var count = document.getElementById("marketplace-buy-count");
+            if (count) {
+                count.value = "4";
+                Marketplace.RenderBuyTotal();
+            }
+        }, 0);
+    });
+
     Tests.register("mailbox", "Mailbox", function () {
         var data = {
             Messages: [
