@@ -275,6 +275,24 @@
             Inventory.Show();
         }, 0);
     });
+    Tests.register("inventory-sell-offer", "Inventory / Sell Offer", function () {
+        var offer = {
+            SellerId: 15,
+            ItemId: 1,
+            Title: "Яблуко",
+            Image: "apple.webp",
+            Count: 3,
+            Price: 500
+        };
+
+        if (typeof Inventory !== "undefined") {
+            Inventory.Init();
+            Inventory.ShowSellOffer(offer);
+            return;
+        }
+
+        Tests.receive("inventory:sell-offer", offer);
+    });
     Tests.register("marketplace", "Marketplace", function () {
         var data = {
             Listings: [

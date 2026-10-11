@@ -36,6 +36,8 @@
             Speedometer.Hide();
         if (typeof QuickMenu !== "undefined" && QuickMenu.Hide)
             QuickMenu.Hide();
+        if (typeof Inventory !== "undefined" && Inventory.HideSellOffer)
+            Inventory.HideSellOffer();
         [
             "authorization", "registration", "spawn-selection", "error-screen",
             "statistics", "inventory", "marketplace", "main-menu", "quick-menu", "tickets", "admin-panel", "speedometer"

@@ -686,8 +686,8 @@ var Inventory = {
                     '<div><span>Ціна</span><strong id="inventory-sell-offer-price">$0</strong></div>' +
                 '</div>' +
                 '<div class="inventory-sell-offer-actions">' +
-                    '<button type="button" id="inventory-sell-offer-reject">Відхилити</button>' +
                     '<button type="button" id="inventory-sell-offer-accept">Прийняти</button>' +
+                    '<button type="button" id="inventory-sell-offer-reject">Відхилити</button>' +
                 '</div>' +
             '</div>';
 
