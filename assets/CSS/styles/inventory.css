@@ -2649,3 +2649,150 @@
         padding: 0 8px;
     }
 }
+
+/* Incoming inventory sell offer */
+.inventory-sell-offer-dialog {
+    position: fixed;
+    inset: 0;
+    z-index: 10000;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    box-sizing: border-box;
+    background: rgba(1, 9, 16, .72);
+    backdrop-filter: blur(8px);
+}
+
+.inventory-sell-offer-dialog.active {
+    display: flex;
+}
+
+.inventory-sell-offer-card {
+    width: min(390px, 92vw);
+    box-sizing: border-box;
+    padding: 24px;
+    border: 1px solid rgba(82, 210, 151, .32);
+    border-radius: 18px;
+    background: linear-gradient(155deg, rgba(10, 31, 44, .99), rgba(5, 18, 29, .99));
+    box-shadow: 0 24px 70px rgba(0, 0, 0, .5);
+}
+
+.inventory-sell-offer-kicker {
+    display: block;
+    margin-bottom: 14px;
+    color: #62d9a1;
+    font-size: 9px;
+    font-weight: 900;
+    letter-spacing: 1.4px;
+}
+
+.inventory-sell-offer-item {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.inventory-sell-offer-image {
+    width: 64px;
+    height: 64px;
+    flex: 0 0 64px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid rgba(67, 153, 199, .22);
+    border-radius: 14px;
+    background: rgba(4, 24, 36, .78);
+    overflow: hidden;
+}
+
+.inventory-sell-offer-image img {
+    width: 78%;
+    height: 78%;
+    object-fit: contain;
+}
+
+.inventory-sell-offer-info {
+    min-width: 0;
+}
+
+.inventory-sell-offer-info h3 {
+    margin: 0 0 5px;
+    color: #f5fbff;
+    font-size: 19px;
+    font-weight: 850;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.inventory-sell-offer-info span {
+    color: #819ead;
+    font-size: 11px;
+    font-weight: 700;
+}
+
+.inventory-sell-offer-values {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin-top: 18px;
+}
+
+.inventory-sell-offer-values > div {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 11px 12px;
+    border: 1px solid rgba(59, 137, 180, .2);
+    border-radius: 11px;
+    background: rgba(5, 28, 42, .62);
+}
+
+.inventory-sell-offer-values span {
+    color: #91aab8;
+    font-size: 10px;
+    font-weight: 800;
+}
+
+.inventory-sell-offer-values strong {
+    color: #edfaff;
+    font-size: 12px;
+    font-weight: 900;
+}
+
+.inventory-sell-offer-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin-top: 20px;
+}
+
+.inventory-sell-offer-actions button {
+    height: 42px;
+    border-radius: 10px;
+    font-size: 11px;
+    font-weight: 900;
+    cursor: pointer;
+}
+
+#inventory-sell-offer-reject {
+    border: 1px solid rgba(83, 145, 178, .26);
+    background: rgba(10, 38, 53, .68);
+    color: #a9c4d3;
+}
+
+#inventory-sell-offer-accept {
+    border: 1px solid rgba(82, 210, 151, .46);
+    background: linear-gradient(135deg, rgba(31, 143, 98, .94), rgba(20, 101, 74, .94));
+    color: #fff;
+}
+
+#inventory-sell-offer-reject:hover,
+#inventory-sell-offer-reject:focus-visible,
+#inventory-sell-offer-accept:hover,
+#inventory-sell-offer-accept:focus-visible {
+    filter: brightness(1.1);
+    outline: none;
+}

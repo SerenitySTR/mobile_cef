@@ -11,6 +11,7 @@ var Inventory = {
     selectedSource: "inventory",
     selectedIndex: null,
     selectedSlot: null,
+    sellOffer: null,
     Init: function () {
         this.screen = document.getElementById("inventory");
         this.grid = document.getElementById("inventory-grid");
@@ -19,6 +20,7 @@ var Inventory = {
         if (!this.screen)
             return;
         this.EnsureDeleteUi();
+        this.EnsureSellOfferUi();
         this.Bind();
     },
     Bind: function () {
@@ -93,6 +95,17 @@ var Inventory = {
             sellPrice.oninput = function () {
                 if (Number(sellPrice.value) < 1)
                     sellPrice.value = "1";
+            };
+
+        var sellOfferReject = document.getElementById("inventory-sell-offer-reject");
+        var sellOfferAccept = document.getElementById("inventory-sell-offer-accept");
+        if (sellOfferReject)
+            sellOfferReject.onclick = function () {
+                self.RejectSellOffer();
+            };
+        if (sellOfferAccept)
+            sellOfferAccept.onclick = function () {
+                self.AcceptSellOffer();
             };
 
         var splitCancel = document.getElementById("inventory-split-cancel");
@@ -650,6 +663,92 @@ var Inventory = {
     },
     EmptySlotIcon: function () {
         return '<svg class="equipment-slot-empty-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 7v10M7 12h10"></path></svg>';
+    },
+    EnsureSellOfferUi: function () {
+        if (document.getElementById("inventory-sell-offer-dialog"))
+            return;
+
+        var dialog = document.createElement("div");
+        dialog.className = "inventory-sell-offer-dialog";
+        dialog.id = "inventory-sell-offer-dialog";
+        dialog.innerHTML =
+            '<div class="inventory-sell-offer-card">' +
+                '<span class="inventory-sell-offer-kicker">ПРОПОЗИЦІЯ ПОКУПКИ</span>' +
+                '<div class="inventory-sell-offer-item">' +
+                    '<div class="inventory-sell-offer-image" id="inventory-sell-offer-image"></div>' +
+                    '<div class="inventory-sell-offer-info">' +
+                        '<h3 id="inventory-sell-offer-title">Предмет</h3>' +
+                        '<span id="inventory-sell-offer-seller">Гравець</span>' +
+                    '</div>' +
+                '</div>' +
+                '<div class="inventory-sell-offer-values">' +
+                    '<div><span>Кількість</span><strong id="inventory-sell-offer-count">1</strong></div>' +
+                    '<div><span>Ціна</span><strong id="inventory-sell-offer-price">$0</strong></div>' +
+                '</div>' +
+                '<div class="inventory-sell-offer-actions">' +
+                    '<button type="button" id="inventory-sell-offer-reject">Відхилити</button>' +
+                    '<button type="button" id="inventory-sell-offer-accept">Прийняти</button>' +
+                '</div>' +
+            '</div>';
+
+        document.body.appendChild(dialog);
+    },
+    ShowSellOffer: function (data) {
+        var offer = this.Parse(data);
+        if (!offer)
+            return;
+
+        this.sellOffer = offer;
+
+        var sellerId = this.Get(offer, "SellerId", "sellerId");
+        var title = this.Get(offer, "Title", "title") || "Предмет";
+        var image = this.Get(offer, "Image", "image");
+        var count = Number(this.Get(offer, "Count", "count")) || 1;
+        var price = Number(this.Get(offer, "Price", "price")) || 0;
+
+        this.SetText("inventory-sell-offer-title", title);
+        this.SetText("inventory-sell-offer-seller", "Гравець #" + sellerId);
+        this.SetText("inventory-sell-offer-count", String(count));
+        this.SetText("inventory-sell-offer-price", "$" + price);
+
+        var imageBox = document.getElementById("inventory-sell-offer-image");
+        if (imageBox)
+            imageBox.innerHTML = this.ImageHtml(image);
+
+        var dialog = document.getElementById("inventory-sell-offer-dialog");
+        if (dialog)
+            dialog.classList.add("active");
+    },
+    HideSellOffer: function () {
+        var dialog = document.getElementById("inventory-sell-offer-dialog");
+        if (dialog)
+            dialog.classList.remove("active");
+
+        this.sellOffer = null;
+    },
+    AcceptSellOffer: function () {
+        if (!this.sellOffer)
+            return;
+
+        var sellerId = this.Get(this.sellOffer, "SellerId", "sellerId");
+
+        GameCef.sendJson("inventory:sell-accept", {
+            SellerId: sellerId
+        });
+
+        this.HideSellOffer();
+    },
+    RejectSellOffer: function () {
+        if (!this.sellOffer)
+            return;
+
+        var sellerId = this.Get(this.sellOffer, "SellerId", "sellerId");
+
+        GameCef.sendJson("inventory:sell-reject", {
+            SellerId: sellerId
+        });
+
+        this.HideSellOffer();
     },
     EnsureDeleteUi: function () {
         var details = document.getElementById("inventory-details");
@@ -1227,6 +1326,10 @@ GameCef.on("inventory:set-chunk", function (data) {
 GameCef.on("inventory:set-end", function () {
     Inventory.SetData(inventoryBuffer);
     inventoryBuffer = "";
+});
+
+GameCef.on("inventory:sell-offer", function (data) {
+    Inventory.ShowSellOffer(data);
 });
 
 GameCef.on("inventory:hide", function () {
