@@ -685,6 +685,10 @@ var Inventory = {
                     '<div><span>Кількість</span><strong id="inventory-sell-offer-count">1</strong></div>' +
                     '<div><span>Ціна</span><strong id="inventory-sell-offer-price">$0</strong></div>' +
                 '</div>' +
+                '<div class="inventory-sell-offer-params-block">' +
+                    '<span class="inventory-sell-offer-params-title">ПАРАМЕТРИ ПРЕДМЕТА</span>' +
+                    '<div class="inventory-sell-offer-params" id="inventory-sell-offer-params"></div>' +
+                '</div>' +
                 '<div class="inventory-sell-offer-actions">' +
                     '<button type="button" id="inventory-sell-offer-accept">Прийняти</button>' +
                     '<button type="button" id="inventory-sell-offer-reject">Відхилити</button>' +
@@ -703,15 +707,21 @@ var Inventory = {
         this.sellOffer = offer;
 
         var sellerId = this.Get(offer, "SellerId", "sellerId");
+        var sellerName = this.Get(offer, "SellerName", "sellerName") || "Гравець";
         var title = this.Get(offer, "Title", "title") || "Предмет";
         var image = this.Get(offer, "Image", "image");
         var count = Number(this.Get(offer, "Count", "count")) || 1;
         var price = Number(this.Get(offer, "Price", "price")) || 0;
+        var params = this.Get(offer, "Params", "params") || [];
 
         this.SetText("inventory-sell-offer-title", title);
-        this.SetText("inventory-sell-offer-seller", "Гравець #" + sellerId);
+        this.SetText("inventory-sell-offer-seller", sellerName + " [" + sellerId + "]");
         this.SetText("inventory-sell-offer-count", String(count));
         this.SetText("inventory-sell-offer-price", "$" + price);
+
+        var paramsBox = document.getElementById("inventory-sell-offer-params");
+        if (paramsBox)
+            this.RenderParams({ Params: params }, paramsBox);
 
         var imageBox = document.getElementById("inventory-sell-offer-image");
         if (imageBox)
@@ -836,8 +846,8 @@ var Inventory = {
                         '</label>' +
                     '</div>' +
                     '<div class="inventory-delete-dialog-actions">' +
-                        '<button type="button" class="inventory-delete-cancel" id="inventory-sell-cancel">Скасувати</button>' +
                         '<button type="button" class="inventory-sell-confirm" id="inventory-sell-confirm">Надіслати</button>' +
+                        '<button type="button" class="inventory-delete-cancel" id="inventory-sell-cancel">Скасувати</button>' +
                     '</div>' +
                 '</div>';
             panel.appendChild(sellDialog);
@@ -886,8 +896,8 @@ var Inventory = {
                         '</div>' +
                     '</div>' +
                     '<div class="inventory-delete-dialog-actions">' +
-                        '<button type="button" class="inventory-delete-cancel" id="inventory-delete-cancel">Скасувати</button>' +
                         '<button type="button" class="inventory-delete-confirm" id="inventory-delete-confirm">Видалити</button>' +
+                        '<button type="button" class="inventory-delete-cancel" id="inventory-delete-cancel">Скасувати</button>' +
                     '</div>' +
                 '</div>';
             panel.appendChild(dialog);

@@ -2762,6 +2762,28 @@
     font-weight: 900;
 }
 
+.inventory-sell-offer-params-block {
+    margin-top: 14px;
+}
+
+.inventory-sell-offer-params-title {
+    display: block;
+    margin-bottom: 7px;
+    color: #66899d;
+    font-size: 9px;
+    font-weight: 900;
+    letter-spacing: 1.1px;
+}
+
+.inventory-sell-offer-params {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+    max-height: 145px;
+    overflow-y: auto;
+    padding-right: 2px;
+}
+
 .inventory-sell-offer-actions {
     display: grid;
     grid-template-columns: 1fr 1fr;

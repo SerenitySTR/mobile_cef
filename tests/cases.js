@@ -293,11 +293,16 @@
     Tests.register("inventory-sell-offer", "Inventory / Sell Offer", function () {
         Tests.receive("inventory:sell-offer", {
             SellerId: 15,
+            SellerName: "Serenity_Walker",
             ItemId: 1,
             Title: "Яблуко",
             Image: "apple.webp",
             Count: 3,
-            Price: 500
+            Price: 500,
+            Params: [
+                { Recovery: "Hunger", Value: 10 },
+                { Recovery: "Health", Value: 15 }
+            ]
         });
     });
     Tests.register("marketplace", "Marketplace", function () {
