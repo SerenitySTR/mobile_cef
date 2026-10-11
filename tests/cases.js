@@ -275,23 +275,30 @@
             Inventory.Show();
         }, 0);
     });
+    Tests.register("inventory-sell", "Inventory / Sell", function () {
+        var inventoryData = inventoryEquipmentTestData(false);
+        Tests.receive("inventory:set", inventoryData);
+        Tests.receive("inventory:show", {});
+
+        setTimeout(function () {
+            if (typeof Inventory === "undefined")
+                return;
+
+            Inventory.SetData(inventoryData);
+            Inventory.Show();
+            Inventory.SelectItem(0);
+            Inventory.SellSelected();
+        }, 0);
+    });
     Tests.register("inventory-sell-offer", "Inventory / Sell Offer", function () {
-        var offer = {
+        Tests.receive("inventory:sell-offer", {
             SellerId: 15,
             ItemId: 1,
             Title: "Яблуко",
             Image: "apple.webp",
             Count: 3,
             Price: 500
-        };
-
-        if (typeof Inventory !== "undefined") {
-            Inventory.Init();
-            Inventory.ShowSellOffer(offer);
-            return;
-        }
-
-        Tests.receive("inventory:sell-offer", offer);
+        });
     });
     Tests.register("marketplace", "Marketplace", function () {
         var data = {

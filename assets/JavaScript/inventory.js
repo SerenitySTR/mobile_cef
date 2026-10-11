@@ -694,6 +694,8 @@ var Inventory = {
         document.body.appendChild(dialog);
     },
     ShowSellOffer: function (data) {
+        this.Init();
+
         var offer = this.Parse(data);
         if (!offer)
             return;
@@ -713,7 +715,7 @@ var Inventory = {
 
         var imageBox = document.getElementById("inventory-sell-offer-image");
         if (imageBox)
-            imageBox.innerHTML = this.ImageHtml(image);
+            imageBox.innerHTML = this.ImageHtml(this.ImagePath(image));
 
         var dialog = document.getElementById("inventory-sell-offer-dialog");
         if (dialog)
