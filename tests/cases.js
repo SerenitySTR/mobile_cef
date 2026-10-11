@@ -409,6 +409,7 @@
                     Date: "Сьогодні, 17:48",
                     Icon: "reward",
                     IsRead: false,
+                    Money: 12500,
                     Attachments: [
                         { ItemId: 2, Title: "Бронежилет", Image: "armor.webp", Count: 1, Weight: 0.50 },
                         { ItemId: 1, Title: "Яблуко", Image: "apple.webp", Count: 5, Weight: 0.05 },
@@ -425,6 +426,7 @@
                     Date: "Сьогодні, 17:38",
                     Icon: "system",
                     IsRead: false,
+                    Money: 4200,
                     Attachments: []
                 },
                 {

@@ -145,18 +145,30 @@ var Mailbox = {
         if (icon)
             icon.innerHTML = this.Icon(this.Get(message, "Icon", "icon"));
         var attachments = this.Get(message, "Attachments", "attachments") || [];
-        this.SetText("mailbox-attachments-count", "(" + attachments.length + ")");
-        this.RenderAttachments(attachments);
+        var money = Math.max(0, Number(this.Get(message, "Money", "money")) || 0);
+        var attachmentsCount = attachments.length + (money > 0 ? 1 : 0);
+        this.SetText("mailbox-attachments-count", "(" + attachmentsCount + ")");
+        this.RenderAttachments(attachments, money);
         var claim = document.getElementById("mailbox-claim");
         if (claim)
-            claim.disabled = !attachments.length;
+            claim.disabled = !attachments.length && money <= 0;
     },
-    RenderAttachments: function (attachments) {
+    RenderAttachments: function (attachments, money) {
         var root = document.getElementById("mailbox-attachments");
         if (!root)
             return;
         root.innerHTML = "";
         var totalWeight = 0;
+        if (money > 0) {
+            var moneyCard = document.createElement("article");
+            moneyCard.className = "mailbox-attachment mailbox-money-attachment";
+            moneyCard.innerHTML =
+                '<div class="mailbox-money-icon">$</div>' +
+                    '<strong>Гроші</strong>' +
+                    '<small class="mailbox-money-value">$' + this.Escape(this.FormatMoney(money)) + '</small>';
+            root.appendChild(moneyCard);
+        }
+
         for (var i = 0; i < attachments.length; i++) {
             var item = attachments[i];
             var title = this.Get(item, "Title", "title") || "Предмет";
@@ -174,7 +186,7 @@ var Mailbox = {
                     '<small>' + (isNaN(weight) ? "" : "Вага: " + this.FormatWeight(weight) + " кг") + '</small>';
             root.appendChild(card);
         }
-        if (!attachments.length) {
+        if (!attachments.length && money <= 0) {
             var empty = document.createElement("div");
             empty.className = "mailbox-no-attachments";
             empty.textContent = "У цьому повідомленні немає вкладень";
@@ -249,6 +261,7 @@ var Mailbox = {
     Escape: function (value) { var div = document.createElement("div"); div.textContent = value === undefined || value === null ? "" : String(value); return div.innerHTML; },
     EscapeAttribute: function (value) { return this.Escape(value).replace(/`/g, "&#96;"); },
     FormatWeight: function (value) { var number = Number(value) || 0; return number.toFixed(number < 1 ? 2 : number % 1 ? 1 : 0).replace(/0+$/, " ").trim().replace(/\.$/, ""); },
+    FormatMoney: function (value) { return Math.max(0, Math.floor(Number(value) || 0)).toLocaleString("uk-UA"); },
     Plural: function (value, one, many) { return Number(value) === 1 ? one : many; }
 };
 var mailboxBuffer = "";

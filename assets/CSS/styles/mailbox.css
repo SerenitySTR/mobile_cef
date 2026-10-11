@@ -503,6 +503,45 @@
     font-size: 8px;
 }
 
+.mailbox-money-attachment {
+    display: flex;
+    min-height: 145px;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border-color: rgba(87,205,142,.28);
+    background: linear-gradient(150deg,rgba(8,39,34,.92),rgba(3,21,24,.88));
+}
+
+.mailbox-money-icon {
+    width: 64px;
+    height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 9px;
+    border: 1px solid rgba(91,220,151,.28);
+    border-radius: 50%;
+    background: radial-gradient(circle,rgba(66,207,133,.2),rgba(4,29,30,.32));
+    color: #64e6a3;
+    font-size: 31px;
+    font-weight: 900;
+    box-shadow: 0 10px 24px rgba(22,135,85,.12);
+}
+
+.mailbox-money-attachment strong {
+    margin-top: 0;
+    color: #dfffee;
+    font-size: 11px;
+}
+
+.mailbox-money-attachment .mailbox-money-value {
+    margin-top: 5px;
+    color: #67e6a5;
+    font-size: 11px;
+    font-weight: 900;
+}
+
 .mailbox-no-attachments {
     grid-column: 1/-1;
     padding: 24px 12px;
