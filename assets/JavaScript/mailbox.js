@@ -107,7 +107,7 @@ var Mailbox = {
             var id = this.Get(message, "Id", "id");
             var title = this.Get(message, "Title", "title") || "Повідомлення";
             var preview = this.Get(message, "Preview", "preview") || this.Get(message, "Text", "text") || "";
-            var created = this.Get(message, "CreatedAt", "createdAt") || "";
+            var created = this.FormatDate(this.Get(message, "CreatedAt", "createdAt"), true);
             var read = !!this.Get(message, "IsRead", "isRead");
             var button = document.createElement("button");
             button.type = "button";
@@ -139,7 +139,7 @@ var Mailbox = {
             body.classList.add("active");
         this.SetText("mailbox-message-title", this.Get(message, "Title", "title") || "Повідомлення");
         this.SetText("mailbox-message-sender", this.Get(message, "Sender", "sender") || "Система");
-        this.SetText("mailbox-message-date", this.Get(message, "Date", "date") || this.Get(message, "CreatedAt", "createdAt") || "");
+        this.SetText("mailbox-message-date", this.FormatDate(this.Get(message, "CreatedAt", "createdAt"), false));
         this.SetText("mailbox-message-text", this.Get(message, "Text", "text") || "");
         var icon = document.getElementById("mailbox-message-icon");
         if (icon)
@@ -262,6 +262,89 @@ var Mailbox = {
     EscapeAttribute: function (value) { return this.Escape(value).replace(/`/g, "&#96;"); },
     FormatWeight: function (value) { var number = Number(value) || 0; return number.toFixed(number < 1 ? 2 : number % 1 ? 1 : 0).replace(/0+$/, " ").trim().replace(/\.$/, ""); },
     FormatMoney: function (value) { return Math.max(0, Math.floor(Number(value) || 0)).toLocaleString("uk-UA"); },
+    FormatDate: function (value, compact) {
+        if (value === undefined || value === null || value === "")
+            return "";
+
+        var source = String(value).trim();
+        if (!source)
+            return "";
+
+        var parsed = this.ParseDate(source);
+        if (!parsed)
+            return source;
+
+        var date = parsed.Date;
+        var hours = this.PadDate(date.getHours());
+        var minutes = this.PadDate(date.getMinutes());
+        var time = hours + ":" + minutes;
+        var today = new Date();
+
+        if (this.IsSameDate(date, today))
+            return parsed.HasTime ? "Сьогодні, " + time : "Сьогодні";
+
+        var yesterday = new Date(today.getFullYear(), today.getMonth(), today.getDate() - 1);
+        if (this.IsSameDate(date, yesterday))
+            return parsed.HasTime ? "Вчора, " + time : "Вчора";
+
+        if (compact) {
+            var compactDate = this.PadDate(date.getDate()) + "." + this.PadDate(date.getMonth() + 1) + "." + date.getFullYear();
+            return parsed.HasTime ? compactDate + " • " + time : compactDate;
+        }
+
+        var months = [
+            "січня", "лютого", "березня", "квітня", "травня", "червня",
+            "липня", "серпня", "вересня", "жовтня", "листопада", "грудня"
+        ];
+        var fullDate = date.getDate() + " " + months[date.getMonth()] + " " + date.getFullYear();
+        return parsed.HasTime ? fullDate + ", " + time : fullDate;
+    },
+    ParseDate: function (value) {
+        var text = String(value || "").trim();
+        if (!text)
+            return null;
+
+        var match = text.match(/^(\d{1,2})[.\/-](\d{1,2})[.\/-](\d{4})(?:[ T](\d{1,2}):(\d{2})(?::(\d{2}))?)?$/);
+        if (match) {
+            var localDate = new Date(
+                Number(match[3]),
+                Number(match[2]) - 1,
+                Number(match[1]),
+                Number(match[4] || 0),
+                Number(match[5] || 0),
+                Number(match[6] || 0)
+            );
+            return { Date: localDate, HasTime: !!match[4] };
+        }
+
+        match = text.match(/^(\d{4})-(\d{1,2})-(\d{1,2})(?:[ T](\d{1,2}):(\d{2})(?::(\d{2})(?:\.\d+)?)?)?$/);
+        if (match) {
+            var serverDate = new Date(
+                Number(match[1]),
+                Number(match[2]) - 1,
+                Number(match[3]),
+                Number(match[4] || 0),
+                Number(match[5] || 0),
+                Number(match[6] || 0)
+            );
+            return { Date: serverDate, HasTime: !!match[4] };
+        }
+
+        var nativeDate = new Date(text);
+        if (isNaN(nativeDate.getTime()))
+            return null;
+
+        return { Date: nativeDate, HasTime: text.indexOf(":") !== -1 };
+    },
+    IsSameDate: function (first, second) {
+        return first.getFullYear() === second.getFullYear() &&
+            first.getMonth() === second.getMonth() &&
+            first.getDate() === second.getDate();
+    },
+    PadDate: function (value) {
+        value = Number(value) || 0;
+        return value < 10 ? "0" + value : String(value);
+    },
     Plural: function (value, one, many) { return Number(value) === 1 ? one : many; }
 };
 var mailboxBuffer = "";

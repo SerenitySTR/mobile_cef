@@ -8,7 +8,7 @@
             Id: id,
             Title: title,
             PlayerName: author,
-            CreatedAt: "22.09.2026 15:20",
+            CreatedAt: "2026-10-12T15:20:00",
             Status: status || "open",
             AdminName: admin || "",
             Messages: messages || []
