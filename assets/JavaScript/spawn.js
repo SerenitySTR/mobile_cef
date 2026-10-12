@@ -11,7 +11,7 @@ const spawnData = {
         title: "Останнє місце",
         text: "Поверніться до вашого останнього місця виходу з гри. Ви з'явитесь саме там, де востаннє завершили гру.",
         image: "./assets/CSS/Images/Spawn/last-position-new.webp",
-        icon: "./assets/CSS/Images/Spawn/icon-location.svg"
+        icon: "./assets/CSS/Images/Spawn/preview-last.svg"
     },
     Standard: {
         id: 2,
@@ -25,14 +25,14 @@ const spawnData = {
         title: "Будинок",
         text: "З'явіться біля власного будинку та продовжіть гру без зайвих переміщень містом.",
         image: "./assets/CSS/Images/Spawn/house-new.webp",
-        icon: "./assets/CSS/Images/Spawn/icon-house.svg"
+        icon: "./assets/CSS/Images/Spawn/preview-house.svg"
     },
     FamilyHouse: {
         id: 3,
         title: "Будинок родини",
         text: "Почніть гру біля будинку своєї родини поруч з іншими її учасниками.",
         image: "./assets/CSS/Images/Spawn/family-house-new.webp",
-        icon: "./assets/CSS/Images/Spawn/icon-family-house.svg"
+        icon: "./assets/CSS/Images/Spawn/preview-family-house.svg"
     }
 };
 let selectedSpawn = "LastPosition";

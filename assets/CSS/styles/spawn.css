@@ -926,3 +926,12 @@
     }
 }
 
+
+/* Unified Spawn icon color */
+.spawn-item-icon img,
+.spawn-preview-heading-icon img,
+.spawn-item-icon-family img,
+.spawn-item-icon-standard img {
+    filter: none;
+    opacity: 1;
+}
