@@ -2582,6 +2582,58 @@
     color: #62d9a1;
 }
 
+.inventory-sell-preview {
+    display: grid;
+    grid-template-columns: 54px minmax(0, 1fr);
+    align-items: center;
+    gap: 11px;
+    margin-top: 16px;
+    padding: 9px 10px;
+    border: 1px solid rgba(82, 210, 151, .18);
+    border-radius: 12px;
+    background: rgba(7, 34, 43, .58);
+}
+
+.inventory-sell-preview-image {
+    width: 54px;
+    height: 54px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    border: 1px solid rgba(67, 153, 199, .2);
+    border-radius: 10px;
+    background: rgba(2, 18, 28, .78);
+}
+
+.inventory-sell-preview-image img {
+    width: 78%;
+    height: 78%;
+    object-fit: contain;
+}
+
+.inventory-sell-preview-info {
+    min-width: 0;
+}
+
+.inventory-sell-preview-info strong {
+    display: block;
+    overflow: hidden;
+    color: #effaff;
+    font-size: 13px;
+    font-weight: 850;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.inventory-sell-preview-info span {
+    display: block;
+    margin-top: 4px;
+    color: #7d9caf;
+    font-size: 10px;
+    font-weight: 700;
+}
+
 .inventory-sell-fields {
     display: flex;
     flex-direction: column;
@@ -2817,4 +2869,502 @@
 #inventory-sell-offer-accept:focus-visible {
     filter: brightness(1.1);
     outline: none;
+}
+
+/* Mobile: keep Sell and Split readable without changing the inventory layout. */
+@media (max-width: 1000px) and (orientation: landscape) {
+    .inventory-actions {
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) 38px;
+        grid-template-areas:
+            "use use use"
+            "sell split delete";
+        gap: 5px;
+    }
+
+    .inventory-sell,
+    .inventory-split {
+        height: 36px;
+        min-width: 0;
+        padding: 0 7px;
+        gap: 5px;
+        font-size: 8px;
+    }
+
+    .inventory-sell span,
+    .inventory-split span {
+        display: inline;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .inventory-sell svg,
+    .inventory-split svg {
+        width: 14px;
+        height: 14px;
+        flex: 0 0 14px;
+    }
+
+    .inventory-delete {
+        width: 38px;
+        min-width: 38px;
+        height: 36px;
+    }
+}
+
+@media (max-height: 430px) and (orientation: landscape) {
+    .inventory-actions {
+        gap: 4px;
+    }
+
+    .inventory-sell,
+    .inventory-split,
+    .inventory-delete {
+        height: 32px;
+    }
+
+    .inventory-sell,
+    .inventory-split {
+        padding: 0 5px;
+        gap: 4px;
+        font-size: 7px;
+    }
+
+    .inventory-delete {
+        width: 34px;
+        min-width: 34px;
+    }
+}
+
+@media (max-width: 700px) and (orientation: portrait) {
+    .inventory-actions {
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) 42px;
+        grid-template-areas:
+            "use use use"
+            "sell split delete";
+        gap: 6px;
+    }
+
+    .inventory-sell,
+    .inventory-split {
+        height: 42px;
+        padding: 0 7px;
+        gap: 5px;
+        font-size: 9px;
+    }
+
+    .inventory-sell span,
+    .inventory-split span {
+        display: inline;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .inventory-sell svg,
+    .inventory-split svg {
+        width: 15px;
+        height: 15px;
+        flex: 0 0 15px;
+    }
+
+    .inventory-delete {
+        width: 42px;
+        min-width: 42px;
+        height: 42px;
+    }
+}
+
+/* Mobile platform: sell dialog and incoming sell offer. */
+body.hud-platform-mobile .inventory-delete-dialog,
+body.hud-platform-mobile .inventory-sell-offer-dialog {
+    padding: 10px;
+}
+
+body.hud-platform-mobile .inventory-delete-card,
+body.hud-platform-mobile .inventory-sell-offer-card {
+    max-height: calc(100vh - 20px);
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+body.hud-platform-mobile .inventory-sell-card {
+    width: min(680px, calc(100vw - 20px));
+    padding: 18px 20px;
+    border-radius: 16px;
+}
+
+body.hud-platform-mobile .inventory-sell-card h3 {
+    font-size: 20px;
+    line-height: 1.15;
+}
+
+body.hud-platform-mobile .inventory-sell-card p {
+    margin-top: 6px;
+    font-size: 10px;
+    line-height: 1.4;
+}
+
+body.hud-platform-mobile .inventory-sell-preview {
+    grid-template-columns: 50px minmax(0, 1fr);
+    gap: 9px;
+    margin-top: 11px;
+    padding: 7px 8px;
+}
+
+body.hud-platform-mobile .inventory-sell-preview-image {
+    width: 50px;
+    height: 50px;
+}
+
+body.hud-platform-mobile .inventory-sell-preview-info strong {
+    font-size: 12px;
+}
+
+body.hud-platform-mobile .inventory-sell-preview-info span {
+    font-size: 9px;
+}
+
+body.hud-platform-mobile .inventory-sell-fields {
+    gap: 9px;
+    margin-top: 14px;
+}
+
+body.hud-platform-mobile .inventory-sell-field,
+body.hud-platform-mobile .inventory-sell-card .inventory-delete-quantity {
+    min-width: 0;
+    margin-top: 0;
+    padding: 9px 10px;
+    border-radius: 10px;
+}
+
+body.hud-platform-mobile .inventory-sell-field span,
+body.hud-platform-mobile .inventory-sell-card .inventory-delete-quantity > span {
+    font-size: 10px;
+}
+
+body.hud-platform-mobile .inventory-sell-field input {
+    width: 108px;
+    height: 38px;
+    font-size: 13px;
+}
+
+body.hud-platform-mobile .inventory-sell-card .inventory-delete-stepper button,
+body.hud-platform-mobile .inventory-sell-card .inventory-delete-stepper input {
+    height: 38px;
+}
+
+body.hud-platform-mobile .inventory-sell-card .inventory-delete-dialog-actions {
+    gap: 9px;
+    margin-top: 14px;
+}
+
+body.hud-platform-mobile .inventory-sell-card .inventory-delete-dialog-actions button {
+    height: 42px;
+    font-size: 11px;
+}
+
+body.hud-platform-mobile .inventory-sell-offer-card {
+    width: min(680px, calc(100vw - 20px));
+    padding: 18px 20px;
+    border-radius: 16px;
+}
+
+body.hud-platform-mobile .inventory-sell-offer-kicker {
+    margin-bottom: 12px;
+    font-size: 10px;
+    letter-spacing: 1.1px;
+}
+
+body.hud-platform-mobile .inventory-sell-offer-item {
+    min-width: 0;
+    gap: 12px;
+}
+
+body.hud-platform-mobile .inventory-sell-offer-image {
+    width: 64px;
+    height: 64px;
+    flex: 0 0 64px;
+}
+
+body.hud-platform-mobile .inventory-sell-offer-info h3 {
+    margin-bottom: 5px;
+    font-size: 18px;
+    line-height: 1.15;
+}
+
+body.hud-platform-mobile .inventory-sell-offer-info span {
+    font-size: 10px;
+}
+
+body.hud-platform-mobile .inventory-sell-offer-values {
+    gap: 8px;
+    margin-top: 14px;
+}
+
+body.hud-platform-mobile .inventory-sell-offer-values > div {
+    padding: 10px 11px;
+}
+
+body.hud-platform-mobile .inventory-sell-offer-values span {
+    font-size: 10px;
+}
+
+body.hud-platform-mobile .inventory-sell-offer-values strong {
+    font-size: 13px;
+}
+
+body.hud-platform-mobile .inventory-sell-offer-params-block {
+    margin-top: 12px;
+}
+
+body.hud-platform-mobile .inventory-sell-offer-params-title {
+    margin-bottom: 7px;
+    font-size: 9px;
+}
+
+body.hud-platform-mobile .inventory-sell-offer-params {
+    max-height: 130px;
+    gap: 6px;
+}
+
+body.hud-platform-mobile .inventory-sell-offer-params .inventory-param span,
+body.hud-platform-mobile .inventory-sell-offer-params .inventory-param strong,
+body.hud-platform-mobile .inventory-sell-offer-params .inventory-param-empty {
+    font-size: 9px;
+}
+
+body.hud-platform-mobile .inventory-sell-offer-actions {
+    gap: 9px;
+    margin-top: 14px;
+}
+
+body.hud-platform-mobile .inventory-sell-offer-actions button {
+    height: 42px;
+    font-size: 11px;
+}
+
+@media (orientation: landscape) {
+    body.hud-platform-mobile .inventory-sell-card {
+        width: min(720px, calc(100vw - 24px));
+    }
+
+    body.hud-platform-mobile .inventory-sell-fields {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        align-items: stretch;
+    }
+
+    body.hud-platform-mobile .inventory-sell-field,
+    body.hud-platform-mobile .inventory-sell-card .inventory-delete-quantity {
+        min-width: 0;
+        align-items: stretch;
+        flex-direction: column;
+        justify-content: center;
+        gap: 6px;
+    }
+
+    body.hud-platform-mobile .inventory-sell-field input {
+        width: 100%;
+    }
+
+    body.hud-platform-mobile .inventory-sell-card .inventory-delete-stepper {
+        display: grid;
+        grid-template-columns: 36px minmax(0, 1fr) 36px;
+        gap: 5px;
+    }
+
+    body.hud-platform-mobile .inventory-sell-card .inventory-delete-stepper button,
+    body.hud-platform-mobile .inventory-sell-card .inventory-delete-stepper input {
+        width: 100%;
+    }
+
+    body.hud-platform-mobile .inventory-sell-offer-card {
+        display: grid;
+        grid-template-columns: minmax(0, 1.1fr) minmax(250px, .9fr);
+        grid-template-areas:
+            "kicker kicker"
+            "item values"
+            "params actions";
+        column-gap: 14px;
+        row-gap: 9px;
+        align-items: start;
+    }
+
+    body.hud-platform-mobile .inventory-sell-offer-kicker {
+        grid-area: kicker;
+        margin: 0;
+    }
+
+    body.hud-platform-mobile .inventory-sell-offer-item {
+        grid-area: item;
+    }
+
+    body.hud-platform-mobile .inventory-sell-offer-values {
+        grid-area: values;
+        align-self: stretch;
+        margin: 0;
+    }
+
+    body.hud-platform-mobile .inventory-sell-offer-params-block {
+        grid-area: params;
+        margin: 0;
+    }
+
+    body.hud-platform-mobile .inventory-sell-offer-params {
+        max-height: 88px;
+    }
+
+    body.hud-platform-mobile .inventory-sell-offer-actions {
+        grid-area: actions;
+        align-self: end;
+        margin: 0;
+    }
+}
+
+@media (orientation: landscape) and (max-height: 430px) {
+    body.hud-platform-mobile .inventory-delete-dialog,
+    body.hud-platform-mobile .inventory-sell-offer-dialog {
+        padding: 6px;
+    }
+
+    body.hud-platform-mobile .inventory-sell-card,
+    body.hud-platform-mobile .inventory-sell-offer-card {
+        max-height: calc(100vh - 12px);
+        padding: 12px 15px;
+        border-radius: 13px;
+    }
+
+    body.hud-platform-mobile .inventory-sell-card h3 {
+        font-size: 17px;
+    }
+
+    body.hud-platform-mobile .inventory-sell-card p {
+        margin-top: 4px;
+        font-size: 9px;
+    }
+
+    body.hud-platform-mobile .inventory-sell-preview {
+        grid-template-columns: 42px minmax(0, 1fr);
+        margin-top: 7px;
+        padding: 5px 7px;
+    }
+
+    body.hud-platform-mobile .inventory-sell-preview-image {
+        width: 42px;
+        height: 42px;
+    }
+
+    body.hud-platform-mobile .inventory-sell-fields {
+        gap: 7px;
+        margin-top: 9px;
+    }
+
+    body.hud-platform-mobile .inventory-sell-field,
+    body.hud-platform-mobile .inventory-sell-card .inventory-delete-quantity {
+        padding: 7px 8px;
+    }
+
+    body.hud-platform-mobile .inventory-sell-field input,
+    body.hud-platform-mobile .inventory-sell-card .inventory-delete-stepper button,
+    body.hud-platform-mobile .inventory-sell-card .inventory-delete-stepper input {
+        height: 34px;
+    }
+
+    body.hud-platform-mobile .inventory-sell-card .inventory-delete-dialog-actions {
+        margin-top: 9px;
+    }
+
+    body.hud-platform-mobile .inventory-sell-card .inventory-delete-dialog-actions button,
+    body.hud-platform-mobile .inventory-sell-offer-actions button {
+        height: 36px;
+    }
+
+    body.hud-platform-mobile .inventory-sell-offer-card {
+        row-gap: 6px;
+    }
+
+    body.hud-platform-mobile .inventory-sell-offer-kicker {
+        font-size: 9px;
+    }
+
+    body.hud-platform-mobile .inventory-sell-offer-image {
+        width: 52px;
+        height: 52px;
+        flex-basis: 52px;
+    }
+
+    body.hud-platform-mobile .inventory-sell-offer-info h3 {
+        font-size: 16px;
+    }
+
+    body.hud-platform-mobile .inventory-sell-offer-values > div {
+        padding: 7px 8px;
+    }
+
+    body.hud-platform-mobile .inventory-sell-offer-params {
+        max-height: 64px;
+    }
+}
+
+@media (orientation: portrait) {
+    body.hud-platform-mobile .inventory-sell-card,
+    body.hud-platform-mobile .inventory-sell-offer-card {
+        width: min(430px, calc(100vw - 20px));
+    }
+
+    body.hud-platform-mobile .inventory-sell-fields {
+        display: flex;
+        flex-direction: column;
+    }
+
+    body.hud-platform-mobile .inventory-sell-field,
+    body.hud-platform-mobile .inventory-sell-card .inventory-delete-quantity {
+        flex-direction: row;
+        align-items: center;
+    }
+
+    body.hud-platform-mobile .inventory-sell-offer-card {
+        display: block;
+    }
+
+    body.hud-platform-mobile .inventory-sell-offer-params {
+        max-height: 150px;
+    }
+}
+
+@media (orientation: portrait) and (max-width: 380px) {
+    body.hud-platform-mobile .inventory-sell-card,
+    body.hud-platform-mobile .inventory-sell-offer-card {
+        padding: 15px;
+    }
+
+    body.hud-platform-mobile .inventory-sell-card .inventory-delete-dialog-actions,
+    body.hud-platform-mobile .inventory-sell-offer-actions {
+        grid-template-columns: 1fr;
+    }
+
+    body.hud-platform-mobile .inventory-sell-card .inventory-delete-dialog-actions button,
+    body.hud-platform-mobile .inventory-sell-offer-actions button {
+        height: 44px;
+    }
+}
+
+/* Inventory text readability on the mobile client. */
+@media (orientation: landscape) {
+    body.hud-platform-mobile .equipment-slot-name,
+    body.hud-platform-mobile .inventory-item-name,
+    body.hud-platform-mobile .inventory-details-info p,
+    body.hud-platform-mobile .inventory-param span,
+    body.hud-platform-mobile .inventory-param strong,
+    body.hud-platform-mobile .inventory-param-empty,
+    body.hud-platform-mobile .inventory-use {
+        font-size: 8px;
+    }
+
+    body.hud-platform-mobile .inventory-item-count,
+    body.hud-platform-mobile .inventory-item-weight,
+    body.hud-platform-mobile .inventory-details-type {
+        font-size: 7.5px;
+    }
 }

@@ -177,3 +177,20 @@
         font-size: 14px;
     }
 }
+
+body.hud-platform-mobile #error-screen {
+    padding: 8px;
+}
+
+body.hud-platform-mobile .error-card {
+    width: min(420px, calc(100vw - 16px));
+    max-height: calc(100vh - 16px);
+    overflow-y: auto;
+}
+
+@media (orientation: landscape) and (max-height: 390px) {
+    body.hud-platform-mobile .error-card {
+        padding: 14px 16px;
+    }
+}
+

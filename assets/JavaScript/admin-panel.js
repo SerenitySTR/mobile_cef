@@ -93,6 +93,20 @@ var AdminPanel = {
         e.textContent = String(v == null ? "" : v);
         return e.innerHTML;
     },
+    Icon: function (name) {
+        var icons = {
+            stats: '<path d="M4 19V10M10 19V5M16 19v-7M22 19V8"/><path d="M2.5 21.5h21"/>',
+            tickets: '<path d="M5 5h14a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2h-7l-4.5 3v-3H5a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2Z"/><path d="M7 9h10M7 13h7"/>',
+            commands: '<path d="m5 7 4 4-4 4M11 17h8"/>',
+            punishments: '<path d="M12 3 4.5 6v5.5c0 4.7 3.2 7.8 7.5 9.5 4.3-1.7 7.5-4.8 7.5-9.5V6L12 3Z"/><path d="M9.5 9.5h5M9.5 13.5h5"/>',
+            items: '<path d="M4 6h6v6H4zM14 6h6v6h-6zM4 16h6v4H4zM14 16h6v4h-6z"/>',
+            spawns: '<path d="M12 21s6-4.7 6-10a6 6 0 1 0-12 0c0 5.3 6 10 6 10Z"/><circle cx="12" cy="11" r="2"/>',
+            online: '<circle cx="12" cy="12" r="8"/><path d="M12 7v5l3 2"/>',
+            done: '<path d="m5 12 4 4 10-10"/>',
+            location: '<path d="M12 21s6-4.7 6-10a6 6 0 1 0-12 0c0 5.3 6 10 6 10Z"/><circle cx="12" cy="11" r="2"/>'
+        };
+        return '<svg class="admin-icon-svg" viewBox="0 0 24 24" aria-hidden="true">' + (icons[name] || icons.items) + '</svg>';
+    },
     Minutes: function (v) {
         v = Math.max(0, Math.floor(Number(v) || 0));
         return v >= 60 ? Math.floor(v / 60) + " год " + v % 60 + " хв" : v + " хв";
@@ -457,8 +471,8 @@ var AdminPanel = {
         var labels = {
             stats: "Статистика", tickets: "Звернення", commands: "Адмін-команди", punishments: "Гайд покарань", items: "Довідник ID", spawns: "Швидкі спавни"
         };
-        var nav = [["stats", "▥"], ["tickets", "♧"], ["commands", "›_"], ["punishments", "▤"], ["items", "◇"], ["spawns", "⌖"]], self = this;
-        this.Q("#admin-nav").innerHTML = nav.map(function (n) { return '<button type="button" data-admin-tab="' + n[0] + '" class="' + (self.tab === n[0] ? "active" : "") + '"><span class="admin-icon">' + n[1] + '</span><span>' + labels[n[0]] + '</span>' + (n[0] === "tickets" ? '<span class="admin-badge">' + self.state.tickets.filter(function (r) { return r.status !== "closed"; }).length + "</span>" : "") + "</button>"; }).join("");
+        var nav = [["stats", "stats"], ["tickets", "tickets"], ["commands", "commands"], ["punishments", "punishments"], ["items", "items"], ["spawns", "spawns"]], self = this;
+        this.Q("#admin-nav").innerHTML = nav.map(function (n) { return '<button type="button" data-admin-tab="' + n[0] + '" class="' + (self.tab === n[0] ? "active" : "") + '"><span class="admin-icon">' + self.Icon(n[1]) + '</span><span>' + labels[n[0]] + '</span>' + (n[0] === "tickets" ? '<span class="admin-badge">' + self.state.tickets.filter(function (r) { return r.status !== "closed"; }).length + "</span>" : "") + "</button>"; }).join("");
         this.Q("#admin-title").textContent = labels[this.tab];
         this.Q("#admin-content").innerHTML = ({ stats: this.Stats, tickets: this.Tickets, commands: this.Commands, punishments: this.Punishments, items: this.Items, spawns: this.Spawns }[this.tab]).call(this);
         var m = this.Q(".admin-messages");
@@ -555,7 +569,7 @@ var AdminPanel = {
     },
     Stats: function () {
         var d = this.state.stats.days || [], t = d.reduce(function (a, x) { a.online += Number(x.onlineMinutes) || 0; a.closed += Number(x.closed) || 0; return a; }, { online: 0, closed: 0 }), self = this;
-        return '<div class="admin-row admin-between"><div class="admin-row"><h2>' + this.Escape(this.state.profile.name || "Адміністратор") + '</h2><span class="admin-badge">' + this.Escape(this.state.profile.role) + "</span></div><small>" + this.Escape(this.state.stats.period || "Останні 14 днів") + '</small></div><div class="admin-cards">' + [["♧", "Мої активні звернення", this.state.tickets.filter(function (r) { return self.Mine(r); }).length], ["◷", "Онлайн за 2 тижні", this.Minutes(t.online)], ["✓", "Закрито звернень за 2 тижні", t.closed]].map(function (x) { return '<div class="admin-card"><span class="admin-icon">' + x[0] + '</span><div><small>' + x[1] + '</small><div class="admin-value">' + x[2] + '</div></div></div>'; }).join("") + '</div><div class="admin-stats"><div class="admin-box admin-days-box"><h2>День | Онлайн | Закрито звернень</h2><div class="admin-days-scroll"><table class="admin-table"><tbody>' + d.map(function (x) { return "<tr><td>" + self.Escape(x.day) + "</td><td>" + self.Minutes(x.onlineMinutes) + "</td><td>" + self.Escape(x.closed) + "</td></tr>"; }).join("") + '</tbody><tfoot><tr><td>Разом</td><td>' + this.Minutes(t.online) + '</td><td>' + t.closed + '</td></tr></tfoot></table></div></div><div class="admin-box admin-scroll"><h2>Адміни онлайн <span class="admin-badge">' + this.state.admins.length + '</span></h2>' + this.Table(["ID", "Нікнейм", "Рівень"], this.state.admins.map(function (a) { return "<tr><td>" + self.Escape(a.id) + "</td><td>" + self.Escape(a.name) + "</td><td>" + self.Escape(a.level) + "</td></tr>"; }).join("")) + '</div></div>';
+        return '<div class="admin-row admin-between"><div class="admin-row"><h2>' + this.Escape(this.state.profile.name || "Адміністратор") + '</h2><span class="admin-badge">' + this.Escape(this.state.profile.role) + "</span></div><small>" + this.Escape(this.state.stats.period || "Останні 14 днів") + '</small></div><div class="admin-cards">' + [["tickets", "Мої активні звернення", this.state.tickets.filter(function (r) { return self.Mine(r); }).length], ["online", "Онлайн за 2 тижні", this.Minutes(t.online)], ["done", "Закрито звернень за 2 тижні", t.closed]].map(function (x) { return '<div class="admin-card"><span class="admin-icon">' + self.Icon(x[0]) + '</span><div><small>' + x[1] + '</small><div class="admin-value">' + x[2] + '</div></div></div>'; }).join("") + '</div><div class="admin-stats"><div class="admin-box admin-days-box"><h2>День | Онлайн | Закрито звернень</h2><div class="admin-days-scroll"><table class="admin-table"><tbody>' + d.map(function (x) { return "<tr><td>" + self.Escape(x.day) + "</td><td>" + self.Minutes(x.onlineMinutes) + "</td><td>" + self.Escape(x.closed) + "</td></tr>"; }).join("") + '</tbody><tfoot><tr><td>Разом</td><td>' + this.Minutes(t.online) + '</td><td>' + t.closed + '</td></tr></tfoot></table></div></div><div class="admin-box admin-scroll"><h2>Адміни онлайн <span class="admin-badge">' + this.state.admins.length + '</span></h2>' + this.Table(["ID", "Нікнейм", "Рівень"], this.state.admins.map(function (a) { return "<tr><td>" + self.Escape(a.id) + "</td><td>" + self.Escape(a.name) + "</td><td>" + self.Escape(a.level) + "</td></tr>"; }).join("")) + '</div></div>';
     },
     FilteredTickets: function () {
         var self = this, q = this.query.toLowerCase();

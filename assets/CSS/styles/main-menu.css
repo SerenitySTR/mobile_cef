@@ -1378,3 +1378,122 @@
         transform: scale(1.22);
     }
 }
+
+/* Explicit mobile-platform layout. Keeps the desktop visual language but uses
+   the same compact logical composition as the admin panel on phones. */
+@media (orientation: landscape) {
+    body.hud-platform-mobile #main-menu {
+        padding: 6px;
+    }
+
+    body.hud-platform-mobile .main-menu-panel {
+        width: min(940px, calc(100vw - 12px));
+        max-height: calc(100vh - 12px);
+        padding: 7px 9px;
+    }
+
+    body.hud-platform-mobile .main-menu-header {
+        min-height: 42px;
+        margin-bottom: 7px;
+    }
+
+    body.hud-platform-mobile .main-menu-logo {
+        width: 38px;
+        height: 38px;
+        flex-basis: 38px;
+    }
+
+    body.hud-platform-mobile .main-menu-title h1 {
+        font-size: 16px;
+    }
+
+    body.hud-platform-mobile .main-menu-title p {
+        display: none;
+    }
+
+    body.hud-platform-mobile .main-menu-user-info {
+        min-width: 120px;
+        max-width: 160px;
+    }
+
+    body.hud-platform-mobile .main-menu-user-info strong {
+        font-size: 11px;
+    }
+
+    body.hud-platform-mobile .main-menu-user-info div {
+        gap: 8px;
+        font-size: 8px;
+    }
+
+    body.hud-platform-mobile .main-menu-avatar,
+    body.hud-platform-mobile .main-menu-close {
+        width: 34px;
+        height: 34px;
+        flex-basis: 34px;
+    }
+
+    body.hud-platform-mobile .main-menu-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 7px;
+    }
+
+    body.hud-platform-mobile .main-menu-card {
+        height: clamp(88px, 25vh, 118px);
+    }
+
+    body.hud-platform-mobile .main-menu-card-title {
+        font-size: 10px;
+    }
+
+    body.hud-platform-mobile .main-menu-card-description {
+        display: none;
+    }
+}
+
+@media (orientation: portrait) {
+    body.hud-platform-mobile #main-menu {
+        padding: 6px;
+    }
+
+    body.hud-platform-mobile .main-menu-panel {
+        width: min(520px, calc(100vw - 12px));
+        height: calc(100vh - 12px);
+        overflow-y: auto;
+        padding: 9px;
+    }
+
+    body.hud-platform-mobile .main-menu-header {
+        position: sticky;
+        top: 0;
+        z-index: 3;
+        min-height: 48px;
+        margin-bottom: 8px;
+    }
+
+    body.hud-platform-mobile .main-menu-title p,
+    body.hud-platform-mobile .main-menu-user-info div {
+        display: none;
+    }
+
+    body.hud-platform-mobile .main-menu-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 8px;
+    }
+
+    body.hud-platform-mobile .main-menu-card {
+        height: clamp(120px, 21vh, 170px);
+    }
+}
+
+
+/* Small-screen text stays legible; card geometry is unchanged. */
+body.hud-platform-mobile .main-menu-user-info div {
+    font-size: 9px;
+}
+
+@media (orientation: landscape) and (max-height: 650px) {
+    .main-menu-user-info div,
+    .main-menu-card-description {
+        font-size: 8px;
+    }
+}

@@ -104,6 +104,31 @@
     text-align: center;
 }
 
+.admin-icon-svg {
+    width: 22px;
+    height: 22px;
+    display: block;
+    margin: auto;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.8;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.admin-sidebar nav button .admin-icon {
+    color: #8fcff1;
+}
+
+.admin-sidebar nav button.active .admin-icon {
+    color: #dff6ff;
+}
+
+.admin-card .admin-icon-svg {
+    width: 30px;
+    height: 30px;
+}
+
 .admin-badge {
     margin-left: auto;
     border-radius: 5px;

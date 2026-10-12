@@ -960,3 +960,31 @@
         font-size: 12px;
     }
 }
+
+/* Short landscape phones: raise only text sizes, keep the existing compact layout. */
+@media (orientation: landscape) and (max-height: 520px) {
+    body.hud-platform-mobile .registration-headline p {
+        font-size: 9px;
+    }
+}
+
+@media (orientation: landscape) and (max-height: 390px) {
+    body.hud-platform-mobile .registration-badge {
+        font-size: 8px;
+    }
+
+    body.hud-platform-mobile .registration-headline p {
+        font-size: 8px;
+    }
+
+    body.hud-platform-mobile .registration-field input {
+        font-size: 10px;
+    }
+
+    body.hud-platform-mobile #registration-next-button,
+    body.hud-platform-mobile #registration-button,
+    body.hud-platform-mobile #registration-back-button,
+    body.hud-platform-mobile .gender-button {
+        font-size: 9px;
+    }
+}

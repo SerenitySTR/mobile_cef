@@ -93,8 +93,8 @@ var Inventory = {
             };
         if (sellPrice)
             sellPrice.oninput = function () {
-                if (Number(sellPrice.value) < 1)
-                    sellPrice.value = "1";
+                if (Number(sellPrice.value) < 0)
+                    sellPrice.value = "0";
             };
 
         var sellOfferReject = document.getElementById("inventory-sell-offer-reject");
@@ -313,7 +313,6 @@ var Inventory = {
         this.RenderItems();
         this.RenderDetails();
         this.RenderWeight();
-        this.SetText("inventory-items-count", this.ItemsCountText(this.items.length));
     },
     RenderWeight: function () {
         var weight = document.getElementById("inventory-weight");
@@ -825,8 +824,15 @@ var Inventory = {
             sellDialog.innerHTML =
                 '<div class="inventory-delete-card inventory-sell-card">' +
                     '<span class="inventory-delete-kicker inventory-sell-kicker">ПРОДАЖ ПРЕДМЕТА</span>' +
-                    '<h3 id="inventory-sell-title">Продати предмет?</h3>' +
-                    '<p>Вкажіть ID гравця, кількість та загальну ціну.</p>' +
+                    '<h3 id="inventory-sell-title">Продаж предмета</h3>' +
+                    '<p>Вкажіть гравця, кількість та загальну ціну угоди.</p>' +
+                    '<div class="inventory-sell-preview">' +
+                        '<div class="inventory-sell-preview-image" id="inventory-sell-preview-image"></div>' +
+                        '<div class="inventory-sell-preview-info">' +
+                            '<strong id="inventory-sell-preview-title">Предмет</strong>' +
+                            '<span id="inventory-sell-preview-count">Доступно: 1</span>' +
+                        '</div>' +
+                    '</div>' +
                     '<div class="inventory-sell-fields">' +
                         '<label class="inventory-sell-field">' +
                             '<span>ID гравця</span>' +
@@ -841,8 +847,8 @@ var Inventory = {
                             '</div>' +
                         '</div>' +
                         '<label class="inventory-sell-field">' +
-                            '<span>Ціна</span>' +
-                            '<input id="inventory-sell-price" type="number" min="1" value="1" inputmode="numeric">' +
+                            '<span>Загальна ціна</span>' +
+                            '<input id="inventory-sell-price" type="number" min="0" value="0" inputmode="numeric">' +
                         '</label>' +
                     '</div>' +
                     '<div class="inventory-delete-dialog-actions">' +
@@ -928,14 +934,23 @@ var Inventory = {
             return;
 
         var title = this.Get(item, "Title", "title") || this.Get(item, "Name", "name") || "Предмет";
-        this.SetText("inventory-sell-title", title);
+        var image = this.Get(item, "Image", "image");
+        var previewImage = document.getElementById("inventory-sell-preview-image");
+
+        this.SetText("inventory-sell-title", "Продаж предмета");
+        this.SetText("inventory-sell-preview-title", title);
+        this.SetText("inventory-sell-preview-count", "Доступно: " + count);
+
+        if (previewImage)
+            previewImage.innerHTML = this.ImageHtml(this.ImagePath(image));
+
         amount.min = "1";
         amount.max = String(count);
         amount.value = "1";
         if (quantity)
             quantity.style.display = count > 1 ? "flex" : "none";
         player.value = "0";
-        price.value = "1";
+        price.value = "0";
         dialog.classList.add("active");
         player.focus();
         player.select();

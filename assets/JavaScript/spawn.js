@@ -3,31 +3,36 @@ const spawnItems = document.querySelectorAll(".spawn-item");
 const spawnButton = document.getElementById("spawn-button");
 const spawnPreviewImage = document.getElementById("spawn-preview-image");
 const spawnPreviewTitle = document.getElementById("spawn-preview-title");
+const spawnPreviewIcon = document.getElementById("spawn-preview-icon");
 const spawnPreviewText = document.getElementById("spawn-preview-text");
 const spawnData = {
     LastPosition: {
         id: 0,
         title: "Останнє місце",
         text: "Поверніться до вашого останнього місця виходу з гри. Ви з'явитесь саме там, де востаннє завершили гру.",
-        image: "./assets/CSS/Images/Spawn/last-position-new.webp"
+        image: "./assets/CSS/Images/Spawn/last-position-new.webp",
+        icon: "./assets/CSS/Images/Spawn/icon-location.svg"
     },
     Standard: {
         id: 2,
         title: "Стандартний",
         text: "Почніть гру зі стандартної точки появи — зручного місця для швидкого старту та знайомства з містом.",
-        image: "./assets/CSS/Images/Spawn/standard-new.webp"
+        image: "./assets/CSS/Images/Spawn/standard-new.webp",
+        icon: "./assets/CSS/Images/Spawn/icon-standard.svg"
     },
     House: {
         id: 1,
         title: "Будинок",
         text: "З'явіться біля власного будинку та продовжіть гру без зайвих переміщень містом.",
-        image: "./assets/CSS/Images/Spawn/house-new.webp"
+        image: "./assets/CSS/Images/Spawn/house-new.webp",
+        icon: "./assets/CSS/Images/Spawn/icon-house.svg"
     },
     FamilyHouse: {
         id: 3,
         title: "Будинок родини",
         text: "Почніть гру біля будинку своєї родини поруч з іншими її учасниками.",
-        image: "./assets/CSS/Images/Spawn/family-house-new.webp"
+        image: "./assets/CSS/Images/Spawn/family-house-new.webp",
+        icon: "./assets/CSS/Images/Spawn/icon-family-house.svg"
     }
 };
 let selectedSpawn = "LastPosition";
@@ -68,6 +73,8 @@ function selectSpawn(value) {
     };
     nextImage.src = data.image;
     spawnPreviewTitle.textContent = data.title;
+    if (spawnPreviewIcon)
+        spawnPreviewIcon.src = data.icon;
     spawnPreviewText.textContent = data.text;
 }
 spawnItems.forEach(item => {

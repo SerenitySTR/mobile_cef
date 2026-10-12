@@ -1055,3 +1055,20 @@
 #dialog-screen.dialog-mobile-landscape .dialog-button {
     font-size: 11px;
 }
+
+/* Dialog readability on short mobile screens. */
+#dialog-screen.dialog-mobile-landscape .dialog-list-description,
+#dialog-screen.dialog-mobile-landscape .dialog-table th,
+#dialog-screen.dialog-mobile-landscape .dialog-table td,
+#dialog-screen.dialog-mobile-landscape .dialog-button {
+    font-size: 9px;
+}
+
+@media (orientation: landscape) and (max-height: 620px) {
+    .dialog-list-description,
+    .dialog-table th,
+    .dialog-table td,
+    .dialog-button {
+        font-size: 9px;
+    }
+}

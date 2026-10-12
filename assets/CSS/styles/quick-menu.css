@@ -323,3 +323,82 @@
         transform: scale(0.92);
     }
 }
+
+/* Mobile platform hardening. Keep the same radial/menu composition, but fit it
+   to the actual usable game area without a fixed 470px minimum. */
+body.hud-platform-mobile #quick-menu {
+    padding: 6px;
+}
+
+body.hud-platform-mobile .quick-menu-shell {
+    width: min(680px, calc(100vw - 12px));
+    min-width: 0;
+    max-width: calc(100vw - 12px);
+    max-height: calc(100vh - 12px);
+    gap: clamp(42px, 8vw, 72px);
+    padding: 18px 0 24px;
+}
+
+body.hud-platform-mobile .quick-menu-list {
+    width: min(210px, 31vw);
+    max-height: calc(100vh - 48px);
+    gap: 8px;
+}
+
+body.hud-platform-mobile .quick-menu-item {
+    min-height: 42px;
+    flex-basis: 42px;
+    gap: 8px;
+    padding: 0 11px;
+}
+
+body.hud-platform-mobile .quick-menu-copy strong {
+    font-size: 11px;
+}
+
+body.hud-platform-mobile .quick-menu-close {
+    width: 42px;
+    height: 42px;
+}
+
+@media (orientation: landscape) and (max-height: 390px) {
+    body.hud-platform-mobile .quick-menu-shell {
+        gap: 38px;
+        padding: 12px 0 18px;
+    }
+
+    body.hud-platform-mobile .quick-menu-list {
+        width: min(190px, 30vw);
+        gap: 6px;
+    }
+
+    body.hud-platform-mobile .quick-menu-item {
+        min-height: 36px;
+        flex-basis: 36px;
+        padding: 0 9px;
+    }
+
+    body.hud-platform-mobile .quick-menu-hint {
+        display: none;
+    }
+}
+
+@media (orientation: portrait) {
+    body.hud-platform-mobile .quick-menu-shell {
+        width: min(430px, calc(100vw - 12px));
+        min-height: 0;
+        max-height: calc(100vh - 12px);
+        gap: 38px;
+    }
+
+    body.hud-platform-mobile .quick-menu-list {
+        width: min(160px, 38vw);
+        max-height: calc(100vh - 60px);
+    }
+}
+
+
+body.hud-platform-mobile .quick-menu-status,
+body.hud-platform-mobile .quick-menu-hint {
+    font-size: 9px;
+}

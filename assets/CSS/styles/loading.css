@@ -88,3 +88,9 @@
         transform: rotate(360deg);
     }
 }
+
+body.hud-platform-mobile #loading-screen .loading-container {
+    max-width: calc(100vw - 24px);
+    max-height: calc(100vh - 24px);
+}
+

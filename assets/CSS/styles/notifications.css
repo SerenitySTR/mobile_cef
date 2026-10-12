@@ -1361,3 +1361,19 @@ body.hud-platform-pc .notification-bottom-reward .notification-brand span, body.
     margin-top: 2px;
     font-size: 7px;
 }
+
+/* Keep notification content readable on very short screens. */
+@media (orientation: landscape) and (max-height: 650px) {
+    .notification-banner .notification-text,
+    .notification-banner .notification-time,
+    .notification-subtext,
+    .notification-bottom .notification-text {
+        font-size: 8px;
+    }
+
+    .notification-banner-label,
+    .notification-bottom-label,
+    .notification-brand {
+        font-size: 7px;
+    }
+}

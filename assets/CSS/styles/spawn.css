@@ -394,7 +394,7 @@
     align-items: center;
     justify-content: space-between;
     color: rgba(198, 220, 236, 0.42);
-    font-size: 7px;
+    font-size: 8px;
     letter-spacing: 3px;
 }
 
@@ -594,7 +594,7 @@
         font-size: clamp(10px, 1.25vw, 12px);
     }
     .spawn-item-info small {
-        font-size: clamp(7px, 0.9vw, 9px);
+        font-size: clamp(8px, 0.9vw, 9px);
     }
     .spawn-item-arrow {
         font-size: 21px;
@@ -633,7 +633,7 @@
     }
     .spawn-preview-story {
         padding-top: 5px;
-        font-size: 5px;
+        font-size: 8px;
         letter-spacing: 2.3px;
     }
     .spawn-buttons {
@@ -655,7 +655,7 @@
     }
     .spawn-footer {
         margin-top: 5px;
-        font-size: 5px;
+        font-size: 8px;
         letter-spacing: 2px;
         flex: 0 0 auto;
     }
@@ -725,7 +725,7 @@
         font-size: 9px;
     }
     .spawn-item-info small {
-        font-size: 6px;
+        font-size: 8px;
     }
     .spawn-item-arrow {
         font-size: 18px;
@@ -738,7 +738,7 @@
     }
     .spawn-preview-body > p {
         margin-top: 3px;
-        font-size: 7px;
+        font-size: 8px;
         line-height: 1.24;
         display: -webkit-box;
         -webkit-line-clamp: 2;
@@ -798,13 +798,13 @@
         font-size: 8px;
     }
     .spawn-item-info small {
-        font-size: 5px;
+        font-size: 8px;
     }
     .spawn-preview-heading h2 {
         font-size: 9px;
     }
     .spawn-preview-body > p {
-        font-size: 6px;
+        font-size: 8px;
     }
     .spawn-buttons {
         margin-top: 3px;
@@ -820,4 +820,185 @@
     height: 32px;
     opacity: 1;
     filter: brightness(1.12) saturate(1.08);
+}
+
+/* Mobile client layout. Platform class is used in addition to viewport media
+   queries because some Android CEF builds report a desktop-like CSS width. */
+body.hud-platform-mobile #spawn-selection {
+    padding: 6px;
+}
+
+body.hud-platform-mobile .spawn-container {
+    width: min(980px, calc(100vw - 12px));
+    max-height: calc(100vh - 12px);
+}
+
+@media (orientation: landscape) {
+    body.hud-platform-mobile .spawn-logo {
+        width: 88px;
+        margin-bottom: 4px;
+    }
+
+    body.hud-platform-mobile .spawn-heading {
+        margin-bottom: 7px;
+    }
+
+    body.hud-platform-mobile .spawn-heading h1 {
+        font-size: 21px;
+    }
+
+    body.hud-platform-mobile .spawn-heading p {
+        margin-top: 3px;
+        font-size: 9px;
+    }
+
+    body.hud-platform-mobile .spawn-panel {
+        min-height: 0;
+        height: min(300px, calc(100vh - 126px));
+        grid-template-columns: minmax(270px, .9fr) minmax(0, 1.4fr);
+        gap: 8px;
+        padding: 8px;
+    }
+
+    body.hud-platform-mobile .spawn-list {
+        gap: 6px;
+    }
+
+    body.hud-platform-mobile .spawn-item {
+        min-height: 58px;
+        padding: 6px 8px;
+    }
+
+    body.hud-platform-mobile .spawn-item-image {
+        width: 58px;
+        height: 46px;
+    }
+
+    body.hud-platform-mobile .spawn-item-info strong {
+        font-size: 10px;
+    }
+
+    body.hud-platform-mobile .spawn-item-info small {
+        font-size: 8px;
+    }
+
+    body.hud-platform-mobile .spawn-preview-body {
+        padding: 10px 12px;
+    }
+
+    body.hud-platform-mobile .spawn-preview-heading h2 {
+        font-size: 16px;
+    }
+
+    body.hud-platform-mobile .spawn-preview-body > p {
+        font-size: 8px;
+        line-height: 1.45;
+    }
+
+    body.hud-platform-mobile .spawn-buttons {
+        margin-top: 7px;
+    }
+
+    body.hud-platform-mobile #spawn-button {
+        min-height: 38px;
+        padding: 0 20px;
+    }
+
+    body.hud-platform-mobile .spawn-footer {
+        display: none;
+    }
+}
+
+@media (orientation: portrait) {
+    body.hud-platform-mobile .spawn-container {
+        width: min(500px, calc(100vw - 12px));
+        height: calc(100vh - 12px);
+        display: flex;
+        flex-direction: column;
+    }
+
+    body.hud-platform-mobile .spawn-logo {
+        width: 88px;
+        margin: 0 auto 6px;
+    }
+
+    body.hud-platform-mobile .spawn-heading {
+        margin-bottom: 8px;
+    }
+
+    body.hud-platform-mobile .spawn-heading h1 {
+        font-size: 20px;
+    }
+
+    body.hud-platform-mobile .spawn-panel {
+        min-height: 0;
+        flex: 1;
+        grid-template-columns: 1fr;
+        grid-template-rows: auto minmax(220px, 1fr);
+        gap: 8px;
+        padding: 8px;
+        overflow-y: auto;
+    }
+
+    body.hud-platform-mobile .spawn-list {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 7px;
+    }
+
+    body.hud-platform-mobile .spawn-item {
+        min-height: 72px;
+        grid-template-columns: 48px minmax(0, 1fr);
+        padding: 7px;
+    }
+
+    body.hud-platform-mobile .spawn-item-image {
+        width: 48px;
+        height: 50px;
+    }
+
+    body.hud-platform-mobile .spawn-item-arrow {
+        display: none;
+    }
+
+    body.hud-platform-mobile .spawn-preview {
+        min-height: 220px;
+    }
+
+    body.hud-platform-mobile .spawn-buttons {
+        margin-top: 8px;
+    }
+
+    body.hud-platform-mobile #spawn-button {
+        width: 100%;
+    }
+
+    body.hud-platform-mobile .spawn-footer {
+        display: none;
+    }
+}
+
+
+/* Readable mobile descriptions. */
+body.hud-platform-mobile .spawn-item-info small,
+body.hud-platform-mobile .spawn-preview-body > p,
+body.hud-platform-mobile .spawn-heading p {
+    font-size: 9px;
+}
+
+/* Spawn icon set v3: keep all four icons at the same visual scale. */
+.spawn-item-icon-family img,
+.spawn-item-icon-standard img {
+    width: 30px;
+    height: 30px;
+    opacity: 0.94;
+    filter: brightness(1.65) saturate(0.65);
+}
+
+@media (max-width: 1180px), (max-height: 720px) {
+    .spawn-item-icon-family img,
+    .spawn-item-icon-standard img {
+        width: 20px;
+        height: 20px;
+    }
 }
