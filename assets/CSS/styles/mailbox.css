@@ -514,19 +514,23 @@
 }
 
 .mailbox-money-icon {
-    width: 64px;
-    height: 64px;
+    width: 68px;
+    height: 68px;
     display: flex;
     align-items: center;
     justify-content: center;
     margin-bottom: 9px;
-    border: 1px solid rgba(91,220,151,.28);
-    border-radius: 50%;
-    background: radial-gradient(circle,rgba(66,207,133,.2),rgba(4,29,30,.32));
-    color: #64e6a3;
-    font-size: 31px;
-    font-weight: 900;
-    box-shadow: 0 10px 24px rgba(22,135,85,.12);
+    border-radius: 17px;
+    overflow: hidden;
+    background: rgba(6,24,31,.72);
+    box-shadow: 0 10px 24px rgba(22,135,85,.14);
+}
+
+.mailbox-money-icon img {
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: cover;
 }
 
 .mailbox-money-attachment strong {
@@ -937,10 +941,10 @@ body.hud-platform-mobile .mailbox-attachment-image {
 }
 
 body.hud-platform-mobile .mailbox-money-icon {
-    width: 48px;
-    height: 48px;
+    width: 52px;
+    height: 52px;
     margin-bottom: 6px;
-    font-size: 24px;
+    border-radius: 13px;
 }
 
 body.hud-platform-mobile .mailbox-actions {

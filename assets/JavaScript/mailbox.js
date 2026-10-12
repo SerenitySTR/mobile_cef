@@ -163,7 +163,7 @@ var Mailbox = {
             var moneyCard = document.createElement("article");
             moneyCard.className = "mailbox-attachment mailbox-money-attachment";
             moneyCard.innerHTML =
-                '<div class="mailbox-money-icon">$</div>' +
+                '<div class="mailbox-money-icon"><img src="./assets/images/mailbox-money-stack.png" alt=""></div>' +
                     '<strong>Гроші</strong>' +
                     '<small class="mailbox-money-value">$' + this.Escape(this.FormatMoney(money)) + '</small>';
             root.appendChild(moneyCard);
