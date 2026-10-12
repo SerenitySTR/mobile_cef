@@ -15,7 +15,6 @@ var Marketplace = {
     commissionPercent: 0,
     commissionFixed: 0,
     listingDurationHours: 24,
-    remainingTimer: null,
     chunkEvent: "",
     chunkBuffer: "",
 
@@ -359,7 +358,6 @@ var Marketplace = {
 
         this.RenderManager();
         this.RenderHeaderBadge();
-        this.StartRemainingTimer();
     },
 
     SetInventory: function (data) {
@@ -1016,72 +1014,20 @@ var Marketplace = {
     },
 
     RemainingText: function (item) {
-        var expiresAt = this.ExpirationTimestamp(item);
+        var remaining = Number(this.Get(item, "RemainingHours", "remainingHours"));
 
-        if (!expiresAt)
-            return { text: "Залишилось: до " + this.listingDurationHours + " " + this.HoursWord(this.listingDurationHours), expired: false };
+        if (!Number.isFinite(remaining))
+            remaining = Number(this.Get(item, "Time", "time"));
 
-        var seconds = Math.max(0, Math.floor((expiresAt - Date.now()) / 1000));
-        if (seconds <= 0)
+        if (!Number.isFinite(remaining))
+            return { text: "", expired: false };
+
+        remaining = Math.max(0, Math.floor(remaining));
+
+        if (remaining <= 0)
             return { text: "Термін оголошення завершено", expired: true };
 
-        var hours = Math.floor(seconds / 3600);
-        var minutes = Math.floor((seconds % 3600) / 60);
-
-        if (hours > 0)
-            return { text: "Залишилось: " + hours + " год " + minutes + " хв", expired: false };
-
-        if (minutes > 0)
-            return { text: "Залишилось: " + minutes + " хв", expired: false };
-
-        return { text: "Залишилось: менше хвилини", expired: false };
-    },
-
-    ExpirationTimestamp: function (item) {
-        if (!item)
-            return 0;
-
-        if (item.__marketplaceExpiresAt)
-            return item.__marketplaceExpiresAt;
-
-        var remaining = Number(this.Get(item, "RemainingSeconds", "remainingSeconds"));
-        if (Number.isFinite(remaining) && remaining >= 0) {
-            item.__marketplaceExpiresAt = Date.now() + remaining * 1000;
-            return item.__marketplaceExpiresAt;
-        }
-
-        var expires = this.Get(item, "ExpiresAt", "expiresAt");
-        if (expires) {
-            var expiresMs = Date.parse(expires);
-            if (!Number.isNaN(expiresMs)) {
-                item.__marketplaceExpiresAt = expiresMs;
-                return expiresMs;
-            }
-        }
-
-        var created = this.Get(item, "CreatedAtIso", "createdAtIso");
-        if (created) {
-            var createdMs = Date.parse(created);
-            if (!Number.isNaN(createdMs)) {
-                item.__marketplaceExpiresAt = createdMs + this.listingDurationHours * 3600000;
-                return item.__marketplaceExpiresAt;
-            }
-        }
-
-        return 0;
-    },
-
-    StartRemainingTimer: function () {
-        var self = this;
-
-        if (this.remainingTimer)
-            return;
-
-        this.remainingTimer = setInterval(function () {
-            var manager = document.getElementById("marketplace-manager");
-            if (manager && manager.classList.contains("active"))
-                self.RenderOwnListings();
-        }, 30000);
+        return { text: "Залишилось: " + remaining + " год.", expired: false };
     },
 
     TrimNumber: function (value) {

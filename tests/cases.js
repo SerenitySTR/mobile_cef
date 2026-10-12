@@ -329,9 +329,9 @@
                 { Id: 1027, ItemId: 4, Title: "Аптечка", Image: "", Count: 5, Price: 6000, SellerId: 11, SellerName: "Oleg_Smith", CreatedAt: "09.10.2026", Params: [{ Recovery: "Health", Value: 35 }] }
             ],
             MyListings: [
-                { Id: 1014, ItemId: 1, Title: "Яблуко", Image: "apple.webp", Count: 5, Price: 300, CreatedAt: "12.10.2026", RemainingSeconds: 71100, Params: [{ Recovery: "Hunger", Value: 10 }, { Recovery: "Health", Value: 15 }] },
-                { Id: 1009, ItemId: 2, Title: "Бронежилет", Image: "armor.webp", Count: 1, Price: 14500, CreatedAt: "12.10.2026", RemainingSeconds: 14900, Params: [{ Recovery: "Armor", Value: 50 }] },
-                { Id: 1004, ItemId: 3, Title: "Бургер", Image: "burger.webp", Count: 3, Price: 1100, CreatedAt: "12.10.2026", RemainingSeconds: 1800, Params: [{ Recovery: "Hunger", Value: 25 }] }
+                { Id: 1014, ItemId: 1, Title: "Яблуко", Image: "apple.webp", Count: 5, Price: 300, CreatedAt: "12.10.2026", RemainingHours: 23, Params: [{ Recovery: "Hunger", Value: 10 }, { Recovery: "Health", Value: 15 }] },
+                { Id: 1009, ItemId: 2, Title: "Бронежилет", Image: "armor.webp", Count: 1, Price: 14500, CreatedAt: "12.10.2026", RemainingHours: 12, Params: [{ Recovery: "Armor", Value: 50 }] },
+                { Id: 1004, ItemId: 3, Title: "Бургер", Image: "burger.webp", Count: 3, Price: 1100, CreatedAt: "12.10.2026", RemainingHours: 1, Params: [{ Recovery: "Hunger", Value: 25 }] }
             ],
             Inventory: [
                 { Index: 0, ItemId: 1, Title: "Яблуко", Image: "apple.webp", Count: 10, Weight: 0.05, Params: [{ Recovery: "Hunger", Value: 10 }, { Recovery: "Health", Value: 15 }] },
