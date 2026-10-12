@@ -11,6 +11,11 @@ var Marketplace = {
     maxListings: 10,
     filterTimer: null,
     buyListing: null,
+    pendingCreate: null,
+    commissionPercent: 0,
+    commissionFixed: 0,
+    listingDurationHours: 24,
+    remainingTimer: null,
     chunkEvent: "",
     chunkBuffer: "",
 
@@ -44,6 +49,9 @@ var Marketplace = {
         var minus = document.getElementById("marketplace-count-minus");
         var plus = document.getElementById("marketplace-count-plus");
         var create = document.getElementById("marketplace-create");
+        var createConfirmClose = document.getElementById("marketplace-create-confirm-close");
+        var createConfirmCancel = document.getElementById("marketplace-create-confirm-cancel");
+        var createConfirmSubmit = document.getElementById("marketplace-create-confirm-submit");
         var buyClose = document.getElementById("marketplace-buy-close");
         var buyCancel = document.getElementById("marketplace-buy-cancel");
         var buyConfirm = document.getElementById("marketplace-buy-confirm");
@@ -121,6 +129,15 @@ var Marketplace = {
         if (create)
             create.onclick = function () { self.CreateListing(); };
 
+        if (createConfirmClose)
+            createConfirmClose.onclick = function () { self.CloseCreateConfirm(); };
+
+        if (createConfirmCancel)
+            createConfirmCancel.onclick = function () { self.CloseCreateConfirm(); };
+
+        if (createConfirmSubmit)
+            createConfirmSubmit.onclick = function () { self.ConfirmCreateListing(); };
+
         if (buyClose)
             buyClose.onclick = function () { self.CloseBuy(); };
 
@@ -170,6 +187,14 @@ var Marketplace = {
             if (!self.screen || !self.screen.classList.contains("active"))
                 return;
 
+            var createConfirmModal = document.getElementById("marketplace-create-confirm-modal");
+            if (createConfirmModal && createConfirmModal.classList.contains("active")) {
+                event.preventDefault();
+                event.stopImmediatePropagation();
+                self.CloseCreateConfirm();
+                return;
+            }
+
             var buyModal = document.getElementById("marketplace-buy-modal");
             if (buyModal && buyModal.classList.contains("active")) {
                 event.preventDefault();
@@ -214,6 +239,7 @@ var Marketplace = {
 
     Hide: function () {
         this.Init();
+        this.CloseCreateConfirm();
         this.CloseBuy();
         this.CloseManager();
 
@@ -256,6 +282,8 @@ var Marketplace = {
         if (!data)
             return;
 
+        this.ApplySettings(data);
+
         var listings = this.Get(data, "Listings", "listings");
         var myListings = this.Get(data, "MyListings", "myListings");
         var inventory = this.Get(data, "Inventory", "inventory");
@@ -286,6 +314,8 @@ var Marketplace = {
         if (!data)
             return;
 
+        this.ApplySettings(data);
+
         var listings = this.Get(data, "Listings", "listings");
         var maxListings = Number(this.Get(data, "MaxListings", "maxListings"));
         var myListingsCount = Number(this.Get(data, "MyListingsCount", "myListingsCount"));
@@ -312,6 +342,8 @@ var Marketplace = {
         if (!data)
             return;
 
+        this.ApplySettings(data);
+
         var listings = this.Get(data, "MyListings", "myListings");
         var maxListings = Number(this.Get(data, "MaxListings", "maxListings"));
 
@@ -327,12 +359,15 @@ var Marketplace = {
 
         this.RenderManager();
         this.RenderHeaderBadge();
+        this.StartRemainingTimer();
     },
 
     SetInventory: function (data) {
         data = this.Parse(data);
         if (!data)
             return;
+
+        this.ApplySettings(data);
 
         var inventory = this.Get(data, "Inventory", "inventory");
 
@@ -557,6 +592,7 @@ var Marketplace = {
         var count = Number(this.Get(item, "Count", "count")) || 1;
         var price = Number(this.Get(item, "Price", "price")) || 0;
         var created = this.Get(item, "CreatedAt", "createdAt") || "";
+        var remaining = this.RemainingText(item);
         var params = this.ParamsText(item, 3);
         var card = document.createElement("article");
 
@@ -566,7 +602,8 @@ var Marketplace = {
             '<div class="marketplace-own-info">' +
                 '<div class="marketplace-own-title"><strong>' + this.Escape(title) + '</strong><span>×' + this.Escape(count) + '</span></div>' +
                 '<span class="marketplace-own-params">' + this.Escape(params) + '</span>' +
-                '<small>' + this.Escape(created) + '</small>' +
+                '<small class="marketplace-own-date">Виставлено: ' + this.Escape(created) + '</small>' +
+                '<small class="marketplace-own-remaining' + (remaining.expired ? ' expired' : '') + '">' + this.Escape(remaining.text) + '</small>' +
             '</div>' +
             '<div class="marketplace-own-actions">' +
                 '<strong>' + this.Money(price) + ' / шт.</strong>' +
@@ -620,12 +657,6 @@ var Marketplace = {
         var fallback = document.getElementById("marketplace-sell-fallback");
         var count = document.getElementById("marketplace-sell-count");
         var create = document.getElementById("marketplace-create");
-        var buyClose = document.getElementById("marketplace-buy-close");
-        var buyCancel = document.getElementById("marketplace-buy-cancel");
-        var buyConfirm = document.getElementById("marketplace-buy-confirm");
-        var buyCount = document.getElementById("marketplace-buy-count");
-        var buyMinus = document.getElementById("marketplace-buy-minus");
-        var buyPlus = document.getElementById("marketplace-buy-plus");
         var limitReached = this.myListingsCount >= this.maxListings;
 
         if (!item) {
@@ -714,12 +745,6 @@ var Marketplace = {
         var item = this.SelectedInventoryItem();
         var price = document.getElementById("marketplace-sell-price");
         var create = document.getElementById("marketplace-create");
-        var buyClose = document.getElementById("marketplace-buy-close");
-        var buyCancel = document.getElementById("marketplace-buy-cancel");
-        var buyConfirm = document.getElementById("marketplace-buy-confirm");
-        var buyCount = document.getElementById("marketplace-buy-count");
-        var buyMinus = document.getElementById("marketplace-buy-minus");
-        var buyPlus = document.getElementById("marketplace-buy-plus");
         var value = Math.max(0, Math.floor(Number(price ? price.value : 0) || 0));
         var countInput = document.getElementById("marketplace-sell-count");
         var itemCount = item ? Math.max(1, Number(this.Get(item, "Count", "count")) || 1) : 1;
@@ -752,6 +777,84 @@ var Marketplace = {
         request.ItemId = Number(this.Get(item, "ItemId", "itemId")) || 0;
         request.Count = valueCount;
         request.Price = valuePrice;
+
+        this.OpenCreateConfirm(item, request);
+    },
+
+    OpenCreateConfirm: function (item, request) {
+        if (!item || !request)
+            return;
+
+        this.pendingCreate = request;
+
+        var title = this.Get(item, "Title", "title") || "Предмет";
+        var image = this.Get(item, "Image", "image") || "";
+        var path = this.ImagePath(image);
+        var total = Math.max(0, request.Price * request.Count);
+        var commission = this.Commission(total);
+        var imageElement = document.getElementById("marketplace-create-confirm-image");
+        var fallback = document.getElementById("marketplace-create-confirm-fallback");
+        var modal = document.getElementById("marketplace-create-confirm-modal");
+
+        this.SetText("marketplace-create-confirm-title", title);
+        this.SetText("marketplace-create-confirm-params", this.ParamsText(item, 4));
+        this.SetText("marketplace-create-confirm-count", "Кількість: " + request.Count);
+        this.SetText("marketplace-create-confirm-price", this.Money(request.Price));
+        this.SetText("marketplace-create-confirm-total", this.Money(total));
+        this.SetText("marketplace-create-confirm-fee", this.Money(commission));
+        this.SetText(
+            "marketplace-create-confirm-fee-label",
+            this.commissionPercent > 0 ? "Комісія " + this.TrimNumber(this.commissionPercent) + "%" : "Комісія"
+        );
+        this.SetText("marketplace-create-confirm-duration", this.listingDurationHours + " " + this.HoursWord(this.listingDurationHours));
+
+        var note = document.querySelector(".marketplace-create-confirm-note");
+        if (note)
+            note.textContent = "Комісія списується одразу після виставлення предмета. Якщо предмет не буде продано, оголошення завершиться через " + this.listingDurationHours + " " + this.HoursWord(this.listingDurationHours) + ".";
+
+        if (imageElement) {
+            if (path) {
+                imageElement.src = path;
+                imageElement.style.display = "block";
+            }
+            else {
+                imageElement.removeAttribute("src");
+                imageElement.style.display = "none";
+            }
+        }
+
+        if (fallback)
+            fallback.style.display = path ? "none" : "flex";
+
+        if (modal) {
+            modal.classList.add("active");
+            modal.setAttribute("aria-hidden", "false");
+        }
+    },
+
+    CloseCreateConfirm: function () {
+        var modal = document.getElementById("marketplace-create-confirm-modal");
+
+        if (modal) {
+            modal.classList.remove("active");
+            modal.setAttribute("aria-hidden", "true");
+        }
+
+        this.pendingCreate = null;
+    },
+
+    ConfirmCreateListing: function () {
+        if (!this.pendingCreate)
+            return;
+
+        var request = this.pendingCreate;
+        this.pendingCreate = null;
+
+        var modal = document.getElementById("marketplace-create-confirm-modal");
+        if (modal) {
+            modal.classList.remove("active");
+            modal.setAttribute("aria-hidden", "true");
+        }
 
         GameCef.sendJson("marketplace:create", request);
     },
@@ -875,6 +978,129 @@ var Marketplace = {
 
         GameCef.sendJson("marketplace:buy", request);
         this.CloseBuy();
+    },
+
+    ApplySettings: function (data) {
+        if (!data || Array.isArray(data))
+            return;
+
+        var percentValue = this.Get(data, "CommissionPercent", "commissionPercent");
+        if (percentValue === undefined || percentValue === null)
+            percentValue = this.Get(data, "ListingCommissionPercent", "listingCommissionPercent");
+
+        var fixedValue = this.Get(data, "CommissionFixed", "commissionFixed");
+        if (fixedValue === undefined || fixedValue === null)
+            fixedValue = this.Get(data, "ListingCommissionFixed", "listingCommissionFixed");
+
+        var durationValue = this.Get(data, "ListingDurationHours", "listingDurationHours");
+        if (durationValue === undefined || durationValue === null)
+            durationValue = this.Get(data, "DurationHours", "durationHours");
+
+        var percent = Number(percentValue);
+        var fixed = Number(fixedValue);
+        var duration = Number(durationValue);
+
+        if (Number.isFinite(percent) && percent >= 0)
+            this.commissionPercent = percent;
+
+        if (Number.isFinite(fixed) && fixed >= 0)
+            this.commissionFixed = fixed;
+
+        if (Number.isFinite(duration) && duration > 0)
+            this.listingDurationHours = duration;
+    },
+
+    Commission: function (total) {
+        total = Math.max(0, Number(total) || 0);
+        return Math.max(0, Math.ceil(total * this.commissionPercent / 100) + Math.floor(this.commissionFixed));
+    },
+
+    RemainingText: function (item) {
+        var expiresAt = this.ExpirationTimestamp(item);
+
+        if (!expiresAt)
+            return { text: "Залишилось: до " + this.listingDurationHours + " " + this.HoursWord(this.listingDurationHours), expired: false };
+
+        var seconds = Math.max(0, Math.floor((expiresAt - Date.now()) / 1000));
+        if (seconds <= 0)
+            return { text: "Термін оголошення завершено", expired: true };
+
+        var hours = Math.floor(seconds / 3600);
+        var minutes = Math.floor((seconds % 3600) / 60);
+
+        if (hours > 0)
+            return { text: "Залишилось: " + hours + " год " + minutes + " хв", expired: false };
+
+        if (minutes > 0)
+            return { text: "Залишилось: " + minutes + " хв", expired: false };
+
+        return { text: "Залишилось: менше хвилини", expired: false };
+    },
+
+    ExpirationTimestamp: function (item) {
+        if (!item)
+            return 0;
+
+        if (item.__marketplaceExpiresAt)
+            return item.__marketplaceExpiresAt;
+
+        var remaining = Number(this.Get(item, "RemainingSeconds", "remainingSeconds"));
+        if (Number.isFinite(remaining) && remaining >= 0) {
+            item.__marketplaceExpiresAt = Date.now() + remaining * 1000;
+            return item.__marketplaceExpiresAt;
+        }
+
+        var expires = this.Get(item, "ExpiresAt", "expiresAt");
+        if (expires) {
+            var expiresMs = Date.parse(expires);
+            if (!Number.isNaN(expiresMs)) {
+                item.__marketplaceExpiresAt = expiresMs;
+                return expiresMs;
+            }
+        }
+
+        var created = this.Get(item, "CreatedAtIso", "createdAtIso");
+        if (created) {
+            var createdMs = Date.parse(created);
+            if (!Number.isNaN(createdMs)) {
+                item.__marketplaceExpiresAt = createdMs + this.listingDurationHours * 3600000;
+                return item.__marketplaceExpiresAt;
+            }
+        }
+
+        return 0;
+    },
+
+    StartRemainingTimer: function () {
+        var self = this;
+
+        if (this.remainingTimer)
+            return;
+
+        this.remainingTimer = setInterval(function () {
+            var manager = document.getElementById("marketplace-manager");
+            if (manager && manager.classList.contains("active"))
+                self.RenderOwnListings();
+        }, 30000);
+    },
+
+    TrimNumber: function (value) {
+        value = Number(value) || 0;
+        return Number.isInteger(value) ? String(value) : String(Math.round(value * 100) / 100);
+    },
+
+    HoursWord: function (value) {
+        value = Math.abs(Number(value) || 0);
+        var mod10 = value % 10;
+        var mod100 = value % 100;
+
+        if (mod10 === 1 && mod100 !== 11)
+            return "година";
+
+        if (mod10 >= 2 && mod10 <= 4 && (mod100 < 12 || mod100 > 14))
+            return "години";
+
+        return "годин";
     },
 
     ParamsText: function (item, limit) {

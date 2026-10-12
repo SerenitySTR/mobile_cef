@@ -15,7 +15,7 @@
     <link rel="stylesheet" href="./assets/CSS/styles/notifications.css?v=20261012-selltype1">
     <link rel="stylesheet" href="./assets/CSS/styles/statistics.css?v=20261012-selltype1">
     <link rel="stylesheet" href="./assets/CSS/styles/inventory.css?v=20261012-selltype1">
-    <link rel="stylesheet" href="./assets/CSS/styles/marketplace.css?v=20261012-selltype1">
+    <link rel="stylesheet" href="./assets/CSS/styles/marketplace.css?v=20261012-marketconfirm1">
     <link rel="stylesheet" href="./assets/CSS/styles/mailbox.css?v=20261012-selltype1">
     <link rel="stylesheet" href="./assets/CSS/styles/main-menu.css?v=20261012-selltype1">
     <link rel="stylesheet" href="./assets/CSS/styles/quick-menu.css?v=20261012-selltype1">
@@ -221,7 +221,7 @@
                     <span class="spawn-item-image">
                         <img src="./assets/CSS/Images/Spawn/thumb-standard.webp" alt="">
                     </span>
-                    <span class="spawn-item-icon spawn-item-icon-standard"><img src="./assets/CSS/Images/Spawn/icon-standard.svg" alt=""></span>
+                    <span class="spawn-item-icon spawn-item-icon-standard">✦</span>
                     <span class="spawn-item-info">
                         <strong>Стандартний</strong>
                         <small>Зручне місце для початку гри</small>
@@ -263,7 +263,7 @@
                 <div class="spawn-preview-body">
                     <div class="spawn-preview-heading-row">
                         <div class="spawn-preview-heading">
-                            <span class="spawn-preview-heading-icon"><img id="spawn-preview-icon" src="./assets/CSS/Images/Spawn/icon-location.svg" alt=""></span>
+                            <span class="spawn-preview-heading-icon"><img src="./assets/CSS/Images/Spawn/icon-location.svg" alt=""></span>
                             <h2 id="spawn-preview-title">Останнє місце</h2>
                         </div>
                     </div>
@@ -601,6 +601,7 @@
                         <div class="inventory-weight-fill" id="inventory-weight-fill"></div>
                     </div>
                 </div>
+                <span class="inventory-items-count" id="inventory-items-count">0 предметів</span>
                 <button class="inventory-close" id="inventory-close" type="button" aria-label="Закрити інвентар">
                     <svg viewBox="0 0 24 24" aria-hidden="true">
                         <path d="M6 6l12 12"></path>
@@ -887,6 +888,61 @@
                         Виставити на продаж
                     </button>
                 </aside>
+            </div>
+        </div>
+    </div>
+
+    <div class="marketplace-create-confirm-modal" id="marketplace-create-confirm-modal" aria-hidden="true">
+        <div class="marketplace-create-confirm-panel">
+            <header class="marketplace-create-confirm-header">
+                <div>
+                    <span>ПІДТВЕРДЖЕННЯ ПРОДАЖУ</span>
+                    <h3>Виставити предмет?</h3>
+                </div>
+                <button id="marketplace-create-confirm-close" type="button" aria-label="Закрити">
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M6 6l12 12"></path>
+                        <path d="M18 6 6 18"></path>
+                    </svg>
+                </button>
+            </header>
+
+            <div class="marketplace-create-confirm-item">
+                <div class="marketplace-create-confirm-image-wrap">
+                    <img id="marketplace-create-confirm-image" alt="">
+                    <div class="marketplace-image-fallback" id="marketplace-create-confirm-fallback">□</div>
+                </div>
+                <div class="marketplace-create-confirm-info">
+                    <strong id="marketplace-create-confirm-title">Предмет</strong>
+                    <span id="marketplace-create-confirm-params">Без параметрів</span>
+                    <small id="marketplace-create-confirm-count">Кількість: 1</small>
+                </div>
+            </div>
+
+            <div class="marketplace-create-confirm-details">
+                <div>
+                    <span>Ціна за 1</span>
+                    <strong id="marketplace-create-confirm-price">$0</strong>
+                </div>
+                <div>
+                    <span>Загальна сума</span>
+                    <strong id="marketplace-create-confirm-total">$0</strong>
+                </div>
+                <div class="marketplace-create-confirm-fee">
+                    <span id="marketplace-create-confirm-fee-label">Комісія</span>
+                    <strong id="marketplace-create-confirm-fee">$0</strong>
+                </div>
+                <div>
+                    <span>Термін продажу</span>
+                    <strong id="marketplace-create-confirm-duration">24 години</strong>
+                </div>
+            </div>
+
+            <p class="marketplace-create-confirm-note">Комісія списується одразу після виставлення предмета. Якщо предмет не буде продано, оголошення завершиться через 24 години.</p>
+
+            <div class="marketplace-create-confirm-actions">
+                <button class="marketplace-create-confirm-submit" id="marketplace-create-confirm-submit" type="button">Виставити</button>
+                <button class="marketplace-create-confirm-cancel" id="marketplace-create-confirm-cancel" type="button">Скасувати</button>
             </div>
         </div>
     </div>
@@ -1204,7 +1260,7 @@
     <script src="./assets/JavaScript/notifications.js?v=20260922-clean-ui2"></script>
     <script src="./assets/JavaScript/statistics.js?v=20260922-focus1"></script>
     <script src="./assets/JavaScript/inventory.js?v=20261012-selltype1"></script>
-    <script src="./assets/JavaScript/marketplace.js?v=20261011-market4"></script>
+    <script src="./assets/JavaScript/marketplace.js?v=20261012-marketconfirm1"></script>
     <script src="./assets/JavaScript/mailbox.js?v=20261007-mailbox1"></script>
     <script src="./assets/JavaScript/main-menu.js?v=20260922-focus1"></script>
     <script src="./assets/JavaScript/quick-menu.js?v=20261004-quick7"></script>
