@@ -275,29 +275,24 @@ var Mailbox = {
             return source;
 
         var date = parsed.Date;
-        var hours = this.PadDate(date.getHours());
-        var minutes = this.PadDate(date.getMinutes());
-        var time = hours + ":" + minutes;
         var today = new Date();
 
         if (this.IsSameDate(date, today))
-            return parsed.HasTime ? "Сьогодні, " + time : "Сьогодні";
+            return "Сьогодні";
 
         var yesterday = new Date(today.getFullYear(), today.getMonth(), today.getDate() - 1);
         if (this.IsSameDate(date, yesterday))
-            return parsed.HasTime ? "Вчора, " + time : "Вчора";
+            return "Вчора";
 
-        if (compact) {
-            var compactDate = this.PadDate(date.getDate()) + "." + this.PadDate(date.getMonth() + 1) + "." + date.getFullYear();
-            return parsed.HasTime ? compactDate + " • " + time : compactDate;
-        }
+        if (compact)
+            return this.PadDate(date.getDate()) + "." + this.PadDate(date.getMonth() + 1) + "." + date.getFullYear();
 
         var months = [
             "січня", "лютого", "березня", "квітня", "травня", "червня",
             "липня", "серпня", "вересня", "жовтня", "листопада", "грудня"
         ];
-        var fullDate = date.getDate() + " " + months[date.getMonth()] + " " + date.getFullYear();
-        return parsed.HasTime ? fullDate + ", " + time : fullDate;
+
+        return date.getDate() + " " + months[date.getMonth()] + " " + date.getFullYear();
     },
     ParseDate: function (value) {
         var text = String(value || "").trim();
