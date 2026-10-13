@@ -312,7 +312,6 @@
             Page: 1,
             TotalPages: 4,
             TotalCount: 38,
-            MaxListings: 10,
             MyListingsCount: 3,
             Listings: [
                 { Id: 1038, ItemId: 1, Title: "Яблуко", Image: "apple.webp", Count: 10, Price: 500, SellerId: 15, SellerName: "Serenity_Walker", CreatedAt: "11.10.2026", Params: [{ Recovery: "Hunger", Value: 10 }] },
