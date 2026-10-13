@@ -12,11 +12,11 @@
     <link rel="stylesheet" href="./assets/CSS/styles/spawn.css?v=20261012-selltype1">
     <link rel="stylesheet" href="./assets/CSS/styles/hud.css">
     <link rel="stylesheet" href="./assets/CSS/styles/hud-platform.css?v=20261004-hide-final">
-    <link rel="stylesheet" href="./assets/CSS/styles/notifications.css?v=20261012-selltype1">
+    <link rel="stylesheet" href="./assets/CSS/styles/notifications.css?v=20261013-laptop1">
     <link rel="stylesheet" href="./assets/CSS/styles/statistics.css?v=20261012-selltype1">
-    <link rel="stylesheet" href="./assets/CSS/styles/inventory.css?v=20261012-selltype1">
-    <link rel="stylesheet" href="./assets/CSS/styles/marketplace.css?v=20261012-marketconfirm1">
-    <link rel="stylesheet" href="./assets/CSS/styles/mailbox.css?v=20261012-moneyicon1">
+    <link rel="stylesheet" href="./assets/CSS/styles/inventory.css?v=20261013-descfont2">
+    <link rel="stylesheet" href="./assets/CSS/styles/marketplace.css?v=20261013-descfont2">
+    <link rel="stylesheet" href="./assets/CSS/styles/mailbox.css?v=20261013-deleteconfirm1">
     <link rel="stylesheet" href="./assets/CSS/styles/main-menu.css?v=20261012-selltype1">
     <link rel="stylesheet" href="./assets/CSS/styles/quick-menu.css?v=20261012-selltype1">
     <link rel="stylesheet" href="./assets/CSS/styles/dialog.css?v=20261012-selltype1">
@@ -666,6 +666,17 @@
                         <span>ПРЕДМЕТИ</span>
                         <p>Оберіть предмет, щоб переглянути його властивості.</p>
                     </div>
+                    <button class="inventory-sort" id="inventory-sort" type="button" aria-pressed="false" title="Упорядкувати предмети за типом і назвою">
+                        <svg viewBox="0 0 24 24" aria-hidden="true">
+                            <path d="M8 7h11"></path>
+                            <path d="M8 12h8"></path>
+                            <path d="M8 17h5"></path>
+                            <path d="m3 7 2-2 2 2"></path>
+                            <path d="M5 5v14"></path>
+                            <path d="m3 17 2 2 2-2"></path>
+                        </svg>
+                        <span>Упорядкувати</span>
+                    </button>
                 </div>
 
                 <div class="inventory-grid" id="inventory-grid"></div>
@@ -736,7 +747,7 @@
                         <path d="M8 7V5h8v2"></path>
                     </svg>
                     <span>Мої оголошення</span>
-                    <strong id="marketplace-my-badge">0</strong>
+                    <strong id="marketplace-my-badge">0/10</strong>
                 </button>
 
                 <button class="marketplace-close" id="marketplace-close" type="button" aria-label="Закрити">
@@ -812,10 +823,10 @@
                 <div>
                     <span>КЕРУВАННЯ ПРОДАЖЕМ</span>
                     <h2>Мої оголошення</h2>
-                    <p>Керуйте активними оголошеннями.</p>
+                    <p>Одночасно можна виставити до 10 предметів.</p>
                 </div>
                 <div class="marketplace-manager-header-actions">
-                    <strong id="marketplace-manager-count">0</strong>
+                    <strong id="marketplace-manager-count">0 / 10</strong>
                     <button id="marketplace-manager-close" type="button" aria-label="Закрити">
                         <svg viewBox="0 0 24 24" aria-hidden="true">
                             <path d="M6 6l12 12"></path>
@@ -847,7 +858,7 @@
                     <div class="marketplace-sell-head">
                         <span>НОВЕ ОГОЛОШЕННЯ</span>
                         <h3>Виставити предмет</h3>
-                        <p id="marketplace-limit-text">Без обмеження кількості оголошень.</p>
+                        <p id="marketplace-limit-text">Доступно ще 10 місць.</p>
                     </div>
 
                     <label class="marketplace-field-label" for="marketplace-sell-item">Предмет</label>
@@ -1084,6 +1095,23 @@
             <span>ПОШТОВА СКРИНЬКА</span>
         </footer>
     </div>
+
+    <div class="mailbox-delete-confirm" id="mailbox-delete-confirm" aria-hidden="true">
+        <div class="mailbox-delete-confirm-card" role="dialog" aria-modal="true" aria-labelledby="mailbox-delete-confirm-title">
+            <div class="mailbox-delete-confirm-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24"><path d="M12 9v4"></path><path d="M12 17h.01"></path><path d="M10.3 3.8 2.7 17a2 2 0 0 0 1.7 3h15.2a2 2 0 0 0 1.7-3L13.7 3.8a2 2 0 0 0-3.4 0Z"></path></svg>
+            </div>
+            <div class="mailbox-delete-confirm-copy">
+                <span>УВАГА</span>
+                <h3 id="mailbox-delete-confirm-title">Видалити лист із вкладеннями?</h3>
+                <p id="mailbox-delete-confirm-text">У цьому листі залишилися вкладення. Після видалення вони будуть втрачені.</p>
+            </div>
+            <div class="mailbox-delete-confirm-actions">
+                <button class="mailbox-delete-confirm-cancel" id="mailbox-delete-confirm-cancel" type="button">Скасувати</button>
+                <button class="mailbox-delete-confirm-submit" id="mailbox-delete-confirm-submit" type="button">Видалити</button>
+            </div>
+        </div>
+    </div>
 </section>
 
     <section id="main-menu">
@@ -1258,9 +1286,9 @@
     <script src="./assets/JavaScript/error.js?v=20260920-hotkeys2"></script>
     <script src="./assets/JavaScript/notifications.js?v=20260922-clean-ui2"></script>
     <script src="./assets/JavaScript/statistics.js?v=20260922-focus1"></script>
-    <script src="./assets/JavaScript/inventory.js?v=20261012-selltype1"></script>
-    <script src="./assets/JavaScript/marketplace.js?v=20261013-unlimited1"></script>
-    <script src="./assets/JavaScript/mailbox.js?v=20261012-dateonly1"></script>
+    <script src="./assets/JavaScript/inventory.js?v=20261013-sort1"></script>
+    <script src="./assets/JavaScript/marketplace.js?v=20261013-limit10"></script>
+    <script src="./assets/JavaScript/mailbox.js?v=20261013-deleteconfirm1"></script>
     <script src="./assets/JavaScript/main-menu.js?v=20260922-focus1"></script>
     <script src="./assets/JavaScript/quick-menu.js?v=20261004-quick7"></script>
     <script src="./assets/JavaScript/dialog.js?v=20260922-focus1"></script>

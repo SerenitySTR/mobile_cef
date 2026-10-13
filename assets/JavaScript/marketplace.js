@@ -8,6 +8,7 @@ var Marketplace = {
     totalPages: 1,
     totalCount: 0,
     pageSize: 12,
+    maxListings: 10,
     filterTimer: null,
     buyListing: null,
     pendingCreate: null,
@@ -285,16 +286,20 @@ var Marketplace = {
         var listings = this.Get(data, "Listings", "listings");
         var myListings = this.Get(data, "MyListings", "myListings");
         var inventory = this.Get(data, "Inventory", "inventory");
+        var maxListings = Number(this.Get(data, "MaxListings", "maxListings"));
         var myListingsCount = Number(this.Get(data, "MyListingsCount", "myListingsCount"));
 
         if (Array.isArray(listings))
             this.listings = listings.slice(0, this.pageSize);
 
         if (Array.isArray(myListings))
-            this.myListings = myListings;
+            this.myListings = myListings.slice(0, this.maxListings);
 
         if (Array.isArray(inventory))
             this.inventory = inventory;
+
+        if (maxListings > 0)
+            this.maxListings = maxListings;
 
         if (myListingsCount >= 0 && !Number.isNaN(myListingsCount))
             this.myListingsCount = myListingsCount;
@@ -311,7 +316,11 @@ var Marketplace = {
         this.ApplySettings(data);
 
         var listings = this.Get(data, "Listings", "listings");
+        var maxListings = Number(this.Get(data, "MaxListings", "maxListings"));
         var myListingsCount = Number(this.Get(data, "MyListingsCount", "myListingsCount"));
+
+        if (maxListings > 0)
+            this.maxListings = maxListings;
 
         if (myListingsCount >= 0 && !Number.isNaN(myListingsCount))
             this.myListingsCount = myListingsCount;
@@ -335,13 +344,17 @@ var Marketplace = {
         this.ApplySettings(data);
 
         var listings = this.Get(data, "MyListings", "myListings");
+        var maxListings = Number(this.Get(data, "MaxListings", "maxListings"));
 
         if (Array.isArray(listings))
-            this.myListings = listings;
+            this.myListings = listings.slice(0, this.maxListings);
         else if (Array.isArray(data))
-            this.myListings = data;
+            this.myListings = data.slice(0, this.maxListings);
 
         this.myListingsCount = this.myListings.length;
+
+        if (maxListings > 0)
+            this.maxListings = maxListings;
 
         this.RenderManager();
         this.RenderHeaderBadge();
@@ -537,7 +550,7 @@ var Marketplace = {
     },
 
     RenderHeaderBadge: function () {
-        this.SetText("marketplace-my-badge", this.myListingsCount);
+        this.SetText("marketplace-my-badge", this.myListingsCount + "/" + this.maxListings);
     },
 
     RenderManager: function () {
@@ -545,8 +558,12 @@ var Marketplace = {
         this.RenderInventoryOptions();
         this.RenderSell();
 
-        this.SetText("marketplace-manager-count", this.myListingsCount);
-        this.SetText("marketplace-limit-text", "Без обмеження кількості оголошень.");
+        var remaining = Math.max(0, this.maxListings - this.myListingsCount);
+        this.SetText("marketplace-manager-count", this.myListingsCount + " / " + this.maxListings);
+        this.SetText(
+            "marketplace-limit-text",
+            remaining > 0 ? "Доступно ще " + remaining + " " + this.SlotsWord(remaining) + "." : "Ліміт оголошень вичерпано."
+        );
     },
 
     RenderOwnListings: function () {
@@ -638,6 +655,7 @@ var Marketplace = {
         var fallback = document.getElementById("marketplace-sell-fallback");
         var count = document.getElementById("marketplace-sell-count");
         var create = document.getElementById("marketplace-create");
+        var limitReached = this.myListingsCount >= this.maxListings;
 
         if (!item) {
             this.SetText("marketplace-sell-title", "Оберіть предмет");
@@ -693,7 +711,7 @@ var Marketplace = {
         }
 
         if (create)
-            create.disabled = false;
+            create.disabled = limitReached;
 
         this.RenderSellSummary();
     },
@@ -729,7 +747,7 @@ var Marketplace = {
         var countInput = document.getElementById("marketplace-sell-count");
         var itemCount = item ? Math.max(1, Number(this.Get(item, "Count", "count")) || 1) : 1;
         var selectedCount = Math.max(1, Math.min(itemCount, Math.floor(Number(countInput ? countInput.value : 1) || 1)));
-        var canCreate = !!item && value > 0;
+        var canCreate = !!item && value > 0 && this.myListingsCount < this.maxListings;
 
         this.SetText("marketplace-sell-total", this.Money(value * selectedCount));
 
@@ -742,7 +760,7 @@ var Marketplace = {
         var count = document.getElementById("marketplace-sell-count");
         var price = document.getElementById("marketplace-sell-price");
 
-        if (!item)
+        if (!item || this.myListingsCount >= this.maxListings)
             return;
 
         var itemCount = Math.max(1, Number(this.Get(item, "Count", "count")) || 1);

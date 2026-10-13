@@ -470,7 +470,7 @@
 .inventory-details-info p {
     margin: 10px 0 0;
     color: #83a0b2;
-    font-size: 12px;
+    font-size: 14px;
     font-weight: 600;
     line-height: 1.55;
 }
@@ -1499,7 +1499,7 @@
     }
     .inventory-details-info p {
         margin-top: 5px;
-        font-size: 9px;
+        font-size: 11px;
         line-height: 1.35;
     }
     .inventory-params {
@@ -1639,7 +1639,7 @@
     }
     .inventory-details-info p {
         margin-top: 4px;
-        font-size: 8px;
+        font-size: 10px;
         line-height: 1.25;
     }
     .inventory-params-title {
@@ -1887,7 +1887,7 @@
         display: -webkit-box;
         overflow: hidden;
         margin-top: 3px;
-        font-size: 7px;
+        font-size: 9px;
         line-height: 1.2;
         -webkit-box-orient: vertical;
         -webkit-line-clamp: 3;
@@ -2001,7 +2001,7 @@
         font-size: 11px;
     }
     .inventory-details-info p {
-        font-size: 6px;
+        font-size: 8px;
         -webkit-line-clamp: 2;
     }
     .inventory-use {
@@ -3366,5 +3366,107 @@ body.hud-platform-mobile .inventory-sell-offer-actions button {
     body.hud-platform-mobile .inventory-item-weight,
     body.hud-platform-mobile .inventory-details-type {
         font-size: 7.5px;
+    }
+}
+
+
+/* Inventory item ordering */
+.inventory-sort {
+    min-height: 34px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    flex: 0 0 auto;
+    box-sizing: border-box;
+    padding: 0 11px;
+    border: 1px solid rgba(43,188,255,.24);
+    border-radius: 10px;
+    background: rgba(5,28,43,.72);
+    color: #8fb8cd;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: .2px;
+    cursor: pointer;
+    transition: color .15s ease, border-color .15s ease, background .15s ease, transform .15s ease;
+}
+
+.inventory-sort svg {
+    width: 15px;
+    height: 15px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.8;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.inventory-sort:hover,
+.inventory-sort:focus-visible {
+    border-color: rgba(43,188,255,.65);
+    background: rgba(8,45,66,.88);
+    color: #d9f4ff;
+    outline: none;
+}
+
+.inventory-sort:active {
+    transform: scale(.97);
+}
+
+.inventory-sort.active {
+    border-color: rgba(43,188,255,.62);
+    background: rgba(13,69,96,.72);
+    color: #7bd8ff;
+    box-shadow: inset 0 0 18px rgba(43,188,255,.06);
+}
+
+@media (max-width:1500px) and (min-width:1001px) {
+    .inventory-sort {
+        min-height: 28px;
+        padding: 0 8px;
+        border-radius: 8px;
+        font-size: 8px;
+    }
+    .inventory-sort svg {
+        width: 13px;
+        height: 13px;
+    }
+}
+
+@media (max-width:1000px) and (orientation:landscape) {
+    .inventory-sort {
+        min-height: 22px;
+        padding: 0 6px;
+        gap: 4px;
+        border-radius: 6px;
+        font-size: 7px;
+    }
+    .inventory-sort svg {
+        width: 11px;
+        height: 11px;
+    }
+}
+
+@media (max-width:800px) and (orientation:portrait) {
+    .inventory-sort {
+        min-height: 28px;
+        padding: 0 8px;
+        font-size: 8px;
+    }
+}
+
+body.hud-platform-mobile .inventory-sort {
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+}
+
+@media (max-width:1000px) and (orientation:landscape) {
+    .inventory-sort {
+        width: 24px;
+        min-width: 24px;
+        padding: 0;
+    }
+    .inventory-sort span {
+        display: none;
     }
 }

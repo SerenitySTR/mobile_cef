@@ -11,6 +11,7 @@ var Inventory = {
     selectedSource: "inventory",
     selectedIndex: null,
     selectedSlot: null,
+    sortEnabled: false,
     sellOffer: null,
     Init: function () {
         this.screen = document.getElementById("inventory");
@@ -33,6 +34,7 @@ var Inventory = {
         var sell = document.getElementById("inventory-sell");
         var split = document.getElementById("inventory-split");
         var remove = document.getElementById("inventory-delete");
+        var sort = document.getElementById("inventory-sort");
         var equipment = document.querySelector(".inventory-equipment");
         if (close)
             close.onclick = function () {
@@ -54,6 +56,10 @@ var Inventory = {
         if (remove)
             remove.onclick = function () {
                 self.DeleteSelected();
+            };
+        if (sort)
+            sort.onclick = function () {
+                self.ToggleSort();
             };
         var sellCancel = document.getElementById("inventory-sell-cancel");
         var sellConfirm = document.getElementById("inventory-sell-confirm");
@@ -259,7 +265,8 @@ var Inventory = {
         this.SetCharacterImage(characterImage || this.defaultCharacterImage);
         if (this.items.length) {
             this.selectedSource = "inventory";
-            this.selectedIndex = 0;
+            var orderedIndexes = this.ItemDisplayIndexes();
+            this.selectedIndex = orderedIndexes.length ? orderedIndexes[0] : 0;
             this.selectedSlot = null;
         }
         else if (this.equipment.length) {
@@ -313,6 +320,7 @@ var Inventory = {
         this.RenderItems();
         this.RenderDetails();
         this.RenderWeight();
+        this.RenderSortButton();
     },
     RenderWeight: function () {
         var weight = document.getElementById("inventory-weight");
@@ -355,8 +363,84 @@ var Inventory = {
         if (this.empty)
             this.empty.style.display = this.items.length ? "none" : "flex";
         this.grid.style.display = this.items.length ? "grid" : "none";
+        var indexes = this.ItemDisplayIndexes();
+        for (var i = 0; i < indexes.length; i++) {
+            var itemIndex = indexes[i];
+            this.grid.appendChild(this.CreateItem(this.items[itemIndex], itemIndex));
+        }
+    },
+    ToggleSort: function () {
+        this.sortEnabled = !this.sortEnabled;
+        this.RenderItems();
+        this.RenderSortButton();
+        if (this.grid)
+            this.grid.scrollTop = 0;
+    },
+    RenderSortButton: function () {
+        var button = document.getElementById("inventory-sort");
+        if (!button)
+            return;
+        button.classList.toggle("active", this.sortEnabled);
+        button.setAttribute("aria-pressed", this.sortEnabled ? "true" : "false");
+        button.setAttribute(
+            "title",
+            this.sortEnabled
+                ? "Повернути початковий порядок предметів"
+                : "Упорядкувати предмети за типом і назвою"
+        );
+        var label = button.querySelector("span");
+        if (label)
+            label.textContent = this.sortEnabled ? "Упорядковано" : "Упорядкувати";
+    },
+    ItemDisplayIndexes: function () {
+        var indexes = [];
         for (var i = 0; i < this.items.length; i++)
-            this.grid.appendChild(this.CreateItem(this.items[i], i));
+            indexes.push(i);
+        if (!this.sortEnabled)
+            return indexes;
+
+        var self = this;
+        indexes.sort(function (leftIndex, rightIndex) {
+            var left = self.items[leftIndex];
+            var right = self.items[rightIndex];
+            var typeCompare = self.ItemSortType(left) - self.ItemSortType(right);
+            if (typeCompare !== 0)
+                return typeCompare;
+
+            var leftTitle = String(self.Get(left, "Title", "title") || self.Get(left, "Name", "name") || "").toLocaleLowerCase();
+            var rightTitle = String(self.Get(right, "Title", "title") || self.Get(right, "Name", "name") || "").toLocaleLowerCase();
+            var titleCompare = leftTitle.localeCompare(rightTitle, "uk", { sensitivity: "base", numeric: true });
+            if (titleCompare !== 0)
+                return titleCompare;
+
+            var leftId = Number(self.Get(left, "ItemId", "itemId"));
+            var rightId = Number(self.Get(right, "ItemId", "itemId"));
+            if (!Number.isFinite(leftId))
+                leftId = Number(self.Get(left, "Id", "id"));
+            if (!Number.isFinite(rightId))
+                rightId = Number(self.Get(right, "Id", "id"));
+            if (Number.isFinite(leftId) && Number.isFinite(rightId) && leftId !== rightId)
+                return leftId - rightId;
+
+            return leftIndex - rightIndex;
+        });
+        return indexes;
+    },
+    ItemSortType: function (item) {
+        var type = this.Get(item, "Type", "type");
+        if (type === undefined || type === null || type === "")
+            return 99;
+        var numeric = Number(type);
+        if (Number.isFinite(numeric))
+            return numeric;
+        type = String(type).toLowerCase();
+        if (type === "consumable")
+            return 0;
+        if (type === "equipment")
+            return 1;
+        if (type === "misc")
+            return 2;
+        return 99;
     },
     CreateItem: function (item, index) {
         var self = this;

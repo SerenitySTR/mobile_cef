@@ -83,4 +83,21 @@
             <span>ПОШТОВА СКРИНЬКА</span>
         </footer>
     </div>
+
+    <div class="mailbox-delete-confirm" id="mailbox-delete-confirm" aria-hidden="true">
+        <div class="mailbox-delete-confirm-card" role="dialog" aria-modal="true" aria-labelledby="mailbox-delete-confirm-title">
+            <div class="mailbox-delete-confirm-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24"><path d="M12 9v4"></path><path d="M12 17h.01"></path><path d="M10.3 3.8 2.7 17a2 2 0 0 0 1.7 3h15.2a2 2 0 0 0 1.7-3L13.7 3.8a2 2 0 0 0-3.4 0Z"></path></svg>
+            </div>
+            <div class="mailbox-delete-confirm-copy">
+                <span>УВАГА</span>
+                <h3 id="mailbox-delete-confirm-title">Видалити лист із вкладеннями?</h3>
+                <p id="mailbox-delete-confirm-text">У цьому листі залишилися вкладення. Після видалення вони будуть втрачені.</p>
+            </div>
+            <div class="mailbox-delete-confirm-actions">
+                <button class="mailbox-delete-confirm-cancel" id="mailbox-delete-confirm-cancel" type="button">Скасувати</button>
+                <button class="mailbox-delete-confirm-submit" id="mailbox-delete-confirm-submit" type="button">Видалити</button>
+            </div>
+        </div>
+    </div>
 </section>

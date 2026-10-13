@@ -16,12 +16,24 @@ var Mailbox = {
         var close = document.getElementById("mailbox-close");
         var claim = document.getElementById("mailbox-claim");
         var remove = document.getElementById("mailbox-delete");
+        var deleteConfirm = document.getElementById("mailbox-delete-confirm");
+        var deleteCancel = document.getElementById("mailbox-delete-confirm-cancel");
+        var deleteSubmit = document.getElementById("mailbox-delete-confirm-submit");
         if (close)
             close.onclick = function () { self.Hide(); GameCef.sendJson("mailbox:close", {}); };
         if (claim)
             claim.onclick = function () { self.Claim(); };
         if (remove)
             remove.onclick = function () { self.Delete(); };
+        if (deleteCancel)
+            deleteCancel.onclick = function () { self.CloseDeleteConfirm(); };
+        if (deleteSubmit)
+            deleteSubmit.onclick = function () { self.ConfirmDelete(); };
+        if (deleteConfirm)
+            deleteConfirm.onclick = function (event) {
+                if (event.target === deleteConfirm)
+                    self.CloseDeleteConfirm();
+            };
         this.screen.addEventListener("click", function (event) {
             var entry = event.target.closest("[data-mailbox-id]");
             if (entry)
@@ -34,6 +46,10 @@ var Mailbox = {
                 return;
             event.preventDefault();
             event.stopImmediatePropagation();
+            if (self.IsDeleteConfirmOpen()) {
+                self.CloseDeleteConfirm();
+                return;
+            }
             if (close)
                 close.click();
         });
@@ -57,6 +73,7 @@ var Mailbox = {
         this.Init();
         if (!this.screen)
             return;
+        this.CloseDeleteConfirm();
         this.screen.classList.remove("active");
         this.screen.setAttribute("aria-hidden", "true");
     },
@@ -214,6 +231,57 @@ var Mailbox = {
         GameCef.sendJson("mailbox:claim", { MessageId: this.selectedId });
     },
     Delete: function () {
+        if (this.selectedId === null)
+            return;
+
+        var message = this.Find(this.selectedId);
+        if (!message)
+            return;
+
+        var attachments = this.Get(message, "Attachments", "attachments");
+        if (!Array.isArray(attachments))
+            attachments = [];
+        var money = Math.max(0, Number(this.Get(message, "Money", "money")) || 0);
+
+        if (attachments.length > 0 || money > 0) {
+            this.OpenDeleteConfirm(attachments.length > 0, money > 0);
+            return;
+        }
+
+        this.SendDelete();
+    },
+    OpenDeleteConfirm: function (hasItems, hasMoney) {
+        var modal = document.getElementById("mailbox-delete-confirm");
+        if (!modal) {
+            this.SendDelete();
+            return;
+        }
+
+        var typeText = hasItems && hasMoney ? "гроші та предмети" : hasMoney ? "гроші" : "предмети";
+        this.SetText("mailbox-delete-confirm-text", "У цьому листі залишилися " + typeText + ". Після видалення вони будуть втрачені.");
+        modal.classList.add("active");
+        modal.setAttribute("aria-hidden", "false");
+    },
+    CloseDeleteConfirm: function () {
+        var modal = document.getElementById("mailbox-delete-confirm");
+        if (!modal)
+            return;
+        modal.classList.remove("active");
+        modal.setAttribute("aria-hidden", "true");
+    },
+    IsDeleteConfirmOpen: function () {
+        var modal = document.getElementById("mailbox-delete-confirm");
+        return !!(modal && modal.classList.contains("active"));
+    },
+    ConfirmDelete: function () {
+        if (this.selectedId === null) {
+            this.CloseDeleteConfirm();
+            return;
+        }
+        this.CloseDeleteConfirm();
+        this.SendDelete();
+    },
+    SendDelete: function () {
         if (this.selectedId === null)
             return;
         GameCef.sendJson("mailbox:delete", { MessageId: this.selectedId });

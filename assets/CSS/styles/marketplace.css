@@ -385,7 +385,7 @@
     text-overflow: ellipsis;
     white-space: nowrap;
     color: #7da6bd;
-    font-size: 10px;
+    font-size: 12px;
 }
 
 .marketplace-card-seller {
@@ -734,7 +734,7 @@
     text-overflow: ellipsis;
     white-space: nowrap;
     color: #83a8bb;
-    font-size: 9px;
+    font-size: 11px;
 }
 
 .marketplace-own-info small {
@@ -889,7 +889,7 @@
 .marketplace-sell-preview-info span {
     margin-top: 5px;
     color: #82a9bf;
-    font-size: 9px;
+    font-size: 11px;
 }
 
 .marketplace-sell-preview-info small {
@@ -1116,7 +1116,7 @@
 
 .marketplace-buy-info strong {
     color: #9ccbe3;
-    font-size: 11px;
+    font-size: 13px;
     line-height: 1.35;
 }
 
@@ -1349,7 +1349,7 @@
 
     .marketplace-card-count { right: 4px; bottom: 4px; padding: 2px 4px; font-size: 7px; }
     .marketplace-card-name { font-size: 10px; }
-    .marketplace-card-params { margin-top: 2px; font-size: 8px; }
+    .marketplace-card-params { margin-top: 2px; font-size: 10px; }
     .marketplace-card-seller { margin-top: 2px; font-size: 8px; }
     .marketplace-card-footer { margin-top: 2px; gap: 6px; }
     .marketplace-card-footer strong { font-size: 11px; }
@@ -1413,7 +1413,8 @@
     .marketplace-own-card { grid-template-columns: 44px minmax(0, 1fr) auto; gap: 7px; padding: 5px; }
     .marketplace-own-image { width: 44px; height: 44px; }
     .marketplace-own-title strong { font-size: 9px; }
-    .marketplace-own-params, .marketplace-own-info small { font-size: 7px; }
+    .marketplace-own-params { font-size: 9px; }
+    .marketplace-own-info small { font-size: 7px; }
 
     .marketplace-create-section { padding: 8px; overflow-y: auto; }
     .marketplace-sell-head { margin-bottom: 5px; }
@@ -1430,7 +1431,8 @@
 
     .marketplace-sell-image-wrap { width: 46px; height: 44px; }
     .marketplace-sell-preview-info strong { font-size: 9px; }
-    .marketplace-sell-preview-info span, .marketplace-sell-preview-info small { margin-top: 2px; font-size: 7px; }
+    .marketplace-sell-preview-info span { margin-top: 2px; font-size: 9px; }
+    .marketplace-sell-preview-info small { margin-top: 2px; font-size: 7px; }
     .marketplace-sell-summary { margin-top: 6px; padding: 6px 8px; }
     .marketplace-create { min-height: 34px; margin-top: 6px; }
 
@@ -1463,7 +1465,7 @@
     }
 
     .marketplace-buy-image-wrap { width: 72px; height: 68px; }
-    .marketplace-buy-info strong { font-size: 9px; }
+    .marketplace-buy-info strong { font-size: 11px; }
     .marketplace-buy-info span, .marketplace-buy-info small { margin-top: 4px; font-size: 8px; }
     .marketplace-buy-price-row { grid-column: 2; grid-row: 2; margin: 0; padding: 7px 9px; }
     .marketplace-buy-panel > .marketplace-field-label { grid-column: 2; grid-row: 3; align-self: end; margin: 0 0 -3px; }
@@ -1485,6 +1487,16 @@
 
 @media (orientation: landscape) and (max-height: 560px) and (max-width: 620px) {
     .marketplace-listings { grid-template-columns: 1fr; }
+
+    .marketplace-card-params,
+    .marketplace-own-params,
+    .marketplace-sell-preview-info span {
+        font-size: 11px;
+    }
+
+    .marketplace-buy-info strong {
+        font-size: 12px;
+    }
 }
 
 @media (orientation: portrait) and (max-width: 900px) {
@@ -1533,7 +1545,8 @@
     .marketplace-card { grid-template-columns: 72px minmax(0, 1fr); column-gap: 8px; padding: 7px; }
     .marketplace-card-image { width: 72px; min-height: 88px; }
     .marketplace-card-name { font-size: 11px; }
-    .marketplace-card-params, .marketplace-card-seller { font-size: 8px; }
+    .marketplace-card-params { font-size: 10px; }
+    .marketplace-card-seller { font-size: 8px; }
     .marketplace-pagination { min-height: 36px; padding-top: 5px; }
     #marketplace-page-info, .marketplace-footer { display: none; }
 
@@ -1556,6 +1569,16 @@
     .marketplace-create-section { overflow: visible; }
     .marketplace-buy-modal { padding: 8px; }
     .marketplace-buy-panel { width: min(430px, calc(100vw - 16px)); max-height: calc(100vh - 16px); padding: 13px; overflow-y: auto; }
+
+    .marketplace-card-params,
+    .marketplace-own-params,
+    .marketplace-sell-preview-info span {
+        font-size: 11px;
+    }
+
+    .marketplace-buy-info strong {
+        font-size: 12px;
+    }
 }
 
 @media (orientation: portrait) and (max-width: 620px) {
@@ -1747,7 +1770,7 @@
 .marketplace-create-confirm-info span {
     margin-top: 5px;
     color: #8cb2c7;
-    font-size: 10px;
+    font-size: 12px;
 }
 
 .marketplace-create-confirm-info small {
@@ -1881,7 +1904,10 @@
         font-size: 11px;
     }
 
-    .marketplace-create-confirm-info span,
+    .marketplace-create-confirm-info span {
+        font-size: 11px;
+    }
+
     .marketplace-create-confirm-info small {
         font-size: 9px;
     }
@@ -1975,5 +2001,30 @@
     .marketplace-create-confirm-actions button {
         min-height: 44px;
         font-size: 11px;
+    }
+}
+
+/* Larger item description/parameter text on compact Marketplace layouts. */
+@media (orientation: landscape) and (max-height: 560px) {
+    .marketplace-card-params,
+    .marketplace-own-params,
+    .marketplace-sell-preview-info span {
+        font-size: 11px;
+    }
+
+    .marketplace-buy-info strong {
+        font-size: 12px;
+    }
+}
+
+@media (orientation: portrait) and (max-width: 900px) {
+    .marketplace-card-params,
+    .marketplace-own-params,
+    .marketplace-sell-preview-info span {
+        font-size: 11px;
+    }
+
+    .marketplace-buy-info strong {
+        font-size: 12px;
     }
 }
