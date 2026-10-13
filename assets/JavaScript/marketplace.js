@@ -17,6 +17,7 @@ var Marketplace = {
     listingDurationHours: 24,
     chunkEvent: "",
     chunkBuffer: "",
+    customSelect: null,
 
     Init: function () {
         this.screen = document.getElementById("marketplace");
@@ -57,6 +58,9 @@ var Marketplace = {
         var buyCount = document.getElementById("marketplace-buy-count");
         var buyMinus = document.getElementById("marketplace-buy-minus");
         var buyPlus = document.getElementById("marketplace-buy-plus");
+
+        this.EnhanceSelect(sort);
+        this.EnhanceSelect(itemSelect);
 
         if (close)
             close.onclick = function () {
@@ -159,6 +163,9 @@ var Marketplace = {
             buyPlus.onclick = function () { self.ChangeBuyCount(1); };
 
         this.screen.addEventListener("click", function (event) {
+            if (!event.target.closest(".marketplace-custom-select") && !event.target.closest(".marketplace-custom-select-menu"))
+                self.CloseCustomSelect();
+
             var buy = event.target.closest("[data-marketplace-buy]");
             if (buy && !buy.disabled) {
                 self.OpenBuy(Number(buy.getAttribute("data-marketplace-buy")) || 0);
@@ -185,6 +192,13 @@ var Marketplace = {
 
             if (!self.screen || !self.screen.classList.contains("active"))
                 return;
+
+            if (self.customSelect) {
+                event.preventDefault();
+                event.stopImmediatePropagation();
+                self.CloseCustomSelect();
+                return;
+            }
 
             var createConfirmModal = document.getElementById("marketplace-create-confirm-modal");
             if (createConfirmModal && createConfirmModal.classList.contains("active")) {
@@ -218,6 +232,179 @@ var Marketplace = {
         });
     },
 
+    EnhanceSelect: function (select) {
+        if (!select || select.getAttribute("data-marketplace-custom") === "1")
+            return;
+
+        select.setAttribute("data-marketplace-custom", "1");
+        select.classList.add("marketplace-native-select");
+
+        var wrapper = document.createElement("div");
+        wrapper.className = "marketplace-custom-select " + (select.id === "marketplace-sort" ? "marketplace-custom-select-sort" : "marketplace-custom-select-field");
+
+        var trigger = document.createElement("button");
+        trigger.type = "button";
+        trigger.className = "marketplace-custom-select-trigger";
+        trigger.setAttribute("aria-haspopup", "listbox");
+        trigger.setAttribute("aria-expanded", "false");
+        trigger.innerHTML = '<span class="marketplace-custom-select-value"></span>' +
+            '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m7 9 5 5 5-5"></path></svg>';
+
+        select.parentNode.insertBefore(wrapper, select);
+        wrapper.appendChild(select);
+        wrapper.appendChild(trigger);
+
+        var self = this;
+        trigger.onclick = function (event) {
+            event.preventDefault();
+            event.stopPropagation();
+
+            if (self.customSelect && self.customSelect.select === select) {
+                self.CloseCustomSelect();
+                return;
+            }
+
+            self.OpenCustomSelect(select, wrapper, trigger);
+        };
+
+        select.addEventListener("change", function () {
+            self.SyncCustomSelect(select);
+        });
+
+        this.SyncCustomSelect(select);
+    },
+
+    SyncCustomSelect: function (select) {
+        if (!select)
+            return;
+
+        var wrapper = select.parentNode;
+        if (!wrapper || !wrapper.classList.contains("marketplace-custom-select"))
+            return;
+
+        var label = wrapper.querySelector(".marketplace-custom-select-value");
+        var option = select.options && select.selectedIndex >= 0 ? select.options[select.selectedIndex] : null;
+
+        if (label)
+            label.textContent = option ? option.textContent : "Оберіть";
+
+        if (this.customSelect && this.customSelect.select === select)
+            this.BuildCustomSelectMenu(select, this.customSelect.menu);
+    },
+
+    OpenCustomSelect: function (select, wrapper, trigger) {
+        this.CloseCustomSelect();
+
+        if (!this.screen || !select || !trigger)
+            return;
+
+        var menu = document.createElement("div");
+        menu.className = "marketplace-custom-select-menu";
+        menu.setAttribute("role", "listbox");
+        this.screen.appendChild(menu);
+
+        this.customSelect = {
+            select: select,
+            wrapper: wrapper,
+            trigger: trigger,
+            menu: menu
+        };
+
+        wrapper.classList.add("open");
+        trigger.setAttribute("aria-expanded", "true");
+        this.BuildCustomSelectMenu(select, menu);
+        this.PositionCustomSelectMenu(trigger, menu);
+    },
+
+    BuildCustomSelectMenu: function (select, menu) {
+        if (!select || !menu)
+            return;
+
+        var self = this;
+        menu.innerHTML = "";
+
+        for (var i = 0; i < select.options.length; i++) {
+            (function (option) {
+                var button = document.createElement("button");
+                button.type = "button";
+                button.className = "marketplace-custom-select-option";
+                button.textContent = option.textContent;
+                button.setAttribute("role", "option");
+                button.setAttribute("aria-selected", option.selected ? "true" : "false");
+                button.classList.toggle("selected", option.selected);
+                button.disabled = option.disabled;
+
+                button.onclick = function (event) {
+                    event.preventDefault();
+                    event.stopPropagation();
+
+                    if (option.disabled)
+                        return;
+
+                    select.value = option.value;
+                    self.SyncCustomSelect(select);
+                    self.CloseCustomSelect();
+
+                    var changeEvent = document.createEvent("HTMLEvents");
+                    changeEvent.initEvent("change", true, false);
+                    select.dispatchEvent(changeEvent);
+                };
+
+                menu.appendChild(button);
+            })(select.options[i]);
+        }
+    },
+
+    PositionCustomSelectMenu: function (trigger, menu) {
+        if (!trigger || !menu)
+            return;
+
+        var rect = trigger.getBoundingClientRect();
+        var viewportWidth = window.innerWidth || document.documentElement.clientWidth || 0;
+        var viewportHeight = window.innerHeight || document.documentElement.clientHeight || 0;
+        var gap = 6;
+        var minWidth = Math.max(rect.width, 180);
+        var width = Math.min(minWidth, Math.max(180, viewportWidth - 16));
+        var left = Math.max(8, Math.min(rect.left, viewportWidth - width - 8));
+        var below = Math.max(0, viewportHeight - rect.bottom - gap - 8);
+        var above = Math.max(0, rect.top - gap - 8);
+        var openUp = below < 150 && above > below;
+        var maxHeight = Math.max(96, Math.min(270, openUp ? above : below));
+
+        menu.style.left = Math.round(left) + "px";
+        menu.style.width = Math.round(width) + "px";
+        menu.style.maxHeight = Math.round(maxHeight) + "px";
+
+        if (openUp) {
+            menu.style.top = "auto";
+            menu.style.bottom = Math.round(viewportHeight - rect.top + gap) + "px";
+            menu.classList.add("open-up");
+        }
+        else {
+            menu.style.bottom = "auto";
+            menu.style.top = Math.round(rect.bottom + gap) + "px";
+            menu.classList.remove("open-up");
+        }
+    },
+
+    CloseCustomSelect: function () {
+        if (!this.customSelect)
+            return;
+
+        var current = this.customSelect;
+
+        if (current.wrapper)
+            current.wrapper.classList.remove("open");
+
+        if (current.trigger)
+            current.trigger.setAttribute("aria-expanded", "false");
+
+        if (current.menu && current.menu.parentNode)
+            current.menu.parentNode.removeChild(current.menu);
+
+        this.customSelect = null;
+    },
+
     Show: function (data) {
         this.Init();
         if (!this.screen)
@@ -238,6 +425,7 @@ var Marketplace = {
 
     Hide: function () {
         this.Init();
+        this.CloseCustomSelect();
         this.CloseCreateConfirm();
         this.CloseBuy();
         this.CloseManager();
@@ -267,6 +455,8 @@ var Marketplace = {
     },
 
     CloseManager: function () {
+        this.CloseCustomSelect();
+
         var manager = document.getElementById("marketplace-manager");
         if (!manager)
             return;
@@ -624,6 +814,7 @@ var Marketplace = {
             empty.value = "";
             empty.textContent = "Немає предметів";
             select.appendChild(empty);
+            this.SyncCustomSelect(select);
             return;
         }
 
@@ -638,6 +829,8 @@ var Marketplace = {
 
         if (current !== "" && Number(current) < this.inventory.length)
             select.value = current;
+
+        this.SyncCustomSelect(select);
     },
 
     SelectedInventoryItem: function () {

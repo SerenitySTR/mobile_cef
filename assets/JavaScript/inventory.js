@@ -363,15 +363,14 @@ var Inventory = {
         if (this.empty)
             this.empty.style.display = this.items.length ? "none" : "flex";
         this.grid.style.display = this.items.length ? "grid" : "none";
-        var indexes = this.ItemDisplayIndexes();
-        for (var i = 0; i < indexes.length; i++) {
-            var itemIndex = indexes[i];
-            this.grid.appendChild(this.CreateItem(this.items[itemIndex], itemIndex));
-        }
+        var entries = this.ItemDisplayEntries();
+        for (var i = 0; i < entries.length; i++)
+            this.grid.appendChild(this.CreateItem(entries[i]));
     },
     ToggleSort: function () {
         this.sortEnabled = !this.sortEnabled;
         this.RenderItems();
+        this.RenderDetails();
         this.RenderSortButton();
         if (this.grid)
             this.grid.scrollTop = 0;
@@ -386,7 +385,7 @@ var Inventory = {
             "title",
             this.sortEnabled
                 ? "Повернути початковий порядок предметів"
-                : "Упорядкувати предмети за типом і назвою"
+                : "Упорядкувати та об\'єднати однакові предмети"
         );
         var label = button.querySelector("span");
         if (label)
@@ -426,6 +425,87 @@ var Inventory = {
         });
         return indexes;
     },
+    ItemDisplayEntries: function () {
+        var indexes = this.ItemDisplayIndexes();
+        var entries = [];
+        if (!this.sortEnabled) {
+            for (var i = 0; i < indexes.length; i++) {
+                var index = indexes[i];
+                var item = this.items[index];
+                entries.push({ Index: index, Indexes: [index], Item: item, Count: this.ItemCount(item) });
+            }
+            return entries;
+        }
+
+        var groups = Object.create(null);
+        for (var j = 0; j < indexes.length; j++) {
+            var itemIndex = indexes[j];
+            var sourceItem = this.items[itemIndex];
+            if (!this.CanVisualStack(sourceItem)) {
+                entries.push({ Index: itemIndex, Indexes: [itemIndex], Item: sourceItem, Count: this.ItemCount(sourceItem) });
+                continue;
+            }
+
+            var key = this.ItemStackKey(sourceItem);
+            var group = groups[key];
+            if (!group) {
+                group = { Index: itemIndex, Indexes: [], Item: sourceItem, Count: 0 };
+                groups[key] = group;
+                entries.push(group);
+            }
+            group.Indexes.push(itemIndex);
+            group.Count += this.ItemCount(sourceItem);
+        }
+        return entries;
+    },
+    ItemCount: function (item) {
+        var count = Number(this.Get(item, "Count", "count"));
+        return Number.isFinite(count) && count > 0 ? count : 1;
+    },
+    CanVisualStack: function (item) {
+        var explicit = this.Get(item, "IsStackable", "isStackable");
+        if (explicit !== undefined && explicit !== null)
+            return explicit === true || explicit === 1 || String(explicit).toLowerCase() === "true";
+        return this.ItemSortType(item) !== 1;
+    },
+    ItemStackKey: function (item) {
+        var itemId = this.Get(item, "ItemId", "itemId");
+        if (itemId === undefined || itemId === null || itemId === "")
+            itemId = this.Get(item, "Id", "id");
+        if (itemId === undefined || itemId === null || itemId === "")
+            itemId = (this.Get(item, "Title", "title") || this.Get(item, "Name", "name") || "") + "|" + (this.Get(item, "Image", "image") || "");
+
+        var params = this.Get(item, "Params", "params") || this.Get(item, "ItemParams", "itemParams") || [];
+        var normalized = [];
+        if (Array.isArray(params)) {
+            for (var i = 0; i < params.length; i++) {
+                var param = params[i] || {};
+                normalized.push(JSON.stringify({
+                    Recovery: this.Get(param, "Recovery", "recovery"),
+                    Buff: this.Get(param, "Buff", "buff"),
+                    Stat: this.Get(param, "Stat", "stat"),
+                    Value: this.Get(param, "Value", "value"),
+                    Title: this.Get(param, "Title", "title")
+                }));
+            }
+            normalized.sort();
+        }
+
+        return [String(itemId), String(this.Get(item, "Type", "type") || ""), String(this.ItemSlot(item) || ""), normalized.join(";")].join("::");
+    },
+    SelectedDisplayEntry: function () {
+        if (this.selectedSource !== "inventory" || this.selectedIndex === null)
+            return null;
+        var entries = this.ItemDisplayEntries();
+        for (var i = 0; i < entries.length; i++)
+            if (entries[i].Indexes.indexOf(this.selectedIndex) !== -1)
+                return entries[i];
+        return null;
+    },
+    SelectedDisplayCount: function () {
+        var entry = this.SelectedDisplayEntry();
+        return entry ? entry.Count : this.ItemCount(this.SelectedItem());
+    },
     ItemSortType: function (item) {
         var type = this.Get(item, "Type", "type");
         if (type === undefined || type === null || type === "")
@@ -442,16 +522,20 @@ var Inventory = {
             return 2;
         return 99;
     },
-    CreateItem: function (item, index) {
+    CreateItem: function (entry) {
         var self = this;
+        var item = entry.Item;
+        var index = entry.Index;
         var title = this.Get(item, "Title", "title") || this.Get(item, "Name", "name") || "Предмет";
-        var count = this.Get(item, "Count", "count");
+        var count = entry.Count;
         var weight = this.ItemWeight(item);
         var image = this.ImagePath(this.Get(item, "Image", "image"));
         var button = document.createElement("button");
         button.type = "button";
         button.className = "inventory-item";
-        if (this.selectedSource === "inventory" && this.selectedIndex === index)
+        if (entry.Indexes.length > 1)
+            button.classList.add("inventory-item-stacked");
+        if (this.selectedSource === "inventory" && entry.Indexes.indexOf(this.selectedIndex) !== -1)
             button.classList.add("active");
         var countHtml = Number(count) > 1
             ? '<span class="inventory-item-count">x' + this.Escape(count) + '</span>'
@@ -464,9 +548,7 @@ var Inventory = {
                 weightHtml +
                 '<span class="inventory-item-image">' + this.ImageHtml(image) + '</span>' +
                 '<strong class="inventory-item-name">' + this.Escape(title) + '</strong>';
-        button.onclick = function () {
-            self.SelectItem(index);
-        };
+        button.onclick = function () { self.SelectItem(index); };
         return button;
     },
     SelectItem: function (index) {
@@ -543,7 +625,7 @@ var Inventory = {
         }
         var title = this.Get(item, "Title", "title") || this.Get(item, "Name", "name") || "Предмет";
         var description = this.Get(item, "Description", "description") || "Опис предмета відсутній.";
-        var count = this.Get(item, "Count", "count");
+        var count = this.selectedSource === "inventory" ? this.SelectedDisplayCount() : this.Get(item, "Count", "count");
         var itemWeight = this.ItemWeight(item);
         var imagePath = this.ImagePath(this.Get(item, "Image", "image"));
         if (image) {
