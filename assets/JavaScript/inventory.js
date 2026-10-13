@@ -11,7 +11,7 @@ var Inventory = {
     selectedSource: "inventory",
     selectedIndex: null,
     selectedSlot: null,
-    sortEnabled: false,
+    sortPending: false,
     sellOffer: null,
     Init: function () {
         this.screen = document.getElementById("inventory");
@@ -59,7 +59,7 @@ var Inventory = {
             };
         if (sort)
             sort.onclick = function () {
-                self.ToggleSort();
+                self.RequestSort();
             };
         var sellCancel = document.getElementById("inventory-sell-cancel");
         var sellConfirm = document.getElementById("inventory-sell-confirm");
@@ -263,6 +263,7 @@ var Inventory = {
         this.currentWeight = Number(currentWeight) || 0;
         this.maxWeight = Number(maxWeight) || 0;
         this.SetCharacterImage(characterImage || this.defaultCharacterImage);
+        this.sortPending = false;
         if (this.items.length) {
             this.selectedSource = "inventory";
             var orderedIndexes = this.ItemDisplayIndexes();
@@ -367,94 +368,38 @@ var Inventory = {
         for (var i = 0; i < entries.length; i++)
             this.grid.appendChild(this.CreateItem(entries[i]));
     },
-    ToggleSort: function () {
-        this.sortEnabled = !this.sortEnabled;
-        this.RenderItems();
-        this.RenderDetails();
+    RequestSort: function () {
+        if (this.sortPending)
+            return;
+        this.sortPending = true;
         this.RenderSortButton();
-        if (this.grid)
-            this.grid.scrollTop = 0;
+        GameCef.sendJson("inventory:sort", {});
     },
     RenderSortButton: function () {
         var button = document.getElementById("inventory-sort");
         if (!button)
             return;
-        button.classList.toggle("active", this.sortEnabled);
-        button.setAttribute("aria-pressed", this.sortEnabled ? "true" : "false");
-        button.setAttribute(
-            "title",
-            this.sortEnabled
-                ? "Повернути початковий порядок предметів"
-                : "Упорядкувати та об\'єднати однакові предмети"
-        );
+        button.classList.remove("active");
+        button.disabled = !!this.sortPending;
+        button.setAttribute("aria-pressed", "false");
+        button.setAttribute("title", "Упорядкувати та об\'єднати однакові предмети");
         var label = button.querySelector("span");
         if (label)
-            label.textContent = this.sortEnabled ? "Упорядковано" : "Упорядкувати";
+            label.textContent = "Упорядкувати";
     },
     ItemDisplayIndexes: function () {
         var indexes = [];
         for (var i = 0; i < this.items.length; i++)
             indexes.push(i);
-        if (!this.sortEnabled)
-            return indexes;
-
-        var self = this;
-        indexes.sort(function (leftIndex, rightIndex) {
-            var left = self.items[leftIndex];
-            var right = self.items[rightIndex];
-            var typeCompare = self.ItemSortType(left) - self.ItemSortType(right);
-            if (typeCompare !== 0)
-                return typeCompare;
-
-            var leftTitle = String(self.Get(left, "Title", "title") || self.Get(left, "Name", "name") || "").toLocaleLowerCase();
-            var rightTitle = String(self.Get(right, "Title", "title") || self.Get(right, "Name", "name") || "").toLocaleLowerCase();
-            var titleCompare = leftTitle.localeCompare(rightTitle, "uk", { sensitivity: "base", numeric: true });
-            if (titleCompare !== 0)
-                return titleCompare;
-
-            var leftId = Number(self.Get(left, "ItemId", "itemId"));
-            var rightId = Number(self.Get(right, "ItemId", "itemId"));
-            if (!Number.isFinite(leftId))
-                leftId = Number(self.Get(left, "Id", "id"));
-            if (!Number.isFinite(rightId))
-                rightId = Number(self.Get(right, "Id", "id"));
-            if (Number.isFinite(leftId) && Number.isFinite(rightId) && leftId !== rightId)
-                return leftId - rightId;
-
-            return leftIndex - rightIndex;
-        });
         return indexes;
     },
     ItemDisplayEntries: function () {
         var indexes = this.ItemDisplayIndexes();
         var entries = [];
-        if (!this.sortEnabled) {
-            for (var i = 0; i < indexes.length; i++) {
-                var index = indexes[i];
-                var item = this.items[index];
-                entries.push({ Index: index, Indexes: [index], Item: item, Count: this.ItemCount(item) });
-            }
-            return entries;
-        }
-
-        var groups = Object.create(null);
-        for (var j = 0; j < indexes.length; j++) {
-            var itemIndex = indexes[j];
-            var sourceItem = this.items[itemIndex];
-            if (!this.CanVisualStack(sourceItem)) {
-                entries.push({ Index: itemIndex, Indexes: [itemIndex], Item: sourceItem, Count: this.ItemCount(sourceItem) });
-                continue;
-            }
-
-            var key = this.ItemStackKey(sourceItem);
-            var group = groups[key];
-            if (!group) {
-                group = { Index: itemIndex, Indexes: [], Item: sourceItem, Count: 0 };
-                groups[key] = group;
-                entries.push(group);
-            }
-            group.Indexes.push(itemIndex);
-            group.Count += this.ItemCount(sourceItem);
+        for (var i = 0; i < indexes.length; i++) {
+            var index = indexes[i];
+            var item = this.items[index];
+            entries.push({ Index: index, Indexes: [index], Item: item, Count: this.ItemCount(item) });
         }
         return entries;
     },
@@ -462,45 +407,13 @@ var Inventory = {
         var count = Number(this.Get(item, "Count", "count"));
         return Number.isFinite(count) && count > 0 ? count : 1;
     },
-    CanVisualStack: function (item) {
-        var explicit = this.Get(item, "IsStackable", "isStackable");
-        if (explicit !== undefined && explicit !== null)
-            return explicit === true || explicit === 1 || String(explicit).toLowerCase() === "true";
-        return this.ItemSortType(item) !== 1;
-    },
-    ItemStackKey: function (item) {
-        var itemId = this.Get(item, "ItemId", "itemId");
-        if (itemId === undefined || itemId === null || itemId === "")
-            itemId = this.Get(item, "Id", "id");
-        if (itemId === undefined || itemId === null || itemId === "")
-            itemId = (this.Get(item, "Title", "title") || this.Get(item, "Name", "name") || "") + "|" + (this.Get(item, "Image", "image") || "");
-
-        var params = this.Get(item, "Params", "params") || this.Get(item, "ItemParams", "itemParams") || [];
-        var normalized = [];
-        if (Array.isArray(params)) {
-            for (var i = 0; i < params.length; i++) {
-                var param = params[i] || {};
-                normalized.push(JSON.stringify({
-                    Recovery: this.Get(param, "Recovery", "recovery"),
-                    Buff: this.Get(param, "Buff", "buff"),
-                    Stat: this.Get(param, "Stat", "stat"),
-                    Value: this.Get(param, "Value", "value"),
-                    Title: this.Get(param, "Title", "title")
-                }));
-            }
-            normalized.sort();
-        }
-
-        return [String(itemId), String(this.Get(item, "Type", "type") || ""), String(this.ItemSlot(item) || ""), normalized.join(";")].join("::");
-    },
     SelectedDisplayEntry: function () {
         if (this.selectedSource !== "inventory" || this.selectedIndex === null)
             return null;
-        var entries = this.ItemDisplayEntries();
-        for (var i = 0; i < entries.length; i++)
-            if (entries[i].Indexes.indexOf(this.selectedIndex) !== -1)
-                return entries[i];
-        return null;
+        var item = this.items[this.selectedIndex];
+        if (!item)
+            return null;
+        return { Index: this.selectedIndex, Indexes: [this.selectedIndex], Item: item, Count: this.ItemCount(item) };
     },
     SelectedDisplayCount: function () {
         var entry = this.SelectedDisplayEntry();
@@ -533,8 +446,6 @@ var Inventory = {
         var button = document.createElement("button");
         button.type = "button";
         button.className = "inventory-item";
-        if (entry.Indexes.length > 1)
-            button.classList.add("inventory-item-stacked");
         if (this.selectedSource === "inventory" && entry.Indexes.indexOf(this.selectedIndex) !== -1)
             button.classList.add("active");
         var countHtml = Number(count) > 1
