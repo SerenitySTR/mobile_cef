@@ -17,7 +17,7 @@
     <link rel="stylesheet" href="./assets/CSS/styles/inventory.css?v=20261013-descfont2">
     <link rel="stylesheet" href="./assets/CSS/styles/marketplace.css?v=20261013-dropdownfix1">
     <link rel="stylesheet" href="./assets/CSS/styles/mailbox.css?v=20261013-deleteconfirm1">
-    <link rel="stylesheet" href="./assets/CSS/styles/bank.css?v=20261014-bank2">
+    <link rel="stylesheet" href="./assets/CSS/styles/bank.css?v=20261014-bank3">
     <link rel="stylesheet" href="./assets/CSS/styles/main-menu.css?v=20261012-selltype1">
     <link rel="stylesheet" href="./assets/CSS/styles/quick-menu.css?v=20261012-selltype1">
     <link rel="stylesheet" href="./assets/CSS/styles/dialog.css?v=20261012-selltype1">
@@ -1207,7 +1207,7 @@
 <div class="bank-page-title">
 <button aria-label="Назад" class="bank-back" data-bank-page="home" type="button">←</button>
 <div class="bank-page-icon"><svg viewbox="0 0 24 24"><path d="M3 9h18"></path><path d="M5 9V7l7-4 7 4v2"></path><path d="M6 9v8M10 9v8M14 9v8M18 9v8"></path><path d="M4 17h16v3H4z"></path></svg></div>
-<div><h2>Зняти гроші</h2><p>Отримайте готівку з банківського рахунку</p></div>
+<div><h2>Зняти гроші</h2><p>Отримайте готівку з банківського рахунку · комісія 2%</p></div>
 </div>
 <div class="bank-flow-cards">
 <div class="bank-mini-balance"><span>Банківський рахунок</span><strong id="bank-withdraw-balance">$0</strong></div>
@@ -1220,6 +1220,10 @@
 <div class="bank-quick-amounts" data-bank-amount-target="bank-withdraw-amount" data-bank-max="balance">
 <button data-amount="1000" type="button">1 000</button><button data-amount="5000" type="button">5 000</button><button data-amount="10000" type="button">10 000</button><button data-amount="50000" type="button">50 000</button><button data-amount="max" type="button">Вся сума</button>
 </div>
+<div class="bank-fee-summary">
+<div><span>Комісія (2%)</span><strong id="bank-withdraw-fee">$0</strong></div>
+<div class="total"><span>Буде списано</span><strong id="bank-withdraw-total">$0</strong></div>
+</div>
 <div class="bank-form-error" id="bank-withdraw-error"></div>
 <button class="bank-submit" id="bank-withdraw-submit" type="button">Зняти гроші</button>
 </div>
@@ -1230,7 +1234,7 @@
 <div class="bank-page-title">
 <button aria-label="Назад" class="bank-back" data-bank-page="home" type="button">←</button>
 <div class="bank-page-icon"><svg viewbox="0 0 24 24"><path d="M4 8h14"></path><path d="m15 5 3 3-3 3"></path><path d="M20 16H6"></path><path d="m9 13-3 3 3 3"></path></svg></div>
-<div><h2>Переказ коштів</h2><p>Надішліть гроші іншому гравцю</p></div>
+<div><h2>Переказ коштів</h2><p>Надішліть гроші іншому гравцю · комісія 5%</p></div>
 </div>
 <div class="bank-transfer-balance"><span>Банківський рахунок</span><strong id="bank-transfer-balance">$0</strong></div>
 <div class="bank-form-card">
@@ -1241,6 +1245,10 @@
 <div class="bank-quick-amounts" data-bank-amount-target="bank-transfer-amount" data-bank-max="balance">
 <button data-amount="1000" type="button">1 000</button><button data-amount="5000" type="button">5 000</button><button data-amount="10000" type="button">10 000</button><button data-amount="50000" type="button">50 000</button><button data-amount="max" type="button">Вся сума</button>
 </div>
+<div class="bank-fee-summary">
+<div><span>Комісія (5%)</span><strong id="bank-transfer-fee">$0</strong></div>
+<div class="total"><span>Буде списано</span><strong id="bank-transfer-total">$0</strong></div>
+</div>
 <div class="bank-form-error" id="bank-transfer-error"></div>
 <button class="bank-submit" id="bank-transfer-submit" type="button">Переказати</button>
 </div>
@@ -1250,6 +1258,23 @@
 </main>
 </div>
 <footer class="bank-footer"><span>ANTARES ROLEPLAY</span><span>ESC — закрити</span></footer>
+</div>
+<div aria-hidden="true" class="bank-confirm" id="bank-confirm">
+<div class="bank-confirm-card" role="dialog" aria-modal="true" aria-labelledby="bank-confirm-title">
+<div class="bank-confirm-icon" id="bank-confirm-icon">✓</div>
+<span class="bank-confirm-kicker">ПІДТВЕРДЖЕННЯ ОПЕРАЦІЇ</span>
+<h3 id="bank-confirm-title">Підтвердити операцію?</h3>
+<p id="bank-confirm-description"></p>
+<div class="bank-confirm-details">
+<div><span id="bank-confirm-amount-label">Сума</span><strong id="bank-confirm-amount">$0</strong></div>
+<div id="bank-confirm-fee-row"><span>Комісія</span><strong id="bank-confirm-fee">$0</strong></div>
+<div class="total"><span id="bank-confirm-total-label">До списання</span><strong id="bank-confirm-total">$0</strong></div>
+</div>
+<div class="bank-confirm-actions">
+<button class="bank-confirm-submit" id="bank-confirm-submit" type="button">Підтвердити</button>
+<button class="bank-confirm-cancel" id="bank-confirm-cancel" type="button">Скасувати</button>
+</div>
+</div>
 </div>
 </section>
 
@@ -1428,7 +1453,7 @@
     <script src="./assets/JavaScript/inventory.js?v=20261013-stack1"></script>
     <script src="./assets/JavaScript/marketplace.js?v=20261013-dropdownfix1"></script>
     <script src="./assets/JavaScript/mailbox.js?v=20261013-deleteconfirm1"></script>
-    <script src="./assets/JavaScript/bank.js?v=20261014-bank1"></script>
+    <script src="./assets/JavaScript/bank.js?v=20261014-bank3"></script>
     <script src="./assets/JavaScript/main-menu.js?v=20260922-focus1"></script>
     <script src="./assets/JavaScript/quick-menu.js?v=20261004-quick7"></script>
     <script src="./assets/JavaScript/dialog.js?v=20260922-focus1"></script>
