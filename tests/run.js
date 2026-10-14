@@ -184,7 +184,8 @@ test('events: core frontend/server event contracts still exist', () => {
         'dialog.js': ['dialog:show', 'dialog:hide', 'dialog:response'],
         'notifications.js': ['notification:show', 'notification:toast', 'notification:banner', 'notification:reward', 'notification:achievement', 'notification:bottom', 'notification:hide', 'notification:clear'],
         'tickets.js': ['ticket:show', 'ticket:hide', 'ticket:update', 'ticket:create', 'ticket:message', 'ticket:close', 'ticket:close-ui'],
-        'admin-panel.js': ['admin:show', 'admin:hide', 'admin:update', 'admin:ticket:open', 'admin:ticket:claim', 'admin:ticket:release', 'admin:ticket:close', 'admin:ticket:message', 'admin:ticket:transfer']
+        'admin-panel.js': ['admin:show', 'admin:hide', 'admin:update', 'admin:ticket:open', 'admin:ticket:claim', 'admin:ticket:release', 'admin:ticket:close', 'admin:ticket:message', 'admin:ticket:transfer'],
+        'bank.js': ['bank:show', 'bank:hide', 'bank:set', 'bank:close', 'bank:refresh', 'bank:deposit', 'bank:withdraw', 'bank:transfer']
     };
     for (const [file, events] of Object.entries(expected)) {
         hasAll(read(`assets/JavaScript/${file}`), events, file);

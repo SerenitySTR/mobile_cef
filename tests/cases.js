@@ -479,6 +479,42 @@
             Mailbox.Show();
         }, 0);
     });
+    function bankTestData() {
+        return {
+            Cash: 12450,
+            Balance: 85230,
+        };
+    }
+    function showBankTest(page) {
+        var data = bankTestData();
+        Tests.receive("bank:set", data);
+        Tests.receive("bank:show", {});
+        setTimeout(function () {
+            if (typeof Bank === "undefined")
+                return;
+            Bank.SetData(data);
+            Bank.Show();
+            Bank.OpenPage(page || "home");
+            if (page === "deposit") {
+                var input = document.getElementById("bank-deposit-amount");
+                if (input) input.value = "10000";
+            }
+            else if (page === "withdraw") {
+                var input = document.getElementById("bank-withdraw-amount");
+                if (input) input.value = "10000";
+            }
+            else if (page === "transfer") {
+                var player = document.getElementById("bank-transfer-player");
+                var amount = document.getElementById("bank-transfer-amount");
+                if (player) player.value = "Alex_Rivera";
+                if (amount) amount.value = "5000";
+            }
+        }, 0);
+    }
+    Tests.register("bank", "Bank", function () { showBankTest("home"); });
+    Tests.register("bank-deposit", "Bank / Deposit", function () { showBankTest("deposit"); });
+    Tests.register("bank-withdraw", "Bank / Withdraw", function () { showBankTest("withdraw"); });
+    Tests.register("bank-transfer", "Bank / Transfer", function () { showBankTest("transfer"); });
     Tests.register("statistics", "Statistics", function () {
         Tests.receive("statistics:show", {
             Profile: {
