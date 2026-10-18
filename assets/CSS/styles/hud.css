@@ -1994,7 +1994,7 @@
 }
 
 #hud {
-    --hud-scale: 0.82 !important;
+    --hud-scale: 0.86 !important;
 }
 
 #hud-corner-info {
@@ -2003,7 +2003,7 @@
 }
 
 .hud-main-shell {
-    zoom: 0.72 !important;
+    zoom: 0.74 !important;
     margin-left: auto !important;
     transform: none !important;
 }
@@ -2054,7 +2054,7 @@
 }
 
 #hud-corner-info {
-    transform: scale(0.62) !important;
+    transform: scale(0.66) !important;
     transform-origin: bottom left !important;
 }
 

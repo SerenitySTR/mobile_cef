@@ -57,7 +57,7 @@
 }
 
 #speedometer.speedometer-mobile .speedometer-wrap {
-    bottom: 20px;
+    bottom: calc(10px + env(safe-area-inset-bottom, 0px));
 }
 
 .speedometer-main {
@@ -298,6 +298,6 @@
 
 @media (max-width: 1024px), (max-height: 600px) {
     #speedometer.speedometer-mobile .speedometer-wrap {
-        bottom: 14px;
+        bottom: calc(6px + env(safe-area-inset-bottom, 0px));
     }
 }

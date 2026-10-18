@@ -93,8 +93,8 @@
         const mobile = IsMobilePlatform();
         root.classList.toggle("speedometer-mobile", mobile);
         root.classList.toggle("speedometer-pc", !mobile);
-        const minScale = mobile ? 0.62 : 0.76;
-        const maxScale = mobile ? 0.82 : 1;
+        const minScale = mobile ? 0.56 : 0.76;
+        const maxScale = mobile ? 0.74 : 1;
         const scale = Math.max(minScale, Math.min(maxScale, width / 1700, height / 930));
         const value = scale.toFixed(3);
         if (root.style.getPropertyValue("--speedometer-scale") !== value)
