@@ -1,7 +1,7 @@
 #inventory {
     position: fixed;
     inset: 0;
-    z-index: 9500;
+    z-index: var(--z-screen);
     display: none;
     align-items: center;
     justify-content: center;
@@ -754,8 +754,6 @@
     }
 }
 
-/* Equipment layout */
-
 .inventory-panel {
     width: min(1480px,96vw);
     height: min(780px,92vh);
@@ -982,8 +980,6 @@
     }
 }
 
-/* Inventory equipment showcase */
-
 .inventory-content {
     grid-template-columns: 420px minmax(0,1fr) 360px;
     gap: 12px;
@@ -1206,8 +1202,6 @@
     }
 }
 
-/* equipment centered layout polish */
-
 .inventory-equipment {
     display: flex;
     flex-direction: column;
@@ -1356,12 +1350,6 @@
         bottom: 12px;
     }
 }
-
-/* =========================================================
-   Responsive inventory v3
-   ========================================================= */
-
-/* Compact desktop / laptop */
 
 @media (max-width:1500px) and (min-width:1001px) {
     #inventory {
@@ -1519,8 +1507,6 @@
     }
 }
 
-/* Low-height laptops: 1366x768, 1280x720 etc. */
-
 @media (min-width:1001px) and (max-height:800px) {
     #inventory {
         padding: 5px;
@@ -1669,8 +1655,6 @@
         display: none;
     }
 }
-
-/* Mobile and small tablets — game is landscape */
 
 @media (max-width:1000px) and (orientation:landscape) {
     #inventory {
@@ -1937,8 +1921,6 @@
     }
 }
 
-/* Narrow landscape phones */
-
 @media (max-width:740px) and (orientation:landscape) {
     .inventory-weight {
         width: 96px;
@@ -2011,8 +1993,6 @@
     }
 }
 
-/* Very low landscape screens */
-
 @media (max-width:1000px) and (max-height:430px) and (orientation:landscape) {
     .inventory-header {
         min-height: 36px;
@@ -2058,8 +2038,6 @@
         flex-basis: 24px;
     }
 }
-
-/* Portrait fallback */
 
 @media (max-width:800px) and (orientation:portrait) {
     .inventory-weight {
@@ -2118,8 +2096,6 @@
         max-height: 430px;
     }
 }
-
-/* keep selected item preview visible on compact landscape layouts */
 
 @media (max-width:1000px) and (orientation:landscape) {
     .inventory-preview {
@@ -2182,7 +2158,6 @@
     }
 }
 
-
 .inventory-actions {
     flex: 0 0 auto;
     display: flex;
@@ -2194,7 +2169,6 @@
     min-width: 0;
     flex: 1 1 auto;
 }
-
 
 .inventory-split {
     height: 48px;
@@ -2474,7 +2448,6 @@
     }
 }
 
-/* Inventory action layout: primary action above, secondary actions below. */
 .inventory-actions {
     display: grid;
     grid-template-columns: minmax(0, 1fr) 44px;
@@ -2518,7 +2491,6 @@
     height: 18px;
 }
 
-/* Inventory sell action */
 .inventory-sell {
     grid-area: sell;
     width: 100%;
@@ -2702,7 +2674,6 @@
     }
 }
 
-/* Incoming inventory sell offer */
 .inventory-sell-offer-dialog {
     position: fixed;
     inset: 0;
@@ -2871,7 +2842,6 @@
     outline: none;
 }
 
-/* Mobile: keep Sell and Split readable without changing the inventory layout. */
 @media (max-width: 1000px) and (orientation: landscape) {
     .inventory-actions {
         grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) 38px;
@@ -2975,7 +2945,6 @@
     }
 }
 
-/* Mobile platform: sell dialog and incoming sell offer. */
 body.hud-platform-mobile .inventory-delete-dialog,
 body.hud-platform-mobile .inventory-sell-offer-dialog {
     padding: 10px;
@@ -3350,7 +3319,6 @@ body.hud-platform-mobile .inventory-sell-offer-actions button {
     }
 }
 
-/* Inventory text readability on the mobile client. */
 @media (orientation: landscape) {
     body.hud-platform-mobile .equipment-slot-name,
     body.hud-platform-mobile .inventory-item-name,
@@ -3369,8 +3337,6 @@ body.hud-platform-mobile .inventory-sell-offer-actions button {
     }
 }
 
-
-/* Inventory item ordering */
 .inventory-sort {
     min-height: 34px;
     display: inline-flex;

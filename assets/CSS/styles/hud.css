@@ -16,7 +16,7 @@
     transform: scale(var(--hud-scale));
     transform-origin: top right;
     transition: opacity .18s ease, visibility .18s ease;
-    z-index: 500;
+    z-index: var(--z-hud);
 }
 
 #hud.active {
@@ -2560,4 +2560,15 @@
 .hud-clock-icon, .hud-calendar-icon {
     filter: drop-shadow(0 1px 1px rgba(0, 0, 0, .72))
     drop-shadow(0 0 1px rgba(5, 13, 22, .58)) !important;
+}
+
+body.hud-platform-mobile #hud .hud-logo-panel,
+body.hud-platform-mobile #hud .hud-main-panel,
+body.hud-platform-mobile #hud .hud-bottom-panel,
+body.hud-platform-mobile #hud .hud-money,
+body.hud-platform-mobile #hud .hud-weapon,
+body.hud-platform-mobile #hud .hud-stat,
+body.hud-platform-mobile #hud-corner-info {
+    -webkit-backdrop-filter: none !important;
+    backdrop-filter: none !important;
 }

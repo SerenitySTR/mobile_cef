@@ -157,10 +157,16 @@ var Bank = {
 
         var cash = this.Get(data, "Cash", "cash");
         var balance = this.Get(data, "Balance", "balance");
+        var withdrawPercent = this.Get(data, "WithdrawCommissionPercent", "withdrawCommissionPercent");
+        var transferPercent = this.Get(data, "TransferCommissionPercent", "transferCommissionPercent");
         if (cash !== undefined && cash !== null)
             this.cash = this.SafeMoney(cash);
         if (balance !== undefined && balance !== null)
             this.balance = this.SafeMoney(balance);
+        if (withdrawPercent !== undefined && withdrawPercent !== null)
+            this.withdrawCommissionPercent = this.SafePercent(withdrawPercent, this.withdrawCommissionPercent);
+        if (transferPercent !== undefined && transferPercent !== null)
+            this.transferCommissionPercent = this.SafePercent(transferPercent, this.transferCommissionPercent);
         this.Render();
     },
 
@@ -196,6 +202,7 @@ var Bank = {
         this.SetText("bank-withdraw-cash", this.Money(this.cash));
         this.SetText("bank-withdraw-balance", this.Money(this.balance));
         this.SetText("bank-transfer-balance", this.Money(this.balance));
+        this.UpdateCommissionLabels();
         this.UpdateCommissionPreview();
     },
 
@@ -222,7 +229,7 @@ var Bank = {
             total,
             this.balance,
             "bank-withdraw-error",
-            "Недостатньо коштів на рахунку з урахуванням комісії 2%"
+            "Недостатньо коштів на рахунку з урахуванням комісії " + this.withdrawCommissionPercent + "%"
         ))
             return;
 
@@ -250,7 +257,7 @@ var Bank = {
             total,
             this.balance,
             "bank-transfer-error",
-            "Недостатньо коштів на рахунку з урахуванням комісії 5%"
+            "Недостатньо коштів на рахунку з урахуванням комісії " + this.transferCommissionPercent + "%"
         ))
             return;
 
@@ -285,13 +292,13 @@ var Bank = {
         }
         else if (operation.Type === "withdraw") {
             title = "Підтвердити зняття?";
-            description = "Ви отримаєте " + this.Money(operation.Amount) + " готівкою. Комісія банку — 2%.";
+            description = "Ви отримаєте " + this.Money(operation.Amount) + " готівкою. Комісія банку — " + this.withdrawCommissionPercent + "%.";
             amountLabel = "Сума зняття";
             if (icon) icon.textContent = "−";
         }
         else if (operation.Type === "transfer") {
             title = "Підтвердити переказ?";
-            description = "Отримувач: " + operation.Nickname + ". Комісія банку — 5%.";
+            description = "Отримувач: " + operation.Nickname + ". Комісія банку — " + this.transferCommissionPercent + "%.";
             amountLabel = "Сума переказу";
             if (icon) icon.textContent = "↗";
         }
@@ -370,6 +377,13 @@ var Bank = {
         }
         this.ShowError(errorId, "");
         return true;
+    },
+
+    UpdateCommissionLabels: function () {
+        this.SetText("bank-withdraw-description", "Отримайте готівку з банківського рахунку · комісія " + this.withdrawCommissionPercent + "%");
+        this.SetText("bank-withdraw-fee-label", "Комісія (" + this.withdrawCommissionPercent + "%)");
+        this.SetText("bank-transfer-description", "Надішліть гроші іншому гравцю · комісія " + this.transferCommissionPercent + "%");
+        this.SetText("bank-transfer-fee-label", "Комісія (" + this.transferCommissionPercent + "%)");
     },
 
     UpdateCommissionPreview: function () {
@@ -464,6 +478,13 @@ var Bank = {
         if (!Number.isFinite(number))
             return 0;
         return Math.trunc(number);
+    },
+
+    SafePercent: function (value, fallback) {
+        var number = Number(value);
+        if (!Number.isFinite(number))
+            return fallback;
+        return Math.max(0, Math.min(100, Math.trunc(number)));
     },
 
     Parse: function (data) {

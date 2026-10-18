@@ -1,7 +1,7 @@
 #dialog-screen {
     position: fixed;
     inset: 0;
-    z-index: 1500;
+    z-index: var(--z-dialog);
     display: none;
     align-items: center;
     justify-content: center;
@@ -1056,7 +1056,6 @@
     font-size: 11px;
 }
 
-/* Dialog readability on short mobile screens. */
 #dialog-screen.dialog-mobile-landscape .dialog-list-description,
 #dialog-screen.dialog-mobile-landscape .dialog-table th,
 #dialog-screen.dialog-mobile-landscape .dialog-table td,

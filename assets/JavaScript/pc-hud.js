@@ -96,23 +96,19 @@
             setStat('hp', hp); if (armor != null)
             setStat('armor', armor); if (hunger != null)
             setStat('hunger', hunger); }, setAmmo, setMoney, setWanted: renderWanted, setWeapon: updateWeapon, update: updateHud };
-    // All CEF/game-data subscriptions live in hud.js.
-    // PC HUD is render-only so GameCef.on() callbacks are never overwritten.
     function updateScale() {
         const root = $('pc-hud');
         if (!root)
             return;
         const width = Math.max(1, window.innerWidth || 1920);
         const height = Math.max(1, window.innerHeight || 1080);
-        // Full HD keeps the original size. Laptop resolutions are reduced smoothly,
-        // but not so aggressively that player info and ammo become unreadable.
         const scale = Math.max(0.76, Math.min(1, width / 1700, height / 930));
         root.style.setProperty('--hud-scale', scale.toFixed(3));
     }
-    updateScale();
-    addEventListener('resize', updateScale, { passive: true });
-    if (window.visualViewport)
-        visualViewport.addEventListener('resize', updateScale, { passive: true });
+    if (window.UiViewport)
+        UiViewport.on(updateScale);
+    else
+        updateScale();
     if (new URLSearchParams(location.search).get('preview') === '1')
         document.body.classList.add('preview');
     renderWanted(4);

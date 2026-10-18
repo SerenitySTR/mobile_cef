@@ -1,7 +1,7 @@
 #main-menu {
     position: fixed;
     inset: 0;
-    z-index: 1200;
+    z-index: var(--z-screen);
     display: none;
     align-items: center;
     justify-content: center;
@@ -1322,8 +1322,6 @@
     }
 }
 
-/* Main menu brand mark: make it more prominent without disturbing card layout. */
-
 .main-menu-logo {
     width: 50px;
     height: 50px;
@@ -1379,8 +1377,6 @@
     }
 }
 
-/* Explicit mobile-platform layout. Keeps the desktop visual language but uses
-   the same compact logical composition as the admin panel on phones. */
 @media (orientation: landscape) {
     body.hud-platform-mobile #main-menu {
         padding: 6px;
@@ -1485,8 +1481,6 @@
     }
 }
 
-
-/* Small-screen text stays legible; card geometry is unchanged. */
 body.hud-platform-mobile .main-menu-user-info div {
     font-size: 9px;
 }

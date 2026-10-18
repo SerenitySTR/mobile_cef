@@ -223,7 +223,6 @@ var QuickMenu = {
         this.Init();
         if (!this.screen)
             return;
-        // Server-driven hide is local only. It must never echo quick-menu:close.
         this.screen.classList.remove("active", "opened", "closing");
         this.screen.setAttribute("aria-hidden", "true");
     },
@@ -231,8 +230,6 @@ var QuickMenu = {
         this.Init();
         if (!this.screen || !this.screen.classList.contains("active"))
             return;
-        // Notify native immediately. Native focus is controlled outside JS,
-        // so delaying this event leaves the game stuck with browser focus.
         if (notifyServer !== false && window.GameCef)
             GameCef.send("quick-menu:close", "");
         this.Hide();

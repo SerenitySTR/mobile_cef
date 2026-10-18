@@ -1,7 +1,7 @@
 #mailbox {
     position: fixed;
     inset: 0;
-    z-index: 1180;
+    z-index: var(--z-screen);
     display: none;
     align-items: center;
     justify-content: center;
@@ -913,7 +913,6 @@
     }
 }
 
-/* Mobile platform layout. */
 body.hud-platform-mobile #mailbox {
     padding: 4px;
 }
@@ -1115,7 +1114,6 @@ body.hud-platform-mobile .mailbox-footer {
     }
 }
 
-/* Mobile typography: keep mail content readable without changing the layout. */
 body.hud-platform-mobile .mailbox-entry-title {
     font-size: 10px;
 }

@@ -1,5 +1,3 @@
-/* Isolated ANTARES admin panel: does not target HUD or other CEF screens. */
-
 #admin-panel {
     --ap-bg: #051321;
     --ap-line: #234158;
@@ -7,7 +5,7 @@
     --ap-muted: #afbdcf;
     position: fixed;
     inset: 0;
-    z-index: 1400;
+    z-index: var(--z-screen);
     display: none;
     align-items: center;
     justify-content: center;
@@ -539,8 +537,6 @@
     border-radius: 9px;
 }
 
-/* Compact ticket/admin panel adjustments */
-
 .admin-panel-canvas {
     width: 1280px;
     height: 720px;
@@ -628,8 +624,6 @@
     background: #552027 !important;
     border-color: #d76070 !important;
 }
-
-/* Ticket chat controls */
 
 .admin-chat-head {
     padding: 12px 14px;
@@ -808,13 +802,6 @@
     cursor: pointer;
 }
 
-/* Mobile landscape admin ticket layout */
-
-/* Phones in landscape: keep the ticket itself usable instead of switching at 767px only. */
-
-/* Custom admin transfer dropdown. Native <select> is unreliable in game CEF
-   and opens the Android system picker on mobile. */
-
 .admin-transfer-select {
     position: relative;
     flex: 1 1 190px;
@@ -862,13 +849,6 @@
     font-size: 12px;
     opacity: .65;
 }
-
-/* ============================================================
-   MOBILE LANDSCAPE — SA-MP / Android
-   Rebuilt from scratch. Height is the primary phone breakpoint.
-   ============================================================ */
-
-/* ==========================================================================\n   MOBILE LANDSCAPE\n   --------------------------------------------------------------------------\n   The mobile version intentionally keeps the same component structure as PC.\n   Instead of trying to resize every control independently, the whole panel is\n   laid out on a dedicated 1280x620 landscape canvas and scaled as one unit by\n   AdminPanel.Scale(). This keeps fonts, buttons, gaps, tables, ticket cards,\n   dropdowns and the composer proportional on every phone resolution.\n   ========================================================================== */
 
 #admin-panel.admin-mobile-landscape {
     padding: 0;
@@ -1184,8 +1164,6 @@
     font-size: 13px;
 }
 
-/* Very short landscape phones: keep the same design, only tighten the logical canvas. */
-
 @media (orientation: landscape) and (max-height: 390px) {
     #admin-panel.admin-mobile-landscape .admin-panel-canvas {
         height: 590px;
@@ -1202,8 +1180,6 @@
         min-height: 43px;
     }
 }
-
-/* Keep the custom transfer menu inside the visible panel on short landscape screens. */
 
 .admin-transfer-menu.admin-transfer-menu-down {
     top: calc(100% + 5px);

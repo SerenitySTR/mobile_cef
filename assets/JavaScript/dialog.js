@@ -235,8 +235,6 @@ var Dialog = {
             SelectedIndex: this.selectedIndex,
             SelectedItemId: this.selectedItemId
         };
-        console.log("Dialog input:", value);
-        console.log("Dialog response:", JSON.stringify(response));
         this.Hide(function () {
             GameCef.sendJson("dialog:response", response);
         });
@@ -288,10 +286,7 @@ var Dialog = {
             }
             return result;
         }
-        catch (error) {
-            console.error("Dialog JSON parse error:");
-            console.error(error);
-            console.error(data);
+        catch (_) {
             return null;
         }
     },
@@ -359,11 +354,5 @@ GameCef.on("dialog:show", function (data) {
 GameCef.on("dialog:hide", function () {
     Dialog.Hide();
 });
-window.addEventListener("resize", function () {
-    Dialog.Init();
-});
-window.addEventListener("orientationchange", function () {
-    setTimeout(function () {
-        Dialog.Init();
-    }, 120);
-});
+if (window.UiViewport)
+    UiViewport.on(function () { Dialog.Init(); });

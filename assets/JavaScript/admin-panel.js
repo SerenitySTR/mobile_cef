@@ -82,8 +82,10 @@ var AdminPanel = {
             e.stopImmediatePropagation();
             self.Action("send");
         });
-        window.addEventListener("resize", function () { self.Scale(); });
-        this.Scale();
+        if (window.UiViewport)
+            UiViewport.on(function () { self.Scale(); });
+        else
+            this.Scale();
     },
     Q: function (s) {
         return this.root.querySelector(s);
@@ -271,7 +273,6 @@ var AdminPanel = {
         var patch = payload.patch;
         if (!patch)
             return this.SetData(payload);
-        // Legacy snapshot protocol.
         if (patch === "reset") {
             this.state.tickets = [];
             this.selectedTicket = null;
@@ -280,7 +281,6 @@ var AdminPanel = {
             this.pendingMessages = null;
             return true;
         }
-        // New chunked snapshot protocol.
         if (patch === "sync-begin") {
             this.pendingSync = {
                 id: String(payload.syncId),
@@ -379,7 +379,6 @@ var AdminPanel = {
                 this.Render();
             return true;
         }
-        // Legacy bulk message protocol.
         if (patch === "messages") {
             var legacyTicketId = String(payload.ticketId);
             var legacyTicket = this.state.tickets.find(function (item) {
@@ -393,7 +392,6 @@ var AdminPanel = {
                 this.Render();
             return true;
         }
-        // New chunked message protocol.
         if (patch === "messages-begin") {
             this.pendingMessages = {
                 ticketId: String(payload.ticketId),
@@ -468,6 +466,13 @@ var AdminPanel = {
     Render: function () {
         if (!this.root)
             return;
+        var draft = this.Q("[data-admin-draft]");
+        var draftState = draft ? {
+            value: draft.value,
+            start: draft.selectionStart,
+            end: draft.selectionEnd,
+            focused: document.activeElement === draft
+        } : null;
         var labels = {
             stats: "Статистика", tickets: "Звернення", commands: "Адмін-команди", punishments: "Гайд покарань", items: "Довідник ID", spawns: "Швидкі спавни"
         };
@@ -475,6 +480,21 @@ var AdminPanel = {
         this.Q("#admin-nav").innerHTML = nav.map(function (n) { return '<button type="button" data-admin-tab="' + n[0] + '" class="' + (self.tab === n[0] ? "active" : "") + '"><span class="admin-icon">' + self.Icon(n[1]) + '</span><span>' + labels[n[0]] + '</span>' + (n[0] === "tickets" ? '<span class="admin-badge">' + self.state.tickets.filter(function (r) { return r.status !== "closed"; }).length + "</span>" : "") + "</button>"; }).join("");
         this.Q("#admin-title").textContent = labels[this.tab];
         this.Q("#admin-content").innerHTML = ({ stats: this.Stats, tickets: this.Tickets, commands: this.Commands, punishments: this.Punishments, items: this.Items, spawns: this.Spawns }[this.tab]).call(this);
+        if (draftState) {
+            var nextDraft = this.Q("[data-admin-draft]");
+            if (nextDraft) {
+                nextDraft.value = draftState.value;
+                if (draftState.focused) {
+                    requestAnimationFrame(function () {
+                        nextDraft.focus({ preventScroll: true });
+                        try {
+                            nextDraft.setSelectionRange(draftState.start, draftState.end);
+                        }
+                        catch (_) { }
+                    });
+                }
+            }
+        }
         var m = this.Q(".admin-messages");
         if (m)
             m.scrollTop = m.scrollHeight;
@@ -805,8 +825,6 @@ var AdminPanel = {
             return;
         this.query = input.value;
         clearTimeout(this.searchTimer);
-        // Do not rebuild the input on every key press. In Android/CEF that
-        // resets the caret/IME composition and characters can appear reversed.
         var self = this;
         this.searchTimer = setTimeout(function () {
             if (self.composingSearch)

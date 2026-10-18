@@ -12,6 +12,7 @@ var Inventory = {
     selectedIndex: null,
     selectedSlot: null,
     sortPending: false,
+    sortFallbackTimer: null,
     sellOffer: null,
     Init: function () {
         this.screen = document.getElementById("inventory");
@@ -243,6 +244,12 @@ var Inventory = {
     },
     Hide: function () {
         this.Init();
+        if (this.sortFallbackTimer) {
+            clearTimeout(this.sortFallbackTimer);
+            this.sortFallbackTimer = null;
+        }
+        this.sortPending = false;
+        this.RenderSortButton();
         if (typeof UiKeyboard !== "undefined")
             UiKeyboard.Release(this.screen);
         if (this.screen)
@@ -263,6 +270,10 @@ var Inventory = {
         this.currentWeight = Number(currentWeight) || 0;
         this.maxWeight = Number(maxWeight) || 0;
         this.SetCharacterImage(characterImage || this.defaultCharacterImage);
+        if (this.sortFallbackTimer) {
+            clearTimeout(this.sortFallbackTimer);
+            this.sortFallbackTimer = null;
+        }
         this.sortPending = false;
         if (this.items.length) {
             this.selectedSource = "inventory";
@@ -374,6 +385,16 @@ var Inventory = {
         this.sortPending = true;
         this.RenderSortButton();
         GameCef.sendJson("inventory:sort", {});
+        var self = this;
+        if (this.sortFallbackTimer)
+            clearTimeout(this.sortFallbackTimer);
+        this.sortFallbackTimer = setTimeout(function () {
+            self.sortFallbackTimer = null;
+            if (!self.sortPending)
+                return;
+            self.sortPending = false;
+            self.RenderSortButton();
+        }, 2500);
     },
     RenderSortButton: function () {
         var button = document.getElementById("inventory-sort");

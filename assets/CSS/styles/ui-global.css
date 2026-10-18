@@ -1,6 +1,11 @@
-/* Global CEF viewport/scroll behavior.
-   The page itself never scrolls. Scrollable UI lists keep wheel/touch scrolling,
-   but native scrollbar tracks are hidden everywhere. */
+:root {
+    --z-hud: 500;
+    --z-screen: 5000;
+    --z-dialog: 20000;
+    --z-notification: 30000;
+    --z-error: 40000;
+    --z-loading: 50000;
+}
 
 html, body {
     width: 100%;
@@ -21,8 +26,6 @@ html::-webkit-scrollbar, body::-webkit-scrollbar, body *::-webkit-scrollbar {
     display: none !important;
 }
 
-/* Keyboard focus target for interfaces: receives key events without visual outline. */
-
-#dialog-screen:focus, #tickets:focus, #inventory:focus, #statistics:focus, #main-menu:focus, #vehicle-menu:focus {
+#dialog-screen:focus, #tickets:focus, #inventory:focus, #statistics:focus, #main-menu:focus {
     outline: none;
 }

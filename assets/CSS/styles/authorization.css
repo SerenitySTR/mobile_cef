@@ -5,6 +5,7 @@ html, body {
 }
 
 #authorization {
+    z-index: var(--z-screen);
     display: none;
     position: fixed;
     inset: 0;
@@ -461,10 +462,6 @@ html, body {
     }
 }
 
-/* =========================================================
-   Full responsive authorization: desktop / laptop / tablet / mobile
-   ========================================================= */
-
 #authorization, #authorization * {
     box-sizing: border-box;
 }
@@ -495,8 +492,6 @@ html, body {
     border-radius: var(--auth-radius);
 }
 
-/* Large desktop */
-
 @media (min-width: 1601px) and (min-height: 900px) {
     #authorization {
         --auth-panel-width: 540px;
@@ -504,8 +499,6 @@ html, body {
         --auth-field-height: 60px;
     }
 }
-
-/* Laptop / compact desktop */
 
 @media (max-width: 1600px), (max-height: 899px) {
     body.hud-platform-pc #authorization {
@@ -549,8 +542,6 @@ html, body {
     }
 }
 
-/* Extra-low laptop */
-
 @media (max-height: 700px) and (min-width: 900px) {
     body.hud-platform-pc #authorization {
         --auth-panel-width: 455px;
@@ -579,8 +570,6 @@ html, body {
         margin-top: 9px;
     }
 }
-
-/* Mobile + tablet landscape: keep the same centered composition as desktop */
 
 @media (orientation: landscape) and (min-width: 600px) {
     body.hud-platform-mobile #authorization {
@@ -685,8 +674,6 @@ html, body {
     }
 }
 
-/* Larger landscape tablet: centered card, just a little roomier */
-
 @media (orientation: landscape) and (min-width: 900px) and (min-height: 600px) {
     body.hud-platform-mobile #authorization {
         --auth-panel-width: 560px;
@@ -709,8 +696,6 @@ html, body {
         font-size: 13px;
     }
 }
-
-/* Very low landscape phones: still centered, but compressed vertically */
 
 @media (orientation: landscape) and (max-height: 430px) and (min-width: 600px) {
     body.hud-platform-mobile #authorization {
@@ -752,8 +737,6 @@ html, body {
         display: none;
     }
 }
-
-/* Portrait phone / tablet */
 
 @media (orientation: portrait) and (max-width: 900px) {
     body.hud-platform-mobile #authorization {
@@ -809,10 +792,6 @@ html, body {
         font-size: 14px;
     }
 }
-
-/* =========================================================
-   Keep authorization logo exactly in sync with registration.
-   ========================================================= */
 
 .authorization-logo {
     width: min(62vw, 275px);

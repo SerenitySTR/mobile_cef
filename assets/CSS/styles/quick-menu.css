@@ -1,7 +1,7 @@
 #quick-menu {
     position: fixed;
     inset: 0;
-    z-index: 1450;
+    z-index: var(--z-screen);
     display: none;
     align-items: center;
     justify-content: center;
@@ -324,8 +324,6 @@
     }
 }
 
-/* Mobile platform hardening. Keep the same radial/menu composition, but fit it
-   to the actual usable game area without a fixed 470px minimum. */
 body.hud-platform-mobile #quick-menu {
     padding: 6px;
 }
@@ -396,7 +394,6 @@ body.hud-platform-mobile .quick-menu-close {
         max-height: calc(100vh - 60px);
     }
 }
-
 
 body.hud-platform-mobile .quick-menu-status,
 body.hud-platform-mobile .quick-menu-hint {

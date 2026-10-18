@@ -23,9 +23,62 @@ function syncHudPlatformClass() {
 }
 syncHudPlatformClass();
 const pcHudPendingCalls = [];
+const pcHudLastState = Object.create(null);
+const HUD_STATS_POLL_MS = 100;
+function normalizePcHudUpdate(data) {
+    if (!data || typeof data !== "object")
+        return null;
+    const normalized = {};
+    const assignNumber = (key, value, integer = false) => {
+        if (value === undefined || value === null || value === "")
+            return;
+        const numeric = Number(value);
+        if (!Number.isFinite(numeric))
+            return;
+        normalized[key] = integer ? Math.trunc(numeric) : numeric;
+    };
+    const assignText = (key, value) => {
+        if (value !== undefined && value !== null)
+            normalized[key] = String(value);
+    };
+    assignNumber("health", data.health ?? data.Health ?? data.hp ?? data.HP);
+    assignNumber("armour", data.armour ?? data.Armour ?? data.armor ?? data.Armor);
+    assignNumber("hunger", data.hunger ?? data.Hunger);
+    assignNumber("money", data.money ?? data.Money, true);
+    assignNumber("wanted", data.wanted ?? data.Wanted ?? data.wantedLevel ?? data.WantedLevel, true);
+    assignNumber("weaponId", data.weaponId ?? data.WeaponId ?? data.weapon ?? data.Weapon, true);
+    assignNumber("ammoClip", data.ammoClip ?? data.AmmoClip ?? data.ammo ?? data.Ammo, true);
+    assignNumber("ammoTotal", data.ammoTotal ?? data.AmmoTotal ?? data.maxAmmo ?? data.MaxAmmo ?? data.max_ammo ?? data.totalAmmo ?? data.TotalAmmo ?? data.ammo_total, true);
+    assignNumber("id", data.id ?? data.ID ?? data.playerId ?? data.PlayerId, true);
+    assignText("nickname", data.nickname ?? data.Nickname ?? data.nick ?? data.name ?? data.Name ?? data.playerName ?? data.PlayerName);
+    assignText("time", data.time ?? data.Time ?? data.serverTime ?? data.ServerTime);
+    assignText("date", data.date ?? data.Date ?? data.serverDate ?? data.ServerDate);
+    return normalized;
+}
+function changedPcHudUpdate(data) {
+    const normalized = normalizePcHudUpdate(data);
+    if (!normalized)
+        return null;
+    const changed = {};
+    let hasChanges = false;
+    Object.keys(normalized).forEach(key => {
+        const value = normalized[key];
+        if (pcHudLastState[key] === value)
+            return;
+        pcHudLastState[key] = value;
+        changed[key] = value;
+        hasChanges = true;
+    });
+    return hasChanges ? changed : null;
+}
 function sendPcHud(action, data) {
     if (isCurrentHudMobilePlatform())
         return;
+    if (action === "update") {
+        data = changedPcHudUpdate(data);
+        if (!data)
+            return;
+    }
     const api = window.AntaresHUD;
     if (!api) {
         pcHudPendingCalls.push([action, data]);
@@ -47,7 +100,10 @@ window.flushPcHudPendingCalls = function () {
         return;
     while (pcHudPendingCalls.length > 0) {
         const [action, data] = pcHudPendingCalls.shift();
-        sendPcHud(action, data);
+        if (action === "update")
+            window.AntaresHUD.update?.(data);
+        else
+            sendPcHud(action, data);
     }
 };
 const hud = document.getElementById("hud");
@@ -70,9 +126,10 @@ function updateHudMobileScale() {
     }
     hud.classList.toggle("hud-compact", isPhone);
 }
-updateHudMobileScale();
-window.addEventListener("resize", updateHudMobileScale, { passive: true });
-window.addEventListener("orientationchange", () => setTimeout(updateHudMobileScale, 120));
+if (window.UiViewport)
+    UiViewport.on(updateHudMobileScale);
+else
+    updateHudMobileScale();
 const HUD_RING_LENGTH = 2 * Math.PI * 49;
 const hudStats = {
     health: {
@@ -176,14 +233,13 @@ function parseHudWanted(value) {
     return Number.isFinite(numeric) ? clamp(Math.trunc(numeric), 0, 6) : null;
 }
 function updateHudWanted(value) {
-    sendPcHud("update", { wanted: value });
-    if (!hudWanted) {
-        return;
-    }
     const wanted = parseHudWanted(value);
-    if (wanted === null) {
+    if (wanted === null)
         return;
-    }
+    sendPcHud("update", { wanted });
+    if (!hudWanted || mobileHudLastState.wanted === wanted)
+        return;
+    mobileHudLastState.wanted = wanted;
     const stars = hudWanted.querySelectorAll(".hud-wanted-star");
     stars.forEach((star, index) => {
         star.classList.toggle("active", index < wanted);
@@ -191,25 +247,30 @@ function updateHudWanted(value) {
 }
 createWantedStars();
 function updateHudWeapon(data) {
-    if (data)
-        sendPcHud("update", data);
-    if (!data) {
+    if (!data)
         return;
-    }
     const weaponId = Math.max(0, Math.trunc(Number(data.WeaponId !== undefined ? data.WeaponId : data.weaponId) || 0));
     const ammoClip = Math.max(0, Math.trunc(Number(data.AmmoClip !== undefined ? data.AmmoClip : data.ammoClip) || 0));
     const ammoTotalValue = data.AmmoTotal ?? data.ammoTotal ?? data.maxAmmo ?? data.MaxAmmo ?? data.max_ammo ?? data.totalAmmo ?? data.TotalAmmo ?? data.ammo_total;
     const ammoTotal = Math.max(0, Math.trunc(Number(ammoTotalValue) || 0));
-    const weaponFile = HUD_WEAPON_IMAGES[weaponId] || HUD_WEAPON_IMAGES[0];
-    if (hudWeaponImage) {
-        hudWeaponImage.src = "./assets/CSS/Images/Hud/Weapons/" + weaponFile;
+    sendPcHud("update", { weaponId, ammoClip, ammoTotal });
+    if (mobileHudLastState.weaponId === weaponId && mobileHudLastState.ammoClip === ammoClip && mobileHudLastState.ammoTotal === ammoTotal)
+        return;
+    const weaponChanged = mobileHudLastState.weaponId !== weaponId;
+    mobileHudLastState.weaponId = weaponId;
+    mobileHudLastState.ammoClip = ammoClip;
+    mobileHudLastState.ammoTotal = ammoTotal;
+    if (weaponChanged && hudWeaponImage) {
+        const weaponFile = HUD_WEAPON_IMAGES[weaponId] || HUD_WEAPON_IMAGES[0];
+        const src = "./assets/CSS/Images/Hud/Weapons/" + weaponFile;
+        if (!hudWeaponImage.src.endsWith(src))
+            hudWeaponImage.src = src;
+        const hudAmmo = hudAmmoClip?.closest(".hud-ammo");
+        if (hudAmmo)
+            hudAmmo.style.display = weaponId === 0 ? "none" : "";
     }
-    const hudAmmo = hudAmmoClip?.closest(".hud-ammo");
-    if (hudAmmo) {
-        hudAmmo.style.display = weaponId === 0 ? "none" : "";
-    }
-    hudAmmoClip.textContent = ammoClip;
-    hudAmmoTotal.textContent = "/" + ammoTotal;
+    setTextIfChanged(hudAmmoClip, ammoClip);
+    setTextIfChanged(hudAmmoTotal, "/" + ammoTotal);
 }
 function setHudRootState(root, visible) {
     if (!root)
@@ -262,37 +323,29 @@ function showHud() {
 function hideHud() {
     window.__hudVisible = false;
     document.body.classList.add("hud-hidden");
-    // hud:hide always means every HUD implementation must disappear.
-    // Do not depend on platform detection or on the current active class.
     setHudRootState(hud, false);
     setHudRootState(document.getElementById("pc-hud"), false);
     setHudCornerState(false);
 }
-// Bind visibility events both through the common wrapper and directly to the
-// native CEF bridge. The direct binding makes hud:show/hud:hide independent
-// from wrapper synchronization timing while keeping GameCef.receive usable in tests.
-let hudNativeBridge = null;
-function bindHudNativeVisibilityEvents() {
-    const bridge = window.cef;
-    if (!bridge || typeof bridge.on !== "function")
-        return false;
-    if (hudNativeBridge === bridge)
-        return true;
-    hudNativeBridge = bridge;
-    bridge.on("hud:show", showHud);
-    bridge.on("hud:hide", hideHud);
-    return true;
-}
-function startHudVisibilityBridgeBinding() {
-    if (bindHudNativeVisibilityEvents())
+const mobileHudLastState = {
+    stats: Object.create(null),
+    health: null,
+    maxHealth: null,
+    armour: null,
+    wanted: null,
+    weaponId: null,
+    ammoClip: null,
+    ammoTotal: null
+};
+function setTextIfChanged(element, value) {
+    if (!element || value === undefined || value === null)
         return;
-    const timer = setInterval(() => {
-        if (bindHudNativeVisibilityEvents())
-            clearInterval(timer);
-    }, 50);
-    setTimeout(() => clearInterval(timer), 15000);
+    const text = String(value);
+    if (element.textContent !== text)
+        element.textContent = text;
 }
 function setHudStat(name, value) {
+    value = clamp(Number(value) || 0, 0, 100);
     if (name === "health")
         sendPcHud("update", { health: value });
     if (name === "armour")
@@ -300,58 +353,56 @@ function setHudStat(name, value) {
     if (name === "hunger")
         sendPcHud("update", { hunger: value });
     const stat = hudStats[name];
-    if (!stat) {
+    if (!stat || mobileHudLastState.stats[name] === value)
         return;
-    }
-    value = clamp(Number(value) || 0, 0, 100);
+    mobileHudLastState.stats[name] = value;
     stat.ring.style.strokeDasharray = "100 100";
     stat.ring.style.strokeDashoffset = String(100 - value);
     stat.ring.closest(".hud-stat")?.style.setProperty("--progress", value);
-    stat.value.textContent = Math.round(value);
+    setTextIfChanged(stat.value, Math.round(value));
 }
 function updateHudHealth(health, maxHealth) {
-    sendPcHud("update", { health, maxHealth });
-    const stat = hudStats.health;
-    if (!stat) {
-        return;
-    }
     health = Math.max(0, Number(health) || 0);
     maxHealth = Math.max(1, Number(maxHealth) || 100);
+    sendPcHud("update", { health });
+    const stat = hudStats.health;
+    if (!stat || (mobileHudLastState.health === health && mobileHudLastState.maxHealth === maxHealth))
+        return;
+    mobileHudLastState.health = health;
+    mobileHudLastState.maxHealth = maxHealth;
     const percent = clamp(health / maxHealth * 100, 0, 100);
     stat.ring.style.strokeDasharray = "100 100";
     stat.ring.style.strokeDashoffset = String(100 - percent);
     stat.ring.closest(".hud-stat")?.style.setProperty("--progress", percent);
-    stat.value.textContent = Math.round(health);
+    setTextIfChanged(stat.value, Math.round(health));
 }
 function updateHudArmour(armour) {
+    armour = clamp(Number(armour) || 0, 0, 100);
     sendPcHud("update", { armour });
     const stat = hudStats.armour;
-    if (!stat) {
+    if (!stat || mobileHudLastState.armour === armour)
         return;
-    }
-    armour = clamp(Number(armour) || 0, 0, 100);
+    mobileHudLastState.armour = armour;
     stat.ring.style.strokeDasharray = "100 100";
     stat.ring.style.strokeDashoffset = String(100 - armour);
     stat.ring.closest(".hud-stat")?.style.setProperty("--progress", armour);
-    stat.value.textContent = Math.round(armour);
+    setTextIfChanged(stat.value, Math.round(armour));
 }
 function formatHudMoney(value) {
     value = Math.trunc(Number(value) || 0);
     return value.toLocaleString("ru-RU").replace(/\u00A0/g, " ");
 }
 function setHudText(element, value) {
-    if (!element || value === undefined || value === null)
-        return;
-    element.textContent = String(value);
+    setTextIfChanged(element, value);
 }
 function updateHudServerIdentity(data) {
     if (!data || typeof data !== "object")
         return;
-    sendPcHud("update", data);
     const nickname = data.nickname ?? data.nick ?? data.name ?? data.playerName ?? data.PlayerName ?? data.Nickname;
     const id = data.id ?? data.playerId ?? data.PlayerId ?? data.ID;
     const time = data.time ?? data.serverTime ?? data.ServerTime;
     const date = data.date ?? data.serverDate ?? data.ServerDate;
+    sendPcHud("update", { nickname, id, time, date });
     if (nickname !== undefined)
         setHudText(hudPlayerName, nickname);
     if (id !== undefined)
@@ -387,16 +438,16 @@ function updateHud(data) {
         setHudStat("hunger", data.hunger);
     }
     if (data.money !== undefined) {
-        hudMoneyValue.textContent = formatHudMoney(data.money);
+        setTextIfChanged(hudMoneyValue, formatHudMoney(data.money));
     }
     if (data.id !== undefined) {
-        hudIdValue.textContent = Math.max(0, Math.trunc(Number(data.id) || 0));
+        setTextIfChanged(hudIdValue, Math.max(0, Math.trunc(Number(data.id) || 0)));
     }
     if (data.ammoClip !== undefined) {
-        hudAmmoClip.textContent = Math.max(0, Math.trunc(Number(data.ammoClip) || 0));
+        setTextIfChanged(hudAmmoClip, Math.max(0, Math.trunc(Number(data.ammoClip) || 0)));
     }
     if (data.ammoTotal !== undefined) {
-        hudAmmoTotal.textContent = `/${Math.max(0, Math.trunc(Number(data.ammoTotal) || 0))}`;
+        setTextIfChanged(hudAmmoTotal, `/${Math.max(0, Math.trunc(Number(data.ammoTotal) || 0))}`);
     }
     const wanted = data.wanted ?? data.wantedLevel ?? data.Wanted ?? data.WantedLevel;
     if (wanted !== undefined)
@@ -446,86 +497,43 @@ if (window.GameCef) {
         catch { }
     });
 }
-startHudVisibilityBridgeBinding();
-let hudPcStatsInitialized = false;
-function initializeHudPcStats() {
-    if (hudPcStatsInitialized) {
-        return true;
-    }
-    if (!window.cef || typeof window.cef.on !== "function" || typeof window.cef.emit !== "function") {
-        return false;
-    }
-    window.cef.on("game:data:wantedLevel", value => updateHudWanted(value));
-    window.cef.on("game:data:hud", value => {
-        const payload = parseHudPayload(value);
-        if (payload)
-            updateHud(payload);
-    });
-    window.cef.on("game:data:playerInfo", value => {
-        const payload = parseHudPayload(value);
-        if (payload)
-            updateHudServerIdentity(payload);
-    });
-    window.cef.on("game:data:playerStats", (...args) => {
-        let stats = null;
-        if (args.length === 1) {
-            const value = args[0];
-            if (value && typeof value === "object") {
-                stats = value;
+function handleHudPlayerStats(...args) {
+    let stats = null;
+    if (args.length === 1) {
+        const value = args[0];
+        if (value && typeof value === "object")
+            stats = value;
+        else if (typeof value === "string") {
+            try {
+                const parsed = JSON.parse(value);
+                if (parsed && typeof parsed === "object")
+                    stats = parsed;
             }
-            else if (typeof value === "string") {
-                try {
-                    const parsed = JSON.parse(value);
-                    if (parsed && typeof parsed === "object") {
-                        stats = parsed;
-                    }
-                }
-                catch { }
-            }
+            catch (_) { }
         }
-        if (stats) {
-            const health = stats.health ?? stats.Health ?? stats.hp ?? stats.HP;
-            const maxHealth = stats.maxHealth ?? stats.MaxHealth ?? stats.max_health ?? 100;
-            const armour = stats.armour ?? stats.Armour ?? stats.armor ?? stats.Armor;
-            const wanted = stats.wanted ?? stats.Wanted ?? stats.wantedLevel ?? stats.WantedLevel;
-            const weapon = stats.weapon ?? stats.Weapon ?? stats.weaponId ?? stats.WeaponId;
-            const ammo = stats.ammo ?? stats.Ammo ?? stats.ammoClip ?? stats.AmmoClip;
-            const maxAmmo = stats.maxAmmo ?? stats.MaxAmmo ?? stats.max_ammo ?? stats.ammoTotal ?? stats.AmmoTotal ?? stats.totalAmmo ?? stats.TotalAmmo ?? stats.ammo_total;
-            const hunger = stats.hunger ?? stats.Hunger;
-            const money = stats.money ?? stats.Money;
-            updateHudServerIdentity(stats);
-            if (hunger !== undefined)
-                setHudStat("hunger", hunger);
-            if (money !== undefined && hudMoneyValue)
-                hudMoneyValue.textContent = formatHudMoney(money);
-            if (health !== undefined) {
-                updateHudHealth(health, maxHealth);
-            }
-            if (armour !== undefined) {
-                updateHudArmour(armour);
-            }
-            if (wanted !== undefined) {
-                updateHudWanted(wanted);
-            }
-            if (weapon !== undefined || ammo !== undefined || maxAmmo !== undefined) {
-                updateHudWeapon({
-                    WeaponId: weapon ?? 0,
-                    AmmoClip: ammo ?? 0,
-                    AmmoTotal: maxAmmo ?? 0
-                });
-            }
-            return;
-        }
-        const [health, maxHealth, armour, breath, wanted, weapon, ammo, maxAmmo] = args;
-        if (health !== undefined) {
+    }
+    if (stats) {
+        sendPcHud("update", stats);
+        const health = stats.health ?? stats.Health ?? stats.hp ?? stats.HP;
+        const maxHealth = stats.maxHealth ?? stats.MaxHealth ?? stats.max_health ?? 100;
+        const armour = stats.armour ?? stats.Armour ?? stats.armor ?? stats.Armor;
+        const wanted = stats.wanted ?? stats.Wanted ?? stats.wantedLevel ?? stats.WantedLevel;
+        const weapon = stats.weapon ?? stats.Weapon ?? stats.weaponId ?? stats.WeaponId;
+        const ammo = stats.ammo ?? stats.Ammo ?? stats.ammoClip ?? stats.AmmoClip;
+        const maxAmmo = stats.maxAmmo ?? stats.MaxAmmo ?? stats.max_ammo ?? stats.ammoTotal ?? stats.AmmoTotal ?? stats.totalAmmo ?? stats.TotalAmmo ?? stats.ammo_total;
+        const hunger = stats.hunger ?? stats.Hunger;
+        const money = stats.money ?? stats.Money;
+        updateHudServerIdentity(stats);
+        if (hunger !== undefined)
+            setHudStat("hunger", hunger);
+        if (money !== undefined && hudMoneyValue)
+            setTextIfChanged(hudMoneyValue, formatHudMoney(money));
+        if (health !== undefined)
             updateHudHealth(health, maxHealth);
-        }
-        if (armour !== undefined) {
+        if (armour !== undefined)
             updateHudArmour(armour);
-        }
-        if (wanted !== undefined) {
+        if (wanted !== undefined)
             updateHudWanted(wanted);
-        }
         if (weapon !== undefined || ammo !== undefined || maxAmmo !== undefined) {
             updateHudWeapon({
                 WeaponId: weapon ?? 0,
@@ -533,36 +541,52 @@ function initializeHudPcStats() {
                 AmmoTotal: maxAmmo ?? 0
             });
         }
-    });
-    window.cef.emit("game:data:pollPlayerStats", true, 50);
-    hudPcStatsInitialized = true;
-    return true;
-}
-function startHudPcStats() {
-    if (initializeHudPcStats()) {
         return;
     }
-    const timer = setInterval(() => {
-        if (initializeHudPcStats()) {
-            clearInterval(timer);
-        }
-    }, 250);
-    setTimeout(() => {
-        clearInterval(timer);
-    }, 15000);
+    const [health, maxHealth, armour, breath, wanted, weapon, ammo, maxAmmo] = args;
+    sendPcHud("update", {
+        health,
+        armour,
+        wanted,
+        weaponId: weapon,
+        ammoClip: ammo,
+        ammoTotal: maxAmmo
+    });
+    if (health !== undefined)
+        updateHudHealth(health, maxHealth);
+    if (armour !== undefined)
+        updateHudArmour(armour);
+    if (wanted !== undefined)
+        updateHudWanted(wanted);
+    if (weapon !== undefined || ammo !== undefined || maxAmmo !== undefined) {
+        updateHudWeapon({
+            WeaponId: weapon ?? 0,
+            AmmoClip: ammo ?? 0,
+            AmmoTotal: maxAmmo ?? 0
+        });
+    }
 }
-startHudPcStats();
-window.addEventListener("load", () => {
-    startHudPcStats();
-    if (hudPcStatsInitialized && window.cef && typeof window.cef.emit === "function") {
-        window.cef.emit("game:data:pollPlayerStats", true, 50);
-    }
-});
-window.addEventListener("focus", () => {
-    if (initializeHudPcStats() && window.cef && typeof window.cef.emit === "function") {
-        window.cef.emit("game:data:pollPlayerStats", true, 50);
-    }
-});
+if (window.GameCef) {
+    GameCef.on("game:data:wantedLevel", value => updateHudWanted(value));
+    GameCef.on("game:data:hud", value => {
+        const payload = parseHudPayload(value);
+        if (payload)
+            updateHud(payload);
+    });
+    GameCef.on("game:data:playerInfo", value => {
+        const payload = parseHudPayload(value);
+        if (payload)
+            updateHudServerIdentity(payload);
+    });
+    GameCef.on("game:data:playerStats", handleHudPlayerStats);
+}
+function requestHudPlayerStats() {
+    if (window.GameCef)
+        GameCef.sendArgs("game:data:pollPlayerStats", true, HUD_STATS_POLL_MS);
+}
+requestHudPlayerStats();
+window.addEventListener("load", requestHudPlayerStats);
+window.addEventListener("focus", requestHudPlayerStats);
 (function enableHudBrowserPreview() {
     try {
         const params = new URLSearchParams(window.location.search);
@@ -574,7 +598,7 @@ window.addEventListener("focus", () => {
         setHudStat("armour", 61);
         setHudStat("hunger", 74);
         updateHudWeapon({ WeaponId: 24, AmmoClip: 7, AmmoTotal: 42 });
-        hudMoneyValue.textContent = formatHudMoney(125430);
+        setTextIfChanged(hudMoneyValue, formatHudMoney(125430));
         updateHudWanted(2);
         updateHudServerIdentity({ nickname: "Nastya Petrova", id: 15, time: "22:31", date: "14.09.2025" });
     }

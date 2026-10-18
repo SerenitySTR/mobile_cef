@@ -317,5 +317,5 @@ GameCef.on("notification:hide", data => {
 GameCef.on("notification:clear", () => {
     Notifications.Clear();
 });
-window.addEventListener("resize", () => Notifications.Resize(), { passive: true });
-window.addEventListener("orientationchange", () => setTimeout(() => Notifications.Resize(), 120), { passive: true });
+if (window.UiViewport)
+    UiViewport.on(() => Notifications.Resize());

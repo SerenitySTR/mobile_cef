@@ -63,13 +63,24 @@ function selectSpawn(value) {
     const data = spawnData[type];
     spawnPreviewImage.style.opacity = "0";
     spawnPreviewImage.style.transform = "scale(1.025)";
+    const requestType = type;
     const nextImage = new Image();
     nextImage.onload = () => {
+        if (selectedSpawn !== requestType)
+            return;
         spawnPreviewImage.src = data.image;
         requestAnimationFrame(() => {
+            if (selectedSpawn !== requestType)
+                return;
             spawnPreviewImage.style.opacity = "1";
             spawnPreviewImage.style.transform = "scale(1.012)";
         });
+    };
+    nextImage.onerror = () => {
+        if (selectedSpawn !== requestType)
+            return;
+        spawnPreviewImage.style.opacity = "1";
+        spawnPreviewImage.style.transform = "scale(1.012)";
     };
     nextImage.src = data.image;
     spawnPreviewTitle.textContent = data.title;
@@ -80,11 +91,14 @@ function selectSpawn(value) {
 spawnItems.forEach(item => {
     item.addEventListener("click", () => selectSpawn(item.dataset.spawn));
 });
-spawnButton.addEventListener("click", () => {
+function submitSpawn() {
+    if (!spawnData[selectedSpawn])
+        return;
     GameCef.sendJson("spawn:submit", {
         SpawnType: spawnData[selectedSpawn].id
     });
-});
+}
+spawnButton.addEventListener("click", submitSpawn);
 document.addEventListener("keydown", event => {
     if (event.defaultPrevented || event.isComposing || event.keyCode === 229 || event.repeat)
         return;

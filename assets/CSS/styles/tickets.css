@@ -1,7 +1,7 @@
 #tickets {
     position: fixed;
     inset: 0;
-    z-index: 1250;
+    z-index: var(--z-screen);
     display: none;
     align-items: center;
     justify-content: center;
@@ -831,7 +831,6 @@ rgba(4,
     transform: scale(.96);
 }
 
-/* Mobile platform layout: two-pane in landscape, stacked in portrait. */
 body.hud-platform-mobile #tickets {
     padding: 5px;
 }
@@ -958,8 +957,6 @@ body.hud-platform-mobile .tickets-modal-card {
     }
 }
 
-
-/* Mobile ticket text: no 6–7px operational text. */
 body.hud-platform-mobile .tickets-tabs button {
     font-size: 9px;
 }

@@ -233,9 +233,6 @@ var MainMenu = {
             return result;
         }
         catch (error) {
-            console.error("MainMenu JSON parse error:");
-            console.error(error);
-            console.error(data);
             return null;
         }
     },

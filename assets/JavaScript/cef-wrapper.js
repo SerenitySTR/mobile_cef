@@ -1,93 +1,129 @@
 window.GameCef = {
-    events: {},
-    boundEvents: {},
+    events: Object.create(null),
+    boundEvents: Object.create(null),
     pending: [],
     bridge: null,
+    maxPending: 64,
     sync() {
         const bridge = window.cef;
         if (!bridge)
             return false;
         if (this.bridge !== bridge) {
+            const previous = this.bridge;
+            if (previous && typeof previous.off === "function") {
+                for (const eventName in this.boundEvents)
+                    previous.off(eventName, this.boundEvents[eventName]);
+            }
             this.bridge = bridge;
-            this.boundEvents = {};
+            this.boundEvents = Object.create(null);
         }
         const canSend = typeof bridge.emit === "function" || typeof bridge.sendEvent === "function";
         const canReceive = typeof bridge.on === "function";
         if (canReceive) {
             for (const eventName in this.events) {
-                const callback = this.events[eventName];
-                const boundCallback = this.boundEvents[eventName];
-                if (boundCallback === callback)
+                const callbacks = this.events[eventName];
+                if (!callbacks || callbacks.size === 0 || this.boundEvents[eventName])
                     continue;
-                if (boundCallback && typeof bridge.off === "function")
-                    bridge.off(eventName, boundCallback);
-                bridge.on(eventName, callback);
-                this.boundEvents[eventName] = callback;
+                const dispatcher = (...args) => this.dispatch(eventName, args);
+                bridge.on(eventName, dispatcher);
+                this.boundEvents[eventName] = dispatcher;
             }
         }
         if (canSend && this.pending.length > 0) {
             const pending = this.pending.splice(0);
-            for (const event of pending)
-                this.send(event.eventName, event.data);
+            for (const event of pending) {
+                if (!this.emit(event.eventName, event.args))
+                    this.enqueue(event.eventName, event.args);
+            }
         }
         return canSend && canReceive;
     },
-    send(eventName, data = "") {
-        const bridge = window.cef;
-        if (!bridge) {
-            this.pending.push({ eventName, data });
+    emit(eventName, args) {
+        const bridge = this.bridge || window.cef;
+        if (!bridge)
             return false;
+        try {
+            if (typeof bridge.emit === "function") {
+                bridge.emit(eventName, ...args);
+                return true;
+            }
+            if (typeof bridge.sendEvent === "function") {
+                bridge.sendEvent(eventName, ...args);
+                return true;
+            }
         }
-        if (typeof bridge.emit === "function") {
-            bridge.emit(eventName, data);
+        catch (_) {
+            this.bridge = null;
+            this.boundEvents = Object.create(null);
+        }
+        return false;
+    },
+    enqueue(eventName, args) {
+        const last = this.pending[this.pending.length - 1];
+        if (last && last.eventName === eventName && last.args.length === args.length && last.args.every((value, index) => value === args[index]))
+            return;
+        this.pending.push({ eventName, args });
+        if (this.pending.length > this.maxPending)
+            this.pending.splice(0, this.pending.length - this.maxPending);
+    },
+    send(eventName, data = "") {
+        return this.sendArgs(eventName, data);
+    },
+    sendArgs(eventName, ...args) {
+        this.sync();
+        if (this.emit(eventName, args))
             return true;
-        }
-        if (typeof bridge.sendEvent === "function") {
-            bridge.sendEvent(eventName, data);
-            return true;
-        }
-        this.pending.push({ eventName, data });
+        this.enqueue(eventName, args);
         return false;
     },
     sendJson(eventName, data) {
         const json = JSON.stringify(data);
-        // Some Android SA-MP CEF bridges corrupt non-ASCII characters while
-        // passing JS strings through the native layer. Keep the transport
-        // payload ASCII-only; JSON.parse / System.Text.Json restores the
-        // original Unicode characters from \uXXXX escapes.
-        const asciiJson = json.replace(/[\u007f-\uffff]/g, (char) => {
+        const asciiJson = json.replace(/[\u007f-\uffff]/g, char => {
             return "\\u" + char.charCodeAt(0).toString(16).padStart(4, "0");
         });
         return this.send(eventName, asciiJson);
     },
     on(eventName, callback) {
-        const oldCallback = this.events[eventName];
-        if (oldCallback && oldCallback !== callback && this.bridge && typeof this.bridge.off === "function" && this.boundEvents[eventName] === oldCallback)
-            this.bridge.off(eventName, oldCallback);
-        this.events[eventName] = callback;
-        delete this.boundEvents[eventName];
-        return this.sync();
+        if (typeof callback !== "function")
+            return null;
+        if (!this.events[eventName])
+            this.events[eventName] = new Set();
+        this.events[eventName].add(callback);
+        this.sync();
+        return callback;
     },
-    off(eventName) {
-        const callback = this.events[eventName];
-        if (!callback)
+    off(eventName, callback) {
+        const callbacks = this.events[eventName];
+        if (!callbacks)
             return;
-        if (this.bridge && typeof this.bridge.off === "function" && this.boundEvents[eventName] === callback)
-            this.bridge.off(eventName, callback);
+        if (callback)
+            callbacks.delete(callback);
+        else
+            callbacks.clear();
+        if (callbacks.size > 0)
+            return;
+        const bound = this.boundEvents[eventName];
+        if (bound && this.bridge && typeof this.bridge.off === "function")
+            this.bridge.off(eventName, bound);
         delete this.events[eventName];
         delete this.boundEvents[eventName];
     },
-    receive(eventName, data = "") {
-        const callback = this.events[eventName];
-        if (!callback)
+    dispatch(eventName, args) {
+        const callbacks = this.events[eventName];
+        if (!callbacks || callbacks.size === 0)
             return;
-        callback(data);
+        for (const callback of Array.from(callbacks)) {
+            try {
+                callback(...args);
+            }
+            catch (_) { }
+        }
+    },
+    receive(eventName, ...args) {
+        this.dispatch(eventName, args);
     }
 };
-const cefSyncTimer = setInterval(() => {
-    if (GameCef.sync())
-        clearInterval(cefSyncTimer);
-}, 25);
+setInterval(() => GameCef.sync(), 1000);
 window.addEventListener("DOMContentLoaded", () => {
     GameCef.sync();
     GameCef.send("browser:ready");

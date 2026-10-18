@@ -7,17 +7,12 @@
     var originalSend = GameCef.send.bind(GameCef);
     function isTestControlEvent(eventName) {
         var name = String(eventName || "");
-        // Quick Menu close is safe in /uitest: the server only releases CEF
-        // focus for this event. Gameplay/select events remain blocked.
         if (name === "quick-menu:close")
             return true;
         return name.indexOf("cef-test:") === 0 || name.indexOf("test:") === 0;
     }
-    // While the visual test is active, prevent the real UI from sending actions
-    // such as spawn:submit, dialog:response or ticket:close to the game server.
     GameCef.send = function (eventName, data) {
         if (active && !isTestControlEvent(eventName)) {
-            console.info("[CEF TEST] blocked outgoing event:", eventName, data);
             return true;
         }
         return originalSend(eventName, data === undefined ? "" : data);
@@ -95,7 +90,6 @@
         })
             .catch(function (error) {
             loadingPromise = null;
-            console.error("[CEF TEST]", error);
             throw error;
         });
         return loadingPromise;
@@ -118,8 +112,7 @@
         active = true;
         var view = selectedView(data, "gallery");
         ensureLoaded().then(function () {
-            if (!window.CefVisualTests.open(view))
-                console.warn("[CEF TEST] unknown view:", view);
+            window.CefVisualTests.open(view);
         });
     }
     function close(notifyServer) {
@@ -132,7 +125,6 @@
     GameCef.on("cef-test:show", open);
     GameCef.on("cef-test:view", changeView);
     GameCef.on("cef-test:hide", function () { close(false); });
-    // Short aliases are supported as well.
     GameCef.on("test:show", open);
     GameCef.on("test:view", changeView);
     GameCef.on("test:hide", function () { close(false); });

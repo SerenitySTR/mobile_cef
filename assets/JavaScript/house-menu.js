@@ -8,9 +8,10 @@ var HouseMenu = {
         Class: "",
         Garage: false,
         Locked: false,
-        StatePrice: 0,
         Image: ""
     },
+    lockPending: false,
+    lockTimer: null,
 
     Init: function () {
         this.screen = document.getElementById("house-menu");
@@ -111,7 +112,11 @@ var HouseMenu = {
         if (garage !== undefined) this.data.Garage = this.ToBool(garage);
         if (locked !== undefined) this.data.Locked = this.ToBool(locked);
         if (image !== undefined) this.data.Image = String(image || "");
-
+        if (this.lockTimer) {
+            clearTimeout(this.lockTimer);
+            this.lockTimer = null;
+        }
+        this.lockPending = false;
         this.Render();
     },
 
@@ -144,7 +149,7 @@ var HouseMenu = {
         if (badge)
             badge.classList.toggle("locked", this.data.Locked);
         if (lock) {
-            lock.disabled = false;
+            lock.disabled = this.lockPending;
             var lockLabel = lock.querySelector("span:last-child");
             if (lockLabel)
                 lockLabel.textContent = this.data.Locked ? "Відкрити двері" : "Закрити двері";
@@ -161,16 +166,20 @@ var HouseMenu = {
     },
 
     ToggleDoor: function () {
+        if (this.lockPending)
+            return;
+        this.lockPending = true;
         GameCef.sendJson("house:lock", { HouseId: this.data.HouseId });
-
-        // Update the visible state immediately. A later house:set from the server
-        // remains authoritative and can correct the state if the action failed.
         this.data.Locked = !this.data.Locked;
         this.Render();
-    },
-
-    SendAction: function (eventName) {
-        GameCef.sendJson(eventName, { HouseId: this.data.HouseId });
+        var self = this;
+        if (this.lockTimer)
+            clearTimeout(this.lockTimer);
+        this.lockTimer = setTimeout(function () {
+            self.lockTimer = null;
+            self.lockPending = false;
+            self.Render();
+        }, 800);
     },
 
     OpenSellConfirm: function () {

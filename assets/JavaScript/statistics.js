@@ -35,7 +35,6 @@ var Statistics = {
     Show: function (data) {
         this.Init();
         if (!this.screen) {
-            console.error("Statistics: #statistics not found");
             return;
         }
         if (data) {
@@ -253,9 +252,6 @@ var Statistics = {
             return result;
         }
         catch (error) {
-            console.error("Statistics JSON parse error:");
-            console.error(error);
-            console.error(data);
             return null;
         }
     },

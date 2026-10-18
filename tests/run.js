@@ -1,6 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 const vm = require('vm');
+const crypto = require('crypto');
 const { spawnSync } = require('child_process');
 const root = path.resolve(__dirname, '..');
 let passed = 0;
@@ -46,10 +47,17 @@ function walk(dir, predicate = () => true) {
 }
 function buildFromTemplate() {
     const template = read('src/index.template.html');
-    return template.replace(/<!--\s*@include\s+(.+?)\s*-->/g, (match, filePath) => {
+    const html = template.replace(/<!--\s*@include\s+(.+?)\s*-->/g, (match, filePath) => {
         const includePath = path.join(root, 'src', filePath.trim());
         ok(fs.existsSync(includePath), `Missing include: src/${filePath.trim()}`);
         return fs.readFileSync(includePath, 'utf8');
+    });
+    return html.replace(/((?:src|href)=["'])(\.\/(?:assets|tests)\/[^"'?]+\.(?:js|css|png|webp|svg))(?:\?v=[^"']*)?(["'])/gi, (match, prefix, filePath, suffix) => {
+        const absolute = path.join(root, filePath.replace(/^\.\//, ''));
+        if (!fs.existsSync(absolute))
+            return match;
+        const hash = crypto.createHash('sha1').update(fs.readFileSync(absolute)).digest('hex').slice(0, 10);
+        return prefix + filePath + '?v=' + hash + suffix;
     });
 }
 function stripQueryHash(value) {
@@ -175,6 +183,58 @@ test('cef-wrapper: Unicode JSON transport is ASCII-safe and decodes back correct
     ok(sent, 'GameCef.sendJson did not emit payload');
     ok(/^[\x00-\x7F]*$/.test(sent.data), 'Transport JSON contains non-ASCII characters');
     equal(JSON.parse(sent.data).Message, payload.Message, 'Unicode payload did not round-trip');
+});
+test('cef-wrapper: send re-syncs after native bridge replacement', () => {
+    const first = [];
+    const second = [];
+    const makeBridge = target => ({
+        emit: (eventName, data) => target.push({ eventName, data }),
+        on: () => { },
+        off: () => { }
+    });
+    const context = {
+        console,
+        setInterval: () => 1,
+        clearInterval: () => { },
+        requestAnimationFrame: callback => callback(),
+        window: {
+            cef: makeBridge(first),
+            addEventListener: () => { }
+        }
+    };
+    context.window.window = context.window;
+    vm.createContext(context);
+    vm.runInContext(read('assets/JavaScript/cef-wrapper.js'), context, { filename: 'cef-wrapper.js' });
+    context.window.GameCef.sendJson('test:first', { Value: 1 });
+    context.window.cef = makeBridge(second);
+    context.window.GameCef.sendJson('spawn:submit', { SpawnType: 2 });
+    ok(first.some(item => item.eventName === 'test:first'), 'Initial bridge did not receive event');
+    const sent = second.find(item => item.eventName === 'spawn:submit');
+    ok(sent, 'Replacement bridge did not receive spawn submit');
+    equal(JSON.parse(sent.data).SpawnType, 2, 'Replacement bridge received wrong payload');
+});
+test('cef-wrapper: multiple subscribers share one native event safely', () => {
+    const listeners = {};
+    const context = {
+        setInterval: () => 1,
+        requestAnimationFrame: callback => callback(),
+        window: {
+            cef: {
+                emit: () => { },
+                on: (eventName, callback) => { listeners[eventName] = callback; },
+                off: () => { }
+            },
+            addEventListener: () => { }
+        }
+    };
+    context.window.window = context.window;
+    vm.createContext(context);
+    vm.runInContext(read('assets/JavaScript/cef-wrapper.js'), context, { filename: 'cef-wrapper.js' });
+    const values = [];
+    context.window.GameCef.on('shared:event', value => values.push('a:' + value));
+    context.window.GameCef.on('shared:event', value => values.push('b:' + value));
+    listeners['shared:event']('ok');
+    equal(values.join(','), 'a:ok,b:ok', 'Multiple GameCef subscribers did not all run');
 });
 test('events: core frontend/server event contracts still exist', () => {
     const expected = {
@@ -462,7 +522,6 @@ test('in-game visual test: lazy bridge and control events are wired into product
         './tests/visual-test.css',
         './tests/visual-test.js',
         './tests/cases.js',
-        'blocked outgoing event',
         'name === "quick-menu:close"'
     ], 'tests/in-game.js');
     ok(source.includes('active && !isTestControlEvent(eventName)'), 'In-game test does not guard real outbound UI events');
@@ -518,6 +577,37 @@ test('tickets: waiting and working statuses are blue while closed stays red', ()
     const js = read('assets/JavaScript/tickets.js');
     hasAll(css, ['.tickets-status.waiting,', '.tickets-status.working', '#0a4f7d', '.tickets-status.closed', '#4b1218'], 'tickets.css');
     ok(js.includes('adminName ? " working" : " waiting"'), 'Ticket working/waiting classes are not assigned correctly');
+});
+
+test('performance: HUD polling, bridge routing and inventory fallback stay optimized', () => {
+    const hud = read('assets/JavaScript/hud.js');
+    const inventory = read('assets/JavaScript/inventory.js');
+    ok(hud.includes('const HUD_STATS_POLL_MS = 100;'), 'HUD polling is not 100 ms');
+    ok(hud.includes('GameCef.sendArgs("game:data:pollPlayerStats", true, HUD_STATS_POLL_MS)'), 'HUD polling bypasses GameCef');
+    ok(!hud.includes('window.cef.on('), 'HUD still binds directly to native bridge');
+    ok(inventory.includes('sortFallbackTimer'), 'Inventory sort fallback is missing');
+});
+test('production: no debug console calls remain in CEF runtime', () => {
+    const files = [...walk('assets/JavaScript', file => file.endsWith('.js')), 'tests/in-game.js'];
+    for (const file of files)
+        ok(!/console\.(?:log|info|debug|warn|error)\s*\(/.test(read(file)), `${file}: debug console call found`);
+});
+test('architecture: viewport manager and automatic asset versions are enabled', () => {
+    const template = read('src/index.template.html');
+    hasAll(template, ['./assets/JavaScript/ui-runtime.js'], 'src/index.template.html');
+    ok(!/\?v=/.test(template), 'Template still contains manual cache versions');
+    const built = read('index.html');
+    ok(/assets\/JavaScript\/cef-wrapper\.js\?v=[0-9a-f]{10}/.test(built), 'Built assets do not use content hashes');
+});
+test('layers: dialogs, notifications, errors and loading stay above screens', () => {
+    const css = read('assets/CSS/styles/ui-global.css');
+    hasAll(css, ['--z-screen: 5000', '--z-dialog: 20000', '--z-notification: 30000', '--z-error: 40000', '--z-loading: 50000'], 'ui-global.css');
+    hasAll(read('assets/CSS/styles/dialog.css'), ['z-index: var(--z-dialog)'], 'dialog.css');
+    hasAll(read('assets/CSS/styles/error.css'), ['z-index: var(--z-error)'], 'error.css');
+});
+test('bank: commission percentages can be supplied by bank:set', () => {
+    const source = read('assets/JavaScript/bank.js');
+    hasAll(source, ['WithdrawCommissionPercent', 'TransferCommissionPercent', 'UpdateCommissionLabels'], 'bank.js');
 });
 test('code style: all JavaScript files follow repository whitespace rules', () => {
     const files = [

@@ -3,6 +3,7 @@
 }
 
 #registration {
+    z-index: var(--z-screen);
     --reg-card-width: 520px;
     --reg-form-width: 430px;
     --reg-field-height: 56px;
@@ -305,8 +306,6 @@
     box-shadow: 0 0 14px rgba(60, 174, 255, 0.28);
 }
 
-/* Step 2 stays vertical too; only gender buttons are side by side. */
-
 .gender-selector {
     width: min(100%, var(--reg-form-width));
     margin: 0 auto 10px;
@@ -439,8 +438,6 @@
     margin: 0;
 }
 
-/* Animations */
-
 #registration.active .registration-step.active .registration-panel {
     animation: registrationEnter 0.4s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
@@ -486,8 +483,6 @@
     }
 }
 
-/* Desktop 1920x1080+ */
-
 @media (min-width: 1600px) and (min-height: 900px) {
     #registration {
         --reg-card-width: 540px;
@@ -507,8 +502,6 @@
         font-size: 15px;
     }
 }
-
-/* Laptop / compact desktop */
 
 @media (max-width: 1600px), (max-height: 899px) {
     body.hud-platform-pc #registration {
@@ -552,8 +545,6 @@
     }
 }
 
-/* Small laptop / low desktop */
-
 @media (max-height: 700px) and (min-width: 900px) {
     body.hud-platform-pc #registration {
         --reg-card-width: 455px;
@@ -593,11 +584,6 @@
         display: none;
     }
 }
-
-/* =========================================================
-   Mobile/tablet landscape
-   Screen is horizontal, but registration itself stays vertical.
-   ========================================================= */
 
 @media (orientation: landscape) {
     body.hud-platform-mobile #registration {
@@ -743,8 +729,6 @@
     }
 }
 
-/* Larger landscape tablets */
-
 @media (orientation: landscape) and (min-height: 600px) {
     body.hud-platform-mobile #registration {
         --reg-card-width: 500px;
@@ -775,8 +759,6 @@
         font-size: 12px;
     }
 }
-
-/* Typical landscape phones, around 450–520px high */
 
 @media (orientation: landscape) and (max-height: 520px) {
     body.hud-platform-mobile #registration {
@@ -832,8 +814,6 @@
         display: none;
     }
 }
-
-/* Very low landscape phones, e.g. 640x360 / 740x360 */
 
 @media (orientation: landscape) and (max-height: 390px) {
     body.hud-platform-mobile #registration {
@@ -938,8 +918,6 @@
     }
 }
 
-/* Fallback for narrow portrait browsers; not the in-game mobile target. */
-
 @media (orientation: portrait) and (max-width: 600px) {
     #registration {
         --reg-card-width: 92vw;
@@ -961,7 +939,6 @@
     }
 }
 
-/* Short landscape phones: raise only text sizes, keep the existing compact layout. */
 @media (orientation: landscape) and (max-height: 520px) {
     body.hud-platform-mobile .registration-headline p {
         font-size: 9px;

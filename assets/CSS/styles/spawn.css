@@ -1,7 +1,7 @@
 #spawn-selection {
     position: fixed;
     inset: 0;
-    z-index: 120;
+    z-index: var(--z-screen);
     display: none;
     align-items: center;
     justify-content: center;
@@ -413,8 +413,6 @@
     }
 }
 
-/* Medium desktop / tablet landscape: keep the layout but make it less stretched. */
-
 @media (max-width: 1280px) and (min-width: 901px) {
     .spawn-container {
         width: min(920px, 84vw);
@@ -427,8 +425,6 @@
         width: min(420px, 44vw);
     }
 }
-
-/* Compact desktop / laptop */
 
 @media (max-height: 820px) and (min-width: 901px) {
     .spawn-container {
@@ -511,8 +507,6 @@
     filter: brightness(1.12) saturate(1.08);
 }
 
-
-/* Mobile / tablet landscape. Keep the same two-column layout and only scale it. */
 @media (orientation: landscape) and (max-height: 650px) {
     #spawn-selection {
         padding: 6px 10px;
@@ -666,7 +660,6 @@
     }
 }
 
-/* Low landscape phones: same layout, less vertical decoration. */
 @media (orientation: landscape) and (max-height: 400px) {
     .spawn-logo {
         width: clamp(92px, 13vw, 118px);
@@ -765,7 +758,6 @@
     }
 }
 
-/* Narrow landscape: reduce only widths, not the structure. */
 @media (orientation: landscape) and (max-width: 760px) and (max-height: 650px) {
     .spawn-container {
         width: 98vw;
@@ -794,7 +786,6 @@
     }
 }
 
-/* Portrait phones/tablets: preserve the same components, stack only the two main columns. */
 @media (orientation: portrait) and (max-width: 700px) {
     #spawn-selection {
         padding: 10px;
@@ -926,8 +917,6 @@
     }
 }
 
-
-/* Unified Spawn icon color */
 .spawn-item-icon img,
 .spawn-preview-heading-icon img,
 .spawn-item-icon-family img,

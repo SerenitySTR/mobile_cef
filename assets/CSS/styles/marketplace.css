@@ -1,7 +1,7 @@
 #marketplace {
     position: fixed;
     inset: 0;
-    z-index: 9550;
+    z-index: var(--z-screen);
     display: none;
     align-items: center;
     justify-content: center;
@@ -1196,10 +1196,6 @@
     background: rgba(45, 83, 105, .48);
 }
 
-/* ========================================================================== 
-   ADAPTIVE LAYOUT
-   ========================================================================== */
-
 @media (max-width: 1500px), (max-height: 860px) {
     #marketplace { padding: 12px; }
 
@@ -1250,7 +1246,6 @@
     .marketplace-manager-content { grid-template-columns: minmax(0, 1fr) 290px; }
 }
 
-/* Phone landscape: cards keep a real height and the list scrolls. */
 @media (orientation: landscape) and (max-height: 560px) {
     #marketplace {
         padding: 0;
@@ -1591,7 +1586,6 @@
     .marketplace-manager-panel { width: 100vw; height: 100vh; border-radius: 0; }
 }
 
-/* Compact screens: keep secondary text readable without changing the layout. */
 @media (orientation: landscape) and (max-height: 560px) {
     .marketplace-card-params,
     .marketplace-card-seller,
@@ -1632,7 +1626,6 @@
     }
 }
 
-/* Marketplace create confirmation */
 .marketplace-own-remaining {
     color: #79cfff !important;
     font-size: 9px !important;
@@ -2004,7 +1997,6 @@
     }
 }
 
-/* Larger item description/parameter text on compact Marketplace layouts. */
 @media (orientation: landscape) and (max-height: 560px) {
     .marketplace-card-params,
     .marketplace-own-params,
@@ -2029,7 +2021,6 @@
     }
 }
 
-/* CEF-safe dropdowns: native <select> popups can render behind the game UI. */
 .marketplace-native-select {
     display: none !important;
 }

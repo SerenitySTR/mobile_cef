@@ -1,7 +1,7 @@
 #statistics {
     position: fixed;
     inset: 0;
-    z-index: 80000;
+    z-index: var(--z-screen);
     display: none;
     align-items: center;
     justify-content: center;
@@ -1542,8 +1542,6 @@
     }
 }
 
-/* ==========================================================================\n   FINAL CENTER GRID LAYOUT\n   4 character-state cards (2x2) + 6 main-stat cards (2x3) without scrolling.\n   ========================================================================== */
-
 .statistics-center {
     min-height: 0 !important;
     display: grid !important;
@@ -1652,7 +1650,6 @@
     }
 }
 
-/* Readability correction for low-height landscape without changing the panel scale. */
 @media (max-height: 620px) and (orientation: landscape) {
     .statistics-profile-row span,
     .statistics-status-header span,
