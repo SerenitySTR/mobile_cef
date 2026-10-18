@@ -622,6 +622,13 @@ test('bank: commission percentages can be supplied by bank:set', () => {
     const source = read('assets/JavaScript/bank.js');
     hasAll(source, ['WithdrawCommissionPercent', 'TransferCommissionPercent', 'UpdateCommissionLabels'], 'bank.js');
 });
+test('house: string garage descriptions remain visible', () => {
+    const source = read('assets/JavaScript/house-menu.js');
+    const cases = read('tests/cases.js');
+    hasAll(source, ['GarageText: function (value)', 'return text;'], 'house-menu.js');
+    ok(!source.includes('this.data.Garage = this.ToBool(garage)'), 'House garage value is still coerced to boolean');
+    ok(cases.includes('Garage: "Одномісний"'), 'House visual test does not cover a string garage description');
+});
 test('code style: all JavaScript files follow repository whitespace rules', () => {
     const files = [
         'build.js',

@@ -522,7 +522,7 @@
             Owner: "Alex_Rivera",
             Price: 240000,
             Class: "Середній",
-            Garage: true,
+            Garage: "Одномісний",
             Locked: false,
             Image: "./assets/CSS/Images/Spawn/house-new.webp"
         });

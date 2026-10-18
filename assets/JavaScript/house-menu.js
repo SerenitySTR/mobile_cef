@@ -6,7 +6,7 @@ var HouseMenu = {
         Owner: "",
         Price: 0,
         Class: "",
-        Garage: false,
+        Garage: "",
         Locked: false,
         Image: ""
     },
@@ -109,7 +109,7 @@ var HouseMenu = {
         if (owner !== undefined) this.data.Owner = String(owner || "");
         if (price !== undefined) this.data.Price = Number(price) || 0;
         if (houseClass !== undefined) this.data.Class = String(houseClass || "");
-        if (garage !== undefined) this.data.Garage = this.ToBool(garage);
+        if (garage !== undefined) this.data.Garage = garage;
         if (locked !== undefined) this.data.Locked = this.ToBool(locked);
         if (image !== undefined) this.data.Image = String(image || "");
         if (this.lockTimer) {
@@ -129,7 +129,7 @@ var HouseMenu = {
         this.SetText("house-menu-owner", this.data.Owner || "—");
         this.SetText("house-menu-price", this.Money(this.data.Price));
         this.SetText("house-menu-class", this.data.Class || "—");
-        this.SetText("house-menu-garage", this.data.Garage ? "Так" : "Ні");
+        this.SetText("house-menu-garage", this.GarageText(this.data.Garage));
         this.SetText("house-menu-door-status", this.data.Locked ? "Закрито" : "Відкрито");
         this.SetText("house-menu-door-badge", this.data.Locked ? "Закрито" : "Відкрито");
 
@@ -208,6 +208,21 @@ var HouseMenu = {
             return;
         this.CloseSellConfirm();
         GameCef.sendJson("house:sell", { HouseId: this.data.HouseId });
+    },
+
+    GarageText: function (value) {
+        if (typeof value === "string") {
+            var text = value.trim();
+            if (!text)
+                return "Ні";
+            var normalized = text.toLowerCase();
+            if (normalized === "true" || normalized === "1" || normalized === "yes" || normalized === "так")
+                return "Так";
+            if (normalized === "false" || normalized === "0" || normalized === "no" || normalized === "ні" || normalized === "нет")
+                return "Ні";
+            return text;
+        }
+        return this.ToBool(value) ? "Так" : "Ні";
     },
 
     Parse: function (data) {
