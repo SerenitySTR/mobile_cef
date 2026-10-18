@@ -468,6 +468,19 @@ test('production: notification local test helpers are absent', () => {
         ok(!source.includes(marker), `Production notifications.js still contains ${marker}`);
     }
 });
+test('registration: invalid age is rejected locally without silently changing the value', () => {
+    const source = read('assets/JavaScript/registration.js');
+    hasAll(source, [
+        'const REGISTRATION_MIN_AGE = 18;',
+        'const REGISTRATION_MAX_AGE = 70;',
+        'function getRegistrationAge()',
+        'if (age === null)',
+        'setAgeValidationError(true);',
+        'Age: age'
+    ], 'registration.js');
+    ok(!source.includes('setAge(ageInput.value);'), 'Registration still silently clamps age before submit');
+    ok(read('src/sections/registration.html').includes('aria-describedby="age-description"'), 'Age input is not linked to its validation message');
+});
 test('password eye: reveal buttons toggle on touch/mouse without refocusing inputs', () => {
     const authorizationSource = read('assets/JavaScript/authorization.js');
     const registrationSource = read('assets/JavaScript/registration.js');

@@ -10,10 +10,14 @@ const referalInput = document.getElementById("referal");
 const passwordInput = document.getElementById("password");
 const passwordRepeatInput = document.getElementById("password-repeat");
 const ageInput = document.getElementById("age");
+const ageSelector = document.querySelector(".age-selector");
+const ageDescription = document.getElementById("age-description");
 const ageMinusButton = document.getElementById("age-minus");
 const agePlusButton = document.getElementById("age-plus");
 const genderButtons = document.querySelectorAll(".gender-button");
 const passwordEyeButtons = document.querySelectorAll(".password-eye");
+const REGISTRATION_MIN_AGE = 18;
+const REGISTRATION_MAX_AGE = 70;
 let selectedGender = null;
 function focusRegistrationInput(input) {
     if (!input)
@@ -53,12 +57,31 @@ function showRegistrationStep(step, shouldFocus = true) {
 function isValidEmail(email) {
     return email.includes("@") && email.includes(".");
 }
+function setAgeValidationError(active) {
+    ageSelector.classList.toggle("invalid", active);
+    ageDescription.classList.toggle("invalid", active);
+    ageDescription.textContent = active
+        ? `Вкажіть вік від ${REGISTRATION_MIN_AGE} до ${REGISTRATION_MAX_AGE} років.`
+        : `Допустимий вік: від ${REGISTRATION_MIN_AGE} до ${REGISTRATION_MAX_AGE} років`;
+    ageInput.setAttribute("aria-invalid", active ? "true" : "false");
+}
+function getRegistrationAge() {
+    const value = ageInput.value.trim();
+    if (!/^\d{1,2}$/.test(value))
+        return null;
+    const age = Number(value);
+    if (!Number.isInteger(age) || age < REGISTRATION_MIN_AGE || age > REGISTRATION_MAX_AGE)
+        return null;
+    return age;
+}
 function setAge(value) {
     let age = Number(value);
-    if (Number.isNaN(age))
-        age = 18;
-    age = Math.max(18, Math.min(70, age));
-    ageInput.value = age;
+    if (!Number.isFinite(age))
+        age = REGISTRATION_MIN_AGE;
+    age = Math.trunc(age);
+    age = Math.max(REGISTRATION_MIN_AGE, Math.min(REGISTRATION_MAX_AGE, age));
+    ageInput.value = String(age);
+    setAgeValidationError(false);
 }
 let passwordEyeTouchAt = 0;
 function togglePasswordInput(button) {
@@ -104,9 +127,11 @@ agePlusButton.addEventListener("click", () => {
 });
 ageInput.addEventListener("input", () => {
     ageInput.value = ageInput.value.replace(/\D/g, "").slice(0, 2);
+    setAgeValidationError(false);
 });
 ageInput.addEventListener("blur", () => {
-    setAge(ageInput.value);
+    if (ageInput.value && getRegistrationAge() === null)
+        setAgeValidationError(true);
 });
 nextButton.addEventListener("click", () => {
     const email = emailInput.value.trim();
@@ -150,18 +175,24 @@ backButton.addEventListener("click", () => {
     showRegistrationStep(step1);
 });
 registerButton.addEventListener("click", () => {
-    setAge(ageInput.value);
     if (!selectedGender) {
         showError("Помилка", "Оберіть стать персонажа.");
         return;
     }
+    const age = getRegistrationAge();
+    if (age === null) {
+        setAgeValidationError(true);
+        focusRegistrationInput(ageInput);
+        return;
+    }
+    setAgeValidationError(false);
     const data = {
         UserName: usernameInput.value.trim(),
         Password: passwordInput.value,
         Email: emailInput.value.trim(),
         Referral: referalInput.value.trim(),
         Gender: selectedGender,
-        Age: Number(ageInput.value)
+        Age: age
     };
     GameCef.sendJson("registration:submit", data);
 });

@@ -403,11 +403,20 @@
     border-color: rgba(88, 201, 255, 0.92);
 }
 
+.age-selector.invalid input {
+    border-color: rgba(255, 92, 92, 0.9);
+    box-shadow: 0 0 0 1px rgba(255, 92, 92, 0.12);
+}
+
 .age-description {
     margin: 5px 0 0;
     color: rgba(204, 224, 240, 0.54);
     font-size: 10px;
     text-align: center;
+}
+
+.age-description.invalid {
+    color: rgba(255, 120, 120, 0.92);
 }
 
 .registration-referral-field {
