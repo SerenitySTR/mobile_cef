@@ -645,6 +645,22 @@ test('house: string garage descriptions remain visible', () => {
     ok(!source.includes('this.data.Garage = this.ToBool(garage)'), 'House garage value is still coerced to boolean');
     ok(cases.includes('Garage: "Одномісний"'), 'House visual test does not cover a string garage description');
 });
+test('hud: ammo-only updates keep the equipped weapon icon', () => {
+    const hud = read('assets/JavaScript/hud.js');
+    const pcHud = read('assets/JavaScript/pc-hud.js');
+    ok(!hud.includes('WeaponId: weapon ?? 0'), 'HUD still converts missing WeaponId to fist');
+    hasAll(hud, [
+        'const hasWeapon = weaponValue !== undefined',
+        'if (hasWeapon)\n        pcUpdate.weaponId = weaponId;',
+        'weaponData.WeaponId = weapon'
+    ], 'hud.js');
+    hasAll(pcHud, [
+        'let currentWeaponId = 0;',
+        'const hasWeapon = weaponValue !== undefined',
+        'if (hasWeapon) {',
+        'currentWeaponId = Math.max(0'
+    ], 'pc-hud.js');
+});
 test('code style: all JavaScript files follow repository whitespace rules', () => {
     const files = [
         'build.js',

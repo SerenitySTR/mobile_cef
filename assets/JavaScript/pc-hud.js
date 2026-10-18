@@ -35,6 +35,7 @@
         $('date').textContent = date; }
     function setMoney(value) { $('money').textContent = fmtMoney(value); }
     function setAmmo(current, total) { $('ammoClip').textContent = Math.max(0, Math.trunc(Number(current) || 0)); $('ammoTotal').textContent = Math.max(0, Math.trunc(Number(total) || 0)); }
+    let currentWeaponId = 0;
     function updateWeapon(data) {
         if (data === undefined || data === null)
             return;
@@ -56,16 +57,21 @@
         }
         if (!data || typeof data !== 'object')
             return;
-        const id = Math.max(0, Math.trunc(Number(data.WeaponId ?? data.weaponId ?? data.weapon ?? data.Weapon) || 0));
-        const clip = data.AmmoClip ?? data.ammoClip ?? data.ammo ?? data.Ammo ?? 0;
-        const total = data.AmmoTotal ?? data.ammoTotal ?? data.maxAmmo ?? data.MaxAmmo ?? data.max_ammo ?? data.totalAmmo ?? data.TotalAmmo ?? data.ammo_total ?? 0;
-        const image = $('weaponImage');
-        if (image)
-            image.src = './assets/CSS/Images/Hud/Weapons/' + (HUD_WEAPON_IMAGES[id] || HUD_WEAPON_IMAGES[0]);
-        const ammo = $('ammo');
-        if (ammo)
-            ammo.style.display = id === 0 ? 'none' : '';
-        setAmmo(clip, total);
+        const weaponValue = data.WeaponId ?? data.weaponId ?? data.weapon ?? data.Weapon;
+        const clip = data.AmmoClip ?? data.ammoClip ?? data.ammo ?? data.Ammo;
+        const total = data.AmmoTotal ?? data.ammoTotal ?? data.maxAmmo ?? data.MaxAmmo ?? data.max_ammo ?? data.totalAmmo ?? data.TotalAmmo ?? data.ammo_total;
+        const hasWeapon = weaponValue !== undefined && weaponValue !== null && weaponValue !== '';
+        if (hasWeapon) {
+            currentWeaponId = Math.max(0, Math.trunc(Number(weaponValue) || 0));
+            const image = $('weaponImage');
+            if (image)
+                image.src = './assets/CSS/Images/Hud/Weapons/' + (HUD_WEAPON_IMAGES[currentWeaponId] || HUD_WEAPON_IMAGES[0]);
+            const ammo = $('ammo');
+            if (ammo)
+                ammo.style.display = currentWeaponId === 0 ? 'none' : '';
+        }
+        if (clip !== undefined || total !== undefined)
+            setAmmo(clip ?? $('ammoClip').textContent, total ?? $('ammoTotal').textContent);
     }
     function updateHud(data) { if (!data)
         return; const hp = data.health ?? data.Health ?? data.hp ?? data.HP; const armor = data.armour ?? data.Armour ?? data.armor ?? data.Armor; const hunger = data.hunger ?? data.Hunger; const money = data.money ?? data.Money; const wanted = data.wanted ?? data.Wanted ?? data.wantedLevel ?? data.WantedLevel; const weapon = data.weapon ?? data.Weapon ?? data.weaponId ?? data.WeaponId; if (hp !== undefined)

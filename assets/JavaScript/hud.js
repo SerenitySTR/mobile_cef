@@ -249,17 +249,33 @@ createWantedStars();
 function updateHudWeapon(data) {
     if (!data)
         return;
-    const weaponId = Math.max(0, Math.trunc(Number(data.WeaponId !== undefined ? data.WeaponId : data.weaponId) || 0));
-    const ammoClip = Math.max(0, Math.trunc(Number(data.AmmoClip !== undefined ? data.AmmoClip : data.ammoClip) || 0));
+    const weaponValue = data.WeaponId ?? data.weaponId ?? data.weapon ?? data.Weapon;
+    const ammoClipValue = data.AmmoClip ?? data.ammoClip ?? data.ammo ?? data.Ammo;
     const ammoTotalValue = data.AmmoTotal ?? data.ammoTotal ?? data.maxAmmo ?? data.MaxAmmo ?? data.max_ammo ?? data.totalAmmo ?? data.TotalAmmo ?? data.ammo_total;
-    const ammoTotal = Math.max(0, Math.trunc(Number(ammoTotalValue) || 0));
-    sendPcHud("update", { weaponId, ammoClip, ammoTotal });
+    const hasWeapon = weaponValue !== undefined && weaponValue !== null && weaponValue !== "";
+    const hasAmmoClip = ammoClipValue !== undefined && ammoClipValue !== null && ammoClipValue !== "";
+    const hasAmmoTotal = ammoTotalValue !== undefined && ammoTotalValue !== null && ammoTotalValue !== "";
+    const weaponId = hasWeapon ? Math.max(0, Math.trunc(Number(weaponValue) || 0)) : (mobileHudLastState.weaponId ?? 0);
+    const ammoClip = hasAmmoClip ? Math.max(0, Math.trunc(Number(ammoClipValue) || 0)) : (mobileHudLastState.ammoClip ?? 0);
+    const ammoTotal = hasAmmoTotal ? Math.max(0, Math.trunc(Number(ammoTotalValue) || 0)) : (mobileHudLastState.ammoTotal ?? 0);
+    const pcUpdate = {};
+    if (hasWeapon)
+        pcUpdate.weaponId = weaponId;
+    if (hasAmmoClip)
+        pcUpdate.ammoClip = ammoClip;
+    if (hasAmmoTotal)
+        pcUpdate.ammoTotal = ammoTotal;
+    if (Object.keys(pcUpdate).length > 0)
+        sendPcHud("update", pcUpdate);
     if (mobileHudLastState.weaponId === weaponId && mobileHudLastState.ammoClip === ammoClip && mobileHudLastState.ammoTotal === ammoTotal)
         return;
-    const weaponChanged = mobileHudLastState.weaponId !== weaponId;
-    mobileHudLastState.weaponId = weaponId;
-    mobileHudLastState.ammoClip = ammoClip;
-    mobileHudLastState.ammoTotal = ammoTotal;
+    const weaponChanged = hasWeapon && mobileHudLastState.weaponId !== weaponId;
+    if (hasWeapon)
+        mobileHudLastState.weaponId = weaponId;
+    if (hasAmmoClip)
+        mobileHudLastState.ammoClip = ammoClip;
+    if (hasAmmoTotal)
+        mobileHudLastState.ammoTotal = ammoTotal;
     if (weaponChanged && hudWeaponImage) {
         const weaponFile = HUD_WEAPON_IMAGES[weaponId] || HUD_WEAPON_IMAGES[0];
         const src = "./assets/CSS/Images/Hud/Weapons/" + weaponFile;
@@ -269,8 +285,10 @@ function updateHudWeapon(data) {
         if (hudAmmo)
             hudAmmo.style.display = weaponId === 0 ? "none" : "";
     }
-    setTextIfChanged(hudAmmoClip, ammoClip);
-    setTextIfChanged(hudAmmoTotal, "/" + ammoTotal);
+    if (hasAmmoClip)
+        setTextIfChanged(hudAmmoClip, ammoClip);
+    if (hasAmmoTotal)
+        setTextIfChanged(hudAmmoTotal, "/" + ammoTotal);
 }
 function setHudRootState(root, visible) {
     if (!root)
@@ -535,11 +553,14 @@ function handleHudPlayerStats(...args) {
         if (wanted !== undefined)
             updateHudWanted(wanted);
         if (weapon !== undefined || ammo !== undefined || maxAmmo !== undefined) {
-            updateHudWeapon({
-                WeaponId: weapon ?? 0,
-                AmmoClip: ammo ?? 0,
-                AmmoTotal: maxAmmo ?? 0
-            });
+            const weaponData = {};
+            if (weapon !== undefined)
+                weaponData.WeaponId = weapon;
+            if (ammo !== undefined)
+                weaponData.AmmoClip = ammo;
+            if (maxAmmo !== undefined)
+                weaponData.AmmoTotal = maxAmmo;
+            updateHudWeapon(weaponData);
         }
         return;
     }
@@ -559,11 +580,14 @@ function handleHudPlayerStats(...args) {
     if (wanted !== undefined)
         updateHudWanted(wanted);
     if (weapon !== undefined || ammo !== undefined || maxAmmo !== undefined) {
-        updateHudWeapon({
-            WeaponId: weapon ?? 0,
-            AmmoClip: ammo ?? 0,
-            AmmoTotal: maxAmmo ?? 0
-        });
+        const weaponData = {};
+        if (weapon !== undefined)
+            weaponData.WeaponId = weapon;
+        if (ammo !== undefined)
+            weaponData.AmmoClip = ammo;
+        if (maxAmmo !== undefined)
+            weaponData.AmmoTotal = maxAmmo;
+        updateHudWeapon(weaponData);
     }
 }
 if (window.GameCef) {
