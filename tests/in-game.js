@@ -45,7 +45,7 @@
         var link = document.createElement("link");
         link.id = "cef-in-game-test-style";
         link.rel = "stylesheet";
-        link.href = "./tests/visual-test.css?v=20260927-speedo3";
+        link.href = "./tests/visual-test.css?v=20261018-nav1";
         document.head.appendChild(link);
     }
     function loadScript(id, src) {
@@ -79,9 +79,9 @@
             return loadingPromise;
         window.__CEF_IN_GAME_TEST_BOOTSTRAP__ = true;
         ensureStyle();
-        loadingPromise = loadScript("cef-in-game-test-framework", "./tests/visual-test.js?v=20260927-speedo3")
+        loadingPromise = loadScript("cef-in-game-test-framework", "./tests/visual-test.js?v=20261018-nav1")
             .then(function () {
-            return loadScript("cef-in-game-test-cases", "./tests/cases.js?v=20260927-speedo3");
+            return loadScript("cef-in-game-test-cases", "./tests/cases.js?v=20261018-nav1");
         })
             .then(function () {
             if (!window.CefVisualTests)

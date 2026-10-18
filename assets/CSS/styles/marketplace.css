@@ -158,26 +158,26 @@
     align-items: center;
     gap: 9px;
     padding: 0 13px;
-    border: 1px solid rgba(62, 157, 220, .34);
+    border: 1px solid rgba(255, 82, 92, .58);
     border-radius: 12px;
-    background: rgba(15, 57, 88, .48);
-    color: #bce7ff;
+    background: linear-gradient(135deg, rgba(153, 34, 45, .76), rgba(104, 20, 30, .72));
+    color: #ffe9eb;
     font-size: 10px;
     font-weight: 800;
     cursor: pointer;
 }
 
 .marketplace-my-button:hover {
-    border-color: rgba(75, 189, 255, .72);
-    background: rgba(20, 82, 123, .62);
+    border-color: rgba(255, 111, 119, .92);
+    background: linear-gradient(135deg, rgba(188, 40, 53, .86), rgba(128, 24, 35, .82));
 }
 
 .marketplace-my-button strong {
     min-width: 38px;
     padding: 5px 7px;
     border-radius: 8px;
-    background: rgba(54, 151, 255, .16);
-    color: #72c8ff;
+    background: rgba(255, 82, 92, .18);
+    color: #ff9aa1;
     font-size: 9px;
     text-align: center;
 }
@@ -990,10 +990,10 @@
 .marketplace-create {
     min-height: 43px;
     margin-top: 10px;
-    border: 1px solid rgba(58, 163, 230, .42);
+    border: 1px solid rgba(255, 82, 92, .68);
     border-radius: 10px;
-    background: linear-gradient(90deg, rgba(36, 119, 213, .78), rgba(31, 157, 219, .68));
-    color: #effaff;
+    background: linear-gradient(90deg, rgba(190, 40, 52, .95), rgba(224, 58, 70, .92));
+    color: #fff5f6;
     font-size: 9px;
     font-weight: 900;
     letter-spacing: .35px;
@@ -1001,7 +1001,7 @@
 }
 
 .marketplace-create:hover:not(:disabled) {
-    border-color: #72ceff;
+    border-color: #ff8f97;
     filter: brightness(1.08);
 }
 
@@ -2168,5 +2168,66 @@
     .marketplace-custom-select-option {
         min-height: 35px;
         font-size: 10px;
+    }
+}
+
+.marketplace-brand span,
+.marketplace-manager-header > div > span,
+.marketplace-manager-section-head span,
+.marketplace-section-head > div:first-child > span,
+.marketplace-section-meta span,
+.marketplace-card-count,
+.marketplace-card-footer span,
+.marketplace-footer,
+.marketplace-manager-section-head button,
+.marketplace-own-title span,
+.marketplace-own-info small,
+.marketplace-own-empty span,
+.marketplace-field-label,
+.marketplace-sell-preview-info small,
+.marketplace-sell-summary span,
+.marketplace-buy-header span,
+.marketplace-create-confirm-header span,
+.marketplace-create-confirm-details span,
+.marketplace-create-confirm-note {
+    font-size: 10px;
+}
+
+.marketplace-my-button,
+.marketplace-my-button strong,
+.marketplace-sort,
+.marketplace-field,
+.marketplace-section-meta strong,
+.marketplace-card-seller,
+.marketplace-buy,
+.marketplace-empty span,
+.marketplace-pagination > button,
+.marketplace-pages button,
+.marketplace-manager-header-actions > strong,
+.marketplace-own-title strong,
+.marketplace-own-actions strong,
+.marketplace-own-actions button,
+.marketplace-create,
+.marketplace-buy-info span,
+.marketplace-buy-info small,
+.marketplace-buy-price-row span,
+.marketplace-buy-total-row span,
+.marketplace-buy-actions button,
+.marketplace-own-remaining,
+.marketplace-create-confirm-info small,
+.marketplace-create-confirm-actions button,
+.marketplace-custom-select-trigger,
+.marketplace-custom-select-option {
+    font-size: 11px;
+}
+
+@media (max-width: 1366px), (max-height: 768px) {
+    .marketplace-card-seller,
+    .marketplace-buy,
+    .marketplace-own-actions button,
+    .marketplace-create,
+    .marketplace-buy-actions button,
+    .marketplace-create-confirm-actions button {
+        font-size: 11px;
     }
 }

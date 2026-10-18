@@ -759,3 +759,8 @@
         top: 10px;
     }
 }
+
+#pc-hud .value,
+#pc-hud.preview::after {
+    font-size: 13px;
+}

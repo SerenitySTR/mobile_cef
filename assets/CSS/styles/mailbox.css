@@ -1142,3 +1142,98 @@ body.hud-platform-mobile .mailbox-claim,
 body.hud-platform-mobile .mailbox-delete {
     font-size: 10px;
 }
+
+.mailbox-unread,
+.mailbox-entry-preview,
+.mailbox-entry-time,
+.mailbox-list-empty span,
+.mailbox-details-empty span,
+.mailbox-total-weight,
+.mailbox-attachment small,
+.mailbox-no-attachments,
+.mailbox-delete-confirm-copy > span,
+.mailbox-footer {
+    font-size: 10px;
+}
+
+.mailbox-attachment strong,
+.mailbox-claim,
+.mailbox-delete,
+.mailbox-delete-confirm-copy p,
+.mailbox-delete-confirm-actions button {
+    font-size: 11px;
+}
+
+body.hud-platform-mobile .mailbox-unread,
+body.hud-platform-mobile .mailbox-entry-preview,
+body.hud-platform-mobile .mailbox-attachment small,
+body.hud-platform-mobile .mailbox-total-weight {
+    font-size: 10px;
+}
+
+body.hud-platform-mobile .mailbox-entry-title,
+body.hud-platform-mobile .mailbox-claim,
+body.hud-platform-mobile .mailbox-delete {
+    font-size: 11px;
+}
+
+@media (max-width: 1366px), (max-height: 768px) {
+    .mailbox-claim,
+    .mailbox-delete {
+        font-size: 11px;
+    }
+}
+
+
+.mailbox-entry-title {
+    font-size: 12px;
+}
+
+.mailbox-entry-preview,
+.mailbox-entry-time,
+.mailbox-unread,
+.mailbox-message-meta,
+.mailbox-total-weight,
+.mailbox-attachment small,
+.mailbox-no-attachments,
+.mailbox-list-empty span,
+.mailbox-details-empty span,
+.mailbox-delete-confirm-copy > span,
+.mailbox-footer {
+    font-size: 11px;
+}
+
+.mailbox-message-text {
+    font-size: 13px;
+    line-height: 1.55;
+}
+
+.mailbox-attachment strong,
+.mailbox-claim,
+.mailbox-delete,
+.mailbox-delete-confirm-copy p,
+.mailbox-delete-confirm-actions button {
+    font-size: 12px;
+}
+
+body.hud-platform-mobile .mailbox-entry-title {
+    font-size: 11px;
+}
+
+body.hud-platform-mobile .mailbox-entry-preview,
+body.hud-platform-mobile .mailbox-message-meta,
+body.hud-platform-mobile .mailbox-attachment small,
+body.hud-platform-mobile .mailbox-total-weight,
+body.hud-platform-mobile .mailbox-unread {
+    font-size: 10px;
+}
+
+body.hud-platform-mobile .mailbox-message-text {
+    font-size: 12px;
+    line-height: 1.5;
+}
+
+body.hud-platform-mobile .mailbox-claim,
+body.hud-platform-mobile .mailbox-delete {
+    font-size: 11px;
+}

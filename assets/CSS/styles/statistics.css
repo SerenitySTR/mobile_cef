@@ -1666,3 +1666,53 @@
         font-size: 9px !important;
     }
 }
+
+.statistics-online,
+.statistics-profile-row span,
+.statistics-profile-row strong,
+.statistics-status-header span,
+.statistics-status-header strong,
+.statistics-skill-header span,
+.statistics-skill-header strong,
+.statistics-empty {
+    font-size: 12px;
+}
+
+.statistics-card-title {
+    font-size: 12px;
+}
+
+@media (max-height: 800px) and (orientation: landscape) {
+    .statistics-online,
+    .statistics-profile-row span,
+    .statistics-status-header span,
+    .statistics-card-title,
+    .statistics-skill-header span {
+        font-size: 10px !important;
+    }
+
+    .statistics-profile-row strong,
+    .statistics-section-title h2,
+    .statistics-status-header strong,
+    .statistics-skill-header strong {
+        font-size: 10.5px !important;
+    }
+}
+
+@media (max-height: 620px) and (orientation: landscape) {
+    .statistics-online,
+    .statistics-profile-row span,
+    .statistics-status-header span,
+    .statistics-card-title,
+    .statistics-skill-header span {
+        font-size: 9.5px !important;
+    }
+
+    .statistics-profile-row strong,
+    .statistics-section-title h2,
+    .statistics-status-header strong,
+    .statistics-skill-header strong,
+    #statistics-close-button {
+        font-size: 10px !important;
+    }
+}

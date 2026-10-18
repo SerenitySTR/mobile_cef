@@ -2572,3 +2572,19 @@ body.hud-platform-mobile #hud-corner-info {
     -webkit-backdrop-filter: none !important;
     backdrop-filter: none !important;
 }
+
+.hud-corner-row,
+.hud-corner-row strong {
+    font-size: 11px;
+}
+
+.hud-calendar-icon::after {
+    font-size: 10px;
+}
+
+@media (max-width: 1000px), (max-height: 600px) {
+    .hud-corner-row,
+    .hud-corner-row strong {
+        font-size: 9.5px;
+    }
+}

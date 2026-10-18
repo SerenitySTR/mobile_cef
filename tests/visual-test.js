@@ -4,6 +4,7 @@
     var controls = null;
     var menu = null;
     var menuList = null;
+    var navigation = null;
     var initialized = false;
     var currentView = "";
     function receive(name, data) {
@@ -28,6 +29,8 @@
             Dialog.screen.classList.remove("active", "opened", "closing");
         if (typeof Tickets !== "undefined" && Tickets.Hide)
             Tickets.Hide();
+        if (typeof Mailbox !== "undefined" && Mailbox.Hide)
+            Mailbox.Hide();
         if (typeof AdminPanel !== "undefined" && AdminPanel.Hide)
             AdminPanel.Hide();
         if (typeof Notifications !== "undefined" && Notifications.Clear)
@@ -40,7 +43,7 @@
             Inventory.HideSellOffer();
         [
             "authorization", "registration", "spawn-selection", "error-screen",
-            "statistics", "inventory", "marketplace", "bank", "house-menu", "main-menu", "quick-menu", "tickets", "admin-panel", "speedometer"
+            "statistics", "inventory", "marketplace", "mailbox", "bank", "house-menu", "main-menu", "quick-menu", "tickets", "admin-panel", "speedometer"
         ].forEach(function (id) { hideById(id); });
         document.querySelectorAll("[data-cef-test-surface]").forEach(function (element) {
             element.classList.add("hidden");
@@ -82,8 +85,19 @@
             createControls();
         if (controls)
             controls.style.display = visible ? "flex" : "none";
+        if (navigation)
+            navigation.style.display = visible ? "block" : "none";
         if (!visible)
             setMenuOpen(false);
+    }
+    function showRelative(offset) {
+        if (!views.length)
+            return false;
+        var index = views.findIndex(function (view) { return view.id === currentView; });
+        if (index < 0)
+            index = offset > 0 ? -1 : 0;
+        index = (index + offset + views.length) % views.length;
+        return show(views[index].id);
     }
     function setMenuOpen(open) {
         if (!menu && open)
@@ -143,6 +157,8 @@
             controls.remove();
         if (menu)
             menu.remove();
+        if (navigation)
+            navigation.remove();
         controls = document.createElement("div");
         controls.id = "cef-visual-test-controls";
         if (wasHidden)
@@ -169,6 +185,22 @@
         });
         controls.append(menuButton, current, closeButton);
         document.body.appendChild(controls);
+        navigation = document.createElement("div");
+        navigation.id = "cef-visual-test-navigation";
+        var previousButton = document.createElement("button");
+        previousButton.type = "button";
+        previousButton.className = "cef-test-nav-button cef-test-nav-prev";
+        previousButton.textContent = "‹";
+        previousButton.setAttribute("aria-label", "Попередній UI");
+        previousButton.addEventListener("click", function () { showRelative(-1); });
+        var nextButton = document.createElement("button");
+        nextButton.type = "button";
+        nextButton.className = "cef-test-nav-button cef-test-nav-next";
+        nextButton.textContent = "›";
+        nextButton.setAttribute("aria-label", "Наступний UI");
+        nextButton.addEventListener("click", function () { showRelative(1); });
+        navigation.append(previousButton, nextButton);
+        document.body.appendChild(navigation);
         menu = document.createElement("aside");
         menu.id = "cef-visual-test-menu";
         menu.setAttribute("aria-hidden", "true");
@@ -220,6 +252,8 @@
         setControlsVisible: setControlsVisible,
         setMenuOpen: setMenuOpen,
         toggleMenu: toggleMenu,
+        previous: function () { return showRelative(-1); },
+        next: function () { return showRelative(1); },
         get views() { return views.slice(); },
         get currentView() { return currentView; }
     };

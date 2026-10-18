@@ -506,8 +506,8 @@ test('password eye: reveal buttons toggle on touch/mouse without refocusing inpu
 test('visual test: reusable UI selector is scrollable and available on PC/mobile', () => {
     const js = read('tests/visual-test.js');
     const css = read('tests/visual-test.css');
-    hasAll(js, ['UI MENU', 'cef-visual-test-menu', 'setMenuOpen', 'cef-test-menu-item'], 'tests/visual-test.js');
-    hasAll(css, ['#cef-visual-test-menu', 'overflow-y: auto', 'touch-action: pan-y', '-webkit-overflow-scrolling: touch'], 'tests/visual-test.css');
+    hasAll(js, ['UI MENU', 'cef-visual-test-menu', 'setMenuOpen', 'cef-test-menu-item', 'cef-visual-test-navigation', 'showRelative(-1)', 'showRelative(1)'], 'tests/visual-test.js');
+    hasAll(css, ['#cef-visual-test-menu', 'overflow-y: auto', 'touch-action: pan-y', '-webkit-overflow-scrolling: touch', '#cef-visual-test-navigation', '.cef-test-nav-prev', '.cef-test-nav-next'], 'tests/visual-test.css');
 });
 test('visual test: tests/index.html and reusable test assets are present', () => {
     ok(fs.existsSync(path.join(root, 'tests/index.html')), 'tests/index.html is missing. Run: node tests/build.js');
@@ -611,6 +611,22 @@ test('architecture: viewport manager and automatic asset versions are enabled', 
     ok(!/\?v=/.test(template), 'Template still contains manual cache versions');
     const built = read('index.html');
     ok(/assets\/JavaScript\/cef-wrapper\.js\?v=[0-9a-f]{10}/.test(built), 'Built assets do not use content hashes');
+});
+test('typography: readable font sizes live in their component styles', () => {
+    const template = read('src/index.template.html');
+    ok(!template.includes('font-legibility.css'), 'Standalone font-legibility.css is still linked');
+    ok(!fs.existsSync(path.join(root, 'assets/CSS/styles/font-legibility.css')), 'Standalone font-legibility.css still exists');
+    hasAll(read('assets/CSS/styles/marketplace.css'), ['.marketplace-card-seller', 'font-size: 11px'], 'marketplace.css');
+    hasAll(read('assets/CSS/styles/inventory.css'), ['.inventory-item-weight', 'font-size: 10px'], 'inventory.css');
+    hasAll(read('assets/CSS/styles/mailbox.css'), ['.mailbox-entry-preview', 'font-size: 10px'], 'mailbox.css');
+    hasAll(read('assets/CSS/styles/bank.css'), ['.bank-kicker', 'font-size: 10.5px'], 'bank.css');
+    hasAll(read('assets/CSS/styles/house-menu.css'), ['.house-menu-kicker', 'font-size: 11px'], 'house-menu.css');
+    hasAll(read('assets/CSS/styles/main-menu.css'), ['.main-menu-card-description', 'font-size: 10px'], 'main-menu.css');
+    hasAll(read('assets/CSS/styles/dialog.css'), ['.dialog-list-description', 'font-size: 10px'], 'dialog.css');
+    hasAll(read('assets/CSS/styles/tickets.css'), ['.ticket-message p', 'font-size: 11px'], 'tickets.css');
+    hasAll(read('assets/CSS/styles/statistics.css'), ['.statistics-card-title', 'font-size: 12px'], 'statistics.css');
+    hasAll(read('assets/CSS/styles/notifications.css'), ['.notification-toast .notification-text', 'font-size: 8.5px'], 'notifications.css');
+    hasAll(read('assets/CSS/styles/registration.css'), ['body.hud-platform-mobile .registration-headline p', 'font-size: clamp(9px, 2.1vh, 11px)'], 'registration.css');
 });
 test('layers: dialogs, notifications, errors and loading stay above screens', () => {
     const css = read('assets/CSS/styles/ui-global.css');

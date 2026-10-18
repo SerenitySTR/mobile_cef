@@ -1498,3 +1498,136 @@ body.hud-platform-pc .notification-bottom-reward .notification-brand span, body.
         font-size: 7px;
     }
 }
+
+.notification-time,
+.notification-banner-label,
+.notification-bottom-label,
+.notification-brand span {
+    font-size: 12px;
+}
+
+body.hud-platform-pc .notification-bottom-reward .notification-bottom-label,
+body.hud-platform-pc .notification-bottom-achievement .notification-bottom-label,
+body.hud-platform-pc .notification-bottom-info .notification-bottom-label,
+body.hud-platform-pc .notification-bottom-reward .notification-brand,
+body.hud-platform-pc .notification-bottom-achievement .notification-brand,
+body.hud-platform-pc .notification-bottom-info .notification-brand {
+    font-size: 10px;
+}
+
+body.hud-platform-pc .notification-bottom-reward .notification-brand span,
+body.hud-platform-pc .notification-bottom-achievement .notification-brand span,
+body.hud-platform-pc .notification-bottom-info .notification-brand span {
+    font-size: 9px;
+}
+
+body.hud-platform-pc .notification-bottom-reward .notification-text,
+body.hud-platform-pc .notification-bottom-achievement .notification-text,
+body.hud-platform-pc .notification-bottom-info .notification-text {
+    font-size: 12px;
+}
+
+@media (max-width: 1366px), (max-height: 768px) {
+    .notification-time,
+    .notification-banner-label,
+    .notification-bottom-label {
+        font-size: 11px;
+    }
+}
+
+@media (orientation: landscape) and (max-height: 430px) {
+    .notification-toast .notification-title {
+        font-size: 10px;
+    }
+
+    .notification-toast .notification-text,
+    .notification-toast .notification-time {
+        font-size: 8.5px;
+    }
+
+    .notification-banner .notification-text,
+    .notification-banner .notification-time,
+    .notification-subtext {
+        font-size: 9px;
+    }
+
+    .notification-bottom .notification-title {
+        font-size: 11px;
+    }
+
+    .notification-bottom .notification-text {
+        font-size: 9px;
+    }
+
+    .notification-brand {
+        font-size: 8.5px;
+    }
+
+    .notification-brand span {
+        font-size: 7.5px;
+    }
+}
+
+@media (orientation: landscape) and (max-height: 340px) {
+    .notification-toast .notification-title {
+        font-size: 9px;
+    }
+
+    .notification-toast .notification-text,
+    .notification-toast .notification-time {
+        font-size: 8px;
+    }
+}
+
+
+.notification-bottom {
+    min-height: 0;
+    padding-top: 14px;
+    padding-bottom: 14px;
+    align-items: center;
+}
+
+.notification-bottom .notification-body {
+    align-self: center;
+}
+
+.notification-bottom .notification-progress {
+    bottom: 4px;
+}
+
+.notification-banner .notification-text {
+    font-size: 15px;
+    line-height: 1.4;
+}
+
+@media (max-width: 760px) {
+    .notification-bottom {
+        min-height: 0;
+        padding-top: 11px;
+        padding-bottom: 11px;
+    }
+
+    .notification-banner .notification-text {
+        font-size: 13px;
+        line-height: 1.38;
+    }
+}
+
+@media (orientation: landscape) and (max-height: 430px) {
+    .notification-bottom {
+        min-height: 0;
+        padding-top: 8px;
+        padding-bottom: 8px;
+    }
+
+    .notification-banner .notification-text {
+        font-size: 12px;
+        line-height: 1.35;
+    }
+}
+
+body.hud-platform-pc .notification-bottom-reward,
+body.hud-platform-pc .notification-bottom-achievement,
+body.hud-platform-pc .notification-bottom-info {
+    min-height: 0;
+}

@@ -93,3 +93,7 @@ body.hud-platform-mobile #loading-screen .loading-container {
     max-width: calc(100vw - 24px);
     max-height: calc(100vh - 24px);
 }
+
+.loading-status {
+    font-size: 12px;
+}

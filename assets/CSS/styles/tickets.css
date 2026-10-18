@@ -990,3 +990,117 @@ body.hud-platform-mobile .tickets-finish {
         font-size: 8px;
     }
 }
+
+.tickets-kicker,
+.tickets-header p,
+.tickets-tabs button,
+.ticket-row-top,
+.ticket-row small,
+.tickets-status,
+.tickets-empty span,
+.tickets-thread-head span,
+.ticket-message b,
+.ticket-message time,
+.tickets-quick-toggle,
+.tickets-quick-replies button {
+    font-size: 10px;
+}
+
+.ticket-message p {
+    font-size: 11px;
+}
+
+body.hud-platform-mobile #tickets-create,
+body.hud-platform-mobile .tickets-tabs button,
+body.hud-platform-mobile .ticket-row-top,
+body.hud-platform-mobile .ticket-row small,
+body.hud-platform-mobile .tickets-status,
+body.hud-platform-mobile .ticket-message b,
+body.hud-platform-mobile .ticket-message time,
+body.hud-platform-mobile .tickets-quick-toggle,
+body.hud-platform-mobile .tickets-quick-replies button {
+    font-size: 10px;
+}
+
+body.hud-platform-mobile .ticket-message p,
+body.hud-platform-mobile .tickets-reply input,
+body.hud-platform-mobile .tickets-reply textarea {
+    font-size: 11px;
+}
+
+
+.tickets-kicker,
+.tickets-header p,
+.tickets-tabs button,
+.ticket-row-top,
+.ticket-row small,
+.tickets-status,
+.tickets-thread-head span,
+.ticket-message b,
+.ticket-message time,
+.tickets-quick-toggle,
+.tickets-quick-replies button {
+    font-size: 11px;
+}
+
+.ticket-row strong,
+.tickets-primary,
+#tickets-send,
+.tickets-finish,
+.tickets-reply input,
+.tickets-modal input,
+.tickets-modal textarea {
+    font-size: 13px;
+}
+
+.ticket-message p {
+    font-size: 14px;
+    line-height: 1.55;
+}
+
+@media (max-width: 760px) {
+    .tickets-tabs button,
+    .ticket-row-top,
+    .ticket-row small,
+    .tickets-status,
+    .tickets-thread-head span,
+    .ticket-message b,
+    .ticket-message time,
+    .tickets-quick-toggle,
+    .tickets-quick-replies button {
+        font-size: 10px;
+    }
+
+    .ticket-row strong,
+    .tickets-reply input,
+    #tickets-send,
+    .tickets-finish {
+        font-size: 12px;
+    }
+
+    .ticket-message p {
+        font-size: 13px;
+        line-height: 1.5;
+    }
+}
+
+@media (max-height: 600px) and (orientation: landscape) {
+    .tickets-tabs button,
+    .ticket-row-top,
+    .ticket-row small,
+    .tickets-status,
+    .tickets-thread-head span,
+    .ticket-message b,
+    .ticket-message time,
+    .tickets-quick-toggle,
+    .tickets-quick-replies button,
+    .tickets-finish {
+        font-size: 9px;
+    }
+
+    .ticket-message p,
+    .tickets-reply input,
+    #tickets-send {
+        font-size: 11px;
+    }
+}

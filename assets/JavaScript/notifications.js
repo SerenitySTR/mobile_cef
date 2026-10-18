@@ -104,8 +104,7 @@ class Notifications {
             Text: data.Text ?? data.text ?? data.Message ?? data.message ?? "",
             Subtext: data.Subtext ?? data.subtext ?? "",
             Time: data.Time ?? data.time ?? "",
-            Duration: Number(data.Duration ?? data.duration ?? 5000),
-            Brand: data.Brand ?? data.brand ?? true
+            Duration: Number(data.Duration ?? data.duration ?? 5000)
         };
     }
     static #CreateToast(data) {
@@ -156,12 +155,6 @@ class Notifications {
                 ${data.Label ? `<div class="notification-bottom-label">${this.#Escape(data.Label)}</div>` : ""}
                 <div class="notification-title">${this.#Escape(data.Title || this.#DefaultTitle(data.Type))}</div>
                 ${data.Text ? `<p class="notification-text">${this.#Escape(data.Text)}</p>` : ""}
-                ${data.Brand ? `
-                    <div class="notification-brand">
-                        ANTARES
-                        <span>ROLEPLAY</span>
-                    </div>
-                ` : ""}
             </div>
             ${data.Duration > 0 ? `<div class="notification-progress"><span></span></div>` : ""}
         `;

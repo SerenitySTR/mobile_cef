@@ -301,3 +301,8 @@
         bottom: calc(6px + env(safe-area-inset-bottom, 0px));
     }
 }
+
+.speedometer-fuel-separator,
+.speedometer-litre {
+    font-size: 12px;
+}

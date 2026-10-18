@@ -355,7 +355,7 @@
         }, 0);
     });
 
-    Tests.register("marketplace-my", "Marketplace / My Listings", function () {
+    Tests.register("marketplace-my", "Marketplace / Sell Item", function () {
         var data = marketplaceTestData();
         Tests.receive("marketplace:set", data);
         Tests.receive("marketplace:show", {});

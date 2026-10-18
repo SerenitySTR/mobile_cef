@@ -392,3 +392,26 @@
     .bank-fee-summary { grid-template-columns: 1fr; }
     .bank-confirm-actions { grid-template-columns: 1fr; }
 }
+
+.bank-kicker,
+.bank-account-badge span,
+.bank-section-head span,
+.bank-transaction-copy small,
+.bank-form-error,
+.bank-history-list .bank-transaction-copy small,
+.bank-footer,
+.bank-fee-summary span,
+.bank-confirm-kicker,
+.bank-confirm-details span {
+    font-size: 10.5px;
+}
+
+.bank-section-head button {
+    font-size: 11px;
+}
+
+@media (max-width: 1366px), (max-height: 768px) {
+    .bank-section-head button {
+        font-size: 11px;
+    }
+}

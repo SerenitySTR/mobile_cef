@@ -849,3 +849,19 @@ html, body {
         max-height: 100px;
     }
 }
+
+.authorization-badge {
+    font-size: 12px;
+}
+
+.authorization-footer small {
+    font-size: 11px;
+}
+
+body.hud-platform-mobile .authorization-headline p {
+    font-size: clamp(10px, 2.15vh, 12px);
+}
+
+body.hud-platform-mobile .authorization-footer small {
+    font-size: 10px;
+}

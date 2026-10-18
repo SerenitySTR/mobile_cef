@@ -1491,3 +1491,18 @@ body.hud-platform-mobile .main-menu-user-info div {
         font-size: 8px;
     }
 }
+
+.main-menu-title p,
+.main-menu-user-info strong {
+    font-size: 11px;
+}
+
+.main-menu-user-info div,
+.main-menu-card-description {
+    font-size: 10px;
+}
+
+body.hud-platform-mobile .main-menu-user-info div,
+body.hud-platform-mobile .main-menu-card-description {
+    font-size: 10.5px;
+}

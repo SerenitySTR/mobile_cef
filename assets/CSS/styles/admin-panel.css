@@ -1198,3 +1198,26 @@
     max-width: 100%;
     overscroll-behavior: contain;
 }
+
+.admin-brand,
+.admin-badge,
+.admin-quick button,
+.admin-message small,
+.admin-quick-menu button,
+.admin-transfer-empty {
+    font-size: 12px;
+}
+
+#admin-panel.admin-mobile-landscape .admin-brand,
+#admin-panel.admin-mobile-landscape .admin-badge,
+#admin-panel.admin-mobile-landscape .admin-muted,
+#admin-panel.admin-mobile-landscape small,
+#admin-panel.admin-mobile-landscape .admin-ticket small,
+#admin-panel.admin-mobile-landscape .admin-ticket span,
+#admin-panel.admin-mobile-landscape .admin-message small,
+#admin-panel.admin-mobile-landscape .admin-quick-menu button,
+#admin-panel.admin-mobile-landscape .admin-transfer-option,
+#admin-panel.admin-mobile-landscape .admin-table th,
+#admin-panel.admin-mobile-landscape .admin-table td {
+    font-size: 11px;
+}

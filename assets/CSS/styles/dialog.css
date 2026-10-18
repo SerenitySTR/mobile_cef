@@ -1071,3 +1071,29 @@
         font-size: 9px;
     }
 }
+
+.dialog-list-number,
+.dialog-list-title,
+.dialog-list-description,
+.dialog-table th,
+.dialog-table td {
+    font-size: 10px;
+}
+
+#dialog-screen.dialog-mobile-landscape .dialog-text,
+#dialog-screen.dialog-mobile-landscape .dialog-input,
+#dialog-screen.dialog-mobile-landscape .dialog-list-title,
+#dialog-screen.dialog-mobile-landscape .dialog-list-description,
+#dialog-screen.dialog-mobile-landscape .dialog-list-number,
+#dialog-screen.dialog-mobile-landscape .dialog-table th,
+#dialog-screen.dialog-mobile-landscape .dialog-table td,
+#dialog-screen.dialog-mobile-landscape .dialog-button,
+#dialog-screen.dialog-mobile-landscape.dialog-mobile-low .dialog-text,
+#dialog-screen.dialog-mobile-landscape.dialog-mobile-low .dialog-input,
+#dialog-screen.dialog-mobile-landscape.dialog-mobile-low .dialog-list-title,
+#dialog-screen.dialog-mobile-landscape.dialog-mobile-low .dialog-list-description,
+#dialog-screen.dialog-mobile-landscape.dialog-mobile-low .dialog-table th,
+#dialog-screen.dialog-mobile-landscape.dialog-mobile-low .dialog-table td,
+#dialog-screen.dialog-mobile-landscape.dialog-mobile-low .dialog-button {
+    font-size: 10px !important;
+}

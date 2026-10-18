@@ -399,3 +399,10 @@ body.hud-platform-mobile .quick-menu-status,
 body.hud-platform-mobile .quick-menu-hint {
     font-size: 9px;
 }
+
+.quick-menu-status,
+.quick-menu-hint,
+body.hud-platform-mobile .quick-menu-status,
+body.hud-platform-mobile .quick-menu-hint {
+    font-size: 10px;
+}

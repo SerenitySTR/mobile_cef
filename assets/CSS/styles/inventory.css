@@ -3436,3 +3436,47 @@ body.hud-platform-mobile .inventory-sort {
         display: none;
     }
 }
+
+.inventory-kicker,
+.inventory-weight-info span,
+.inventory-item-count,
+.inventory-details-type,
+.inventory-param-empty,
+.inventory-sort,
+.inventory-split,
+.inventory-sell,
+.inventory-sell-preview-info span,
+.inventory-sell-offer-values span {
+    font-size: 11px;
+}
+
+.inventory-item-weight,
+.inventory-footer,
+.inventory-params-title,
+.equipment-slot-name,
+.inventory-delete-kicker,
+.inventory-sell-offer-kicker,
+.inventory-sell-offer-params-title {
+    font-size: 10px;
+}
+
+body.hud-platform-mobile .inventory-sell-card p,
+body.hud-platform-mobile .inventory-sell-preview-info span,
+body.hud-platform-mobile .inventory-sell-field span,
+body.hud-platform-mobile .inventory-sell-card .inventory-sell-field span,
+body.hud-platform-mobile .inventory-sell-offer-kicker,
+body.hud-platform-mobile .inventory-sell-offer-info span,
+body.hud-platform-mobile .inventory-sell-offer-values span,
+body.hud-platform-mobile .inventory-sell-offer-params-title,
+body.hud-platform-mobile .inventory-sell-offer-params .inventory-param span,
+body.hud-platform-mobile .inventory-sell-offer-params .inventory-param strong {
+    font-size: 10.5px;
+}
+
+@media (max-width: 1366px), (max-height: 768px) {
+    .inventory-sort,
+    .inventory-split,
+    .inventory-sell {
+        font-size: 11px;
+    }
+}

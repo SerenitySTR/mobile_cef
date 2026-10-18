@@ -924,3 +924,13 @@
     filter: none;
     opacity: 1;
 }
+
+.spawn-item-info small,
+.spawn-preview-body > p {
+    font-size: 12px;
+}
+
+.spawn-preview-story,
+.spawn-footer {
+    font-size: 10px;
+}
