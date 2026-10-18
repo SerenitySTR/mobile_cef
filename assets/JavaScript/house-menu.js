@@ -31,7 +31,7 @@ var HouseMenu = {
         if (info)
             info.onclick = function () { self.Render(); };
         if (lock)
-            lock.onclick = function () { self.SendAction("house:lock"); };
+            lock.onclick = function () { self.ToggleDoor(); };
         if (sell)
             sell.onclick = function () { self.OpenSellConfirm(); };
         if (confirmSell)
@@ -101,7 +101,6 @@ var HouseMenu = {
         var houseClass = this.First(data, ["Class", "class", "HouseClass", "houseClass"]);
         var garage = this.First(data, ["Garage", "garage", "HasGarage", "hasGarage"]);
         var locked = this.First(data, ["Locked", "locked", "IsLocked", "isLocked"]);
-        var statePrice = this.First(data, ["StatePrice", "statePrice", "SellPrice", "sellPrice"]);
         var image = this.First(data, ["Image", "image"]);
 
         if (id !== undefined) this.data.HouseId = Number(id) || 0;
@@ -111,7 +110,6 @@ var HouseMenu = {
         if (houseClass !== undefined) this.data.Class = String(houseClass || "");
         if (garage !== undefined) this.data.Garage = this.ToBool(garage);
         if (locked !== undefined) this.data.Locked = this.ToBool(locked);
-        if (statePrice !== undefined) this.data.StatePrice = Number(statePrice) || 0;
         if (image !== undefined) this.data.Image = String(image || "");
 
         this.Render();
@@ -129,8 +127,10 @@ var HouseMenu = {
         this.SetText("house-menu-garage", this.data.Garage ? "Так" : "Ні");
         this.SetText("house-menu-door-status", this.data.Locked ? "Закрито" : "Відкрито");
         this.SetText("house-menu-door-badge", this.data.Locked ? "Закрито" : "Відкрито");
-        this.SetText("house-menu-sell-price", this.data.StatePrice > 0 ? this.Money(this.data.StatePrice) : "—");
-        this.SetText("house-menu-confirm-price", this.data.StatePrice > 0 ? this.Money(this.data.StatePrice) : "—");
+
+        var statePrice = Math.floor(Math.max(0, Number(this.data.Price) || 0) / 2);
+        this.SetText("house-menu-sell-price", this.Money(statePrice));
+        this.SetText("house-menu-confirm-price", this.Money(statePrice));
 
         var status = document.getElementById("house-menu-door-status");
         var badge = document.getElementById("house-menu-door-badge");
@@ -147,11 +147,26 @@ var HouseMenu = {
             lock.disabled = false;
             var lockLabel = lock.querySelector("span:last-child");
             if (lockLabel)
-                lockLabel.textContent = this.data.Locked ? "Відкрити дім" : "Закрити дім";
-            lock.setAttribute("title", this.data.Locked ? "Відкрити дім" : "Закрити дім");
+                lockLabel.textContent = this.data.Locked ? "Відкрити двері" : "Закрити двері";
+            lock.setAttribute("title", this.data.Locked ? "Відкрити двері" : "Закрити двері");
         }
-        if (image)
-            image.src = this.data.Image || "./assets/CSS/Images/Spawn/house-new.webp";
+        if (image) {
+            var fallbackImage = "./assets/CSS/Images/Spawn/house-new.webp";
+            image.onerror = function () {
+                image.onerror = null;
+                image.src = fallbackImage;
+            };
+            image.src = this.data.Image || fallbackImage;
+        }
+    },
+
+    ToggleDoor: function () {
+        GameCef.sendJson("house:lock", { HouseId: this.data.HouseId });
+
+        // Update the visible state immediately. A later house:set from the server
+        // remains authoritative and can correct the state if the action failed.
+        this.data.Locked = !this.data.Locked;
+        this.Render();
     },
 
     SendAction: function (eventName) {

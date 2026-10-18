@@ -524,7 +524,6 @@
             Class: "Середній",
             Garage: true,
             Locked: false,
-            StatePrice: 120000,
             Image: "./assets/CSS/Images/Spawn/house-new.webp"
         });
     });
