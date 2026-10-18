@@ -515,6 +515,19 @@
     Tests.register("bank-deposit", "Bank / Deposit", function () { showBankTest("deposit"); });
     Tests.register("bank-withdraw", "Bank / Withdraw", function () { showBankTest("withdraw"); });
     Tests.register("bank-transfer", "Bank / Transfer", function () { showBankTest("transfer"); });
+    Tests.register("house-menu", "House / Management", function () {
+        Tests.receive("house:show", {
+            HouseId: 1287,
+            Number: 1287,
+            Owner: "Alex_Rivera",
+            Price: 240000,
+            Class: "Середній",
+            Garage: true,
+            Locked: false,
+            StatePrice: 120000,
+            Image: "./assets/CSS/Images/Spawn/house-new.webp"
+        });
+    });
     Tests.register("statistics", "Statistics", function () {
         Tests.receive("statistics:show", {
             Profile: {

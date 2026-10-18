@@ -18,6 +18,7 @@
     <link rel="stylesheet" href="./assets/CSS/styles/marketplace.css?v=20261013-dropdownfix1">
     <link rel="stylesheet" href="./assets/CSS/styles/mailbox.css?v=20261013-deleteconfirm1">
     <link rel="stylesheet" href="./assets/CSS/styles/bank.css?v=20261014-bank3">
+    <link rel="stylesheet" href="./assets/CSS/styles/house-menu.css?v=20261018-house1">
     <link rel="stylesheet" href="./assets/CSS/styles/main-menu.css?v=20261012-selltype1">
     <link rel="stylesheet" href="./assets/CSS/styles/quick-menu.css?v=20261012-selltype1">
     <link rel="stylesheet" href="./assets/CSS/styles/dialog.css?v=20261012-selltype1">
@@ -748,7 +749,7 @@
                         <path d="M8 7V5h8v2"></path>
                     </svg>
                     <span>Мої оголошення</span>
-                    <strong id="marketplace-my-badge">0</strong>
+                    <strong id="marketplace-my-badge">0/10</strong>
                 </button>
 
                 <button class="marketplace-close" id="marketplace-close" type="button" aria-label="Закрити">
@@ -824,10 +825,10 @@
                 <div>
                     <span>КЕРУВАННЯ ПРОДАЖЕМ</span>
                     <h2>Мої оголошення</h2>
-                    <p>Керуйте активними оголошеннями.</p>
+                    <p>Одночасно можна виставити до 10 предметів.</p>
                 </div>
                 <div class="marketplace-manager-header-actions">
-                    <strong id="marketplace-manager-count">0</strong>
+                    <strong id="marketplace-manager-count">0 / 10</strong>
                     <button id="marketplace-manager-close" type="button" aria-label="Закрити">
                         <svg viewBox="0 0 24 24" aria-hidden="true">
                             <path d="M6 6l12 12"></path>
@@ -859,7 +860,7 @@
                     <div class="marketplace-sell-head">
                         <span>НОВЕ ОГОЛОШЕННЯ</span>
                         <h3>Виставити предмет</h3>
-                        <p id="marketplace-limit-text">Без обмеження кількості оголошень.</p>
+                        <p id="marketplace-limit-text">Доступно ще 10 місць.</p>
                     </div>
 
                     <label class="marketplace-field-label" for="marketplace-sell-item">Предмет</label>
@@ -1096,6 +1097,23 @@
             <span>ПОШТОВА СКРИНЬКА</span>
         </footer>
     </div>
+
+    <div class="mailbox-delete-confirm" id="mailbox-delete-confirm" aria-hidden="true">
+        <div class="mailbox-delete-confirm-card" role="dialog" aria-modal="true" aria-labelledby="mailbox-delete-confirm-title">
+            <div class="mailbox-delete-confirm-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24"><path d="M12 9v4"></path><path d="M12 17h.01"></path><path d="M10.3 3.8 2.7 17a2 2 0 0 0 1.7 3h15.2a2 2 0 0 0 1.7-3L13.7 3.8a2 2 0 0 0-3.4 0Z"></path></svg>
+            </div>
+            <div class="mailbox-delete-confirm-copy">
+                <span>УВАГА</span>
+                <h3 id="mailbox-delete-confirm-title">Видалити лист із вкладеннями?</h3>
+                <p id="mailbox-delete-confirm-text">У цьому листі залишилися вкладення. Після видалення вони будуть втрачені.</p>
+            </div>
+            <div class="mailbox-delete-confirm-actions">
+                <button class="mailbox-delete-confirm-cancel" id="mailbox-delete-confirm-cancel" type="button">Скасувати</button>
+                <button class="mailbox-delete-confirm-submit" id="mailbox-delete-confirm-submit" type="button">Видалити</button>
+            </div>
+        </div>
+    </div>
 </section>
 
     <section aria-hidden="true" id="bank">
@@ -1278,6 +1296,121 @@
 </div>
 </section>
 
+    <section id="house-menu" aria-hidden="true">
+    <div class="house-menu-panel">
+        <header class="house-menu-header">
+            <div class="house-menu-brand">
+                <span class="house-menu-brand-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24"><path d="M3 11 12 4l9 7"></path><path d="M5 10v10h14V10"></path><path d="M9 20v-6h6v6"></path></svg>
+                </span>
+                <div>
+                    <span class="house-menu-kicker">НЕРУХОМІСТЬ</span>
+                    <h1>Мій дім</h1>
+                </div>
+            </div>
+            <button class="house-menu-close" id="house-menu-close" type="button" aria-label="Закрити меню будинку">
+                <svg viewBox="0 0 24 24"><path d="M6 6l12 12"></path><path d="M18 6 6 18"></path></svg>
+            </button>
+        </header>
+
+        <div class="house-menu-body">
+            <nav class="house-menu-nav" aria-label="Керування будинком">
+                <button class="house-menu-nav-item active" id="house-menu-info" type="button">
+                    <span class="house-menu-nav-icon info" aria-hidden="true">
+                        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"></circle><path d="M12 11v6"></path><path d="M12 7h.01"></path></svg>
+                    </span>
+                    <span>Інформація</span>
+                </button>
+
+                <button class="house-menu-nav-item" id="house-menu-lock" type="button">
+                    <span class="house-menu-nav-icon" aria-hidden="true">
+                        <svg viewBox="0 0 24 24"><rect x="5" y="10" width="14" height="10" rx="2"></rect><path d="M8 10V7a4 4 0 0 1 8 0v3"></path></svg>
+                    </span>
+                    <span>Закрити дім</span>
+                </button>
+
+
+                <div class="house-menu-nav-spacer"></div>
+
+                <button class="house-menu-nav-item house-menu-sell" id="house-menu-sell" type="button">
+                    <span class="house-menu-nav-icon" aria-hidden="true">
+                        <svg viewBox="0 0 24 24"><path d="M3 9h18"></path><path d="M5 9V7l7-4 7 4v2"></path><path d="M6 9v8M10 9v8M14 9v8M18 9v8"></path><path d="M4 17h16v3H4z"></path></svg>
+                    </span>
+                    <span class="house-menu-sell-text"><b>Продати державі</b><small id="house-menu-sell-price">—</small></span>
+                </button>
+            </nav>
+
+            <main class="house-menu-content">
+                <div class="house-menu-content-head">
+                    <div>
+                        <span>ІНФОРМАЦІЯ ПРО ДІМ</span>
+                        <h2 id="house-menu-number-title">Будинок №—</h2>
+                    </div>
+                    <span class="house-menu-door-badge" id="house-menu-door-badge">Відкрито</span>
+                </div>
+
+                <div class="house-menu-info-card">
+                    <div class="house-menu-image-wrap">
+                        <img id="house-menu-image" src="./assets/CSS/Images/Spawn/house-new.webp" alt="Будинок" draggable="false">
+                        <div class="house-menu-image-number" id="house-menu-image-number">№ —</div>
+                    </div>
+
+                    <div class="house-menu-details">
+                        <div class="house-menu-detail-row">
+                            <span>Номер будинку</span>
+                            <strong id="house-menu-number">—</strong>
+                        </div>
+                        <div class="house-menu-detail-row">
+                            <span>Власник</span>
+                            <strong id="house-menu-owner">—</strong>
+                        </div>
+                        <div class="house-menu-detail-row">
+                            <span>Ціна</span>
+                            <strong id="house-menu-price">$0</strong>
+                        </div>
+                        <div class="house-menu-detail-row">
+                            <span>Клас</span>
+                            <strong class="accent" id="house-menu-class">—</strong>
+                        </div>
+                        <div class="house-menu-detail-row">
+                            <span>Гараж</span>
+                            <strong id="house-menu-garage">—</strong>
+                        </div>
+                        <div class="house-menu-detail-row">
+                            <span>Статус дверей</span>
+                            <strong id="house-menu-door-status">—</strong>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+
+        <footer class="house-menu-footer">
+            <span>ANTARES ROLEPLAY</span>
+            <span>ESC — закрити</span>
+        </footer>
+    </div>
+
+    <div class="house-menu-confirm" id="house-menu-confirm" aria-hidden="true">
+        <div class="house-menu-confirm-card" role="dialog" aria-modal="true" aria-labelledby="house-menu-confirm-title">
+            <span class="house-menu-confirm-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24"><path d="M3 9h18"></path><path d="M5 9V7l7-4 7 4v2"></path><path d="M6 9v8M10 9v8M14 9v8M18 9v8"></path><path d="M4 17h16v3H4z"></path></svg>
+            </span>
+            <span class="house-menu-confirm-kicker">ПРОДАЖ БУДИНКУ</span>
+            <h3 id="house-menu-confirm-title">Продати будинок державі?</h3>
+            <p>Після підтвердження будинок буде передано державі. Скасувати цю дію після продажу буде неможливо.</p>
+            <div class="house-menu-confirm-value">
+                <span>Ви отримаєте</span>
+                <strong id="house-menu-confirm-price">—</strong>
+            </div>
+            <div class="house-menu-confirm-actions">
+                <button class="house-menu-confirm-primary" id="house-menu-confirm-sell" type="button">Продати</button>
+                <button class="house-menu-confirm-cancel" id="house-menu-confirm-cancel" type="button">Скасувати</button>
+            </div>
+        </div>
+    </div>
+</section>
+
     <section id="main-menu">
     <div class="main-menu-panel">
         <header class="main-menu-header">
@@ -1454,6 +1587,7 @@
     <script src="./assets/JavaScript/marketplace.js?v=20261013-dropdownfix1"></script>
     <script src="./assets/JavaScript/mailbox.js?v=20261013-deleteconfirm1"></script>
     <script src="./assets/JavaScript/bank.js?v=20261014-bank3"></script>
+    <script src="./assets/JavaScript/house-menu.js?v=20261018-house1"></script>
     <script src="./assets/JavaScript/main-menu.js?v=20260922-focus1"></script>
     <script src="./assets/JavaScript/quick-menu.js?v=20261004-quick7"></script>
     <script src="./assets/JavaScript/dialog.js?v=20260922-focus1"></script>

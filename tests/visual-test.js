@@ -40,7 +40,7 @@
             Inventory.HideSellOffer();
         [
             "authorization", "registration", "spawn-selection", "error-screen",
-            "statistics", "inventory", "marketplace", "main-menu", "quick-menu", "tickets", "admin-panel", "speedometer"
+            "statistics", "inventory", "marketplace", "bank", "house-menu", "main-menu", "quick-menu", "tickets", "admin-panel", "speedometer"
         ].forEach(function (id) { hideById(id); });
         document.querySelectorAll("[data-cef-test-surface]").forEach(function (element) {
             element.classList.add("hidden");
