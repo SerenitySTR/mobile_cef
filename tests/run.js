@@ -661,6 +661,17 @@ test('hud: ammo-only updates keep the equipped weapon icon', () => {
         'currentWeaponId = Math.max(0'
     ], 'pc-hud.js');
 });
+test('pc hud: health text supports 170 HP while ring stays capped at 100', () => {
+    const pcHud = read('assets/JavaScript/pc-hud.js');
+    hasAll(pcHud, [
+        'const MAX_HEALTH = 170;',
+        "function setHealth(value)",
+        "const v = clampStat(value, MAX_HEALTH);",
+        "el.textContent = Math.round(v);",
+        "stat.style.setProperty('--value', clampStat(v));",
+        'setHealth(hp);'
+    ], 'pc-hud.js');
+});
 test('code style: all JavaScript files follow repository whitespace rules', () => {
     const files = [
         'build.js',

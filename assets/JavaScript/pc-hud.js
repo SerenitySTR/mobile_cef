@@ -1,6 +1,7 @@
 (() => {
     const $ = id => document.getElementById(id);
-    const clamp100 = n => Math.max(0, Math.min(100, Number(n) || 0));
+    const MAX_HEALTH = 170;
+    const clampStat = (n, max = 100) => Math.max(0, Math.min(max, Number(n) || 0));
     const parsePayload = data => {
         if (data && typeof data === 'object')
             return data;
@@ -16,9 +17,12 @@
     const HUD_WEAPON_IMAGES = {
         0: 'fist.webp', 1: 'brassknuckle.webp', 2: 'golfclub.webp', 3: 'nightstick.webp', 4: 'knife.webp', 5: 'bat.webp', 6: 'shovel.webp', 7: 'poolcue.webp', 8: 'katana.webp', 9: 'chainsaw.webp', 10: 'dildo1.webp', 11: 'dildo2.webp', 12: 'vibrator1.webp', 13: 'vibrator2.webp', 14: 'flowers.webp', 15: 'cane.webp', 16: 'grenade.webp', 17: 'teargas.webp', 18: 'molotov.webp', 22: 'colt45.webp', 23: 'silenced.webp', 24: 'deagle.webp', 25: 'shotgun.webp', 26: 'sawnoff.webp', 27: 'spas12.webp', 28: 'uzi.webp', 29: 'mp5.webp', 30: 'ak47.webp', 31: 'm4.webp', 32: 'tec9.webp', 33: 'rifle.webp', 34: 'sniper.webp', 35: 'rocketlauncher.webp', 36: 'heatseeker.webp', 37: 'flamethrower.webp', 38: 'minigun.webp', 39: 'satchel.webp', 40: 'detonator.webp', 41: 'spraycan.webp', 42: 'extinguisher.webp', 43: 'camera.webp', 44: 'nightvision.webp', 45: 'infrared.webp', 46: 'parachute.webp'
     };
-    function setStat(id, value) { const el = $(id); if (!el)
-        return; const v = clamp100(value); el.textContent = Math.round(v); const stat = el.closest('.stat'); if (stat)
-        stat.style.setProperty('--value', v); }
+    function setStat(id, value, max = 100) { const el = $(id); if (!el)
+        return; const v = clampStat(value, max); el.textContent = Math.round(v); const stat = el.closest('.stat'); if (stat)
+        stat.style.setProperty('--value', max > 0 ? (v / max) * 100 : 0); }
+    function setHealth(value) { const el = $('hp'); if (!el)
+        return; const v = clampStat(value, MAX_HEALTH); el.textContent = Math.round(v); const stat = el.closest('.stat'); if (stat)
+        stat.style.setProperty('--value', clampStat(v)); }
     function fmtMoney(v) { return Number(v || 0).toLocaleString('uk-UA').replace(/\u00a0/g, ' '); }
     function renderWanted(level) { const root = $('wanted'); if (!root)
         return; root.innerHTML = ''; const n = Math.max(0, Math.min(5, Math.trunc(Number(level) || 0))); for (let i = 1; i <= 5; i++) {
@@ -75,7 +79,7 @@
     }
     function updateHud(data) { if (!data)
         return; const hp = data.health ?? data.Health ?? data.hp ?? data.HP; const armor = data.armour ?? data.Armour ?? data.armor ?? data.Armor; const hunger = data.hunger ?? data.Hunger; const money = data.money ?? data.Money; const wanted = data.wanted ?? data.Wanted ?? data.wantedLevel ?? data.WantedLevel; const weapon = data.weapon ?? data.Weapon ?? data.weaponId ?? data.WeaponId; if (hp !== undefined)
-        setStat('hp', hp); if (armor !== undefined)
+        setHealth(hp); if (armor !== undefined)
         setStat('armor', armor); if (hunger !== undefined)
         setStat('hunger', hunger); if (money !== undefined)
         setMoney(money); if (wanted !== undefined)
@@ -99,7 +103,7 @@
         root.style.setProperty('pointer-events', 'none', 'important');
     } }
     window.AntaresHUD = { show: showHud, hide: hideHud, setPlayer, setTime, setStats({ hp, armor, hunger } = {}) { if (hp != null)
-            setStat('hp', hp); if (armor != null)
+            setHealth(hp); if (armor != null)
             setStat('armor', armor); if (hunger != null)
             setStat('hunger', hunger); }, setAmmo, setMoney, setWanted: renderWanted, setWeapon: updateWeapon, update: updateHud };
     function updateScale() {
