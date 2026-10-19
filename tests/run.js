@@ -213,6 +213,31 @@ test('cef-wrapper: send re-syncs after native bridge replacement', () => {
     ok(sent, 'Replacement bridge did not receive spawn submit');
     equal(JSON.parse(sent.data).SpawnType, 2, 'Replacement bridge received wrong payload');
 });
+test('cef-wrapper: mobile receive re-acknowledges UI readiness', () => {
+    const emitted = [];
+    const frames = [];
+    const context = {
+        setInterval: () => 1,
+        requestAnimationFrame: callback => { frames.push(callback); return frames.length; },
+        window: {
+            cef: {
+                emit: (eventName, data) => emitted.push({ eventName, data }),
+                on: () => { },
+                off: () => { }
+            },
+            addEventListener: () => { }
+        }
+    };
+    context.window.window = context.window;
+    vm.createContext(context);
+    vm.runInContext(read('assets/JavaScript/cef-wrapper.js'), context, { filename: 'cef-wrapper.js' });
+    context.window.GameCef.receive('spawn:show', '{}');
+    equal(frames.length, 1, 'Mobile receive did not schedule readiness ack');
+    frames.shift()();
+    equal(frames.length, 1, 'Mobile receive did not schedule second readiness frame');
+    frames.shift()();
+    ok(emitted.some(item => item.eventName === 'browser:ui-ready'), 'Mobile receive did not re-send browser:ui-ready');
+});
 test('cef-wrapper: multiple subscribers share one native event safely', () => {
     const listeners = {};
     const context = {
