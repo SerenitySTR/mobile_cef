@@ -31,6 +31,12 @@
                     <span>Закрити двері</span>
                 </button>
 
+                <button class="house-menu-nav-item" id="house-menu-transfer" type="button">
+                    <span class="house-menu-nav-icon" aria-hidden="true">
+                        <svg viewBox="0 0 24 24"><path d="M7 7h11"></path><path d="m15 4 3 3-3 3"></path><path d="M17 17H6"></path><path d="m9 14-3 3 3 3"></path></svg>
+                    </span>
+                    <span>Продати / Обміняти</span>
+                </button>
 
                 <div class="house-menu-nav-spacer"></div>
 
@@ -91,6 +97,38 @@
             <span>ANTARES ROLEPLAY</span>
             <span>ESC — закрити</span>
         </footer>
+    </div>
+
+    <div class="house-menu-transfer" id="house-menu-transfer-modal" aria-hidden="true">
+        <div class="house-menu-transfer-card" role="dialog" aria-modal="true" aria-labelledby="house-menu-transfer-title">
+            <span class="house-menu-transfer-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24"><path d="M7 7h11"></path><path d="m15 4 3 3-3 3"></path><path d="M17 17H6"></path><path d="m9 14-3 3 3 3"></path></svg>
+            </span>
+            <span class="house-menu-transfer-kicker">УГОДА З ГРАВЦЕМ</span>
+            <h3 id="house-menu-transfer-title">Продати або обміняти будинок</h3>
+            <p>Вкажіть ID гравця та суму угоди. Якщо в гравця вже є будинок, буде запропоновано обмін.</p>
+
+            <div class="house-menu-transfer-fields">
+                <label class="house-menu-transfer-field" for="house-menu-transfer-player">
+                    <span>ID гравця</span>
+                    <input id="house-menu-transfer-player" type="number" min="0" step="1" inputmode="numeric" placeholder="0" autocomplete="off">
+                </label>
+
+                <label class="house-menu-transfer-field" for="house-menu-transfer-price">
+                    <span>Сума</span>
+                    <div class="house-menu-transfer-money">
+                        <input id="house-menu-transfer-price" type="number" min="0" step="1" inputmode="numeric" placeholder="0" autocomplete="off">
+                        <b>$</b>
+                    </div>
+                    <small class="house-menu-transfer-limit">Максимальна ціна: <b id="house-menu-transfer-max-price">$0</b> <span>×4 від вартості будинку</span></small>
+                </label>
+            </div>
+
+            <div class="house-menu-transfer-actions">
+                <button class="house-menu-transfer-primary" id="house-menu-transfer-submit" type="button">Запропонувати</button>
+                <button class="house-menu-transfer-cancel" id="house-menu-transfer-cancel" type="button">Скасувати</button>
+            </div>
+        </div>
     </div>
 
     <div class="house-menu-confirm" id="house-menu-confirm" aria-hidden="true">

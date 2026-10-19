@@ -124,6 +124,31 @@
 
 .house-menu-footer { min-height: 42px; display: flex; align-items: center; justify-content: space-between; padding: 0 22px; border-top: 1px solid var(--house-line); color: #66768b; font-size: 9px; font-weight: 800; letter-spacing: 1.1px; }
 
+.house-menu-transfer { position: absolute; inset: 0; z-index: 5; display: none; align-items: center; justify-content: center; padding: 20px; background: rgba(3, 7, 12, .76); }
+.house-menu-transfer.active { display: flex; }
+.house-menu-transfer-card { width: min(440px, calc(100vw - 40px)); padding: 25px; border: 1px solid rgba(128,155,190,.24); border-radius: 16px; background: linear-gradient(145deg, #172333, #0b121c); box-shadow: 0 24px 70px rgba(0,0,0,.5); }
+.house-menu-transfer-icon { width: 52px; height: 52px; display: grid; place-items: center; margin: 0 auto 13px; border-radius: 14px; color: #66a5ff; background: rgba(47,125,241,.12); }
+.house-menu-transfer-icon svg { width: 28px; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+.house-menu-transfer-kicker { display: block; color: #6f95c8; font-size: 11px; font-weight: 900; letter-spacing: 1.6px; text-align: center; }
+.house-menu-transfer h3 { margin: 8px 0 9px; font-size: 20px; text-align: center; }
+.house-menu-transfer p { margin: 0; color: #97a5b8; font-size: 12px; line-height: 1.55; text-align: center; }
+.house-menu-transfer-fields { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 19px 0; }
+.house-menu-transfer-field { display: flex; flex-direction: column; gap: 7px; }
+.house-menu-transfer-field > span { color: #9ba9bb; font-size: 11px; font-weight: 700; }
+.house-menu-transfer-field input { width: 100%; height: 44px; box-sizing: border-box; padding: 0 12px; border: 1px solid rgba(132,159,190,.18); border-radius: 9px; outline: 0; color: #f4f7fb; background: rgba(255,255,255,.035); font: inherit; font-size: 13px; font-weight: 700; transition: .15s ease; }
+.house-menu-transfer-field input:focus { border-color: rgba(75,156,255,.62); background: rgba(47,125,241,.07); box-shadow: 0 0 0 3px rgba(47,125,241,.08); }
+.house-menu-transfer-field input::-webkit-inner-spin-button, .house-menu-transfer-field input::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+.house-menu-transfer-money { position: relative; }
+.house-menu-transfer-money input { padding-right: 34px; }
+.house-menu-transfer-money b { position: absolute; top: 50%; right: 12px; transform: translateY(-50%); color: #58e189; font-size: 13px; pointer-events: none; }
+.house-menu-transfer-limit { display: block; margin-top: 2px; color: #74859b; font-size: 10px; font-weight: 700; line-height: 1.35; }
+.house-menu-transfer-limit b { color: #58e189; font-size: inherit; }
+.house-menu-transfer-limit span { color: #607086; }
+.house-menu-transfer-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 9px; }
+.house-menu-transfer-actions button { height: 43px; border-radius: 9px; font-weight: 800; cursor: pointer; }
+.house-menu-transfer-primary { border: 1px solid #2f76db; color: #fff; background: linear-gradient(180deg, #3f8df5, #2867c4); }
+.house-menu-transfer-cancel { border: 1px solid rgba(144,168,199,.2); color: #dbe3ed; background: rgba(255,255,255,.045); }
+
 .house-menu-confirm { position: absolute; inset: 0; z-index: 5; display: none; align-items: center; justify-content: center; padding: 20px; background: rgba(3, 7, 12, .76); }
 .house-menu-confirm.active { display: flex; }
 .house-menu-confirm-card { width: min(420px, calc(100vw - 40px)); padding: 25px; border: 1px solid rgba(128,155,190,.24); border-radius: 16px; background: linear-gradient(145deg, #172333, #0b121c); box-shadow: 0 24px 70px rgba(0,0,0,.5); text-align: center; }
@@ -161,6 +186,7 @@
 }
 
 @media (max-width: 720px) {
+    .house-menu-transfer-fields { grid-template-columns: 1fr; }
     #house-menu { padding: 8px; }
     .house-menu-panel { width: calc(100vw - 16px); height: calc(100vh - 16px); min-height: 0; border-radius: 13px; }
     .house-menu-header { min-height: 62px; padding: 10px 12px; }

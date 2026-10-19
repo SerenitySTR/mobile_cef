@@ -24,6 +24,10 @@ var HouseMenu = {
         var info = document.getElementById("house-menu-info");
         var lock = document.getElementById("house-menu-lock");
         var sell = document.getElementById("house-menu-sell");
+        var transfer = document.getElementById("house-menu-transfer");
+        var transferPrice = document.getElementById("house-menu-transfer-price");
+        var transferSubmit = document.getElementById("house-menu-transfer-submit");
+        var transferCancel = document.getElementById("house-menu-transfer-cancel");
         var confirmSell = document.getElementById("house-menu-confirm-sell");
         var confirmCancel = document.getElementById("house-menu-confirm-cancel");
 
@@ -35,6 +39,14 @@ var HouseMenu = {
             lock.onclick = function () { self.ToggleDoor(); };
         if (sell)
             sell.onclick = function () { self.OpenSellConfirm(); };
+        if (transfer)
+            transfer.onclick = function () { self.OpenTransfer(); };
+        if (transferPrice)
+            transferPrice.oninput = function () { self.LimitTransferPrice(this); };
+        if (transferSubmit)
+            transferSubmit.onclick = function () { self.ConfirmTransfer(); };
+        if (transferCancel)
+            transferCancel.onclick = function () { self.CloseTransfer(); };
         if (confirmSell)
             confirmSell.onclick = function () { self.ConfirmSell(); };
         if (confirmCancel)
@@ -49,11 +61,22 @@ var HouseMenu = {
             if (event.key === "Escape") {
                 event.preventDefault();
                 event.stopImmediatePropagation();
+                if (self.TransferOpen()) {
+                    self.CloseTransfer();
+                    return;
+                }
                 if (self.SellConfirmOpen()) {
                     self.CloseSellConfirm();
                     return;
                 }
                 self.Close();
+                return;
+            }
+
+            if (event.key === "Enter" && self.TransferOpen()) {
+                event.preventDefault();
+                event.stopImmediatePropagation();
+                self.ConfirmTransfer();
                 return;
             }
 
@@ -72,6 +95,7 @@ var HouseMenu = {
         if (data !== undefined && data !== null && data !== "")
             this.SetData(data);
         this.CloseSellConfirm();
+        this.CloseTransfer();
         this.screen.classList.add("active");
         this.screen.setAttribute("aria-hidden", "false");
     },
@@ -79,6 +103,7 @@ var HouseMenu = {
     Hide: function () {
         this.Init();
         this.CloseSellConfirm();
+        this.CloseTransfer();
         if (!this.screen)
             return;
         this.screen.classList.remove("active");
@@ -134,8 +159,14 @@ var HouseMenu = {
         this.SetText("house-menu-door-badge", this.data.Locked ? "Закрито" : "Відкрито");
 
         var statePrice = Math.floor(Math.max(0, Number(this.data.Price) || 0) / 2);
+        var maxTransferPrice = this.GetMaxTransferPrice();
         this.SetText("house-menu-sell-price", this.Money(statePrice));
         this.SetText("house-menu-confirm-price", this.Money(statePrice));
+        this.SetText("house-menu-transfer-max-price", this.Money(maxTransferPrice));
+
+        var transferPrice = document.getElementById("house-menu-transfer-price");
+        if (transferPrice)
+            transferPrice.max = String(maxTransferPrice);
 
         var status = document.getElementById("house-menu-door-status");
         var badge = document.getElementById("house-menu-door-badge");
@@ -180,6 +211,82 @@ var HouseMenu = {
             self.lockPending = false;
             self.Render();
         }, 800);
+    },
+
+    GetMaxTransferPrice: function () {
+        return Math.floor(Math.max(0, Number(this.data.Price) || 0) * 4);
+    },
+
+    LimitTransferPrice: function (input) {
+        if (!input || input.value === "")
+            return;
+
+        var value = Number(input.value);
+        if (!Number.isFinite(value))
+            return;
+
+        var maxPrice = this.GetMaxTransferPrice();
+        if (value > maxPrice)
+            input.value = String(maxPrice);
+        else if (value < 0)
+            input.value = "0";
+    },
+
+    OpenTransfer: function () {
+        var modal = document.getElementById("house-menu-transfer-modal");
+        var playerInput = document.getElementById("house-menu-transfer-player");
+        var priceInput = document.getElementById("house-menu-transfer-price");
+        if (!modal)
+            return;
+
+        if (playerInput) playerInput.value = "";
+        if (priceInput) {
+            priceInput.value = "";
+            priceInput.max = String(this.GetMaxTransferPrice());
+        }
+        this.SetText("house-menu-transfer-max-price", this.Money(this.GetMaxTransferPrice()));
+        modal.classList.add("active");
+        modal.setAttribute("aria-hidden", "false");
+
+        if (playerInput)
+            setTimeout(function () { playerInput.focus(); }, 0);
+    },
+
+    CloseTransfer: function () {
+        var modal = document.getElementById("house-menu-transfer-modal");
+        if (!modal)
+            return;
+        modal.classList.remove("active");
+        modal.setAttribute("aria-hidden", "true");
+    },
+
+    TransferOpen: function () {
+        var modal = document.getElementById("house-menu-transfer-modal");
+        return !!(modal && modal.classList.contains("active"));
+    },
+
+    ConfirmTransfer: function () {
+        if (!this.TransferOpen())
+            return;
+
+        var playerInput = document.getElementById("house-menu-transfer-player");
+        var priceInput = document.getElementById("house-menu-transfer-price");
+        if (priceInput)
+            this.LimitTransferPrice(priceInput);
+
+        var targetId = Number(playerInput ? playerInput.value : -1);
+        var price = Number(priceInput ? priceInput.value : -1);
+        var maxPrice = this.GetMaxTransferPrice();
+
+        if (!Number.isInteger(targetId) || targetId < 0 || !Number.isInteger(price) || price < 0 || price > maxPrice)
+            return;
+
+        this.CloseTransfer();
+        GameCef.sendJson("house:transfer", {
+            HouseId: this.data.HouseId,
+            TargetId: targetId,
+            Price: price
+        });
     },
 
     OpenSellConfirm: function () {
