@@ -121,12 +121,6 @@ window.GameCef = {
     },
     receive(eventName, ...args) {
         this.dispatch(eventName, args);
-        requestAnimationFrame(() => {
-            requestAnimationFrame(() => {
-                this.sync();
-                this.send("browser:ui-ready");
-            });
-        });
     }
 };
 setInterval(() => GameCef.sync(), 1000);

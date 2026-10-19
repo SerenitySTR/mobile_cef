@@ -213,16 +213,16 @@ test('cef-wrapper: send re-syncs after native bridge replacement', () => {
     ok(sent, 'Replacement bridge did not receive spawn submit');
     equal(JSON.parse(sent.data).SpawnType, 2, 'Replacement bridge received wrong payload');
 });
-test('cef-wrapper: mobile receive re-acknowledges UI readiness', () => {
+test('cef-wrapper: receiving server events never re-emits UI readiness', () => {
     const emitted = [];
-    const frames = [];
+    const listeners = {};
     const context = {
         setInterval: () => 1,
-        requestAnimationFrame: callback => { frames.push(callback); return frames.length; },
+        requestAnimationFrame: callback => callback(),
         window: {
             cef: {
                 emit: (eventName, data) => emitted.push({ eventName, data }),
-                on: () => { },
+                on: (eventName, callback) => { listeners[eventName] = callback; },
                 off: () => { }
             },
             addEventListener: () => { }
@@ -231,12 +231,11 @@ test('cef-wrapper: mobile receive re-acknowledges UI readiness', () => {
     context.window.window = context.window;
     vm.createContext(context);
     vm.runInContext(read('assets/JavaScript/cef-wrapper.js'), context, { filename: 'cef-wrapper.js' });
-    context.window.GameCef.receive('spawn:show', '{}');
-    equal(frames.length, 1, 'Mobile receive did not schedule readiness ack');
-    frames.shift()();
-    equal(frames.length, 1, 'Mobile receive did not schedule second readiness frame');
-    frames.shift()();
-    ok(emitted.some(item => item.eventName === 'browser:ui-ready'), 'Mobile receive did not re-send browser:ui-ready');
+    let received = 0;
+    context.window.GameCef.on('authorization:show', () => { received++; });
+    context.window.GameCef.receive('authorization:show', 'Serenity2');
+    equal(received, 1, 'Server event was not dispatched exactly once');
+    ok(!emitted.some(item => item.eventName === 'browser:ui-ready'), 'Server event incorrectly re-emitted browser:ui-ready');
 });
 test('cef-wrapper: multiple subscribers share one native event safely', () => {
     const listeners = {};
