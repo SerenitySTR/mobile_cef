@@ -43,7 +43,7 @@
             Inventory.HideSellOffer();
         [
             "authorization", "registration", "spawn-selection", "error-screen",
-            "statistics", "inventory", "marketplace", "mailbox", "bank", "house-menu", "main-menu", "quick-menu", "tickets", "admin-panel", "speedometer"
+            "statistics", "inventory", "marketplace", "mailbox", "bank", "house-menu", "personal-vehicles", "main-menu", "quick-menu", "tickets", "admin-panel", "speedometer"
         ].forEach(function (id) { hideById(id); });
         document.querySelectorAll("[data-cef-test-surface]").forEach(function (element) {
             element.classList.add("hidden");

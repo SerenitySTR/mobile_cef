@@ -19,6 +19,7 @@
     <link rel="stylesheet" href="./assets/CSS/styles/mailbox.css?v=90ca0c1fb3">
     <link rel="stylesheet" href="./assets/CSS/styles/bank.css?v=6e39955b08">
     <link rel="stylesheet" href="./assets/CSS/styles/house-menu.css?v=d5b704d8af">
+    <link rel="stylesheet" href="./assets/CSS/styles/personal-vehicles.css?v=897c374f3a">
     <link rel="stylesheet" href="./assets/CSS/styles/main-menu.css?v=18b314e5e4">
     <link rel="stylesheet" href="./assets/CSS/styles/quick-menu.css?v=b4fa9393eb">
     <link rel="stylesheet" href="./assets/CSS/styles/dialog.css?v=20350d3a05">
@@ -1449,6 +1450,52 @@
     </div>
 </section>
 
+    <section id="personal-vehicles" aria-hidden="true">
+    <div class="personal-vehicles-panel">
+        <header class="personal-vehicles-header">
+            <div class="personal-vehicles-brand">
+                <span class="personal-vehicles-brand-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24"><path d="M5 16h14"></path><path d="M7 16 5.5 12.5A2 2 0 0 1 7.3 9.7h9.4a2 2 0 0 1 1.8 2.8L17 16"></path><path d="M8 10 9.4 7.5h5.2L16 10"></path><circle cx="7.5" cy="17.5" r="1.5"></circle><circle cx="16.5" cy="17.5" r="1.5"></circle></svg>
+                </span>
+                <div>
+                    <span class="personal-vehicles-kicker">ОСОБИСТИЙ ТРАНСПОРТ</span>
+                    <h1>Мій транспорт</h1>
+                </div>
+            </div>
+
+            <div class="personal-vehicles-header-actions">
+                <div class="personal-vehicles-count">
+                    <span>ТРАНСПОРТ</span>
+                    <strong id="personal-vehicles-count">0</strong>
+                </div>
+                <button class="personal-vehicles-close" id="personal-vehicles-close" type="button" aria-label="Закрити особистий транспорт">
+                    <svg viewBox="0 0 24 24"><path d="M6 6l12 12"></path><path d="M18 6 6 18"></path></svg>
+                </button>
+            </div>
+        </header>
+
+        <main class="personal-vehicles-main">
+            <div class="personal-vehicles-heading">
+                <div>
+                    <span>ВАШ ГАРАЖ</span>
+                    <h2>Список транспорту</h2>
+                </div>
+                <p>Увесь особистий транспорт, що належить вашому персонажу.</p>
+            </div>
+
+            <div class="personal-vehicles-grid" id="personal-vehicles-list"></div>
+
+            <div class="personal-vehicles-empty" id="personal-vehicles-empty" aria-hidden="true">
+                <span class="personal-vehicles-empty-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24"><path d="M5 16h14"></path><path d="M7 16 5.5 12.5A2 2 0 0 1 7.3 9.7h9.4a2 2 0 0 1 1.8 2.8L17 16"></path><path d="M8 10 9.4 7.5h5.2L16 10"></path><circle cx="7.5" cy="17.5" r="1.5"></circle><circle cx="16.5" cy="17.5" r="1.5"></circle></svg>
+                </span>
+                <strong>У вас немає особистого транспорту</strong>
+                <span>Придбаний транспорт з'явиться у цьому списку.</span>
+            </div>
+        </main>
+    </div>
+</section>
+
     <section id="main-menu">
     <div class="main-menu-panel">
         <header class="main-menu-header">
@@ -1627,6 +1674,7 @@
     <script src="./assets/JavaScript/mailbox.js?v=3ac040cca7"></script>
     <script src="./assets/JavaScript/bank.js?v=186918f37e"></script>
     <script src="./assets/JavaScript/house-menu.js?v=e2291ca5ec"></script>
+    <script src="./assets/JavaScript/personal-vehicles.js?v=5d0c3125e0"></script>
     <script src="./assets/JavaScript/main-menu.js?v=d6c43a2b9c"></script>
     <script src="./assets/JavaScript/quick-menu.js?v=19954b2ca0"></script>
     <script src="./assets/JavaScript/dialog.js?v=c047e19240"></script>
@@ -1635,7 +1683,7 @@
     <script src="./assets/JavaScript/admin-panel.js?v=eae2829adc"></script>
     <script src="./assets/JavaScript/tickets.js?v=95020b22cb"></script>
     <script src="./tests/in-game.js?v=cdb871bbca"></script>
-    <script src="./tests/visual-test.js?v=a2cfb955b1"></script>
-    <script src="./tests/cases.js?v=bf93e52f7b"></script>
+    <script src="./tests/visual-test.js?v=99789e5540"></script>
+    <script src="./tests/cases.js?v=81ce3d5ba1"></script>
 </body>
 </html>

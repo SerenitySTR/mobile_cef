@@ -527,6 +527,31 @@
             Image: "./assets/CSS/Images/Spawn/house-new.webp"
         });
     });
+    Tests.register("personal-vehicles", "Personal Vehicles", function () {
+        Tests.receive("personal-vehicles:show", {
+            MaxVehicles: 5,
+            Vehicles: [
+                {
+                    Name: "Infernus",
+                    Fuel: 68,
+                    MaxFuel: 100,
+                    Condition: 94
+                },
+                {
+                    Name: "Sultan",
+                    Fuel: 43,
+                    MaxFuel: 80,
+                    Condition: 78
+                },
+                {
+                    Name: "NRG-500",
+                    Fuel: 22,
+                    MaxFuel: 35,
+                    Condition: 87
+                }
+            ]
+        });
+    });
     Tests.register("statistics", "Statistics", function () {
         Tests.receive("statistics:show", {
             Profile: {
